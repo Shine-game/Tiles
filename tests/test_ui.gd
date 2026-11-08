@@ -20,6 +20,11 @@ func _run() -> void:
 	check(scene.indicators.size() == 7, "all seven symmetry indicators present")
 	check(scene.undo_button.disabled, "undo initially disabled")
 	check(scene.board_view.size.x > 0 and scene.board_view.size.y > 0, "board laid out")
+	await process_frame
+	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "board spans full phone viewport width")
+	check(absf(scene.board_view.field.size.x - scene.board_view.field.size.y) < 1.0, "full-width board stays square")
+	check(absf(scene.board_view.get_global_rect().position.x) < 1.0, "board starts at screen edge")
+
 	scene.game.queue[scene.game.index] = "J"
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
@@ -76,6 +81,19 @@ func _run() -> void:
 	scene.requested_size = 11
 	scene._reset()
 	check(scene.game.board.size() == 11, "11 by 11 reset works")
+	await process_frame
+	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "11 by 11 board also spans full width")
+	var original_window_size := root.size
+	root.size = Vector2i(390, 844)
+	await process_frame
+	await process_frame
+	await process_frame
+	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "board follows phone width after resize")
+	check(absf(scene.board_view.size.x - scene.board_view.size.y) < 1.0, "resized board keeps square cells")
+	root.size = original_window_size
+	await process_frame
+	await process_frame
+
 	scene.requested_size = 9
 	scene._reset()
 	await process_frame

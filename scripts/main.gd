@@ -67,10 +67,12 @@ func _build_interface() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# Retain vertical scrolling on short screens without taking width from the board.
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	add_child(scroll)
 	var margin := MarginContainer.new()
 	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for edge in ["left", "right", "top", "bottom"]:
+	for edge in ["top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + edge, 24)
 	scroll.add_child(margin)
 	var column := VBoxContainer.new()
@@ -145,7 +147,7 @@ func _build_interface() -> void:
 	board_view.hover_exited.connect(func():
 		anchor = selected
 		_preview())
-	column.resized.connect(func(): board_view.custom_minimum_size.y = minf(column.size.x, maxf(280, get_viewport_rect().size.y - 700)))
+	column.resized.connect(func(): board_view.custom_minimum_size.y = column.size.x)
 	status = _label("", 17, column)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.custom_minimum_size.y = 48
@@ -175,6 +177,20 @@ func _build_interface() -> void:
 	reset_dialog.confirmed.connect(_reset)
 	reset_dialog.canceled.connect(func(): size_picker.select(0 if game.board.size() == 9 else 1))
 	add_child(reset_dialog)
+	# Inset the surrounding controls, while the square board spans the viewport.
+	for child: Control in column.get_children():
+		if child == board_view:
+			continue
+		var position_in_column := child.get_index()
+		column.remove_child(child)
+		var inset := MarginContainer.new()
+		inset.add_theme_constant_override("margin_left", 24)
+		inset.add_theme_constant_override("margin_right", 24)
+		inset.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		column.add_child(inset)
+		column.move_child(inset, position_in_column)
+		inset.add_child(child)
+
 
 func _refresh() -> void:
 	board_view.board = game.board

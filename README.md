@@ -4,7 +4,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Play
 
-- A bright blue center square begins a 9×9 garden, switchable to 11×11.
+- A bright blue center square begins a 9×9 garden, switchable to 11×11. The square board spans the full phone viewport width. On shorter screens, swipe vertically to reach the surrounding controls; the board is never shrunk to fit the screen height.
 - Eleven shapes are available: the seven standard tetrominoes, a 1×1 square (Dot), a 1×2 domino, a straight three-square piece (I3), and an L-shaped three-square piece (L3). Generation first chooses a size category uniformly, then a fitting shape uniformly within that category. While all shapes fit, each size has a 25% chance: Dot 25%, Domino 25%, I3/L3 12.5% each, and each tetromino about 3.57%. Draws are independent, so repeats can occur.
 - Shapes are eligible only if some rotation or reflection fits inside empty squares and touches the existing pattern at an edge or corner. Color and symmetry are deliberately ignored for this generation filter. If a size has no fitting shapes, its probability is shared equally among the remaining sizes. A physically fitting piece that destroys symmetry in every placement can still be generated and end the game.
 - Pieces must touch the pattern along an edge or corner. They cannot overlap or leave the board. No lines clear.
