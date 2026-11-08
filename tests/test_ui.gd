@@ -39,6 +39,28 @@ func _run() -> void:
 	root.add_child(scene)
 	for i in range(4):
 		await process_frame
+	check(scene.palette_options.size() == 5, "palette button offers exactly five pairs")
+	check(scene.palette_button.get_global_rect().get_center().x > scene.get_viewport_rect().size.x * 0.8, "palette button is at top right")
+	check(scene.palette_button.position.y < 30, "palette button sits at the top edge")
+	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 1, "active piece is centered at top")
+	var unchanged_board: Array = scene.game.board.duplicate(true)
+	for i in range(5):
+		touch(scene, scene.palette_button.get_global_rect().get_center(), true)
+		touch(scene, scene.palette_button.get_global_rect().get_center(), false)
+		check(scene.palette_menu.visible, "touch opens palette choices")
+		await process_frame
+		touch(scene, scene.palette_options[i].get_global_rect().get_center(), true)
+		touch(scene, scene.palette_options[i].get_global_rect().get_center(), false)
+		check(Palette.selected_index == i and not scene.palette_menu.visible, "touch selects each palette and closes choices")
+		check(scene.game.board == unchanged_board, "palette selection preserves logical cell colors")
+		check(Palette.pigment(1) == Palette.tile(1) and Palette.blossom(1) == Palette.tile(2), "pure palette reaches vines and inverted flowers")
+		for color: Color in Palette.PAIRS[i].colors:
+			check(is_equal_approx(color.v, 1), "palette colors have full brightness")
+			check(color == Color.WHITE or color.s > 0.7, "palette colors are saturated or pure snow white")
+		if Palette.PAIRS[i].colors.has(Color.WHITE):
+			check(Palette.dark() and Palette.floor_color().get_luminance() < 0.3, "snow-white artwork has a contrasting field")
+	check(not Palette.select(-1) and not Palette.select(5), "invalid palette indices are rejected")
+	scene._choose_palette(0)
 	check(scene.indicators.size() == 2, "exactly two symmetry graphics")
 	check(scene.indicators[0].icon.available == [true, true, true, true], "reflection graphic lights all four initial axes")
 	check(scene.indicators[1].icon.available == [true, true, true], "rotation graphic initially available")
@@ -110,6 +132,12 @@ func _run() -> void:
 	scene._place()
 	check(scene.game.moves == committed_moves, "controller rejects early placement even without a button click")
 	var committed_flowers: int = scene.board_view.pattern.flowers.size()
+	var growth_clock: float = scene.board_view.clock
+	scene._choose_palette(1)
+	check(scene.board_view.growing and is_equal_approx(scene.board_view.clock, growth_clock), "palette switching does not restart active growth")
+	check(scene.place_button.disabled, "palette switching cannot bypass growth gate")
+	scene._choose_palette(0)
+
 	scene._flip()
 	scene._choose_color(3 - scene.game.current_color)
 	check(scene.board_view.pattern.flowers.size() == committed_flowers, "preview changes never mutate committed growth")
@@ -211,6 +239,14 @@ func _run() -> void:
 		root.size = dimensions
 		for i in range(4):
 			await process_frame
+		check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 1, "piece remains centered at " + str(dimensions))
+		scene._toggle_palette_menu()
+		await process_frame
+		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
+		check(menu_bounds.encloses(scene.palette_menu.get_global_rect()), "palette choices fit without scrolling at " + str(dimensions))
+		for option: Button in scene.palette_options:
+			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
+		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		for control: Control in scene._controls() + [scene.board_view, scene.piece_view, scene.indicators[0].panel, scene.indicators[1].panel]:
 			check(bounds.encloses(control.get_global_rect()), "every element fits " + str(dimensions))
@@ -218,7 +254,19 @@ func _run() -> void:
 		for first in range(scene._controls().size()):
 			for second in range(first + 1, scene._controls().size()):
 				check(not scene._controls()[first].get_global_rect().intersects(scene._controls()[second].get_global_rect()), "controls do not overlap at " + str(dimensions))
+	root.size = Vector2i(720, 1100)
+	for i in range(4):
+		await process_frame
+	scene.cells = Rules.PIECES.J.cells
+	scene._refresh()
+	check(absf(scene.piece_view.geometry().unit - 51) < 0.01, "normal source squares grow from 34 to 51 pixels, exactly 50 percent")
+	check(absf((scene.piece_view.geometry().unit - 4 * scene.piece_view.geometry().scale) - 45) < 0.01, "filled square and its gap scale together by 50 percent")
+	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
+	scene._refresh()
+	check(absf(scene.piece_view.geometry().unit - 39) < 0.01, "vertical I grows from 26 to 39 pixels without clipping")
 	root.size = original_window_size
+	scene.cells = scene.game.piece().cells
+	scene._refresh()
 	for i in range(4):
 		await process_frame
 	if DisplayServer.get_name() != "headless":

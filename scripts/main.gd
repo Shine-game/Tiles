@@ -6,6 +6,7 @@ const Game = preload("res://scripts/game.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
 const FloatingPiece = preload("res://scripts/floating_piece.gd")
+const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
 var game = Game.new()
 var cells: Array = []
@@ -25,6 +26,10 @@ var flip_button: Button
 var blue_button: Button
 var coral_button: Button
 var new_button: Button
+var palette_button: Button
+var palette_menu: PanelContainer
+var palette_list: Control
+var palette_options: Array = []
 var indicators: Array = []
 var size_picker: Button
 var requested_size := 9
@@ -83,6 +88,24 @@ func _build_interface() -> void:
 	undo_button = _button("↶", _undo)
 	new_button = _button("+", func(): _ask_reset(game.board.size()))
 	size_picker = _button("9 × 9", func(): _ask_reset(11 if game.board.size() == 9 else 9))
+	palette_button = PaletteChoice.new()
+	add_child(palette_button)
+	palette_button.pressed.connect(_toggle_palette_menu)
+	palette_menu = PanelContainer.new()
+	palette_menu.visible = false
+	palette_menu.z_index = 80
+	add_child(palette_menu)
+	palette_list = Control.new()
+	palette_menu.add_child(palette_list)
+	for i in range(Palette.PAIRS.size()):
+		var option = PaletteChoice.new()
+		option.pair_index = i
+		option.text = Palette.PAIRS[i].name
+		option.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		option.pressed.connect(_choose_palette.bind(i))
+		palette_list.add_child(option)
+		palette_options.append(option)
+
 	floating_piece = FloatingPiece.new()
 	floating_piece.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(floating_piece)
@@ -90,7 +113,7 @@ func _build_interface() -> void:
 		control.z_index = 50
 
 func _controls() -> Array:
-	return [place_button, undo_button, rotate_button, flip_button, blue_button, coral_button, size_picker, new_button]
+	return [place_button, undo_button, rotate_button, flip_button, blue_button, coral_button, size_picker, new_button, palette_button]
 
 func _set_rect(control: Control, rect: Rect2) -> void:
 	control.position = rect.position
@@ -109,44 +132,57 @@ func _layout() -> void:
 	var button_height: float = clampf(minf(view.x, view.y) * 0.10, 32, 56)
 	for control: Control in _controls():
 		control.add_theme_font_size_override("font_size", clampi(roundi(button_height * 0.35), 11, 20))
-	var top: Rect2
+	var landscape: bool = view.x > view.y * 1.15
+	# Retain the old preview bounds only as a reference for exact 1.5x scaling.
+	var legacy_height: float = minf(104, view.y * 0.28) if landscape else clampf(view.y * 0.10, 60, 104)
+	var legacy_width: float = view.x - minf(view.y - 2 * pad, view.x * 0.58) - 3 * pad if landscape else view.x - 2 * pad
+	piece_view.reference_size = Vector2(legacy_width * 0.38, legacy_height)
+	var top_height: float = legacy_height * 1.5
+	var top := Rect2(pad, pad, view.x - 2 * pad, top_height)
 	var tools: Rect2
 	var actions: Rect2
-	if view.x > view.y * 1.15:
-		# Wide screens put controls beside the board, rather than below it.
-		var side: float = minf(view.y - 2 * pad, view.x * 0.58)
-		_set_rect(board_view, Rect2(Vector2(pad, (view.y - side) / 2), Vector2.ONE * side))
+	if landscape:
+		var side: float = minf(view.y - top.end.y - 2 * pad, view.x * 0.58)
+		_set_rect(board_view, Rect2(Vector2(pad, top.end.y + pad), Vector2.ONE * side))
 		var panel_x: float = side + 2 * pad
 		var panel_width: float = view.x - panel_x - pad
-		var top_height: float = minf(104, view.y * 0.28)
-		var group_height: float = top_height + 2 * button_height + 2 * pad
-		var y: float = (view.y - group_height) / 2
-		top = Rect2(panel_x, y, panel_width, top_height)
-		tools = Rect2(panel_x, top.end.y + pad, panel_width, button_height)
+		var y: float = top.end.y + pad + (side - 2 * button_height - pad) / 2
+		tools = Rect2(panel_x, y, panel_width, button_height)
 		actions = Rect2(panel_x, tools.end.y + pad, panel_width, button_height)
 	else:
-		var top_height: float = clampf(view.y * 0.10, 60, 104)
-		top = Rect2(pad, pad, view.x - 2 * pad, top_height)
 		actions = Rect2(pad, view.y - pad - button_height, view.x - 2 * pad, button_height)
 		tools = Rect2(pad, actions.position.y - pad - button_height, view.x - 2 * pad, button_height)
 		var space: float = tools.position.y - top.end.y - 2 * pad
 		var side: float = maxf(1, minf(view.x, space))
 		_set_rect(board_view, Rect2(Vector2((view.x - side) / 2, top.end.y + pad + (space - side) / 2), Vector2.ONE * side))
-	var icon_side: float = minf(top.size.y, top.size.x * 0.23)
-	for i in range(2):
-		_set_rect(indicators[i].panel, Rect2(top.position + Vector2(i * (icon_side + pad), 0), Vector2.ONE * icon_side))
-	var piece_width: float = top.size.x * 0.38
-	_set_rect(piece_view, Rect2(top.end.x - piece_width, top.position.y, piece_width, top.size.y))
+	var group_width: float
+	if view.x >= 600:
+		var icon_side: float = minf(64, top.size.y)
+		for i in range(2):
+			_set_rect(indicators[i].panel, Rect2(top.position + Vector2(i * (icon_side + pad), 0), Vector2.ONE * icon_side))
+		group_width = icon_side * 2 + pad
+	else:
+		var icon_side: float = minf((top.size.y - pad) / 2, view.x * 0.15)
+		for i in range(2):
+			_set_rect(indicators[i].panel, Rect2(top.position + Vector2(0, i * (icon_side + pad)), Vector2.ONE * icon_side))
+		group_width = icon_side
+	var palette_size: float = maxf(32, button_height)
+	_set_rect(palette_button, Rect2(view.x - pad - palette_size, pad, palette_size, palette_size))
+	var reserve: float = maxf(group_width, palette_size) + 2 * pad
+	_set_rect(piece_view, Rect2(reserve, top.position.y, view.x - 2 * reserve, top.size.y))
+	_layout_palette_menu(pad)
 	_layout_row([rotate_button, flip_button, blue_button, coral_button], tools, pad)
 	_layout_row([place_button, undo_button, size_picker, new_button], actions, pad)
 	# Update geometry immediately so an in-progress drag survives a resize.
 	board_view.update_geometry()
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
+	queue_redraw()
 	if has_hover:
 		_update_floating_position()
 
 func _refresh() -> void:
+	_refresh_theme()
 	board_view.sync_board(game.board)
 	piece_view.cells = [] if game.over else cells
 	piece_view.color = game.current_color
@@ -158,10 +194,10 @@ func _refresh() -> void:
 	for button: Button in [blue_button, coral_button]:
 		var chosen: bool = (button == blue_button) == (game.current_color == Rules.BLUE)
 		button.set_pressed_no_signal(chosen)
-		var ink := Palette.BLUE if button == blue_button else Palette.CORAL
+		var ink: Color = Palette.tile(1 if button == blue_button else 2)
 		var style := _style(ink)
 		style.set_border_width_all(3 if chosen else 0)
-		style.border_color = Color("243446")
+		style.border_color = Color("101a30") if ink.get_luminance() > 0.7 else (Color.WHITE if Palette.dark() else Palette.text())
 		for state in ["normal", "hover", "pressed", "hover_pressed"]:
 			button.add_theme_stylebox_override(state, style)
 	_preview()
@@ -176,7 +212,7 @@ func _update_summaries(board: Array) -> void:
 		var indicator: Dictionary = indicators[i]
 		indicator.icon.available = available
 		indicator.icon.queue_redraw()
-		indicator.panel.add_theme_stylebox_override("panel", _style(Color("e2edda") if lit else Color("e5e4dc")))
+		indicator.panel.add_theme_stylebox_override("panel", _style(Palette.controls().lerp(Palette.tile(1), 0.10) if lit else Palette.controls()))
 
 func _preview() -> void:
 	floating_piece.cells = cells if has_hover and not game.over else []
@@ -210,7 +246,7 @@ func _drag_to(point: Vector2) -> void:
 	_preview()
 
 func _start_drag(point: Vector2, id: int) -> bool:
-	if game.over or dragging:
+	if game.over or dragging or palette_menu.visible:
 		return false
 	for control: Control in _controls():
 		if control.get_global_rect().has_point(point):
@@ -229,6 +265,12 @@ func _start_drag(point: Vector2, id: int) -> bool:
 	return true
 
 func _input(event: InputEvent) -> void:
+	var pointer_pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
+	if palette_menu.visible and pointer_pressed:
+		if not palette_menu.get_global_rect().has_point(event.position) and not palette_button.get_global_rect().has_point(event.position):
+			palette_menu.hide()
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			if _start_drag(event.position, event.index):
@@ -300,6 +342,7 @@ func _ask_reset(n: int) -> void:
 	_reset()
 
 func _reset() -> void:
+	palette_menu.hide()
 	game = Game.new(requested_size)
 	board_view.show_settled(game.board)
 	cells = game.piece().cells
@@ -307,8 +350,62 @@ func _reset() -> void:
 	_clear_selection()
 	_refresh()
 
+func _draw() -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
+
+func _layout_palette_menu(pad: float) -> void:
+	var row_height: float = clampf(size.y * 0.09, 30, 44)
+	var width: float = minf(260, size.x - 2 * pad)
+	var height: float = row_height * Palette.PAIRS.size() + 4 * (Palette.PAIRS.size() - 1) + 12
+	var y: float = minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
+	_set_rect(palette_menu, Rect2(size.x - pad - width, maxf(pad, y), width, height))
+	for i in range(palette_options.size()):
+		_set_rect(palette_options[i], Rect2(0, i * (row_height + 4), width - 12, row_height))
+		palette_options[i].add_theme_font_size_override("font_size", clampi(roundi(row_height * 0.36), 11, 16))
+
+func _refresh_theme() -> void:
+	for button: Button in [rotate_button, flip_button, place_button, undo_button, size_picker, new_button, palette_button]:
+		for state in ["normal", "hover", "pressed", "disabled"]:
+			var ink: Color = Palette.controls().lightened(0.04 if state == "hover" or state == "pressed" else 0)
+			button.add_theme_stylebox_override(state, _style(ink))
+		for state in ["font_color", "font_hover_color", "font_pressed_color"]:
+			button.add_theme_color_override(state, Palette.text())
+		button.add_theme_color_override("font_disabled_color", Palette.muted())
+	var menu_style := _style(Palette.controls())
+	menu_style.set_border_width_all(1)
+	menu_style.border_color = Color(Palette.text(), 0.20)
+	palette_menu.add_theme_stylebox_override("panel", menu_style)
+	for i in range(palette_options.size()):
+		var option: Button = palette_options[i]
+		var style := _style(Palette.background())
+		style.set_border_width_all(2 if i == Palette.selected_index else 0)
+		style.border_color = Palette.tile(1)
+		for state in ["normal", "hover", "pressed"]:
+			option.add_theme_stylebox_override(state, style)
+			option.add_theme_color_override("font_color", Palette.text())
+			option.add_theme_color_override("font_hover_color", Palette.text())
+			option.add_theme_color_override("font_pressed_color", Palette.text())
+		option.queue_redraw()
+	palette_button.queue_redraw()
+	queue_redraw()
+
+func _toggle_palette_menu() -> void:
+	palette_menu.visible = not palette_menu.visible
+
+func _choose_palette(index: int) -> void:
+	if Palette.select(index):
+		palette_menu.hide()
+		_refresh()
+		board_view.queue_redraw()
+		for indicator: Dictionary in indicators:
+			indicator.icon.queue_redraw()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE and palette_menu.visible:
+			palette_menu.hide()
+			get_viewport().set_input_as_handled()
+			return
 		match event.keycode:
 			KEY_R: _rotate()
 			KEY_F: _flip()

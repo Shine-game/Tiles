@@ -1,12 +1,18 @@
 # Optional visual review tool. Run on a graphical display; output is ignored by Git.
 extends SceneTree
 
+const Palette = preload("res://scripts/palette.gd")
 const Rules = preload("res://scripts/rules.gd")
 
 func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	var explicit_palette := -1
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--palette="):
+			explicit_palette = arg.get_slice("=", 1).to_int()
+			Palette.select(explicit_palette)
 	root.size = Vector2i(720, 1100)
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
@@ -35,6 +41,8 @@ func _run() -> void:
 	scene.has_hover = true
 	scene._refresh()
 	var prefix: String = "dense-growth" if dense else "growth"
+	if explicit_palette >= 0:
+		prefix += "-palette-%d" % explicit_palette
 	DirAccess.make_dir_recursive_absolute("res://build/" + prefix + "-frames")
 	FileAccess.open("res://build/.gdignore", FileAccess.WRITE).close()
 	for i in range(48):
@@ -47,6 +55,11 @@ func _run() -> void:
 		if i >= 6:
 			scene.board_view.advance_growth(1.0 / 30.0)
 	root.get_texture().get_image().save_png("res://build/" + prefix + "-preview.png")
+	scene._toggle_palette_menu()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	root.get_texture().get_image().save_png("res://build/" + prefix + "-palettes.png")
+	scene.palette_menu.hide()
 	print("Captured 48 frames; Place triggered the new growth. Resolved: ", not scene.board_view.growing)
 	scene.queue_free()
 	await process_frame

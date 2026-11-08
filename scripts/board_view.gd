@@ -82,7 +82,7 @@ func _draw() -> void:
 		return
 	update_geometry()
 	var frame := StyleBoxFlat.new()
-	frame.bg_color = Color("f7f4e9")
+	frame.bg_color = Palette.floor_color()
 	frame.set_corner_radius_all(10)
 	draw_style_box(frame, field)
 	_draw_guides()
@@ -104,7 +104,7 @@ func _draw() -> void:
 
 func _draw_guides() -> void:
 	var n: int = board.size()
-	var ink := Color("8b8977")
+	var ink: Color = Palette.grid()
 	var width: float = maxf(0.9, pitch * 0.016)
 	for y in range(n):
 		for x in range(n + 1):
@@ -261,7 +261,7 @@ func _draw_flower(corner: Vector2i, flower: Dictionary) -> void:
 		var direction := Vector2.from_angle(petal * TAU / 8)
 		_paint_leaf(center + direction * radius * 0.04, direction, radius * 0.96, radius * 0.55, Color(ink, 0.96))
 		_paint_leaf(center + direction * radius * 0.03, direction, radius * 0.72, radius * 0.25, Color(ink.lightened(0.25), 0.62))
-	draw_circle(center, radius * 0.11, Color("f7f0d5"), true, -1, true)
+	draw_circle(center, radius * 0.11, Palette.tile(flower.color), true, -1, true)
 	for i in range(8):
 		var offset := Vector2.from_angle(i * TAU / 8) * radius * 0.14
 		draw_circle(center + offset, maxf(0.35, radius * 0.022), Color(stem, 0.62), true, -1, true)
