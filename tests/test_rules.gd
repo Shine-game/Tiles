@@ -71,9 +71,9 @@ func _initialize() -> void:
 		for i in range(3, 0, -1):
 			check(game.undo(), "undo succeeds")
 			check(game.board == snapshots[i].board, "undo restores board")
-			check(game.queue[game.index] == snapshots[i].piece, "undo restores offered piece")
+			check(not Rules.first_physical_move(game.board, game.piece()).is_empty(), "undo rerolls a physically fitting piece")
 			check(game.current_color == snapshots[i].color, "undo restores selected color")
-			check(game.restored_cells == snapshots[i].cells, "undo restores flipped or rotated orientation")
+			check(game.restored_cells == game.piece().cells, "rerolled piece starts in its own orientation")
 		check(not game.undo(), "fourth undo unavailable")
 		check(game.moves == 1, "three undos retrace three moves")
 	# A one-cell hole in an otherwise blue board can only accept blue.
@@ -183,20 +183,32 @@ func _initialize() -> void:
 	check(finisher.place(Rules.PIECES.Dot.cells, Vector2i(2, 1)).ok, "final physical space can be filled")
 	check(finisher.over and finisher.no_space and finisher.piece().cells.is_empty(), "full grid completes without an impossible next piece")
 	check(finisher.undo() and not finisher.over and finisher.queue[finisher.index] == "Dot", "completion can be undone")
-	# Replaying a move reproduces the draw; branching recomputes physical fit.
+	# Back restores the board but rerolls the current offer. It must not rewind
+	# the random stream, otherwise replaying a move repeats the unwanted draw.
 	var replay = Game.new(9, 888)
 	var replay_move: Dictionary = Rules.first_legal_move(replay.board, replay.piece())
 	replay.current_color = replay_move.color
+	var restored_board: Array = replay.board.duplicate(true)
 	replay.place(replay_move.cells, replay_move.anchor)
-	var next_name: String = replay.queue[replay.index]
-	check(replay.undo(), "draw replay undo succeeds")
-	replay.place(replay_move.cells, replay_move.anchor)
-	check(replay.queue[replay.index] == next_name, "same placement after undo reproduces next draw")
-	replay.undo()
-	var alternate_cells: Array = Rules.rotate(replay.piece().cells)
-	var alternate: Dictionary = Rules.first_legal_move(replay.board, {"cells": alternate_cells, "color": replay.current_color})
-	replay.current_color = alternate.color
-	replay.place(alternate.cells, alternate.anchor)
-	check(not Rules.first_physical_move(replay.board, replay.piece()).is_empty(), "new branch draws a physically fitting piece")
+	var old_offer: String = replay.queue[replay.index]
+	var random_state: int = replay.rng.state
+	check(replay.undo(), "reroll undo succeeds")
+	check(replay.board == restored_board, "reroll restores the board before last placement")
+	check(replay.queue[replay.index] != old_offer, "Back offers a different shape when alternatives fit")
+	check(replay.rng.state != random_state, "Back consumes fresh randomness")
+	check(not Rules.first_physical_move(replay.board, replay.piece()).is_empty(), "rerolled piece physically fits restored board")
+	var replacement: Dictionary = Rules.first_legal_move(replay.board, replay.piece())
+	replay.current_color = replacement.color
+	check(replay.place(replacement.cells, replacement.anchor).ok, "rerolled piece can be played")
+	# Only Dot fits: a reroll must repeat it rather than produce an impossible shape.
+	var forced = Game.new(9, 456)
+	forced.board = Rules.empty_board(9)
+	for row: Array in forced.board:
+		row.fill(Rules.BLUE)
+	forced.board[1][2] = 0
+	forced.queue[forced.index] = "Dot"
+	forced._refresh_over()
+	forced.place(Rules.PIECES.Dot.cells, Vector2i(2, 1))
+	check(forced.undo() and forced.queue[forced.index] == "Dot", "reroll repeats the only physically fitting shape")
 	print("Rules: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

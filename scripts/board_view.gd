@@ -10,12 +10,17 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
 
-func _draw() -> void:
+func update_geometry() -> void:
 	if board.is_empty():
 		return
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	pitch = (side - 16.0) / board.size()
+
+func _draw() -> void:
+	if board.is_empty():
+		return
+	update_geometry()
 	draw_style_box(_box(Color("e6e7dc"), 12), field)
 	for y in range(board.size()):
 		for x in range(board.size()):

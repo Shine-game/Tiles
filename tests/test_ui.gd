@@ -97,7 +97,7 @@ func _run() -> void:
 	check(scene.game.moves == 1, "Place commits the hovering piece")
 	check(not scene.has_hover, "commit clears floating piece")
 	scene.undo_button.pressed.emit()
-	check(scene.game.board == original_board and scene.cells == placed_cells, "Back restores board and orientation")
+	check(scene.game.board == original_board and scene.cells == scene.game.piece().cells, "Back restores board and refreshes the offered piece")
 	check(scene.game.current_color == Rules.CORAL, "Back restores color")
 	# Geometry is allowed even when a chosen color breaks every symmetry.
 	scene.game.board = Rules.empty_board(9)
@@ -138,30 +138,28 @@ func _run() -> void:
 	root.size = Vector2i(390, 844)
 	for i in range(4):
 		await process_frame
-	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board tracks resized phone width")
+	check(scene.board_view.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "resized board remains entirely visible")
 	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place stays docked after resize")
 	root.size = original_window_size
 	scene.requested_size = 9
 	scene._reset()
 	for i in range(4):
 		await process_frame
-	# The scroll container must not steal an active piece drag. Edge scrolling
-	# moves the board underneath the held piece, while the dock stays accessible.
+	# Edge dragging stays within the same non-scrolling screen.
 	var edge: Vector2 = Vector2(scene.get_viewport_rect().size.x / 2, scene.get_viewport_rect().size.y - 90)
 	var first_cell: Vector2i = scene.cells[0]
 	touch(scene, source_point(scene, first_cell), true)
 	touch(scene, Vector2.ZERO, false, 1)
 	check(scene.dragging, "another finger cannot release the active drag")
 	drag(scene, edge)
-	var scroll_before: int = scene.scroll.scroll_vertical
+	var board_before: Vector2 = scene.board_view.position
 	scene._process(0.15)
-	check(scene.scroll.scroll_vertical > scroll_before, "dragging at the lower edge scrolls the field")
+	check(scene.board_view.position == board_before, "edge dragging never scrolls the field")
 	touch(scene, edge, false)
 	check(scene.has_hover and not scene.dragging, "release after scrolling preserves hover")
 	# A ghost covering the dock must not steal a Place or Back button press.
 	check(not scene._start_drag(scene.place_button.get_global_rect().get_center(), 0), "fixed dock has priority over floating drag hits")
 	scene._clear_selection()
-	scene.scroll.scroll_vertical = 0
 	scene._preview()
 	for i in range(3):
 		await process_frame
@@ -182,6 +180,23 @@ func _run() -> void:
 	check(scene.has_hover and not scene.dragging and scene.game.moves == 0, "mouse release also hovers without committing")
 	scene._clear_selection()
 	scene._preview()
+	# All content must stay visible, including on short and landscape screens.
+	check(scene.find_children("*", "ScrollContainer", true, false).is_empty(), "screen contains no scrolling containers")
+	check(scene.find_children("*", "Label", true, false).is_empty(), "screen contains no titles, instructions, or commentary labels")
+	for dimensions: Vector2i in [Vector2i(320, 480), Vector2i(360, 640), Vector2i(390, 844), Vector2i(844, 390), Vector2i(640, 360), Vector2i(240, 320)]:
+		root.size = dimensions
+		for i in range(4):
+			await process_frame
+		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
+		for control: Control in scene._controls() + [scene.board_view, scene.piece_view, scene.indicators[0].panel, scene.indicators[1].panel]:
+			check(bounds.encloses(control.get_global_rect()), "every element fits " + str(dimensions))
+		check(absf(scene.board_view.size.x - scene.board_view.size.y) < 1, "board remains square at " + str(dimensions))
+		for first in range(scene._controls().size()):
+			for second in range(first + 1, scene._controls().size()):
+				check(not scene._controls()[first].get_global_rect().intersects(scene._controls()[second].get_global_rect()), "controls do not overlap at " + str(dimensions))
+	root.size = original_window_size
+	for i in range(4):
+		await process_frame
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("/tmp/tiles-godot.png")

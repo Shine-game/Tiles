@@ -40,8 +40,17 @@ func _choose_from_groups(groups: Array) -> String:
 	var group: Array = groups[rng.randi_range(0, groups.size() - 1)]
 	return group[rng.randi_range(0, group.size() - 1)]
 
-func _draw_piece() -> String:
-	return _choose_from_groups(eligible_groups())
+func _draw_piece(exclude: String = "") -> String:
+	var groups: Array = eligible_groups()
+	if not exclude.is_empty():
+		var alternatives: Array = []
+		for group: Array in groups:
+			var filtered: Array = group.filter(func(name: String): return name != exclude)
+			if not filtered.is_empty():
+				alternatives.append(filtered)
+		if not alternatives.is_empty():
+			groups = alternatives
+	return _choose_from_groups(groups)
 
 func piece() -> Dictionary:
 	return {"cells": [] if queue[index] == "" else Rules.PIECES[queue[index]].cells, "color": current_color}
@@ -53,7 +62,7 @@ func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if not physical.ok:
 		return physical
 	var result: Dictionary = Rules.placement(board, cells, piece().color, anchor)
-	history.append({"board": board, "index": index, "moves": moves, "color": current_color, "cells": cells.duplicate(), "rng_state": rng.state})
+	history.append({"board": board, "index": index, "moves": moves, "color": current_color, "cells": cells.duplicate()})
 	if history.size() > 3:
 		history.pop_front()
 	moves += 1
@@ -75,15 +84,16 @@ func place(cells: Array, anchor: Vector2i) -> Dictionary:
 func undo() -> bool:
 	if history.is_empty():
 		return false
+	var offered_name: String = queue[index]
 	var previous: Dictionary = history.pop_back()
 	board = previous.board
 	index = previous.index
 	moves = previous.moves
 	current_color = previous.color
-	restored_cells = previous.cells
 	lost = false
-	rng.state = previous.rng_state
 	queue.resize(index + 1)
+	queue[index] = _draw_piece(offered_name)
+	restored_cells = piece().cells.duplicate()
 	_refresh_over()
 	return true
 
