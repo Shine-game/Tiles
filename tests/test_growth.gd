@@ -151,6 +151,28 @@ func _initialize() -> void:
 	growth.build(before, after)
 	var opposed: Array = Growth.leaf_sprouts(growth.edges[0])
 	check(opposed.any(func(sprout: Dictionary): return sprout.direction == 1) and opposed.any(func(sprout: Dictionary): return sprout.direction == -1), "meeting fronts sprout leaves forward from both ends")
+	# Placement guides disappear locally, only after a real vine crosses them.
+	before = Rules.empty_board(9)
+	before[2][0] = Rules.BLUE
+	after = before.duplicate(true)
+	after[2][1] = Rules.BLUE
+	growth.build(before, after)
+	var a := Vector2i(0, 2)
+	var b := Vector2i(1, 2)
+	var crossing: float = Growth.STEP / 2
+	check(near(growth.grid_visibility(a, b, 0), 1), "guide remains visible before growth reaches boundary")
+	check(near(growth.grid_visibility(a, b, crossing + Growth.GRID_FADE / 2), 0.5), "guide fades progressively after crossing")
+	check(near(growth.grid_visibility(a, b, growth.duration), 0), "crossed guide disappears once pattern resolves")
+	check(near(growth.grid_visibility(b, a, growth.duration), 0), "guide crossing is independent of lookup direction")
+	check(near(growth.grid_visibility(b, Vector2i(2, 2), growth.duration), 1), "empty neighboring cells retain their guides")
+	check(near(growth.grid_visibility(a, Vector2i(-1, 2), growth.duration), 1), "outer field border remains visible")
+	after[2][2] = Rules.CORAL
+	growth.build(before, after)
+	check(near(growth.grid_visibility(b, Vector2i(2, 2), growth.duration), 1), "different-color boundary retains placement guide")
+	growth.build(after, after)
+	check(near(growth.grid_visibility(a, b, 0), 0), "established vines do not flash grid lines back on")
+	growth.build(before, before)
+	check(near(growth.grid_visibility(a, b, 0), 1), "undo restores guides in the cleared space")
 	view.free()
 	print("Growth: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

@@ -5,6 +5,7 @@ extends RefCounted
 const STEP := 0.14
 const CENTER_POP := 0.30
 const LEAF_POP := 0.22
+const GRID_FADE := 0.14
 const FLOWER_POP := 0.36
 const LINK_GROW := 0.18
 const STAR_POP := 0.24
@@ -17,6 +18,7 @@ var edges: Array = []
 var flowers: Dictionary = {}
 var links: Array = []
 var duration := 0.0
+var boundary_crossings: Dictionary = {}
 
 static func value(grid: Array, cell: Vector2i) -> int:
 	if cell.y < 0 or cell.x < 0 or cell.y >= grid.size() or cell.x >= grid.size():
@@ -32,12 +34,22 @@ static func leaf_sprouts(edge: Dictionary) -> Array:
 	var result: Array = []
 	var directions: Array = [1, -1] if int(edge.flow) == 0 else [int(edge.flow)]
 	for direction: int in directions:
-		var fractions: Array = [0.18, 0.38] if int(edge.flow) == 0 else [0.24, 0.51, 0.78]
+		var fractions: Array = [0.12, 0.28, 0.43] if int(edge.flow) == 0 else [0.12, 0.34, 0.56, 0.78]
 		for i in range(fractions.size()):
 			var fraction: float = fractions[i]
 			var start: float = -100 if edge.old else float(edge.start_a if direction == 1 else edge.start_b) + fraction * STEP
-			result.append({"fraction": fraction if direction == 1 else 1 - fraction, "direction": direction, "side": 1 if i % 2 == 0 else -1, "start": start})
+			for side: int in [-1, 1]:
+				result.append({"fraction": fraction if direction == 1 else 1 - fraction, "direction": direction, "side": side, "start": start + (0.012 if side == 1 and not edge.old else 0)})
 	return result
+
+# A guide fades only when a real same-color connection crosses that boundary.
+# Empty-cell, different-color, and outer borders keep their placement guides.
+func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
+	var key: Vector4i = edge_key(a, b)
+	if not boundary_crossings.has(key):
+		return 1.0
+	var crossing: float = boundary_crossings[key]
+	return 1.0 - smoothstep(crossing, crossing + GRID_FADE, time)
 
 static func is_flower(grid: Array, corner: Vector2i, color: int) -> bool:
 	for offset: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i.ZERO]:
@@ -51,6 +63,7 @@ func build(before: Array, after: Array) -> void:
 	edges.clear()
 	flowers.clear()
 	links.clear()
+	boundary_crossings.clear()
 	duration = 0
 	var pending: Dictionary = {}
 	for y in range(board.size()):
@@ -114,8 +127,11 @@ func build(before: Array, after: Array) -> void:
 			var edge := {"a": cell, "b": other, "color": value(board, cell), "start_a": a, "start_b": b, "finish": 0.0 if old else finish, "old": old, "flow": 0 if is_equal_approx(a, b) else (1 if a < b else -1)}
 			edges.append(edge)
 			lookup[edge_key(cell, other)] = edge
+			var crossing: float = -100 if old else minf(a, b) + STEP / 2
+			boundary_crossings[edge_key(cell, other)] = crossing
 			if not old:
 				duration = maxf(duration, finish + maxf(maxf(RIPPLE, STAR_POP), LEAF_POP))
+				duration = maxf(duration, crossing + GRID_FADE)
 				for sprout: Dictionary in leaf_sprouts(edge):
 					duration = maxf(duration, sprout.start + LEAF_POP)
 	for y in range(1, board.size()):

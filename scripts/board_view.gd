@@ -85,11 +85,7 @@ func _draw() -> void:
 	frame.bg_color = Color("f7f4e9")
 	frame.set_corner_radius_all(10)
 	draw_style_box(frame, field)
-	# Whisper-faint guides preserve placement legibility without enclosing the art.
-	for i in range(1, board.size()):
-		var ink := Color(0.5, 0.48, 0.39, 0.065)
-		draw_line(_point(Vector2(i, 0)), _point(Vector2(i, board.size())), ink, 0.6)
-		draw_line(_point(Vector2(0, i)), _point(Vector2(board.size(), i)), ink, 0.6)
+	_draw_guides()
 	for cell: Vector2i in pattern.arrivals:
 		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
 		if scale > 0:
@@ -105,6 +101,21 @@ func _draw() -> void:
 		_draw_holding_motif(cell)
 	for corner: Vector2i in pattern.flowers:
 		_draw_flower(corner, pattern.flowers[corner])
+
+func _draw_guides() -> void:
+	var n: int = board.size()
+	var ink := Color("8b8977")
+	var width: float = maxf(0.9, pitch * 0.016)
+	for y in range(n):
+		for x in range(n + 1):
+			var opacity: float = pattern.grid_visibility(Vector2i(x - 1, y), Vector2i(x, y), clock)
+			if opacity > 0.001:
+				draw_line(_point(Vector2(x, y)), _point(Vector2(x, y + 1)), Color(ink, opacity * 0.24), width, true)
+	for y in range(n + 1):
+		for x in range(n):
+			var opacity: float = pattern.grid_visibility(Vector2i(x, y - 1), Vector2i(x, y), clock)
+			if opacity > 0.001:
+				draw_line(_point(Vector2(x, y)), _point(Vector2(x + 1, y)), Color(ink, opacity * 0.24), width, true)
 
 func _port_tangent(cell: Vector2i, neighbor: Vector2i) -> Vector2:
 	var direction := Vector2(neighbor - cell)
@@ -140,9 +151,9 @@ func _vine(curve: Dictionary, start: float, end: float, ink: Color, wave: float)
 	var points := PackedVector2Array()
 	for i in range(21):
 		points.append(_curve_point(curve, lerpf(start, end, i / 20.0), wave))
-	draw_polyline(points, Color(ink, 0.07), maxf(2, pitch * 0.085), true)
-	draw_polyline(points, Color(ink, 0.27), maxf(1.2, pitch * 0.038), true)
-	draw_polyline(points, Color(ink, 0.88), maxf(0.65, pitch * 0.018), true)
+	draw_polyline(points, Color(ink, ink.a * 0.10), maxf(2.5, pitch * 0.115), true)
+	draw_polyline(points, Color(ink, ink.a * 0.36), maxf(1.6, pitch * 0.060), true)
+	draw_polyline(points, Color(ink, ink.a * 0.92), maxf(0.9, pitch * 0.029), true)
 
 func _paint_leaf(root: Vector2, direction: Vector2, length: float, width: float, ink: Color, scale: float = 1) -> void:
 	if length * scale < 0.6 or width * scale < 0.4:
@@ -171,8 +182,8 @@ func _draw_edge(edge: Dictionary) -> void:
 			continue
 		var tangent: Vector2 = _curve_tangent(curve, sprout.fraction) * sprout.direction
 		var normal: Vector2 = Vector2(-tangent.y, tangent.x) * float(sprout.side)
-		var direction: Vector2 = (tangent * 0.86 + normal * 0.75).normalized()
-		_paint_leaf(_curve_point(curve, sprout.fraction), direction, pitch * 0.28, pitch * 0.13, Color(ink.lightened(0.12), 0.85), scale)
+		var direction: Vector2 = (tangent * 0.75 + normal * 0.93).normalized()
+		_paint_leaf(_curve_point(curve, sprout.fraction), direction, pitch * 0.44, pitch * 0.21, Color(ink.lightened(0.08), 0.92), scale)
 	if not edge.old:
 		var t: float = (clock - edge.finish) / Growth.STAR_POP
 		if t > 0 and t < 1:
@@ -185,17 +196,24 @@ func _draw_holding_motif(cell: Vector2i) -> void:
 	var center := _point(Vector2(cell) + Vector2(0.5, 0.5))
 	var ink: Color = Palette.pigment(board[cell.y][cell.x])
 	var accent: Color = Palette.blossom(board[cell.y][cell.x])
-	# Four delicate star-tipped shoots replace the old pin-joint circle.
+	# Disconnected directions grow full, nonconnecting fronds toward the cell's
+	# boundary. Opposite colors nearly meet in foliage, never in logical stems.
 	for vector: Vector2i in Growth.DIRECTIONS:
 		var direction := Vector2(vector)
 		var normal := Vector2(-direction.y, direction.x)
-		var tip: Vector2 = center + direction * pitch * 0.205 * scale
+		var open: bool = Growth.value(board, cell + vector) != board[cell.y][cell.x]
+		var reach: float = 0.415 if open else 0.205
+		var tip: Vector2 = center + direction * pitch * reach * scale
 		var curve: Dictionary = _curve(center, tip, direction + normal * 0.3, -direction)
-		_vine(curve, 0, 1, Color(ink, 0.65), 0)
+		_vine(curve, 0, 1, Color(ink, 0.76 if open else 0.60), 0)
 		for side: float in [-1.0, 1.0]:
-			var root: Vector2 = center + direction * pitch * 0.09 * scale
-			_paint_leaf(root, (direction + normal * side * 0.75).normalized(), pitch * 0.105, pitch * 0.052, Color(ink, 0.72), scale)
-		_star(tip, pitch * 0.031 * scale, Color(accent, 0.9))
+			if open:
+				_paint_leaf(center + direction * pitch * 0.10 * scale, (direction + normal * side * 0.70).normalized(), pitch * 0.30, pitch * 0.16, Color(ink, 0.90), scale)
+				_paint_leaf(center + direction * pitch * 0.23 * scale, (direction + normal * side * 0.70).normalized(), pitch * 0.26, pitch * 0.14, Color(ink.lightened(0.10), 0.84), scale)
+			else:
+				var root: Vector2 = center + direction * pitch * 0.09 * scale
+				_paint_leaf(root, (direction + normal * side * 0.75).normalized(), pitch * 0.14, pitch * 0.075, Color(ink, 0.78), scale)
+		_star(tip, pitch * (0.037 if open else 0.031) * scale, Color(accent, 0.9))
 	draw_circle(center, maxf(0.5, pitch * 0.014 * scale), Color(ink, 0.75), true, -1, true)
 
 func _draw_link(link: Dictionary) -> void:
