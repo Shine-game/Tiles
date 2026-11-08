@@ -28,6 +28,7 @@ func _run() -> void:
 	scene.has_hover = true
 	scene._refresh()
 	DirAccess.make_dir_recursive_absolute("res://build/growth-frames")
+	FileAccess.open("res://build/.gdignore", FileAccess.WRITE).close()
 	for i in range(48):
 		if i == 6:
 			scene._place()
