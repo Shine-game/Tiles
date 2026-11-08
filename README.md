@@ -5,15 +5,16 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 ## Play
 
 - A bright blue center square begins a 9×9 garden, switchable to 11×11.
-- Eleven shapes arrive in shuffled bags: the seven standard tetrominoes, a 1×1 square (Dot), a 1×2 domino, a straight three-square piece (I3), and an L-shaped three-square piece (L3). Each bag contains each named shape once.
+- Eleven shapes are available: the seven standard tetrominoes, a 1×1 square (Dot), a 1×2 domino, a straight three-square piece (I3), and an L-shaped three-square piece (L3). Generation first chooses a size category uniformly, then a fitting shape uniformly within that category. While all shapes fit, each size has a 25% chance: Dot 25%, Domino 25%, I3/L3 12.5% each, and each tetromino about 3.57%. Draws are independent, so repeats can occur.
+- Shapes are eligible only if some rotation or reflection fits inside empty squares and touches the existing pattern at an edge or corner. Color and symmetry are deliberately ignored for this generation filter. If a size has no fitting shapes, its probability is shared equally among the remaining sizes. A physically fitting piece that destroys symmetry in every placement can still be generated and end the game.
 - Pieces must touch the pattern along an edge or corner. They cannot overlap or leave the board. No lines clear.
 - Tap a square to preview, then tap it again or press **Place piece**. The anchor is the top-left of the piece's bounding box; that square may itself be empty. The same controls work with a mouse.
 - Rotate clockwise with **Rotate** or **R**, and mirror horizontally with **Flip** or **F**. Rotate after flipping for other reflected orientations. Flipping a symmetric shape leaves an equivalent shape.
 - Choose vibrant **Blue** or **Coral** freely before any placement; **C** toggles colors on a keyboard. Color is no longer tied to piece shape. Your choice carries forward to the next piece. Invalid placement previews are dull gray; changing color or orientation immediately rechecks the preview.
 - Small diagrams at the top left highlight possible symmetries; the incoming piece appears at the top right. An asterisk indicates a symmetry already achieved.
-- **Back** retraces up to three recent placements, restoring the board, offered piece, chosen color, and placed orientation. Playing again starts a new history branch while preserving the generated piece sequence.
+- **Back** retraces up to three recent placements, restoring the board, offered piece, chosen color, and placed orientation. Replaying the same move reproduces the next draw. A different history branch regenerates the next piece against its resulting board, so an old draw cannot become physically impossible.
 - New pattern and board-size changes ask before discarding the current game.
-- There is no timer. An invalid move is rejected; the game ends when the incoming piece has no safe placement across either color and every rotation and reflection. Back remains available after game over.
+- There is no timer. An invalid move is rejected; the game ends when the incoming piece has no safe placement across either color and every rotation and reflection. A completely filled board ends with a completion message and no new piece. Back remains available after either ending.
 
 ## Symmetry rule
 
@@ -48,7 +49,7 @@ godot --headless --path . --script tests/test_rules.gd
 godot --headless --path . --script tests/test_ui.gd
 ```
 
-The rules runner executes 637 checks covering both sizes, all eleven pieces, rotations, flips, reflection/orbit conflicts, placement constraints, color/flip rescues, game over, seeded piece bags, and undo. The UI runner exercises native screen-touch input, color selection, flips, gray invalid previews, rotation, placement, undo, and board reset. On a graphical display it also writes `/tmp/tiles-godot.png`.
+The rules runner executes 684 checks covering both sizes, all eleven pieces, rotations, flips, reflection/orbit conflicts, placement constraints, color/flip rescues, game over, physical-fit filtering, balanced size frequencies, deterministic replay, and undo. The UI runner exercises native screen-touch input, color selection, flips, gray invalid previews, rotation, placement, undo, and board reset. On a graphical display it also writes `/tmp/tiles-godot.png`.
 
 ## Structure
 

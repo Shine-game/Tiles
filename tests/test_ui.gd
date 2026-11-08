@@ -67,6 +67,12 @@ func _run() -> void:
 	scene.blue_button.pressed.emit()
 	check(scene.board_view.preview_valid and not scene.place_button.disabled, "changing color revalidates selected placement")
 	check(scene.piece_view.color == Rules.BLUE, "piece preview updates immediately")
+	scene.place_button.pressed.emit()
+	check(scene.game.no_space and scene.game.over, "filling last cell completes garden")
+	check(scene.cells.is_empty() and scene.piece_label.text == "Garden complete", "completion clears incoming piece")
+	check(scene.status.text.contains("full"), "completion has specific message")
+	scene.undo_button.pressed.emit()
+	check(not scene.game.over and scene.cells.size() == 1, "Back reopens completed garden")
 	scene.requested_size = 11
 	scene._reset()
 	check(scene.game.board.size() == 11, "11 by 11 reset works")

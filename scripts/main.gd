@@ -181,7 +181,7 @@ func _refresh() -> void:
 	piece_view.cells = cells
 	piece_view.color = game.piece().color
 	piece_view.queue_redraw()
-	piece_label.text = "%s · %s" % [game.queue[game.index], "Blue" if game.piece().color == Rules.BLUE else "Coral"]
+	piece_label.text = "Garden complete" if game.no_space else "%s · %s" % [game.queue[game.index], "Blue" if game.piece().color == Rules.BLUE else "Coral"]
 	undo_button.text = "Back  (%d / 3)" % game.history.size()
 	undo_button.disabled = game.history.is_empty()
 	rotate_button.disabled = game.over
@@ -213,7 +213,7 @@ func _refresh() -> void:
 		indicator.panel.tooltip_text = Rules.SYMMETRY_NAMES[i] + (": complete" if state.complete else (": possible" if state.possible else ": color conflict"))
 		if state.possible:
 			possible += 1
-	status.text = "This pattern has reached its edge. Go back, or begin a new garden." if game.over else "%d paths remain. Tap a square to explore; tap again or choose Place." % possible
+	status.text = ("Your garden is full. Enjoy your completed pattern, or go back." if game.no_space else "This piece fits, but every placement closes the last path to symmetry. Go back, or begin again.") if game.over else "%d paths remain. Tap a square to explore; tap again or choose Place." % possible
 	_preview()
 
 func _preview() -> void:
@@ -293,7 +293,7 @@ func _reset() -> void:
 func _show_help() -> void:
 	var help := AcceptDialog.new()
 	help.title = "A little space for balance"
-	help.dialog_text = "Place pieces against an edge or corner of the pattern.\nTap to preview, then tap again or choose Place.\nThe selected square is the top-left of the piece's bounding box.\nRotate with R, or mirror horizontally with F.\nChoose Blue or Coral freely before placing any piece.\nGray previews indicate invalid positions.\nGo back up to three placements, including color and orientation.\n\nA lit symmetry is still possible, even when it is not complete.\nEmpty partners can be filled later; different colors cannot match.\nAll reflections and rotations use the board's center.\n\nPlay ends when the offered piece has no safe placement.\nThere is no timer. Enjoy finding your pattern."
+	help.dialog_text = "Place pieces against an edge or corner of the pattern.\nTap to preview, then tap again or choose Place.\nThe selected square is the top-left of the piece's bounding box.\nRotate with R, or mirror horizontally with F.\nChoose Blue or Coral freely before placing any piece.\nGray previews indicate invalid positions.\nGo back up to three placements, including color and orientation.\n\nA lit symmetry is still possible, even when it is not complete.\nEmpty partners can be filled later; different colors cannot match.\nAll reflections and rotations use the board's center.\n\nAll four sizes are equally likely while they fit.\nPieces with no physical fit are excluded from the draw.\nPlay ends when a fitting piece cannot preserve symmetry, or the garden is full.\nThere is no timer. Enjoy finding your pattern."
 	add_child(help)
 	help.confirmed.connect(help.queue_free)
 	help.canceled.connect(help.queue_free)

@@ -55,11 +55,8 @@ func _initialize() -> void:
 	for seed_value in range(20):
 		var game = Game.new(9, seed_value)
 		var snapshots: Array = []
-		var initial_names: Array = game.queue.duplicate()
-		initial_names.sort()
-		var expected: Array = Rules.PIECES.keys()
-		expected.sort()
-		check(initial_names == expected, "bag includes each piece once")
+		var groups: Array = game.eligible_groups()
+		check(groups.size() == 4, "all four size categories initially eligible")
 		for i in range(4):
 			snapshots.append({"board": game.board.duplicate(true), "piece": game.queue[game.index], "color": game.current_color})
 			var move: Dictionary = Rules.first_legal_move(game.board, game.piece())
@@ -113,5 +110,88 @@ func _initialize() -> void:
 		row.fill(Rules.BLUE)
 	full_game._refresh_over()
 	check(full_game.over, "full board ends game")
+	# Measure both levels of randomness without changing the board between draws.
+	var sampler = Game.new(9, 124578)
+	var groups: Array = sampler.eligible_groups()
+	var counts := [0, 0, 0, 0]
+	var shape_counts: Dictionary = {}
+	for i in range(28000):
+		var name: String = sampler._choose_from_groups(groups)
+		counts[Rules.PIECES[name].cells.size() - 1] += 1
+		shape_counts[name] = shape_counts.get(name, 0) + 1
+	for count: int in counts:
+		check(absi(count - 7000) < 400, "each size receives approximately 25 percent")
+	check(absi(shape_counts.I3 - shape_counts.L3) < 400, "triominoes are uniform within size")
+	for name: String in ["I", "O", "S", "T", "J", "L", "Z"]:
+		check(absi(shape_counts[name] - 1000) < 150, "tetrominoes are uniform within size")
+	print("Generation sample by size (28,000 draws): ", counts)
+	# Two isolated holes have enough area for a domino but no matching cavity.
+	sampler.board = Rules.empty_board(9)
+	for row: Array in sampler.board:
+		row.fill(Rules.BLUE)
+	sampler.board[1][1] = 0
+	sampler.board[7][7] = 0
+	check(sampler.eligible_groups() == [["Dot"]], "fragmented free area excludes physically impossible shapes")
+	for i in range(20):
+		check(sampler._draw_piece() == "Dot", "generation falls back to the only fitting size")
+	# A mirrored cavity must admit J as well as L because the player can flip.
+	sampler.board = Rules.empty_board(9)
+	for row: Array in sampler.board:
+		row.fill(Rules.BLUE)
+	for cell: Vector2i in [Vector2i(5, 3), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4)]:
+		sampler.board[cell.y][cell.x] = 0
+	groups = sampler.eligible_groups()
+	check(groups[3].has("J") and groups[3].has("L"), "physical filter includes flipped fits")
+	check(not groups[3].has("O"), "physical filter excludes square from L-shaped cavity")
+	# A physically fitting domino needs two different colors to preserve the
+	# only remaining reflection, so drawing it must still be allowed to end play.
+	sampler.board = Rules.empty_board(9)
+	for y in range(9):
+		for x in range(9):
+			var mirrored_x: int = mini(x, 8 - x)
+			sampler.board[y][x] = Rules.CORAL if (mirrored_x * 3 + y * 7 + mirrored_x * y) % 3 == 0 else Rules.BLUE
+	sampler.board[1][7] = Rules.BLUE
+	sampler.board[1][6] = Rules.CORAL
+	sampler.board[1][1] = 0
+	sampler.board[1][2] = 0
+	check(Rules.symmetry_states(sampler.board)[0].possible, "fixture still permits vertical symmetry")
+	check(not Rules.first_physical_move(sampler.board, Rules.PIECES.Domino).is_empty(), "domino physically fits cavity")
+	check(Rules.first_legal_move(sampler.board, Rules.PIECES.Domino).is_empty(), "domino cannot preserve any symmetry in either color")
+	groups = sampler.eligible_groups()
+	check(groups == [["Dot"], ["Domino"]], "symmetry-breaking piece stays eligible")
+	var drew_fatal := false
+	for i in range(20):
+		if sampler._draw_piece() == "Domino":
+			drew_fatal = true
+	check(drew_fatal, "generator actually offers symmetry-breaking pieces")
+	sampler.queue[sampler.index] = "Domino"
+	sampler._refresh_over()
+	check(sampler.over and not sampler.no_space, "fitting but symmetry-breaking piece ends game")
+	# Filling the final hole produces a completed board, without offering an impossible piece.
+	var finisher = Game.new(9, 777)
+	finisher.board = Rules.empty_board(9)
+	for row: Array in finisher.board:
+		row.fill(Rules.BLUE)
+	finisher.board[1][2] = 0
+	finisher.queue[finisher.index] = "Dot"
+	finisher._refresh_over()
+	check(finisher.place(Rules.PIECES.Dot.cells, Vector2i(2, 1)).ok, "final physical space can be filled")
+	check(finisher.over and finisher.no_space and finisher.piece().cells.is_empty(), "full grid completes without an impossible next piece")
+	check(finisher.undo() and not finisher.over and finisher.queue[finisher.index] == "Dot", "completion can be undone")
+	# Replaying a move reproduces the draw; branching recomputes physical fit.
+	var replay = Game.new(9, 888)
+	var replay_move: Dictionary = Rules.first_legal_move(replay.board, replay.piece())
+	replay.current_color = replay_move.color
+	replay.place(replay_move.cells, replay_move.anchor)
+	var next_name: String = replay.queue[replay.index]
+	check(replay.undo(), "draw replay undo succeeds")
+	replay.place(replay_move.cells, replay_move.anchor)
+	check(replay.queue[replay.index] == next_name, "same placement after undo reproduces next draw")
+	replay.undo()
+	var alternate_cells: Array = Rules.rotate(replay.piece().cells)
+	var alternate: Dictionary = Rules.first_legal_move(replay.board, {"cells": alternate_cells, "color": replay.current_color})
+	replay.current_color = alternate.color
+	replay.place(alternate.cells, alternate.anchor)
+	check(not Rules.first_physical_move(replay.board, replay.piece()).is_empty(), "new branch draws a physically fitting piece")
 	print("Rules: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

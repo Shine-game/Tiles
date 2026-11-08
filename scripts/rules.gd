@@ -91,7 +91,7 @@ static func symmetry_states(board: Array) -> Array:
 		result.append({"possible": possible, "complete": complete})
 	return result
 
-static func placement(board: Array, cells: Array, color: int, anchor: Vector2i) -> Dictionary:
+static func physical_placement(board: Array, cells: Array, anchor: Vector2i) -> Dictionary:
 	var n: int = board.size()
 	var touching := false
 	for offset: Vector2i in cells:
@@ -108,6 +108,12 @@ static func placement(board: Array, cells: Array, color: int, anchor: Vector2i) 
 						touching = true
 	if not touching:
 		return {"ok": false, "reason": "Touch an existing tile at an edge or corner."}
+	return {"ok": true}
+
+static func placement(board: Array, cells: Array, color: int, anchor: Vector2i) -> Dictionary:
+	var physical: Dictionary = physical_placement(board, cells, anchor)
+	if not physical.ok:
+		return physical
 	var next: Array = board.duplicate(true)
 	for offset: Vector2i in cells:
 		var cell := anchor + offset
@@ -117,16 +123,12 @@ static func placement(board: Array, cells: Array, color: int, anchor: Vector2i) 
 			return {"ok": true, "board": next}
 	return {"ok": false, "reason": "This closes every path to symmetry. Try another position."}
 
-# Search every player-selectable variant before declaring game over.
-# The optional restrictions support focused tests and future rule variants.
-static func first_legal_move(board: Array, piece: Dictionary, allow_color_change: bool = true, allow_flip: bool = true) -> Dictionary:
-	var preferred_color: int = piece.get("color", BLUE)
-	var colors: Array = [preferred_color]
-	if allow_color_change:
-		colors.append(CORAL if preferred_color == BLUE else BLUE)
+# Physical fit deliberately ignores colors and symmetry.
+static func orientations(original: Array, allow_flip: bool = true) -> Array:
+	var result: Array = []
 	var seen: Dictionary = {}
 	for mirrored in range(2 if allow_flip else 1):
-		var cells: Array = flip(piece.cells) if mirrored else piece.cells
+		var cells: Array = flip(original) if mirrored else original
 		for rotation in range(4):
 			var key: Array = []
 			for cell: Vector2i in cells:
@@ -134,11 +136,30 @@ static func first_legal_move(board: Array, piece: Dictionary, allow_color_change
 			key.sort()
 			if not seen.has(key):
 				seen[key] = true
-				for color: int in colors:
-					for y in range(board.size()):
-						for x in range(board.size()):
-							var anchor := Vector2i(x, y)
-							if placement(board, cells, color, anchor).ok:
-								return {"anchor": anchor, "cells": cells, "rotation": rotation, "flipped": bool(mirrored), "color": color}
+				result.append({"cells": cells, "rotation": rotation, "flipped": bool(mirrored)})
 			cells = rotate(cells)
+	return result
+
+static func first_physical_move(board: Array, piece: Dictionary) -> Dictionary:
+	for variant: Dictionary in orientations(piece.cells):
+		for y in range(board.size()):
+			for x in range(board.size()):
+				var anchor := Vector2i(x, y)
+				if physical_placement(board, variant.cells, anchor).ok:
+					return {"anchor": anchor, "cells": variant.cells, "rotation": variant.rotation, "flipped": variant.flipped}
+	return {}
+
+# Search every player-selectable variant before declaring game over.
+static func first_legal_move(board: Array, piece: Dictionary, allow_color_change: bool = true, allow_flip: bool = true) -> Dictionary:
+	var preferred_color: int = piece.get("color", BLUE)
+	var colors: Array = [preferred_color]
+	if allow_color_change:
+		colors.append(CORAL if preferred_color == BLUE else BLUE)
+	for variant: Dictionary in orientations(piece.cells, allow_flip):
+		for color: int in colors:
+			for y in range(board.size()):
+				for x in range(board.size()):
+					var anchor := Vector2i(x, y)
+					if placement(board, variant.cells, color, anchor).ok:
+						return {"anchor": anchor, "cells": variant.cells, "rotation": variant.rotation, "flipped": variant.flipped, "color": color}
 	return {}
