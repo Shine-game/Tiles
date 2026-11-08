@@ -1,22 +1,28 @@
 extends Control
 
-var symmetry := 0
-var active := true
+var rotational := false
+var available: Array = [true, true, true, true]
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	resized.connect(queue_redraw)
 
 func _draw() -> void:
 	var center := size / 2
-	var ink := Color("45654b") if active else Color("96978c")
-	var rect := Rect2(center - Vector2(12, 12), Vector2(24, 24))
-	draw_rect(rect, Color(ink, 0.25), false, 1)
-	match symmetry:
-		0: draw_line(center - Vector2(0, 14), center + Vector2(0, 14), ink, 2)
-		1: draw_line(center - Vector2(14, 0), center + Vector2(14, 0), ink, 2)
-		2: draw_line(center + Vector2(-12, 12), center + Vector2(12, -12), ink, 2)
-		3: draw_line(center - Vector2(12, 12), center + Vector2(12, 12), ink, 2)
-		_:
-			draw_arc(center, 10, -PI / 2, PI, 24, ink, 2, true)
-			draw_line(center + Vector2(0, -10), center + Vector2(-5, -14), ink, 2)
-			draw_line(center + Vector2(0, -10), center + Vector2(-5, -6), ink, 2)
+	var radius: float = minf(size.x, size.y) * 0.36
+	var active := Color("168bff")
+	var inactive := Color("b9bcb7")
+	if rotational:
+		var ink: Color = active if available.any(func(value): return value) else inactive
+		draw_arc(center, radius, -PI / 2, PI, 40, ink, 4, true)
+		var tip := center + Vector2(0, -radius)
+		draw_colored_polygon(PackedVector2Array([tip, tip + Vector2(-12, -7), tip + Vector2(-12, 7)]), ink)
+	else:
+		draw_rect(Rect2(center - Vector2.ONE * radius, Vector2.ONE * radius * 2), Color("d3d9ce"), false, 1)
+		var directions := [Vector2(0, 1), Vector2(1, 0), Vector2(1, -1).normalized(), Vector2(1, 1).normalized()]
+		# Paint inactive axes first, so remaining axes stay clear at intersections.
+		for enabled in [false, true]:
+			for i in range(4):
+				if available[i] == enabled:
+					var offset: Vector2 = directions[i] * radius * (1.414 if i >= 2 else 1.1)
+					draw_line(center - offset, center + offset, active if enabled else inactive, 4 if enabled else 2, true)

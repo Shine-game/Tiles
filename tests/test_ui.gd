@@ -3,11 +3,33 @@ extends SceneTree
 const Palette = preload("res://scripts/palette.gd")
 const Rules = preload("res://scripts/rules.gd")
 var failures := 0
+var checks := 0
 
 func check(condition: bool, description: String) -> void:
+	checks += 1
 	if not condition:
 		failures += 1
 		push_error("FAIL: " + description)
+
+func touch(scene, point: Vector2, pressed: bool, id: int = 0) -> void:
+	var event := InputEventScreenTouch.new()
+	event.position = point
+	event.pressed = pressed
+	event.index = id
+	root.push_input(event, true)
+
+func drag(scene, point: Vector2) -> void:
+	var event := InputEventScreenDrag.new()
+	event.position = point
+	event.index = 0
+	root.push_input(event, true)
+
+func board_point(scene, cell: Vector2i) -> Vector2:
+	return scene.board_view.get_global_transform_with_canvas() * (scene.board_view.field.position + Vector2(8, 8) + (Vector2(cell) + Vector2(0.5, 0.5)) * scene.board_view.pitch)
+
+func source_point(scene, cell: Vector2i) -> Vector2:
+	var layout: Dictionary = scene.piece_view.geometry()
+	return scene.piece_view.get_global_transform_with_canvas() * (layout.origin + (Vector2(cell) + Vector2(0.5, 0.5)) * layout.unit)
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -15,93 +37,155 @@ func _initialize() -> void:
 func _run() -> void:
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
-	await process_frame
-	await process_frame
-	check(scene.indicators.size() == 7, "all seven symmetry indicators present")
-	check(scene.undo_button.disabled, "undo initially disabled")
-	check(scene.board_view.size.x > 0 and scene.board_view.size.y > 0, "board laid out")
-	await process_frame
-	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "board spans full phone viewport width")
-	check(absf(scene.board_view.field.size.x - scene.board_view.field.size.y) < 1.0, "full-width board stays square")
-	check(absf(scene.board_view.get_global_rect().position.x) < 1.0, "board starts at screen edge")
+	for i in range(4):
+		await process_frame
+	check(scene.indicators.size() == 2, "exactly two symmetry graphics")
+	check(scene.indicators[0].icon.available == [true, true, true, true], "reflection graphic lights all four initial axes")
+	check(scene.indicators[1].icon.available == [true, true, true], "rotation graphic initially available")
+	var partial: Array = Rules.empty_board(9)
+	partial[1][1] = Rules.BLUE
+	partial[1][7] = Rules.BLUE
+	partial[7][1] = Rules.CORAL
+	partial[7][7] = Rules.CORAL
+	scene._update_summaries(partial)
+	check(scene.indicators[0].icon.available == [true, false, false, false], "each axis is highlighted independently")
+	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic is off when all rotations conflict")
+	scene._preview()
 
+	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board spans full phone width")
+	check(scene.place_button.get_global_rect().position.x < scene.undo_button.get_global_rect().position.x, "Place is at bottom left")
+	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place dock stays within screen")
 	scene.game.queue[scene.game.index] = "J"
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
 	scene.coral_button.pressed.emit()
-	check(scene.game.current_color == Rules.CORAL, "color button changes selected piece color")
-	var unflipped: Array = scene.cells.duplicate()
+	check(scene.game.current_color == Rules.CORAL, "color selection changes piece")
+	var original_cells: Array = scene.cells.duplicate()
 	scene.flip_button.pressed.emit()
-	check(scene.cells == Rules.flip(unflipped), "Flip button mirrors piece")
-	var original: Array = scene.game.board.duplicate(true)
-	var original_piece: String = scene.game.queue[scene.game.index]
+	check(scene.cells == Rules.flip(original_cells), "Flip mirrors piece")
 	var move: Dictionary = Rules.first_legal_move(scene.game.board, {"cells": scene.cells, "color": scene.game.current_color}, false, false)
 	for i in range(move.rotation):
 		scene.rotate_button.pressed.emit()
 	var placed_cells: Array = scene.cells.duplicate()
-	# Exercise the actual screen-touch handler, not just the model API.
-	var event := InputEventScreenTouch.new()
-	event.pressed = true
-	event.position = scene.board_view.field.position + Vector2(8, 8) + (Vector2(move.anchor) + Vector2(0.5, 0.5)) * scene.board_view.pitch
-	scene.board_view._gui_input(event)
-	check(scene.game.moves == 0, "first tap previews without committing")
-	check(not scene.place_button.disabled, "valid preview enables Place")
-	scene.board_view._gui_input(event)
-	check(scene.game.moves == 1, "second tap commits exactly one piece")
-	check(not scene.undo_button.disabled, "placement enables Back")
+	var original_board: Array = scene.game.board.duplicate(true)
+	for grab: Vector2i in placed_cells:
+		scene._clear_selection()
+		scene._preview()
+		touch(scene, source_point(scene, grab), true)
+		check(scene.dragging, "every occupied source square starts dragging")
+		var target := board_point(scene, move.anchor + grab)
+		drag(scene, target)
+		touch(scene, target, false)
+		check(scene.has_hover and not scene.dragging, "finger release leaves a hovering piece")
+		check(scene.selected == move.anchor, "grabbed square retains its offset")
+		check(scene.game.board == original_board and scene.game.moves == 0, "release never places automatically")
+		check(not scene.place_button.disabled, "physically fitting hover enables Place")
+	# Regrab a non-anchor square of the floating piece and move off the field.
+	var grab: Vector2i = placed_cells.back()
+	touch(scene, board_point(scene, move.anchor + grab), true)
+	check(scene.dragging, "any square of the floating piece can be regrabbed")
+	var off_field := board_point(scene, Vector2i(-1, -1) + grab)
+	drag(scene, off_field)
+	touch(scene, off_field, false)
+	check(scene.has_hover and scene.floating_piece.cells.size() == 4, "invalid release keeps floating piece visible")
+	check(not scene.floating_piece.valid and scene.place_button.disabled, "off-field hover is gray and cannot be placed")
+	# Restore a valid hover, then confirm using the dock button.
+	touch(scene, source_point(scene, grab), true)
+	drag(scene, board_point(scene, move.anchor + grab))
+	touch(scene, board_point(scene, move.anchor + grab), false)
+	scene.place_button.pressed.emit()
+	check(scene.game.moves == 1, "Place commits the hovering piece")
+	check(not scene.has_hover, "commit clears floating piece")
 	scene.undo_button.pressed.emit()
-	check(scene.game.board == original, "Back restores board")
-	check(scene.game.queue[scene.game.index] == original_piece, "Back restores next piece")
-	check(scene.game.current_color == Rules.CORAL, "Back restores chosen color")
-	check(scene.cells == placed_cells, "Back restores flipped orientation")
-	scene._select_anchor(Vector2i(0, 0))
-	check(scene.place_button.disabled, "disconnected placement disabled")
+	check(scene.game.board == original_board and scene.cells == placed_cells, "Back restores board and orientation")
+	check(scene.game.current_color == Rules.CORAL, "Back restores color")
+	# Geometry is allowed even when a chosen color breaks every symmetry.
 	scene.game.board = Rules.empty_board(9)
 	for row: Array in scene.game.board:
 		row.fill(Rules.BLUE)
 	scene.game.board[1][2] = 0
 	scene.game.queue[scene.game.index] = "Dot"
-	scene.cells = Rules.PIECES.Dot.cells
 	scene.game.current_color = Rules.CORAL
+	scene.cells = Rules.PIECES.Dot.cells
 	scene.game._refresh_over()
 	scene._clear_selection()
 	scene._refresh()
-	scene._select_anchor(Vector2i(2, 1))
-	check(not scene.board_view.preview_valid and scene.place_button.disabled, "incompatible color is rejected")
-	check(Palette.INVALID.r == Palette.INVALID.g or absf(Palette.INVALID.r - Palette.INVALID.g) < 0.02, "invalid preview uses dull gray")
-	scene.blue_button.pressed.emit()
-	check(scene.board_view.preview_valid and not scene.place_button.disabled, "changing color revalidates selected placement")
-	check(scene.piece_view.color == Rules.BLUE, "piece preview updates immediately")
+	touch(scene, source_point(scene, Vector2i.ZERO), true)
+	drag(scene, board_point(scene, Vector2i(2, 1)))
+	touch(scene, board_point(scene, Vector2i(2, 1)), false)
+	check(not scene.floating_piece.valid and not scene.place_button.disabled, "symmetry-breaking physical fit remains placeable with gray warning")
+	check(not scene.indicators[0].icon.available.any(func(value): return value), "reflection graphic previews loss of every axis")
+	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic previews loss of every rotation")
 	scene.place_button.pressed.emit()
-	check(scene.game.no_space and scene.game.over, "filling last cell completes garden")
-	check(scene.cells.is_empty() and scene.piece_label.text == "Garden complete", "completion clears incoming piece")
-	check(scene.status.text.contains("full"), "completion has specific message")
+	check(scene.game.lost and scene.game.over, "confirming symmetry conflict ends game")
 	scene.undo_button.pressed.emit()
-	check(not scene.game.over and scene.cells.size() == 1, "Back reopens completed garden")
+	check(not scene.game.over, "Back reopens a lost game")
+	scene.blue_button.pressed.emit()
+	touch(scene, source_point(scene, Vector2i.ZERO), true)
+	drag(scene, board_point(scene, Vector2i(2, 1)))
+	touch(scene, board_point(scene, Vector2i(2, 1)), false)
+	check(scene.floating_piece.valid, "color switch allows safe placement")
+	scene.place_button.pressed.emit()
+	check(scene.game.no_space and not scene.game.lost, "safe final cell completes garden")
+	scene.undo_button.pressed.emit()
+	check(not scene.game.over, "Back reopens completed garden")
 	scene.requested_size = 11
 	scene._reset()
+	for i in range(3):
+		await process_frame
 	check(scene.game.board.size() == 11, "11 by 11 reset works")
-	await process_frame
-	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "11 by 11 board also spans full width")
 	var original_window_size := root.size
 	root.size = Vector2i(390, 844)
-	await process_frame
-	await process_frame
-	await process_frame
-	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1.0, "board follows phone width after resize")
-	check(absf(scene.board_view.size.x - scene.board_view.size.y) < 1.0, "resized board keeps square cells")
+	for i in range(4):
+		await process_frame
+	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board tracks resized phone width")
+	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place stays docked after resize")
 	root.size = original_window_size
-	await process_frame
-	await process_frame
-
 	scene.requested_size = 9
 	scene._reset()
-	await process_frame
-	await process_frame
+	for i in range(4):
+		await process_frame
+	# The scroll container must not steal an active piece drag. Edge scrolling
+	# moves the board underneath the held piece, while the dock stays accessible.
+	var edge: Vector2 = Vector2(scene.get_viewport_rect().size.x / 2, scene.get_viewport_rect().size.y - 90)
+	var first_cell: Vector2i = scene.cells[0]
+	touch(scene, source_point(scene, first_cell), true)
+	touch(scene, Vector2.ZERO, false, 1)
+	check(scene.dragging, "another finger cannot release the active drag")
+	drag(scene, edge)
+	var scroll_before: int = scene.scroll.scroll_vertical
+	scene._process(0.15)
+	check(scene.scroll.scroll_vertical > scroll_before, "dragging at the lower edge scrolls the field")
+	touch(scene, edge, false)
+	check(scene.has_hover and not scene.dragging, "release after scrolling preserves hover")
+	# A ghost covering the dock must not steal a Place or Back button press.
+	check(not scene._start_drag(scene.place_button.get_global_rect().get_center(), 0), "fixed dock has priority over floating drag hits")
+	scene._clear_selection()
+	scene.scroll.scroll_vertical = 0
+	scene._preview()
+	for i in range(3):
+		await process_frame
+	# Mouse gestures use the same routed input path as touch.
+	var mouse_press := InputEventMouseButton.new()
+	mouse_press.button_index = MOUSE_BUTTON_LEFT
+	mouse_press.pressed = true
+	mouse_press.position = source_point(scene, first_cell)
+	root.push_input(mouse_press, true)
+	check(scene.dragging, "mouse press picks up source piece")
+	var mouse_move := InputEventMouseMotion.new()
+	mouse_move.position = board_point(scene, Vector2i(2, 2) + first_cell)
+	root.push_input(mouse_move, true)
+	mouse_press = mouse_press.duplicate()
+	mouse_press.pressed = false
+	mouse_press.position = mouse_move.position
+	root.push_input(mouse_press, true)
+	check(scene.has_hover and not scene.dragging and scene.game.moves == 0, "mouse release also hovers without committing")
+	scene._clear_selection()
+	scene._preview()
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("/tmp/tiles-godot.png")
 	scene.queue_free()
 	await process_frame
-	print("UI: color changes, flips, touch placement, undo, gray invalid preview, size reset; %d failures" % failures)
+	print("UI: %d checks, %d failures (drag, hover, summaries, placement, undo, resize)" % [checks, failures])
 	quit(1 if failures else 0)

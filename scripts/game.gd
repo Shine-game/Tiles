@@ -8,6 +8,8 @@ var index := 0
 var moves := 0
 var history: Array = []
 var over := false
+var lost := false
+var symmetry_blocked := false
 var no_space := false
 var current_color := Rules.BLUE
 var restored_cells: Array = []
@@ -47,14 +49,22 @@ func piece() -> Dictionary:
 func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if over:
 		return {"ok": false, "reason": "No safe placements remain. Go back or start a new garden."}
+	var physical: Dictionary = Rules.physical_placement(board, cells, anchor)
+	if not physical.ok:
+		return physical
 	var result: Dictionary = Rules.placement(board, cells, piece().color, anchor)
-	if not result.ok:
-		return result
 	history.append({"board": board, "index": index, "moves": moves, "color": current_color, "cells": cells.duplicate(), "rng_state": rng.state})
 	if history.size() > 3:
 		history.pop_front()
-	board = result.board
 	moves += 1
+	if not result.ok:
+		board = board.duplicate(true)
+		for cell: Vector2i in cells:
+			board[anchor.y + cell.y][anchor.x + cell.x] = current_color
+		lost = true
+		over = true
+		return {"ok": true, "lost": true}
+	board = result.board
 	index += 1
 	# Future draws depend on the resulting board; discard any abandoned branch.
 	queue.resize(index)
@@ -71,11 +81,13 @@ func undo() -> bool:
 	moves = previous.moves
 	current_color = previous.color
 	restored_cells = previous.cells
+	lost = false
 	rng.state = previous.rng_state
 	queue.resize(index + 1)
 	_refresh_over()
 	return true
 
 func _refresh_over() -> void:
-	no_space = queue[index] == ""
-	over = no_space or Rules.first_legal_move(board, piece()).is_empty()
+	no_space = queue[index] == "" or not board.any(func(row: Array): return row.has(0))
+	symmetry_blocked = not no_space and Rules.first_legal_move(board, piece()).is_empty()
+	over = lost or no_space

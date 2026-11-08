@@ -90,7 +90,7 @@ func _initialize() -> void:
 	rescued_game.queue[rescued_game.index] = "Dot"
 	rescued_game.current_color = Rules.CORAL
 	rescued_game._refresh_over()
-	check(not rescued_game.over, "game over considers both colors")
+	check(not rescued_game.symmetry_blocked, "safe placement search considers both colors")
 	# The only four empty cells form L, while the incoming piece is J.
 	board = Rules.empty_board(9)
 	for row: Array in board:
@@ -104,7 +104,7 @@ func _initialize() -> void:
 	rescued_game.board = board
 	rescued_game.queue[rescued_game.index] = "J"
 	rescued_game._refresh_over()
-	check(not rescued_game.over, "game over considers reflected orientations")
+	check(not rescued_game.symmetry_blocked, "safe placement search considers reflected orientations")
 	var full_game = Game.new()
 	for row: Array in full_game.board:
 		row.fill(Rules.BLUE)
@@ -166,7 +166,12 @@ func _initialize() -> void:
 	check(drew_fatal, "generator actually offers symmetry-breaking pieces")
 	sampler.queue[sampler.index] = "Domino"
 	sampler._refresh_over()
-	check(sampler.over and not sampler.no_space, "fitting but symmetry-breaking piece ends game")
+	check(not sampler.over and sampler.symmetry_blocked, "symmetry-blocked draw remains draggable until confirmed")
+	var fatal_move: Dictionary = Rules.first_physical_move(sampler.board, sampler.piece())
+	var before_fatal: Array = sampler.board.duplicate(true)
+	check(sampler.place(fatal_move.cells, fatal_move.anchor).ok, "physically fitting symmetry conflict can be confirmed")
+	check(sampler.over and sampler.lost, "confirmed symmetry conflict ends game")
+	check(sampler.undo() and not sampler.over and sampler.board == before_fatal, "fatal placement can be undone")
 	# Filling the final hole produces a completed board, without offering an impossible piece.
 	var finisher = Game.new(9, 777)
 	finisher.board = Rules.empty_board(9)
