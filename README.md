@@ -26,17 +26,18 @@ This prototype checks **color compatibility**, not whether every remaining gap c
 
 ## Procedural growth
 
-Placed cells keep their logical colors but lose their solid backgrounds. Fine vines, center holding circles, flowers, and stars leave the floor visible. The palette is inverted: green networks have yellow flowers/stars; yellow networks have green accents. The stable numeric color IDs retain their original BLUE/CORAL names internally.
+Placed cells keep their logical colors but lose their solid backgrounds. Curved vines, translucent veined leaves, four-way holding shoots, supported flowers, and stars leave the floor visible. The art uses softer sage and gold watercolor pigments while the piece controls retain clear logical colors. The palette is inverted: green networks have yellow flowers/stars; yellow networks have green accents. The stable numeric color IDs retain their original BLUE/CORAL names internally.
 
-- **Place** starts a deterministic, frame-rate-independent growth schedule. An existing same-color side neighbor sends growth into the new piece. Every crossed center-to-center connection takes 0.14 seconds; multiple contacts launch fronts simultaneously. Centers pop when reached.
+- **Place** starts a deterministic, frame-rate-independent growth schedule. An existing same-color side neighbor sends growth into the new piece. Every crossed center-to-center connection takes 0.14 seconds; multiple contacts launch fronts simultaneously. Four-way, star-tipped holding shoots awaken when a center is reached.
 - A newly independent same-color component awakens all its centers at once. Its outward fronts meet at shared-side midpoints. Different colors and corner-only contacts never connect.
-- Lines wave slightly while extending, then settle. Small complementary stars pop off completed vines.
-- Every completed same-color 2×2 loop opens an eight-petal flower at its common corner. The maximum petal reach is one-third of a cell; each flower stays within the four participating corner quarters.
+- Lines wave while extending and form smooth curved joins. Alternating leaves unfold root-to-tip in the direction of each growth front; opposed fronts carry opposed leaf directions. Existing directions survive later placements and Back. Small complementary stars pop off completed vines.
+- Every occupied center has four short, delicate shoots with tiny buds/stars pointing up, down, left, and right. They remain inside that cell and do not create logical connections into empty neighbors.
+- Every completed same-color 2×2 loop opens an eight-petal flower at its common corner. The maximum petal reach is one-third of a cell. A stem and two pairs of leaves sprout from underneath to support the flower, within the four participating corner quarters. Petals and foliage use a reusable, procedurally generated watercolor texture with directional veins.
 - Horizontally/vertically neighboring flowers develop a connecting vine with popping stars. Four flowers in a 2×2 arrangement create a ring. Existing flowers and connections are preserved, with no locks or exclusive cell ownership.
 - **Place remains disabled until centers, vines, flowers, and stars finish.** The next piece can still be dragged, flipped, rotated, and recolored meanwhile; its preview never participates in committed growth.
 - Back, board-size changes, and reset cancel pending animation and rebuild the restored board as a settled pattern. There are no delayed callbacks that can decorate an obsolete board.
 
-`tests/test_growth.gd` runs 53 checks covering travel times, multiple sources, independent pieces, side-midpoint meetings, corner/color isolation, loop timing, inverted palettes, flower bounds, flowering rings, preservation, resolution, and cancellation.
+`tests/test_growth.gd` runs 71 checks covering travel times, multiple sources, independent pieces, side-midpoint meetings, corner/color isolation, loop timing, inverted palettes, flower bounds, flowering rings, preservation, resolution, cancellation, forward/reverse leaf direction, and retained directions after undo.
 
 To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 48 frames plus a settled PNG under the ignored `build/` directory. It is a development tool and is excluded from Android export.
 
@@ -75,7 +76,8 @@ The rules runner executes 691 checks covering both sizes, all eleven pieces, rot
 - `scripts/rules.gd`: pure board, placement, and symmetry functions.
 - `scripts/game.gd`: piece generation, progression, game over, and history.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
-- `scripts/growth.gd`: deterministic propagation and bloom schedule, separate from rendering.
+- `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
+- `scripts/botanical_brush.gd`: a cached, tintable watercolor brush with root-to-tip leaf veins.
 - `scripts/palette.gd`: shared green/yellow network colors and dull gray invalid preview.
 - `scripts/board_view.gd`, `piece_view.gd`, `floating_piece.gd`, `symmetry_icon.gd`: independent procedural renderers.
 - `main.tscn`: entry scene; `export_presets.cfg`: portable Android preset.

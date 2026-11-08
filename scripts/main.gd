@@ -179,7 +179,6 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("panel", _style(Color("e2edda") if lit else Color("e5e4dc")))
 
 func _preview() -> void:
-	board_view.queue_redraw()
 	floating_piece.cells = cells if has_hover and not game.over else []
 	floating_piece.color = game.current_color
 	var physical := false
@@ -291,7 +290,7 @@ func _choose_color(color: int) -> void:
 
 func _undo() -> void:
 	if game.undo():
-		board_view.show_settled(game.board)
+		board_view.show_settled(game.board, true)
 		cells = game.restored_cells
 		_clear_selection()
 		_refresh()

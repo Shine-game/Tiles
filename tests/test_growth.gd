@@ -121,6 +121,36 @@ func _initialize() -> void:
 	view.show_settled(before)
 	view.advance_growth(100)
 	check(not view.growing and view.pattern.board == before, "undo cancels all pending growth")
+	# Leaf tips must follow growth even when it travels left/up, and old vines
+	# must retain that direction when another piece is added or Back is used.
+	before = Rules.empty_board(9)
+	before[2][4] = Rules.BLUE
+	after = before.duplicate(true)
+	after[2][3] = Rules.BLUE
+	after[2][2] = Rules.BLUE
+	growth.build(before, after)
+	for edge: Dictionary in growth.edges:
+		check(edge.flow == -1, "reverse growth points leaves toward the newly reached cells")
+		for sprout: Dictionary in Growth.leaf_sprouts(edge):
+			check(sprout.direction == -1, "every leaf on reverse growth keeps the same forward direction")
+			check(growth.duration >= sprout.start + Growth.LEAF_POP, "Place gate includes every unfolding leaf")
+	view.animate_growth(before, after)
+	var original_key: Vector4i = Growth.edge_key(Vector2i(3, 2), Vector2i(4, 2))
+	var extended: Array = after.duplicate(true)
+	extended[2][1] = Rules.BLUE
+	view.animate_growth(after, extended)
+	check(view.direction_by_edge[original_key].flow == -1, "later placements preserve established leaf direction")
+	view.show_settled(after, true)
+	check(view.direction_by_edge[original_key].flow == -1, "Back preserves direction on surviving vines")
+	view.show_settled(Rules.create_board())
+	check(view.direction_by_edge.is_empty(), "new game clears old growth directions")
+	before = Rules.empty_board(9)
+	after = before.duplicate(true)
+	after[1][1] = Rules.BLUE
+	after[1][2] = Rules.BLUE
+	growth.build(before, after)
+	var opposed: Array = Growth.leaf_sprouts(growth.edges[0])
+	check(opposed.any(func(sprout: Dictionary): return sprout.direction == 1) and opposed.any(func(sprout: Dictionary): return sprout.direction == -1), "meeting fronts sprout leaves forward from both ends")
 	view.free()
 	print("Growth: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

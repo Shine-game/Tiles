@@ -3,8 +3,9 @@ extends RefCounted
 
 # A deterministic event schedule in board coordinates. Rendering never changes it.
 const STEP := 0.14
-const CENTER_POP := 0.18
-const FLOWER_POP := 0.26
+const CENTER_POP := 0.30
+const LEAF_POP := 0.22
+const FLOWER_POP := 0.36
 const LINK_GROW := 0.18
 const STAR_POP := 0.24
 const RIPPLE := 0.18
@@ -26,6 +27,17 @@ static func edge_key(a: Vector2i, b: Vector2i) -> Vector4i:
 	if a.y > b.y or (a.y == b.y and a.x > b.x):
 		return Vector4i(b.x, b.y, a.x, a.y)
 	return Vector4i(a.x, a.y, b.x, b.y)
+
+static func leaf_sprouts(edge: Dictionary) -> Array:
+	var result: Array = []
+	var directions: Array = [1, -1] if int(edge.flow) == 0 else [int(edge.flow)]
+	for direction: int in directions:
+		var fractions: Array = [0.18, 0.38] if int(edge.flow) == 0 else [0.24, 0.51, 0.78]
+		for i in range(fractions.size()):
+			var fraction: float = fractions[i]
+			var start: float = -100 if edge.old else float(edge.start_a if direction == 1 else edge.start_b) + fraction * STEP
+			result.append({"fraction": fraction if direction == 1 else 1 - fraction, "direction": direction, "side": 1 if i % 2 == 0 else -1, "start": start})
+	return result
 
 static func is_flower(grid: Array, corner: Vector2i, color: int) -> bool:
 	for offset: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i.ZERO]:
@@ -99,11 +111,13 @@ func build(before: Array, after: Array) -> void:
 			var a: float = maxf(0, arrivals[cell])
 			var b: float = maxf(0, arrivals[other])
 			var finish: float = minf(a, b) + STEP if absf(a - b) >= STEP else (a + b + STEP) / 2.0
-			var edge := {"a": cell, "b": other, "color": value(board, cell), "start_a": a, "start_b": b, "finish": 0.0 if old else finish, "old": old}
+			var edge := {"a": cell, "b": other, "color": value(board, cell), "start_a": a, "start_b": b, "finish": 0.0 if old else finish, "old": old, "flow": 0 if is_equal_approx(a, b) else (1 if a < b else -1)}
 			edges.append(edge)
 			lookup[edge_key(cell, other)] = edge
 			if not old:
-				duration = maxf(duration, finish + maxf(RIPPLE, STAR_POP))
+				duration = maxf(duration, finish + maxf(maxf(RIPPLE, STAR_POP), LEAF_POP))
+				for sprout: Dictionary in leaf_sprouts(edge):
+					duration = maxf(duration, sprout.start + LEAF_POP)
 	for y in range(1, board.size()):
 		for x in range(1, board.size()):
 			var corner := Vector2i(x, y)
