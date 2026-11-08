@@ -96,6 +96,29 @@ func _run() -> void:
 	scene.place_button.pressed.emit()
 	check(scene.game.moves == 1, "Place commits the hovering piece")
 	check(not scene.has_hover, "commit clears floating piece")
+	check(scene.board_view.growing, "Place starts the committed pattern's growth")
+	var pending_move: Dictionary = Rules.first_legal_move(scene.game.board, scene.game.piece())
+	scene.cells = pending_move.cells
+	scene._choose_color(pending_move.color)
+	var pending_grab: Vector2i = scene.cells[0]
+	touch(scene, source_point(scene, pending_grab), true)
+	drag(scene, board_point(scene, pending_move.anchor + pending_grab))
+	touch(scene, board_point(scene, pending_move.anchor + pending_grab), false)
+	check(scene.has_hover and not scene.dragging, "next piece remains draggable while growth resolves")
+	check(scene.place_button.disabled, "physically valid next piece cannot be placed during growth")
+	var committed_moves: int = scene.game.moves
+	scene._place()
+	check(scene.game.moves == committed_moves, "controller rejects early placement even without a button click")
+	var committed_flowers: int = scene.board_view.pattern.flowers.size()
+	scene._flip()
+	scene._choose_color(3 - scene.game.current_color)
+	check(scene.board_view.pattern.flowers.size() == committed_flowers, "preview changes never mutate committed growth")
+	# Restore the valid hovering orientation/color and complete the timeline.
+	scene.cells = pending_move.cells
+	scene._choose_color(pending_move.color)
+	scene.board_view.advance_growth(scene.board_view.pattern.duration + 1)
+	check(not scene.board_view.growing and not scene.place_button.disabled, "Place unlocks automatically after all growth resolves")
+
 	scene.undo_button.pressed.emit()
 	check(scene.game.board == original_board and scene.cells == scene.game.piece().cells, "Back restores board and refreshes the offered piece")
 	check(scene.game.current_color == Rules.CORAL, "Back restores color")
@@ -120,6 +143,7 @@ func _run() -> void:
 	check(scene.game.lost and scene.game.over, "confirming symmetry conflict ends game")
 	scene.undo_button.pressed.emit()
 	check(not scene.game.over, "Back reopens a lost game")
+	check(not scene.board_view.growing and scene.board_view.pattern.board == scene.game.board, "Back cancels pending decoration after a loss")
 	scene.blue_button.pressed.emit()
 	touch(scene, source_point(scene, Vector2i.ZERO), true)
 	drag(scene, board_point(scene, Vector2i(2, 1)))

@@ -4,25 +4,41 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Play
 
-- A bright blue center square begins a 9×9 garden, switchable to 11×11. The board and every control fit on a single screen without scrolling. The board uses the full available width when space permits, and shrinks to fit shorter screens. Landscape layouts place the controls beside the board. Fitting everything on screen takes priority over earlier control positions. The interface contains no title, captions, instructions, commentary, or help dialogs.
+- A small green center motif begins a 9×9 garden, switchable to 11×11. The board and every control fit on a single screen without scrolling. The board uses the full available width when space permits, and shrinks to fit shorter screens. Landscape layouts place the controls beside the board. Fitting everything on screen takes priority over earlier control positions. The interface contains no title, captions, instructions, commentary, or help dialogs.
 - Eleven shapes are available: the seven standard tetrominoes, a 1×1 square (Dot), a 1×2 domino, a straight three-square piece (I3), and an L-shaped three-square piece (L3). Generation first chooses a size category uniformly, then a fitting shape uniformly within that category. While all shapes fit, each size has a 25% chance: Dot 25%, Domino 25%, I3/L3 12.5% each, and each tetromino about 3.57%. Draws are independent, so repeats can occur.
 - Shapes are eligible only if some rotation or reflection fits inside empty squares and touches the existing pattern at an edge or corner. Color and symmetry are deliberately ignored for this generation filter. If a size has no fitting shapes, its probability is shared equally among the remaining sizes. A physically fitting piece that destroys symmetry in every placement can still be generated. It remains draggable; confirming a symmetry-breaking placement ends the game.
 - Pieces must touch the pattern along an edge or corner. They cannot overlap or leave the board. No lines clear.
 - Drag the incoming piece from the upper right onto the field. Grab **any occupied square**, including when picking up a floating piece again. The grabbed square stays under the finger or mouse pointer. Empty space in a piece's bounding box is not a drag handle.
 - Release to leave the piece hovering, whether the position is valid or invalid. Release never commits. The overlay remains visible even partly outside the board. The screen stays fixed even while dragging at an edge.
-- **Place** activates when the piece is inside the board, avoids overlap, and touches the pattern. Press it to commit. The **Back** arrow, board-size toggle, and **+** reset are alongside it.
+- **Place** activates when the piece is inside the board, avoids overlap, touches the pattern, and the previous growth animation has resolved. Press it to commit. The **Back** arrow, board-size toggle, and **+** reset are alongside it.
 - Rotate clockwise with the rotation arrow or **R**, and mirror horizontally with **Flip** or **F**. Rotate after flipping for other reflected orientations. Flipping a symmetric shape leaves an equivalent shape.
-- Choose vibrant blue or coral using the color swatches freely before any placement; **C** toggles colors on a keyboard. Color is no longer tied to piece shape. Your choice carries forward to the next piece. Invalid placement previews are dull gray; changing color or orientation immediately rechecks the preview. A symmetry conflict is gray but can still be physically placeable: pressing Place then ends the game.
+- Choose green or yellow using the color swatches freely before any placement; **C** toggles colors on a keyboard. Color is no longer tied to piece shape. Your choice carries forward to the next piece. Invalid placement previews are dull gray; changing color or orientation immediately rechecks the preview. A symmetry conflict is gray but can still be physically placeable: pressing Place then ends the game.
 - Two graphics at the top left summarize symmetry: a single square highlights each available vertical, horizontal, and diagonal reflection axis; a circular arrow lights when any rotational symmetry is possible. The graphics preview the hovered placement when it physically fits, and otherwise show the committed pattern. The incoming piece appears at the top right.
 - **Back** retraces up to three recent placements, restores the board and chosen color, and rerolls the offered piece immediately. The reroll uses fresh randomness, excludes the outgoing offer when another shape fits, and still applies physical-fit filtering and balanced size selection. If only one shape fits, it repeats that shape. The rerolled piece starts in its default orientation.
 - The **+** button starts a fresh pattern; the size button switches between 9×9 and 11×11. Both reset immediately without a dialog.
-- There is no timer. Physically impossible placements are disabled. The game ends only after the player confirms a physically valid placement that breaks every remaining symmetry. A piece with no symmetry-preserving placement does not end play merely by appearing. A completely filled board ends with a completion message and no new piece. Back remains available after either ending.
+- There is no timer. Physically impossible placements are disabled. The game ends only after the player confirms a physically valid placement that breaks every remaining symmetry. A piece with no symmetry-preserving placement does not end play merely by appearing. A completely filled board ends with no new piece. Back remains available after either ending.
 
 ## Symmetry rule
 
 The board may be asymmetric during play. For every central reflection (vertical, horizontal, both diagonals) and nonidentity square rotation (90°, 180°, 270°), cells are grouped into transformation orbits. A symmetry remains possible if no orbit contains both colors. Empty cells may be filled later. Quarter-turn checks inspect the entire four-cell orbit, including conflicts separated by empty cells. 90° and 270° have equivalent feasibility; the rotation graphic combines all three nonidentity rotations.
 
-This prototype checks **color compatibility**, not whether every remaining gap can be filled with future whole pieces. All axes and centers are fixed to the garden's center. State is held in memory; restarting the app starts a fresh game. Decorative flower/leaf overlays are a later feature.
+This prototype checks **color compatibility**, not whether every remaining gap can be filled with future whole pieces. All axes and centers are fixed to the garden's center. State is held in memory; restarting the app starts a fresh game. Positioned squares resolve into procedural flora; a snow visual theme remains a future option.
+
+## Procedural growth
+
+Placed cells keep their logical colors but lose their solid backgrounds. Fine vines, center holding circles, flowers, and stars leave the floor visible. The palette is inverted: green networks have yellow flowers/stars; yellow networks have green accents. The stable numeric color IDs retain their original BLUE/CORAL names internally.
+
+- **Place** starts a deterministic, frame-rate-independent growth schedule. An existing same-color side neighbor sends growth into the new piece. Every crossed center-to-center connection takes 0.14 seconds; multiple contacts launch fronts simultaneously. Centers pop when reached.
+- A newly independent same-color component awakens all its centers at once. Its outward fronts meet at shared-side midpoints. Different colors and corner-only contacts never connect.
+- Lines wave slightly while extending, then settle. Small complementary stars pop off completed vines.
+- Every completed same-color 2×2 loop opens an eight-petal flower at its common corner. The maximum petal reach is one-third of a cell; each flower stays within the four participating corner quarters.
+- Horizontally/vertically neighboring flowers develop a connecting vine with popping stars. Four flowers in a 2×2 arrangement create a ring. Existing flowers and connections are preserved, with no locks or exclusive cell ownership.
+- **Place remains disabled until centers, vines, flowers, and stars finish.** The next piece can still be dragged, flipped, rotated, and recolored meanwhile; its preview never participates in committed growth.
+- Back, board-size changes, and reset cancel pending animation and rebuild the restored board as a settled pattern. There are no delayed callbacks that can decorate an obsolete board.
+
+`tests/test_growth.gd` runs 53 checks covering travel times, multiple sources, independent pieces, side-midpoint meetings, corner/color isolation, loop timing, inverted palettes, flower bounds, flowering rings, preservation, resolution, and cancellation.
+
+To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 48 frames plus a settled PNG under the ignored `build/` directory. It is a development tool and is excluded from Android export.
 
 ## Android export
 
@@ -48,18 +64,20 @@ Use the **4.7.2** binary, not a different `godot` installation:
 ```sh
 godot --headless --editor --path . --import --quit
 godot --headless --path . --script tests/test_rules.gd
+godot --headless --path . --script tests/test_growth.gd
 godot --headless --path . --script tests/test_ui.gd
 ```
 
-The rules runner executes 691 checks covering both sizes, all eleven pieces, rotations, flips, reflection/orbit conflicts, placement constraints, color/flip rescues, game over, physical-fit filtering, balanced size frequencies, rerolls after undo, and the forced single-shape fallback. The UI runner executes 302 checks with engine-routed touch and mouse input, dragging from every occupied piece square, persistent valid/invalid hover, grab offsets, color selection, flips, the two symmetry summaries, the compact action controls, confirmed symmetry loss, undo, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display it also writes `/tmp/tiles-godot.png`.
+The rules runner executes 691 checks covering both sizes, all eleven pieces, rotations, flips, reflection/orbit conflicts, placement constraints, color/flip rescues, game over, physical-fit filtering, balanced size frequencies, rerolls after undo, and the forced single-shape fallback. The UI runner executes 309 checks with engine-routed touch and mouse input, dragging from every occupied piece square, persistent valid/invalid hover, grab offsets, color selection, flips, the two symmetry summaries, the compact action controls, confirmed symmetry loss, undo, the Place growth gate, cancellation on Back, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display it also writes `/tmp/tiles-godot.png`.
 
 ## Structure
 
 - `scripts/rules.gd`: pure board, placement, and symmetry functions.
 - `scripts/game.gd`: piece generation, progression, game over, and history.
-- `scripts/main.gd`: native responsive controls and interactions.
-- `scripts/palette.gd`: shared vibrant tile colors and dull gray invalid preview.
-- `scripts/board_view.gd`, `piece_view.gd`, `floating_piece.gd`, `symmetry_icon.gd`: independent renderers, ready for later visual motifs.
+- `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
+- `scripts/growth.gd`: deterministic propagation and bloom schedule, separate from rendering.
+- `scripts/palette.gd`: shared green/yellow network colors and dull gray invalid preview.
+- `scripts/board_view.gd`, `piece_view.gd`, `floating_piece.gd`, `symmetry_icon.gd`: independent procedural renderers.
 - `main.tscn`: entry scene; `export_presets.cfg`: portable Android preset.
 
 The earlier browser proof of concept remains available in Git history at commit `1552407`; this working tree is the native Godot implementation.

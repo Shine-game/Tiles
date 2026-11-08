@@ -72,6 +72,7 @@ func _build_interface() -> void:
 	add_child(piece_view)
 	board_view = BoardView.new()
 	add_child(board_view)
+	board_view.growth_finished.connect(_preview)
 	rotate_button = _button("↻", _rotate)
 	flip_button = _button("Flip", _flip)
 	blue_button = _button("", func(): _choose_color(Rules.BLUE))
@@ -146,7 +147,7 @@ func _layout() -> void:
 		_update_floating_position()
 
 func _refresh() -> void:
-	board_view.board = game.board
+	board_view.sync_board(game.board)
 	piece_view.cells = [] if game.over else cells
 	piece_view.color = game.current_color
 	piece_view.queue_redraw()
@@ -192,7 +193,7 @@ func _preview() -> void:
 			for cell: Vector2i in cells:
 				proposed[selected.y + cell.y][selected.x + cell.x] = game.current_color
 	floating_piece.valid = legal
-	place_button.disabled = not physical or game.over
+	place_button.disabled = not physical or game.over or board_view.growing
 	_update_summaries(proposed)
 	_update_floating_position()
 
@@ -257,11 +258,13 @@ func _process(_delta: float) -> void:
 		_update_floating_position()
 
 func _place() -> void:
-	if not has_hover:
+	if not has_hover or board_view.growing:
 		return
+	var before: Array = game.board
 	var result: Dictionary = game.place(cells, selected)
 	if not result.ok:
 		return
+	board_view.animate_growth(before, game.board)
 	cells = [] if game.over else game.piece().cells
 	_clear_selection()
 	_refresh()
@@ -288,6 +291,7 @@ func _choose_color(color: int) -> void:
 
 func _undo() -> void:
 	if game.undo():
+		board_view.show_settled(game.board)
 		cells = game.restored_cells
 		_clear_selection()
 		_refresh()
@@ -298,6 +302,7 @@ func _ask_reset(n: int) -> void:
 
 func _reset() -> void:
 	game = Game.new(requested_size)
+	board_view.show_settled(game.board)
 	cells = game.piece().cells
 	size_picker.text = "%d × %d" % [requested_size, requested_size]
 	_clear_selection()
