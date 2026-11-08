@@ -2,16 +2,20 @@ class_name TileRules
 extends RefCounted
 
 # Colors belong to cells, independently of the pieces that supplied them.
-const GREEN = 1
-const YELLOW = 2
+const BLUE = 1
+const CORAL = 2
 const PIECES = {
-	"I": {"color": GREEN, "cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]},
-	"O": {"color": GREEN, "cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]},
-	"S": {"color": GREEN, "cells": [Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1)]},
-	"T": {"color": YELLOW, "cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(1, 1)]},
-	"J": {"color": YELLOW, "cells": [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]},
-	"L": {"color": YELLOW, "cells": [Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]},
-	"Z": {"color": YELLOW, "cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1)]},
+	"Dot": {"cells": [Vector2i(0, 0)]},
+	"Domino": {"cells": [Vector2i(0, 0), Vector2i(1, 0)]},
+	"I3": {"cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]},
+	"L3": {"cells": [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1)]},
+	"I": {"cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]},
+	"O": {"cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]},
+	"S": {"cells": [Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1)]},
+	"T": {"cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(1, 1)]},
+	"J": {"cells": [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]},
+	"L": {"cells": [Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]},
+	"Z": {"cells": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(2, 1)]},
 }
 const SYMMETRY_NAMES = ["Vertical", "Horizontal", "Diagonal /", "Diagonal \\", "90 degrees", "180 degrees", "270 degrees"]
 
@@ -26,7 +30,7 @@ static func empty_board(n: int) -> Array:
 
 static func create_board(n: int = 9) -> Array:
 	var board: Array = empty_board(n)
-	board[n / 2][n / 2] = GREEN
+	board[n / 2][n / 2] = BLUE
 	return board
 
 static func rotate(cells: Array) -> Array:
@@ -38,6 +42,15 @@ static func rotate(cells: Array) -> Array:
 		minimum = minimum.min(turned)
 	for i in range(result.size()):
 		result[i] -= minimum
+	return result
+
+static func flip(cells: Array) -> Array:
+	var result: Array = []
+	var max_x := 0
+	for cell: Vector2i in cells:
+		max_x = maxi(max_x, cell.x)
+	for cell: Vector2i in cells:
+		result.append(Vector2i(max_x - cell.x, cell.y))
 	return result
 
 static func transform(cell: Vector2i, symmetry: int, n: int) -> Vector2i:
@@ -104,13 +117,28 @@ static func placement(board: Array, cells: Array, color: int, anchor: Vector2i) 
 			return {"ok": true, "board": next}
 	return {"ok": false, "reason": "This closes every path to symmetry. Try another position."}
 
-static func first_legal_move(board: Array, piece: Dictionary) -> Dictionary:
-	var cells: Array = piece.cells
-	for rotation in range(4):
-		for y in range(board.size()):
-			for x in range(board.size()):
-				var anchor := Vector2i(x, y)
-				if placement(board, cells, piece.color, anchor).ok:
-					return {"anchor": anchor, "cells": cells, "rotation": rotation}
-		cells = rotate(cells)
+# Search every player-selectable variant before declaring game over.
+# The optional restrictions support focused tests and future rule variants.
+static func first_legal_move(board: Array, piece: Dictionary, allow_color_change: bool = true, allow_flip: bool = true) -> Dictionary:
+	var preferred_color: int = piece.get("color", BLUE)
+	var colors: Array = [preferred_color]
+	if allow_color_change:
+		colors.append(CORAL if preferred_color == BLUE else BLUE)
+	var seen: Dictionary = {}
+	for mirrored in range(2 if allow_flip else 1):
+		var cells: Array = flip(piece.cells) if mirrored else piece.cells
+		for rotation in range(4):
+			var key: Array = []
+			for cell: Vector2i in cells:
+				key.append(cell.y * 8 + cell.x)
+			key.sort()
+			if not seen.has(key):
+				seen[key] = true
+				for color: int in colors:
+					for y in range(board.size()):
+						for x in range(board.size()):
+							var anchor := Vector2i(x, y)
+							if placement(board, cells, color, anchor).ok:
+								return {"anchor": anchor, "cells": cells, "rotation": rotation, "flipped": bool(mirrored), "color": color}
+			cells = rotate(cells)
 	return {}

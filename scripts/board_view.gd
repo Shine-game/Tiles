@@ -5,8 +5,7 @@ signal anchor_selected(anchor: Vector2i)
 signal anchor_hovered(anchor: Vector2i)
 signal hover_exited
 
-const GREEN := Color("769981")
-const YELLOW := Color("d9b75e")
+const Palette = preload("res://scripts/palette.gd")
 var board: Array = []
 var preview_cells: Array = []
 var preview_anchor := Vector2i(-100, -100)
@@ -32,13 +31,13 @@ func _draw() -> void:
 			var cell := Vector2i(x, y)
 			var rect := Rect2(field.position + Vector2(8, 8) + Vector2(cell) * pitch, Vector2.ONE * (pitch - 4))
 			var value: int = board[y][x]
-			var color := Color("f8f8f1") if value == 0 else (GREEN if value == 1 else YELLOW)
+			var color := Color("f8f8f1") if value == 0 else Palette.tile(value)
 			var is_preview: bool = preview_cells.has(cell - preview_anchor)
 			if is_preview:
-				color = (GREEN if preview_color == 1 else YELLOW).lightened(0.3) if preview_valid else Color("dcb8a9")
+				color = Palette.tile(preview_color) if preview_valid else Palette.INVALID
 			draw_style_box(_box(color, 4), rect)
 			if is_preview:
-				draw_rect(rect.grow(-1), Color("4c6a50") if preview_valid else Color("a26955"), false, 2)
+				draw_rect(rect.grow(-1), Palette.tile(preview_color).darkened(0.25) if preview_valid else Palette.INVALID_BORDER, false, 2)
 			if cell == Vector2i(board.size() / 2, board.size() / 2):
 				draw_circle(rect.get_center(), 3, Color("f8f8f1"))
 

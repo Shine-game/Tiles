@@ -1,6 +1,7 @@
 extends Control
 
 const Rules = preload("res://scripts/rules.gd")
+const Palette = preload("res://scripts/palette.gd")
 const Game = preload("res://scripts/game.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
@@ -17,6 +18,9 @@ var piece_label: Label
 var undo_button: Button
 var place_button: Button
 var rotate_button: Button
+var flip_button: Button
+var blue_button: Button
+var coral_button: Button
 var indicators: Array = []
 var size_picker: OptionButton
 var reset_dialog: ConfirmationDialog
@@ -120,7 +124,18 @@ func _build_interface() -> void:
 	next_column.add_child(piece_view)
 	piece_label = _label("", 16, next_column)
 	piece_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rotate_button = _button("Rotate  [R]", next_column, _rotate)
+	var tools := HBoxContainer.new()
+	tools.add_theme_constant_override("separation", 10)
+	column.add_child(tools)
+	rotate_button = _button("Rotate [R]", tools, _rotate)
+	flip_button = _button("Flip [F]", tools, _flip)
+	blue_button = _button("Blue", tools, func(): _choose_color(Rules.BLUE))
+	coral_button = _button("Coral", tools, func(): _choose_color(Rules.CORAL))
+	for button: Button in [rotate_button, flip_button, blue_button, coral_button]:
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.tooltip_text = "Change the unplaced piece; you can change it again at any time."
+	blue_button.toggle_mode = true
+	coral_button.toggle_mode = true
 	move_label = _label("", 15, column)
 	board_view = BoardView.new()
 	board_view.custom_minimum_size.y = 600
@@ -130,7 +145,7 @@ func _build_interface() -> void:
 	board_view.hover_exited.connect(func():
 		anchor = selected
 		_preview())
-	column.resized.connect(func(): board_view.custom_minimum_size.y = minf(column.size.x, maxf(280, get_viewport_rect().size.y - 660)))
+	column.resized.connect(func(): board_view.custom_minimum_size.y = minf(column.size.x, maxf(280, get_viewport_rect().size.y - 700)))
 	status = _label("", 17, column)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.custom_minimum_size.y = 48
@@ -152,7 +167,7 @@ func _build_interface() -> void:
 	settings.add_child(size_picker)
 	size_picker.item_selected.connect(func(index: int): _ask_reset(size_picker.get_item_id(index)))
 	_button("New pattern", settings, func(): _ask_reset(game.board.size()))
-	var legend := _label("Sage: I, O, S     Marigold: T, J, L, Z", 15, column)
+	var legend := _label("11 shapes · Choose either color · Gray means unavailable", 15, column)
 	legend.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	reset_dialog = ConfirmationDialog.new()
 	reset_dialog.title = "A new garden?"
@@ -166,10 +181,24 @@ func _refresh() -> void:
 	piece_view.cells = cells
 	piece_view.color = game.piece().color
 	piece_view.queue_redraw()
-	piece_label.text = "%s · %s" % [game.queue[game.index], "Sage" if game.piece().color == Rules.GREEN else "Marigold"]
+	piece_label.text = "%s · %s" % [game.queue[game.index], "Blue" if game.piece().color == Rules.BLUE else "Coral"]
 	undo_button.text = "Back  (%d / 3)" % game.history.size()
 	undo_button.disabled = game.history.is_empty()
 	rotate_button.disabled = game.over
+	flip_button.disabled = game.over
+	blue_button.disabled = game.over
+	coral_button.disabled = game.over
+	for button: Button in [blue_button, coral_button]:
+		var chosen: bool = (button == blue_button) == (game.current_color == Rules.BLUE)
+		button.set_pressed_no_signal(chosen)
+		var ink := Palette.BLUE if button == blue_button else Palette.CORAL
+		var style := _style(ink)
+		style.set_border_width_all(3 if chosen else 0)
+		style.border_color = Color("243446")
+		for state in ["normal", "hover", "pressed", "hover_pressed"]:
+			button.add_theme_stylebox_override(state, style)
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
+			button.add_theme_color_override(state, Color.WHITE)
 	move_label.text = "YOUR GARDEN  %d x %d     ·     %d pieces placed" % [game.board.size(), game.board.size(), game.moves]
 	var states: Array = Rules.symmetry_states(game.board)
 	var possible := 0
@@ -234,9 +263,19 @@ func _rotate() -> void:
 		cells = Rules.rotate(cells)
 		_refresh()
 
+func _flip() -> void:
+	if not game.over:
+		cells = Rules.flip(cells)
+		_refresh()
+
+func _choose_color(color: int) -> void:
+	if not game.over:
+		game.current_color = color
+		_refresh()
+
 func _undo() -> void:
 	if game.undo():
-		cells = game.piece().cells
+		cells = game.restored_cells
 		_clear_selection()
 		_refresh()
 
@@ -254,13 +293,17 @@ func _reset() -> void:
 func _show_help() -> void:
 	var help := AcceptDialog.new()
 	help.title = "A little space for balance"
-	help.dialog_text = "Place pieces against an edge or corner of the pattern.\nTap to preview, then tap again or choose Place.\nThe selected square is the top-left of the piece's bounding box.\nRotate with the button or R. Go back up to three placements.\n\nA lit symmetry is still possible, even when it is not complete.\nEmpty partners can be filled later; different colors cannot match.\nAll reflections and rotations use the board's center.\n\nPlay ends when the offered piece has no safe placement.\nThere is no timer. Enjoy finding your pattern."
+	help.dialog_text = "Place pieces against an edge or corner of the pattern.\nTap to preview, then tap again or choose Place.\nThe selected square is the top-left of the piece's bounding box.\nRotate with R, or mirror horizontally with F.\nChoose Blue or Coral freely before placing any piece.\nGray previews indicate invalid positions.\nGo back up to three placements, including color and orientation.\n\nA lit symmetry is still possible, even when it is not complete.\nEmpty partners can be filled later; different colors cannot match.\nAll reflections and rotations use the board's center.\n\nPlay ends when the offered piece has no safe placement.\nThere is no timer. Enjoy finding your pattern."
 	add_child(help)
 	help.confirmed.connect(help.queue_free)
 	help.canceled.connect(help.queue_free)
 	help.popup_centered()
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
-		_rotate()
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_R: _rotate()
+			KEY_F: _flip()
+			KEY_C: _choose_color(Rules.CORAL if game.current_color == Rules.BLUE else Rules.BLUE)
+			_: return
 		get_viewport().set_input_as_handled()

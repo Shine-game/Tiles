@@ -8,6 +8,8 @@ var index := 0
 var moves := 0
 var history: Array = []
 var over := false
+var current_color := Rules.BLUE
+var restored_cells: Array = []
 var rng := RandomNumberGenerator.new()
 
 func _init(n: int = 9, seed_value: int = -1) -> void:
@@ -29,7 +31,7 @@ func _add_bag() -> void:
 	queue.append_array(bag)
 
 func piece() -> Dictionary:
-	return Rules.PIECES[queue[index]]
+	return {"cells": Rules.PIECES[queue[index]].cells, "color": current_color}
 
 func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if over:
@@ -37,7 +39,7 @@ func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	var result: Dictionary = Rules.placement(board, cells, piece().color, anchor)
 	if not result.ok:
 		return result
-	history.append({"board": board, "index": index, "moves": moves})
+	history.append({"board": board, "index": index, "moves": moves, "color": current_color, "cells": cells.duplicate()})
 	if history.size() > 3:
 		history.pop_front()
 	board = result.board
@@ -55,6 +57,8 @@ func undo() -> bool:
 	board = previous.board
 	index = previous.index
 	moves = previous.moves
+	current_color = previous.color
+	restored_cells = previous.cells
 	_refresh_over()
 	return true
 

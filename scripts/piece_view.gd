@@ -1,6 +1,6 @@
 extends Control
 
-const Rules = preload("res://scripts/rules.gd")
+const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var color := 1
 
@@ -18,6 +18,6 @@ func _draw() -> void:
 	var origin := (size - Vector2(extent) * unit) / 2
 	for cell: Vector2i in cells:
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color("769981") if color == Rules.GREEN else Color("d9b75e")
+		style.bg_color = Palette.tile(color)
 		style.set_corner_radius_all(4)
 		draw_style_box(style, Rect2(origin + Vector2(cell) * unit, Vector2.ONE * (unit - 4)))
