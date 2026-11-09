@@ -8,6 +8,8 @@ signal flower_opened(corner: Vector2i, color: int)
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Surface = preload("res://scripts/tile_surface.gd")
+const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
+const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
 const Growth = preload("res://scripts/growth.gd")
 var board: Array = []
 var pattern = Growth.new()
@@ -19,6 +21,8 @@ var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
 var announced_flowers: Dictionary = {}
 var show_guides := true
+var growth_before: Array = []
+var labyrinth := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -29,7 +33,7 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	growth_canceled.emit()
 	announced_flowers.clear()
 	board = grid
-	pattern.build(grid, grid)
+	_build_pattern(grid, grid)
 	_adopt_directions(preserve_direction)
 	clock = 0
 	growing = false
@@ -39,10 +43,31 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 func sync_board(grid: Array) -> void:
 	if pattern.board != grid:
 		show_settled(grid)
+	elif labyrinth != Palette.labyrinth:
+		_restyle()
+
+func _build_pattern(before: Array, after: Array) -> void:
+	labyrinth = Palette.labyrinth
+	pattern = MazeGrowth.new() if labyrinth else Growth.new()
+	pattern.build(before, after)
+
+func _restyle() -> void:
+	if not growing:
+		show_settled(board, true)
+		return
+	_build_pattern(growth_before, board)
+	_adopt_directions(true)
+	clock = minf(clock, pattern.duration)
+	growing = clock < pattern.duration
+	set_process(growing)
+	if not growing:
+		growth_finished.emit()
+	queue_redraw()
 
 func animate_growth(before: Array, after: Array) -> void:
 	board = after
-	pattern.build(before, after)
+	growth_before = before.duplicate(true)
+	_build_pattern(before, after)
 	_adopt_directions(true)
 	clock = 0
 	announced_flowers.clear()
@@ -110,6 +135,9 @@ func _draw() -> void:
 	_draw_raised_garden()
 	if show_guides:
 		_draw_guides()
+	if labyrinth:
+		MazeRenderer.draw(self)
+		return
 	for cell: Vector2i in pattern.arrivals:
 		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
 		if scale > 0:

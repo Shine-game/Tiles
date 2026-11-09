@@ -18,12 +18,20 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - Each game starts with **three Undo, three Skip, and three Erase uses**. Counts are independent and never refunded by Undo. Undo retracts the latest placement and returns that exact piece, orientation, and color to your hand. It does not reroll; the set-aside next offer stays next if it still fits. At most the last three placements are retained. Erasures of older squares are preserved when undoing a placement.
 - Skip replaces the current offer with another physically fitting shape, without checking symmetry. It excludes the outgoing shape if another fits; if only one shape fits, it may repeat. Skip neither changes the garden nor creates an undo entry.
 - Erase arms a square selection. Tap any occupied square, including the original center, to remove it. Disconnected fragments are allowed. Empty/outside selections cost nothing; tap the helper again or press Escape to cancel for free. Undo and Erase can reopen ended gardens. Erase does not restore a whole tile.
-- The Settings button opens five palette choices, the 9×9/11×11 size switch, Restart, and Gallery. Palette changes preserve play; changing size or restarting begins a new game with fresh helper budgets. Menus and gallery pages fit without scrolling.
+- The Settings button opens a Vines/Labyrinth theme switch, five vine palette choices, the 9×9/11×11 size switch, Restart, and Gallery. Palette changes preserve play; changing size or restarting begins a new game with fresh helper budgets. Menus and gallery pages fit without scrolling.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
+
+## Labyrinth theme
+
+Choose **Settings → Garden: Vines** to switch to **Garden: Labyrinth**, or tap the same entry to return. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the narrow walls, creating the appearance of paths. The surrounding screen stays white.
+
+The same side-connected growth schedule extends hedges between matching-color square centers. Ordinary centers grow taller, faceted pyramid hedges. A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
+
+Paths are visual sandy spaces; there is no player character or route-solving rule. The theme changes the drawing, not the puzzle's symmetry or placement rules. Growth whispers and bell accents accompany hedges and new trees.
 
 ## Local gallery
 
-Symmetric designs are stored as clean 900×900 PNG artwork and board/palette JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette again does not duplicate it. The empty board cannot be saved. This is an app-private gallery and needs no Android photo/storage or Internet permission. It does not export to the system Photos app or resume a saved game.
+Symmetric designs are stored as clean 900×900 PNG artwork and board/palette/theme JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette/theme again does not duplicate it. The empty board cannot be saved. This is an app-private gallery and needs no Android photo/storage or Internet permission. It does not export to the system Photos app or resume a saved game.
 
 ## Symmetry rule
 
@@ -101,16 +109,21 @@ godot --headless --path . --script tests/test_growth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
+godot --headless --path . --script tests/test_labyrinth.gd
 ```
 
 The runners cover generation, symmetry orbits, placement, independent helper budgets, exact-piece Undo, non-refunding erasures, recovery from empty/finished gardens, routed touch and mouse gestures, committed symmetry indicators, the growth gate, audio, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display `tests/test_ui.gd` also writes `/tmp/tiles-godot.png`.
 
 Run `tests/test_gallery.gd` on a graphical display to additionally test real clean artwork capture, repeated-save deduplication, gallery navigation, and saving a 100% filled board. It writes `build/helpers-preview.png`, `build/gallery-artwork-preview.png`, and `build/gallery-browser-preview.png` for visual review. Tests use isolated temporary gallery directories and remove only their own records.
+Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-driven hedge/tree/bench sequence to `build/labyrinth-frames/`, `build/labyrinth-preview.png`, and clean gallery artwork at `build/labyrinth-artwork.png`.
+
 ## Structure
 
 - `scripts/rules.gd`: pure board, placement, and symmetry functions.
 - `scripts/game.gd`: piece generation, progression, game over, history, and limited helpers.
 - `scripts/gallery.gd`: persistent local artwork and metadata storage.
+- `scripts/labyrinth_growth.gd`: shared-wall openings and bench timing after tree growth.
+- `scripts/labyrinth_renderer.gd`: narrow green/rose hedges, pyramid centers, taller trees, and wooden benches.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
 - `scripts/growth_audio.gd`: synchronized foliage and flower sounds.

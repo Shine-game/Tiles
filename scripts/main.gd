@@ -32,6 +32,7 @@ var gallery_close: Button
 var gallery_page: Button
 var gallery_entries: Array = []
 var gallery_index := 0
+var theme_button: Button
 var gallery_button: Button
 var skip_button: Button
 var erase_button: Button
@@ -120,6 +121,7 @@ func _build_interface() -> void:
 	size_picker = _button("9 × 9", func(): _ask_reset(11 if game.board.size() == 9 else 9))
 	palette_button = _button("⚙", _toggle_palette_menu)
 	gallery_button = _button("Gallery", _open_gallery)
+	theme_button = _button("Garden: Vines", _toggle_theme)
 	palette_menu = PanelContainer.new()
 	palette_menu.visible = false
 	palette_menu.z_index = 80
@@ -135,7 +137,7 @@ func _build_interface() -> void:
 		palette_list.add_child(option)
 		palette_options.append(option)
 
-	for control: Control in [size_picker, new_button, gallery_button]:
+	for control: Control in [theme_button, size_picker, new_button, gallery_button]:
 		control.reparent(palette_list)
 	_build_gallery()
 	floating_piece = FloatingPiece.new()
@@ -260,7 +262,7 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
 func _design_fingerprint() -> String:
-	return JSON.stringify([game.board, Palette.selected_index]).sha256_text()
+	return Gallery.fingerprint(game.board, Palette.selected_index, "labyrinth" if Palette.labyrinth else "vines")
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -465,19 +467,22 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
 
 func _layout_palette_menu(pad: float) -> void:
-	var row_height: float = clampf((size.y - 2 * pad - 12) / 8 - 4, 24, 44)
+	var options: Array = [theme_button] + ([] if Palette.labyrinth else palette_options) + [size_picker, new_button, gallery_button]
+	for option: Control in palette_options:
+		option.visible = not Palette.labyrinth
+	theme_button.text = "Garden: Labyrinth" if Palette.labyrinth else "Garden: Vines"
+	var row_height: float = clampf((size.y - 2 * pad - 12) / options.size() - 4, 22, 44)
 	var width: float = minf(260, size.x - 2 * pad)
-	var height: float = (row_height + 4) * 8 + 8
+	var height: float = (row_height + 4) * options.size() + 8
 	var y: float = minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
 	_set_rect(palette_menu, Rect2(size.x - pad - width, maxf(pad, y), width, height))
-	var options: Array = palette_options + [size_picker, new_button, gallery_button]
 	new_button.text = "Restart"
 	for i in range(options.size()):
 		_set_rect(options[i], Rect2(0, i * (row_height + 4), width - 12, row_height))
 		options[i].add_theme_font_size_override("font_size", clampi(roundi(row_height * 0.36), 11, 16))
 
 func _refresh_theme() -> void:
-	for button: Button in [flip_button, place_button, undo_button, skip_button, erase_button, size_picker, new_button, gallery_button, palette_button]:
+	for button: Button in [flip_button, place_button, undo_button, skip_button, erase_button, size_picker, new_button, gallery_button, theme_button, palette_button]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
 			var ink: Color = Palette.controls().lightened(0.04 if state == "hover" or state == "pressed" else 0)
 			button.add_theme_stylebox_override(state, _style(ink))
@@ -505,6 +510,14 @@ func _refresh_theme() -> void:
 func _toggle_palette_menu() -> void:
 	dragging = false
 	palette_menu.visible = not palette_menu.visible
+
+func _toggle_theme() -> void:
+	Palette.labyrinth = not Palette.labyrinth
+	palette_menu.hide()
+	dragging = false
+	_layout()
+	_refresh()
+	board_view.queue_redraw()
 
 func _choose_palette(index: int) -> void:
 	if Palette.select(index):
@@ -590,6 +603,7 @@ func _save_design() -> void:
 	saving = true
 	var snapshot: Array = game.board.duplicate(true)
 	var palette_index: int = Palette.selected_index
+	var theme: String = "labyrinth" if Palette.labyrinth else "vines"
 	var fingerprint := _design_fingerprint()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(900, 900)
@@ -605,7 +619,7 @@ func _save_design() -> void:
 	artwork.direction_by_edge = board_view.direction_by_edge.duplicate(true)
 	artwork._adopt_directions(true)
 	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image())
+	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme)
 	viewport.queue_free()
 	saving = false
 	if result.ok:

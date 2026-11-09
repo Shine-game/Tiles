@@ -12,6 +12,10 @@ const PAIRS = [
 const INVALID := Color("96999c")
 const INVALID_BORDER := Color("6f7377")
 static var selected_index := 0
+static var labyrinth := false
+const HEDGE_GREEN := Color("119d45")
+const HEDGE_ROSE := Color("f43877")
+const SAND := Color("efe1c3")
 
 static func select(index: int) -> bool:
 	if index < 0 or index >= PAIRS.size():
@@ -20,6 +24,8 @@ static func select(index: int) -> bool:
 	return true
 
 static func tile(color: int) -> Color:
+	if labyrinth:
+		return HEDGE_GREEN if color == 1 else HEDGE_ROSE
 	return PAIRS[selected_index].colors[0 if color == 1 else 1]
 
 static func accent(color: int) -> Color:
@@ -32,7 +38,7 @@ static func blossom(color: int) -> Color:
 	return accent(color)
 
 static func floor_color() -> Color:
-	return PAIRS[selected_index].floor
+	return SAND if labyrinth else PAIRS[selected_index].floor
 
 static func dark() -> bool:
 	return floor_color().get_luminance() < 0.4
@@ -53,5 +59,7 @@ static func grid() -> Color:
 	return Color("bbc9e4") if dark() else Color("947c9c")
 
 static func garden() -> Color:
+	if labyrinth:
+		return Color("f6e9ce")
 	# One continuous terrace, including boundaries between the two pigments.
 	return floor_color().lightened(0.09) if dark() else floor_color().darkened(0.035)

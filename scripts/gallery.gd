@@ -30,16 +30,20 @@ func entries() -> Array:
 	result.sort_custom(func(a: Dictionary, b: Dictionary): return str(a.id) > str(b.id))
 	return result
 
-func save_design(board: Array, palette_index: int, image: Image) -> Dictionary:
+static func fingerprint(board: Array, palette_index: int, theme: String = "vines") -> String:
+	# Preserve legacy vine fingerprints so old saves still deduplicate.
+	return JSON.stringify([board, palette_index] if theme == "vines" else [board, palette_index, theme]).sha256_text()
+
+func save_design(board: Array, palette_index: int, image: Image, theme: String = "vines") -> Dictionary:
 	if image == null or image.is_empty():
 		return {"ok": false}
-	var fingerprint := JSON.stringify([board, palette_index]).sha256_text()
+	var design_key := fingerprint(board, palette_index, theme)
 	for record: Dictionary in entries():
-		if record.get("fingerprint", "") == fingerprint:
+		if record.get("fingerprint", "") == design_key:
 			return {"ok": true, "id": record.id}
 	if DirAccess.make_dir_recursive_absolute(directory) != OK:
 		return {"ok": false}
-	var id := "%020d-%s" % [int(Time.get_unix_time_from_system() * 1000), fingerprint.left(8)]
+	var id := "%020d-%s" % [int(Time.get_unix_time_from_system() * 1000), design_key.left(8)]
 	var path := directory.path_join(id)
 	if image.save_png(path + ".png") != OK:
 		return {"ok": false}
@@ -47,7 +51,7 @@ func save_design(board: Array, palette_index: int, image: Image) -> Dictionary:
 	if file == null:
 		DirAccess.remove_absolute(path + ".png")
 		return {"ok": false}
-	file.store_string(JSON.stringify({"id": id, "fingerprint": fingerprint, "board": board, "palette": palette_index}))
+	file.store_string(JSON.stringify({"id": id, "fingerprint": design_key, "board": board, "palette": palette_index, "theme": theme}))
 	file.close()
 	return {"ok": true, "id": id}
 

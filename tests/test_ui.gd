@@ -290,7 +290,7 @@ func _run() -> void:
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		check(menu_bounds.encloses(scene.palette_menu.get_global_rect()), "palette choices fit without scrolling at " + str(dimensions))
-		for option: Button in scene.palette_options + [scene.size_picker, scene.new_button, scene.gallery_button]:
+		for option: Button in scene.palette_options + [scene.theme_button, scene.size_picker, scene.new_button, scene.gallery_button]:
 			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
 		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)

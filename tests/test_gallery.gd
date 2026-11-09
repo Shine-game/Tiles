@@ -96,6 +96,12 @@ func _run() -> void:
 		check(scene.game.over and scene.gallery.entries().size() == 5, "100 percent filled garden can still be saved")
 		scene.queue_free()
 		await create_timer(0.12).timeout
+	var previous_count: int = gallery.entries().size()
+	var maze_record: Dictionary = gallery.save_design(board, 0, image, "labyrinth")
+	check(maze_record.ok and gallery.entries().size() == previous_count + 1, "same board can be saved separately as labyrinth artwork")
+	check(gallery.entries().any(func(record: Dictionary): return record.id == maze_record.id and record.theme == "labyrinth"), "gallery persists visual theme metadata")
+	check(gallery.save_design(board, 0, image, "labyrinth").id == maze_record.id and gallery.entries().size() == previous_count + 1, "labyrinth saves also deduplicate")
+	check(Gallery.fingerprint(board, 0) == JSON.stringify([board, 0]).sha256_text(), "legacy vine save identity remains compatible")
 	# Delete only this runner's isolated test directory.
 	var folder := DirAccess.open(gallery.directory)
 	for name: String in folder.get_files():
