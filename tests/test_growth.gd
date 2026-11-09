@@ -168,7 +168,7 @@ func _initialize() -> void:
 	check(near(growth.grid_visibility(a, Vector2i(-1, 2), growth.duration), 1), "outer field border remains visible")
 	after[2][2] = Rules.CORAL
 	growth.build(before, after)
-	check(near(growth.grid_visibility(b, Vector2i(2, 2), growth.duration), 1), "different-color boundary retains placement guide")
+	check(near(growth.grid_visibility(b, Vector2i(2, 2), growth.duration), 0), "filled different-color cells merge without separation guides")
 	growth.build(after, after)
 	check(near(growth.grid_visibility(a, b, 0), 0), "established vines do not flash grid lines back on")
 	growth.build(before, before)

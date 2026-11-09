@@ -22,4 +22,9 @@ func _draw() -> void:
 		var face := Rect2(origin + Vector2(cell) * pitch - Vector2(0, Surface.depth(pitch)), Vector2.ONE * (pitch - 4))
 		var ink: Color = Palette.tile(color) if valid else Palette.INVALID
 		Surface.draw(self, face, ink, Surface.depth(pitch))
-		draw_rect(face.grow(-1), Palette.tile(color).darkened(0.3) if valid else Palette.INVALID_BORDER, false, 1.2)
+		var outline := StyleBoxFlat.new()
+		outline.bg_color = Color.TRANSPARENT
+		outline.border_color = Palette.tile(color).darkened(0.3) if valid else Palette.INVALID_BORDER
+		outline.set_border_width_all(1)
+		outline.set_corner_radius_all(roundi(face.size.x * 0.16))
+		draw_style_box(outline, face.grow(-0.5))

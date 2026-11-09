@@ -38,16 +38,20 @@ static func dark() -> bool:
 	return floor_color().get_luminance() < 0.4
 
 static func background() -> Color:
-	return floor_color().darkened(0.06) if dark() else floor_color()
+	return Color.WHITE
 
 static func controls() -> Color:
-	return floor_color().lightened(0.10) if dark() else floor_color().darkened(0.055)
+	return Color("eeedf3")
 
 static func text() -> Color:
-	return Color("f7f2ff") if dark() else Color("40334d")
+	return Color("40334d")
 
 static func muted() -> Color:
-	return Color("8794ae") if dark() else Color("9b8ca6")
+	return Color("9b8ca6")
 
 static func grid() -> Color:
 	return Color("bbc9e4") if dark() else Color("947c9c")
+
+static func garden() -> Color:
+	# One continuous terrace, including boundaries between the two pigments.
+	return floor_color().lightened(0.09) if dark() else floor_color().darkened(0.035)

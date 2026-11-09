@@ -126,7 +126,7 @@ func _draw() -> void:
 
 func _draw_raised_garden() -> void:
 	var depth: float = surface_depth()
-	var top: Color = Palette.floor_color().lightened(0.035 if Palette.dark() else 0.018)
+	var top: Color = Palette.garden()
 	var side: Color = Palette.floor_color().darkened(0.28 if Palette.dark() else 0.14)
 	# Draw all shadows first so contiguous occupied cells form one terrace.
 	for cell: Vector2i in pattern.arrivals:

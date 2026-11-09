@@ -74,6 +74,64 @@ func _run() -> void:
 	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic is off when all rotations conflict")
 	scene._preview()
 
+	# Gesture modes must remain distinct: tap mirrors, immediate drag translates,
+	# held circular movement rotates, and releasing never places a piece.
+	scene.cells = Rules.PIECES.J.cells.duplicate()
+	scene._refresh()
+	var tap_point := source_point(scene, scene.cells[0])
+	var gesture_cells: Array = scene.cells.duplicate()
+	touch(scene, tap_point, true)
+	touch(scene, tap_point + Vector2(2, 1), false)
+	check(scene.cells == Rules.flip(gesture_cells), "short tap mirrors the source piece")
+	check(not scene.has_hover and scene.game.moves == 0, "tap does not move or commit source")
+	scene.cells = gesture_cells.duplicate()
+	scene._refresh()
+	tap_point = source_point(scene, scene.cells[0])
+	touch(scene, tap_point, true)
+	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
+	var pivot: Vector2 = scene.rotation_pivot
+	var start_vector: Vector2 = scene.rotation_vector
+	drag(scene, pivot + start_vector.rotated(PI / 2))
+	check(scene.cells == Rules.rotate(gesture_cells), "hold and clockwise arc snaps one quarter turn")
+	check(not scene.has_hover, "held rotation does not translate source")
+	drag(scene, pivot + start_vector.rotated(PI))
+	check(scene.cells == Rules.rotate(Rules.rotate(gesture_cells)), "continuing circular movement rotates another quarter turn")
+	touch(scene, pivot + start_vector.rotated(PI), false)
+	check(not scene.dragging and scene.game.moves == 0, "rotation release never places")
+	scene.cells = gesture_cells.duplicate()
+	scene._refresh()
+	tap_point = source_point(scene, scene.cells[0])
+	touch(scene, tap_point, true)
+	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
+	pivot = scene.rotation_pivot
+	start_vector = scene.rotation_vector
+	drag(scene, pivot + start_vector.rotated(-PI / 2))
+	check(scene.cells == Rules.rotate(Rules.rotate(Rules.rotate(gesture_cells))), "counterclockwise held arc rotates backward")
+	touch(scene, pivot + start_vector.rotated(-PI / 2), false)
+	scene.cells = gesture_cells.duplicate()
+	scene._refresh()
+	tap_point = source_point(scene, scene.cells[0])
+	touch(scene, tap_point, true)
+	var canceled := InputEventScreenTouch.new()
+	canceled.position = tap_point
+	canceled.index = 0
+	canceled.pressed = false
+	canceled.canceled = true
+	root.push_input(canceled, true)
+	check(scene.cells == gesture_cells and not scene.dragging, "system-canceled touch never flips")
+	scene.cells = gesture_cells.duplicate()
+	scene._refresh()
+	tap_point = source_point(scene, scene.cells[0])
+	touch(scene, tap_point, true)
+	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
+	touch(scene, tap_point, false)
+	check(scene.cells == gesture_cells and not scene.has_hover, "stationary long hold does not flip or translate")
+	check(is_equal_approx(scene.place_button.size.y, scene.rotate_button.size.y * 2), "Place is twice normal button height")
+	check(scene.board_view.position.y <= scene.piece_view.get_rect().end.y + 13, "field sits directly below header")
+	for palette_index in range(5):
+		Palette.select(palette_index)
+		check(Palette.background() == Color.WHITE, "surrounding screen remains white in every palette")
+	Palette.select(0)
 	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board spans full phone width")
 	check(scene.place_button.get_global_rect().position.x < scene.undo_button.get_global_rect().position.x, "Place is at bottom left")
 	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place dock stays within screen")

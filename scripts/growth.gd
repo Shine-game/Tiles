@@ -42,8 +42,8 @@ static func leaf_sprouts(edge: Dictionary) -> Array:
 				result.append({"fraction": fraction if direction == 1 else 1 - fraction, "direction": direction, "side": side, "start": start + (0.012 if side == 1 and not edge.old else 0)})
 	return result
 
-# A guide fades only when a real same-color connection crosses that boundary.
-# Empty-cell, different-color, and outer borders keep their placement guides.
+# Filled cells merge into a seamless terrace, even across pigment boundaries.
+# This visual merge does not create a vine connection between different colors.
 func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	var key: Vector4i = edge_key(a, b)
 	if not boundary_crossings.has(key):
@@ -119,6 +119,10 @@ func build(before: Array, after: Array) -> void:
 		for direction: Vector2i in [Vector2i.RIGHT, Vector2i.DOWN]:
 			var other := cell + direction
 			if value(board, other) != value(board, cell):
+				if value(board, other) != 0:
+					var merge_time: float = -100.0 if value(before, cell) != 0 and value(before, other) != 0 else 0.0
+					boundary_crossings[edge_key(cell, other)] = merge_time
+					duration = maxf(duration, merge_time + GRID_FADE)
 				continue
 			var old: bool = value(before, cell) == value(board, cell) and value(before, other) == value(board, cell)
 			var a: float = maxf(0, arrivals[cell])

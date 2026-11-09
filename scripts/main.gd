@@ -13,6 +13,15 @@ var game = Game.new()
 var cells: Array = []
 var has_hover := false
 var dragging := false
+const HOLD_TO_ROTATE := 0.35
+const TAP_LIMIT := 0.25
+const GESTURE_SLOP := 10.0
+var gesture_age := 0.0
+var gesture_mode := "pending"
+var gesture_start := Vector2.ZERO
+var rotation_pivot := Vector2.ZERO
+var rotation_vector := Vector2.ZERO
+var rotation_angle := 0.0
 var pointer_id := -1
 var grabbed_cell := Vector2i.ZERO
 var last_pointer := Vector2.ZERO
@@ -154,15 +163,15 @@ func _layout() -> void:
 		_set_rect(board_view, Rect2(Vector2(pad, top.end.y + pad), Vector2.ONE * side))
 		var panel_x: float = side + 2 * pad
 		var panel_width: float = view.x - panel_x - pad
-		var y: float = top.end.y + pad + (side - 2 * button_height - pad) / 2
+		var y: float = top.end.y + pad + maxf(0, (side - 3 * button_height - pad) / 2)
 		tools = Rect2(panel_x, y, panel_width, button_height)
-		actions = Rect2(panel_x, tools.end.y + pad, panel_width, button_height)
+		actions = Rect2(panel_x, tools.end.y + pad, panel_width, 2 * button_height)
 	else:
-		actions = Rect2(pad, view.y - pad - button_height, view.x - 2 * pad, button_height)
+		actions = Rect2(pad, view.y - pad - 2 * button_height, view.x - 2 * pad, 2 * button_height)
 		tools = Rect2(pad, actions.position.y - pad - button_height, view.x - 2 * pad, button_height)
-		var space: float = tools.position.y - top.end.y - 2 * pad
+		var space: float = tools.position.y - top.end.y - pad
 		var side: float = maxf(1, minf(view.x, space))
-		_set_rect(board_view, Rect2(Vector2((view.x - side) / 2, top.end.y + pad + (space - side) / 2), Vector2.ONE * side))
+		_set_rect(board_view, Rect2(Vector2((view.x - side) / 2, top.end.y + pad), Vector2.ONE * side))
 	var group_width: float
 	if view.x >= 600:
 		var icon_side: float = minf(64, top.size.y)
@@ -181,6 +190,9 @@ func _layout() -> void:
 	_layout_palette_menu(pad)
 	_layout_row([rotate_button, flip_button, blue_button, coral_button], tools, pad)
 	_layout_row([place_button, undo_button, size_picker, new_button], actions, pad)
+	for control: Control in [undo_button, size_picker, new_button]:
+		control.position.y += button_height
+		control.size.y = button_height
 	# Update geometry immediately so an in-progress drag survives a resize.
 	board_view.update_geometry()
 	board_view.queue_redraw()
@@ -263,6 +275,7 @@ func _start_drag(point: Vector2, id: int) -> bool:
 	var hit := Vector2i(-1, -1)
 	if has_hover:
 		hit = floating_piece.cell_at(point)
+	var from_hover: bool = hit.x >= 0
 	if hit.x < 0:
 		hit = piece_view.cell_at(piece_view.get_global_transform_with_canvas().affine_inverse() * point)
 	if hit.x < 0:
@@ -270,8 +283,46 @@ func _start_drag(point: Vector2, id: int) -> bool:
 	grabbed_cell = hit
 	pointer_id = id
 	dragging = true
-	_drag_to(point)
+	gesture_age = 0
+	gesture_mode = "pending"
+	gesture_start = point
+	last_pointer = point
+	var bounds := Vector2.ZERO
+	for cell: Vector2i in cells:
+		bounds = bounds.max(Vector2(cell) + Vector2.ONE)
+	rotation_pivot = floating_piece.origin + bounds * board_view.pitch / 2 - Vector2(0, board_view.surface_depth()) if from_hover else piece_view.get_global_transform_with_canvas() * (piece_view.geometry().origin + bounds * piece_view.geometry().unit / 2)
+	rotation_vector = point - rotation_pivot
+	rotation_angle = 0
 	return true
+
+# Movement before the hold threshold is translation; after it, circular motion
+# rotates around a fixed pivot. The chosen mode stays fixed until release.
+func _move_gesture(point: Vector2) -> void:
+	if gesture_mode == "pending":
+		if point.distance_to(gesture_start) < GESTURE_SLOP:
+			return
+		gesture_mode = "rotate" if gesture_age >= HOLD_TO_ROTATE else "move"
+	if gesture_mode == "move":
+		_drag_to(point)
+	else:
+		var vector := point - rotation_pivot
+		if vector.length() < GESTURE_SLOP:
+			return
+		if rotation_vector.length() >= GESTURE_SLOP:
+			rotation_angle += rotation_vector.angle_to(vector)
+		rotation_vector = vector
+		# Clockwise/counterclockwise 90-degree snaps with 15 degrees of hysteresis.
+		while absf(rotation_angle) >= deg_to_rad(60):
+			var direction: int = 1 if rotation_angle > 0 else -1
+			for step in range(1 if direction == 1 else 3):
+				_rotate()
+			rotation_angle -= direction * PI / 2
+
+func _finish_gesture(point: Vector2) -> void:
+	_move_gesture(point)
+	if gesture_mode == "pending" and gesture_age <= TAP_LIMIT:
+		_flip()
+	dragging = false
 
 func _input(event: InputEvent) -> void:
 	var pointer_pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
@@ -285,25 +336,28 @@ func _input(event: InputEvent) -> void:
 			if _start_drag(event.position, event.index):
 				get_viewport().set_input_as_handled()
 		elif dragging and event.index == pointer_id:
-			_drag_to(event.position)
-			dragging = false
+			if event.canceled:
+				dragging = false
+			else:
+				_finish_gesture(event.position)
 			get_viewport().set_input_as_handled()
 	elif event is InputEventScreenDrag and dragging and event.index == pointer_id:
-		_drag_to(event.position)
+		_move_gesture(event.position)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			if _start_drag(event.position, -1):
 				get_viewport().set_input_as_handled()
 		elif dragging and pointer_id == -1:
-			_drag_to(event.position)
-			dragging = false
+			_finish_gesture(event.position)
 			get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and dragging and pointer_id == -1:
-		_drag_to(event.position)
+		_move_gesture(event.position)
 		get_viewport().set_input_as_handled()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if dragging:
+		gesture_age += delta
 	if has_hover:
 		_update_floating_position()
 
