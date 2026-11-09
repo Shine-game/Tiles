@@ -1,6 +1,7 @@
 # Optional visual review tool. Run on a graphical display; output is ignored by Git.
 extends SceneTree
 
+const Growth = preload("res://scripts/growth.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Rules = preload("res://scripts/rules.gd")
 
@@ -30,14 +31,14 @@ func _run() -> void:
 		scene.requested_size = 11
 		scene._reset()
 		before = _dense_board()
-		for x in range(4, 7):
-			before[2][x] = 0
+		for cell: Vector2i in [Vector2i(4, 0), Vector2i(5, 0), Vector2i(4, 1), Vector2i(5, 1)]:
+			before[cell.y][cell.x] = 0
 	scene.game.board = before
-	scene.game.queue[scene.game.index] = "I3"
-	scene.game.current_color = Rules.BLUE
+	scene.game.queue[scene.game.index] = "O" if dense else "I3"
+	scene.game.current_color = Rules.CORAL if dense else Rules.BLUE
 	scene.game._refresh_over()
-	scene.cells = Rules.PIECES.I3.cells
-	scene.selected = Vector2i(4, 2) if dense else Vector2i(3, 3)
+	scene.cells = Rules.PIECES.O.cells if dense else Rules.PIECES.I3.cells
+	scene.selected = Vector2i(4, 0) if dense else Vector2i(3, 3)
 	scene.has_hover = true
 	scene._refresh()
 	var prefix: String = "dense-growth" if dense else "growth"
@@ -45,10 +46,11 @@ func _run() -> void:
 		prefix += "-palette-%d" % explicit_palette
 	DirAccess.make_dir_recursive_absolute("res://build/" + prefix + "-frames")
 	FileAccess.open("res://build/.gdignore", FileAccess.WRITE).close()
-	for i in range(48):
+	for i in range(90):
 		if i == 6:
 			scene._place()
 			scene.board_view.set_process(false)
+			_write_audio_events(scene, prefix)
 		await process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://build/%s-frames/%03d.png" % [prefix, i])
@@ -60,8 +62,9 @@ func _run() -> void:
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("res://build/" + prefix + "-palettes.png")
 	scene.palette_menu.hide()
-	print("Captured 48 frames; Place triggered the new growth. Resolved: ", not scene.board_view.growing)
+	print("Captured 90 frames; Place triggered the new growth. Resolved: ", not scene.board_view.growing)
 	scene.queue_free()
+	await create_timer(0.12).timeout
 	await process_frame
 	quit()
 
@@ -103,3 +106,15 @@ func _dense_board() -> Array:
 	grid[5][0] = Rules.BLUE
 	grid[5][10] = Rules.BLUE
 	return grid
+
+func _write_audio_events(scene, prefix: String) -> void:
+	var bells: Array = []
+	for corner: Vector2i in scene.board_view.pattern.flowers:
+		var flower: Dictionary = scene.board_view.pattern.flowers[corner]
+		if not flower.old:
+			var slot: int = posmod(corner.x + corner.y * 3, scene.sounds.PITCHES.size())
+			bells.append({"time": 0.2 + flower.start + Growth.FLOWER_POP * 0.12, "pitch": scene.sounds.PITCHES[slot]})
+	var data := {"duration": 3.0, "whisper_start": 0.2, "whisper_stop": 0.2 + scene.board_view.pattern.duration, "whisper_db": scene.sounds.WHISPER_DB, "bell_db": scene.sounds.BELL_DB, "bells": bells}
+	var file := FileAccess.open("res://build/" + prefix + "-audio-events.json", FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()

@@ -6,6 +6,7 @@ const Game = preload("res://scripts/game.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
 const FloatingPiece = preload("res://scripts/floating_piece.gd")
+const GrowthSounds = preload("res://scripts/growth_audio.gd")
 const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
 var game = Game.new()
@@ -18,6 +19,7 @@ var last_pointer := Vector2.ZERO
 var selected := Vector2i(-1, -1)
 var floating_piece: Control
 var board_view: Control
+var sounds: GrowthAudio
 var piece_view: Control
 var undo_button: Button
 var place_button: Button
@@ -78,6 +80,12 @@ func _build_interface() -> void:
 	board_view = BoardView.new()
 	add_child(board_view)
 	board_view.growth_finished.connect(_preview)
+	sounds = GrowthSounds.new()
+	add_child(sounds)
+	board_view.growth_started.connect(sounds.begin)
+	board_view.flower_opened.connect(sounds.bloom)
+	board_view.growth_finished.connect(sounds.finish)
+	board_view.growth_canceled.connect(sounds.cancel)
 	rotate_button = _button("↻", _rotate)
 	flip_button = _button("Flip", _flip)
 	blue_button = _button("", func(): _choose_color(Rules.BLUE))
@@ -240,6 +248,7 @@ func _update_floating_position() -> void:
 func _drag_to(point: Vector2) -> void:
 	last_pointer = point
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
+	local += Vector2(0, board_view.surface_depth())
 	var relative: Vector2 = (local - board_view.field.position - Vector2(8, 8)) / board_view.pitch
 	selected = Vector2i(floori(relative.x), floori(relative.y)) - grabbed_cell
 	has_hover = true

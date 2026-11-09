@@ -1,5 +1,6 @@
 extends Control
 
+const Surface = preload("res://scripts/tile_surface.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var color := 1
@@ -34,7 +35,5 @@ func _draw() -> void:
 		return
 	var layout: Dictionary = geometry()
 	for cell: Vector2i in cells:
-		var style := StyleBoxFlat.new()
-		style.bg_color = Palette.tile(color)
-		style.set_corner_radius_all(4)
-		draw_style_box(style, Rect2(layout.origin + Vector2(cell) * layout.unit, Vector2.ONE * (layout.unit - 4 * layout.scale)))
+		var face := Rect2(layout.origin + Vector2(cell) * layout.unit, Vector2.ONE * (layout.unit - 4 * layout.scale))
+		Surface.draw(self, face, Palette.tile(color), Surface.depth(layout.unit))

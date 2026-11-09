@@ -1,5 +1,6 @@
 extends Control
 
+const Surface = preload("res://scripts/tile_surface.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var origin := Vector2.ZERO
@@ -12,15 +13,13 @@ func _ready() -> void:
 	z_index = 30
 
 func cell_at(point: Vector2) -> Vector2i:
-	var cell := Vector2i(floori((point.x - origin.x) / pitch), floori((point.y - origin.y) / pitch))
+	var face_origin: Vector2 = origin - Vector2(0, Surface.depth(pitch))
+	var cell := Vector2i(floori((point.x - face_origin.x) / pitch), floori((point.y - face_origin.y) / pitch))
 	return cell if cells.has(cell) else Vector2i(-1, -1)
 
 func _draw() -> void:
 	for cell: Vector2i in cells:
-		var rect := Rect2(origin + Vector2(cell) * pitch, Vector2.ONE * (pitch - 4))
-		var style := StyleBoxFlat.new()
-		style.bg_color = Palette.tile(color) if valid else Palette.INVALID
-		style.set_corner_radius_all(4)
-		style.set_border_width_all(2)
-		style.border_color = Palette.tile(color).darkened(0.3) if valid else Palette.INVALID_BORDER
-		draw_style_box(style, rect)
+		var face := Rect2(origin + Vector2(cell) * pitch - Vector2(0, Surface.depth(pitch)), Vector2.ONE * (pitch - 4))
+		var ink: Color = Palette.tile(color) if valid else Palette.INVALID
+		Surface.draw(self, face, ink, Surface.depth(pitch))
+		draw_rect(face.grow(-1), Palette.tile(color).darkened(0.3) if valid else Palette.INVALID_BORDER, false, 1.2)

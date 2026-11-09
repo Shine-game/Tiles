@@ -54,7 +54,17 @@ Placed cells keep their logical colors but lose their solid backgrounds. Curved 
 
 `tests/test_growth.gd` runs 100 checks covering travel times, multiple sources, independent pieces, side-midpoint meetings, corner/color isolation, loop timing, inverted palettes, flower bounds, flowering rings, preservation, resolution, cancellation, forward/reverse leaf direction, retained directions after undo, and local grid fading/restoration.
 
-To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 48 frames plus a settled PNG under the ignored `build/` directory. Add `-- --dense --palette=1` to capture the blue/snow pair, or `-- --dense` for the default rose/violet pair on an 11×11 near-filled example with separate neighboring colors, sparse pockets, and isolated centers; those outputs use the `dense-growth` prefix. It is a development tool and is excluded from Android export.
+To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 90 frames, a sound-event schedule, and a settled PNG under the ignored `build/` directory. Add `-- --dense --palette=1` to capture the blue/snow pair, or `-- --dense` for the default rose/violet pair on an 11×11 near-filled example with separate neighboring colors, sparse pockets, and isolated centers; those outputs use the `dense-growth` prefix. It is a development tool and is excluded from Android export. To create the matching sound track, run `python3 tools/mix_growth_preview.py dense-growth`, then mux `build/dense-growth-audio.wav` with the captured frames. All preview and tool files are excluded from the APK.
+
+## Sound and shallow depth
+
+Growth has a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. No ambient sound runs while the board is idle.
+
+`assets/audio/foliage.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
+
+Filled cells form a shallow raised garden terrace, with exposed-edge bevels and shadows. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming and hovering pieces have a matching colored face, darker underside, and soft shadow. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
+
+`tests/test_sound_and_depth.gd` runs 29 checks for idle silence, growth whispers, bell timing, duplicate suppression, cancellation, audio fade races, raised surfaces, stable placement coordinates, and raised-rim dragging.
 
 ## Android export
 
@@ -81,6 +91,7 @@ Use the **4.7.2** binary, not a different `godot` installation:
 godot --headless --editor --path . --import --quit
 godot --headless --path . --script tests/test_rules.gd
 godot --headless --path . --script tests/test_growth.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
 godot --headless --path . --script tests/test_ui.gd
 ```
 
@@ -92,6 +103,8 @@ The rules runner executes 691 checks covering both sizes, all eleven pieces, rot
 - `scripts/game.gd`: piece generation, progression, game over, and history.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
+- `scripts/growth_audio.gd`: synchronized foliage and flower sounds.
+- `scripts/tile_surface.gd`: shallow depth for draggable pieces.
 - `scripts/botanical_brush.gd`: a cached, tintable watercolor brush with root-to-tip leaf veins.
 - `scripts/palette.gd`: five pure color pairs, adaptive field/control colors, and dull gray invalid previews.
 - `scripts/palette_choice.gd`: the palette button and pair swatches.

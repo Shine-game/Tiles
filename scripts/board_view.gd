@@ -2,8 +2,12 @@ class_name TileBoardView
 extends Control
 
 signal growth_finished
+signal growth_started
+signal growth_canceled
+signal flower_opened(corner: Vector2i, color: int)
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
+const Surface = preload("res://scripts/tile_surface.gd")
 const Growth = preload("res://scripts/growth.gd")
 var board: Array = []
 var pattern = Growth.new()
@@ -13,6 +17,7 @@ var field := Rect2()
 var pitch := 1.0
 var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
+var announced_flowers: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -20,6 +25,8 @@ func _ready() -> void:
 	set_process(false)
 
 func show_settled(grid: Array, preserve_direction: bool = false) -> void:
+	growth_canceled.emit()
+	announced_flowers.clear()
 	board = grid
 	pattern.build(grid, grid)
 	_adopt_directions(preserve_direction)
@@ -37,14 +44,22 @@ func animate_growth(before: Array, after: Array) -> void:
 	pattern.build(before, after)
 	_adopt_directions(true)
 	clock = 0
+	announced_flowers.clear()
 	growing = pattern.duration > 0
 	set_process(growing)
+	if growing:
+		growth_started.emit()
 	queue_redraw()
 
 func advance_growth(delta: float) -> void:
 	if not growing:
 		return
 	clock = minf(pattern.duration, clock + maxf(0, delta))
+	for corner: Vector2i in pattern.flowers:
+		var flower: Dictionary = pattern.flowers[corner]
+		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + Growth.FLOWER_POP * 0.12:
+			announced_flowers[corner] = true
+			flower_opened.emit(corner, flower.color)
 	if clock >= pattern.duration:
 		growing = false
 		set_process(false)
@@ -61,8 +76,14 @@ func update_geometry() -> void:
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	pitch = (side - 16.0) / board.size()
 
-func _point(position_in_grid: Vector2) -> Vector2:
+func surface_depth() -> float:
+	return Surface.depth(pitch)
+
+func _floor_point(position_in_grid: Vector2) -> Vector2:
 	return field.position + Vector2(8, 8) + position_in_grid * pitch
+
+func _point(position_in_grid: Vector2) -> Vector2:
+	return _floor_point(position_in_grid) - Vector2(0, surface_depth())
 
 static func pop(progress: float) -> float:
 	var t: float = clampf(progress, 0, 1)
@@ -85,6 +106,7 @@ func _draw() -> void:
 	frame.bg_color = Palette.floor_color()
 	frame.set_corner_radius_all(10)
 	draw_style_box(frame, field)
+	_draw_raised_garden()
 	_draw_guides()
 	for cell: Vector2i in pattern.arrivals:
 		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
@@ -102,6 +124,33 @@ func _draw() -> void:
 	for corner: Vector2i in pattern.flowers:
 		_draw_flower(corner, pattern.flowers[corner])
 
+func _draw_raised_garden() -> void:
+	var depth: float = surface_depth()
+	var top: Color = Palette.floor_color().lightened(0.035 if Palette.dark() else 0.018)
+	var side: Color = Palette.floor_color().darkened(0.28 if Palette.dark() else 0.14)
+	# Draw all shadows first so contiguous occupied cells form one terrace.
+	for cell: Vector2i in pattern.arrivals:
+		var base := Rect2(_floor_point(Vector2(cell)), Vector2.ONE * pitch)
+		if Growth.value(board, cell + Vector2i.DOWN) == 0:
+			for layer in range(3):
+				var shade := Rect2(base.position + Vector2(1, pitch + layer), Vector2(pitch, 2))
+				draw_rect(shade, Color(0, 0, 0, 0.045 * (3 - layer)))
+		if Growth.value(board, cell + Vector2i.RIGHT) == 0:
+			draw_rect(Rect2(base.position + Vector2(pitch, 1), Vector2(2, pitch)), Color(0, 0, 0, 0.065))
+	# No internal bevels between filled neighbors, regardless of their color.
+	for cell: Vector2i in pattern.arrivals:
+		var face := Rect2(_point(Vector2(cell)), Vector2.ONE * pitch)
+		draw_rect(face, top)
+		if Growth.value(board, cell + Vector2i.DOWN) == 0:
+			draw_rect(Rect2(face.position + Vector2(0, pitch), Vector2(pitch, depth)), side)
+			draw_line(face.position + Vector2(0, pitch), face.end, Color(side, 0.75), 0.8, true)
+		if Growth.value(board, cell + Vector2i.UP) == 0:
+			draw_line(face.position, face.position + Vector2(pitch, 0), Color(1, 1, 1, 0.24 if Palette.dark() else 0.65), 1, true)
+		if Growth.value(board, cell + Vector2i.LEFT) == 0:
+			draw_line(face.position, face.position + Vector2(0, pitch), Color(1, 1, 1, 0.18 if Palette.dark() else 0.40), 0.8, true)
+		if Growth.value(board, cell + Vector2i.RIGHT) == 0:
+			draw_line(face.position + Vector2(pitch, 0), face.end, Color(side, 0.55), 0.8, true)
+
 func _draw_guides() -> void:
 	var n: int = board.size()
 	var ink: Color = Palette.grid()
@@ -110,12 +159,14 @@ func _draw_guides() -> void:
 		for x in range(n + 1):
 			var opacity: float = pattern.grid_visibility(Vector2i(x - 1, y), Vector2i(x, y), clock)
 			if opacity > 0.001:
-				draw_line(_point(Vector2(x, y)), _point(Vector2(x, y + 1)), Color(ink, opacity * 0.24), width, true)
+				var lift := Vector2(0, -surface_depth()) if Growth.value(board, Vector2i(x - 1, y)) != 0 and Growth.value(board, Vector2i(x, y)) != 0 else Vector2.ZERO
+				draw_line(_floor_point(Vector2(x, y)) + lift, _floor_point(Vector2(x, y + 1)) + lift, Color(ink, opacity * 0.24), width, true)
 	for y in range(n + 1):
 		for x in range(n):
 			var opacity: float = pattern.grid_visibility(Vector2i(x, y - 1), Vector2i(x, y), clock)
 			if opacity > 0.001:
-				draw_line(_point(Vector2(x, y)), _point(Vector2(x + 1, y)), Color(ink, opacity * 0.24), width, true)
+				var lift := Vector2(0, -surface_depth()) if Growth.value(board, Vector2i(x, y - 1)) != 0 and Growth.value(board, Vector2i(x, y)) != 0 else Vector2.ZERO
+				draw_line(_floor_point(Vector2(x, y)) + lift, _floor_point(Vector2(x + 1, y)) + lift, Color(ink, opacity * 0.24), width, true)
 
 func _port_tangent(cell: Vector2i, neighbor: Vector2i) -> Vector2:
 	var direction := Vector2(neighbor - cell)
