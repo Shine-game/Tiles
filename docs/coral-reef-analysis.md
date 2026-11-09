@@ -26,6 +26,10 @@ Undo and Erase remove obsolete components and expose underlying coral, retaining
 
 Only runtime PNGs, masks, shader, and manifest are copied into `art/themes/coral_reef/`. Artwork imports use lossless compression, straight alpha, and mipmaps; masks use lossless linear scalar sampling without mipmaps. Completed components shed their reveal materials; active components each have a private material and a shared CPU clock. The manifest is explicitly included in Android exports.
 
+## Proportion correction from the original artwork reference
+
+The delivered PNGs place a 24px-wide main stem inside a 256px cell canvas. The original artist reference shows a substantially broader ordinary coral line, comparable to the line forming the enclosing colony rim. The renderer therefore expands arms **3× across the stem**, keeping their longitudinal dimensions and anchors fixed. Buds and side branches use **2.2×** uniform scale. Side branches are re-anchored at u=0.18/0.40 of each half-arm, with their reveal timing following those actual attachment positions; this preserves rounded tips and keeps them inside their cells. The supplied colony fringe, bloom folds, finish, and joining shelves retain their original scale. Masks inherit the same sprite transforms as their artwork, so reveal alignment remains exact. The source PNGs are unchanged.
+
 ## Future handoff improvements
 
 Use the structure and example manifest in [theme-handoff/README.md](theme-handoff/README.md). The main improvements are a single current contract, explicit geometry and lifecycle examples, and separation of runtime content, editable sources, reviews, and tooling. The original archive mixes an older artwork README with a newer authoritative integration guide and several large overlapping catalogs. Its narrative contains repeated timing and gameplay directions that can drift apart. Keep normative asset data in one versioned manifest; label illustrative engine code and gameplay suggestions as optional notes.

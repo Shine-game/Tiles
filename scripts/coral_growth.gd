@@ -5,6 +5,8 @@ const ROOT := "res://art/themes/coral_reef/"
 const SOFT := 0.035
 const CELL_SECONDS := 0.20
 const HALF_SECONDS := 0.10
+# Enlarged side branches attach earlier along each half-arm to stay inside its cell.
+const DETAIL_ATTACHMENTS := [0.18, 0.40]
 const DIR_NAMES := ["n", "e", "s", "w"]
 const OFFSETS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 static var manifest: Dictionary = {}
@@ -107,7 +109,7 @@ func build(before: Array, after: Array) -> void:
 			var name: String = DIR_NAMES[direction]
 			var arm := _add("arm_" + name, color, cell, center, old_arm, start, HALF_SECONDS, reverse, true)
 			for index in range(2):
-				var u: float = 0.34 if index == 0 else 0.72
+				var u: float = DETAIL_ATTACHMENTS[index]
 				_add("detail_%s_%d" % [name, index], color, cell, center, old_arm, arrival(arm, u) + 0.08, 0.16)
 	# Iterate in canonical row/column order; later placements append their own
 	# feature groups above surviving groups rather than sorting their layers apart.

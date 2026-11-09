@@ -3,6 +3,11 @@ extends Node2D
 
 const Model = preload("res://scripts/coral_growth.gd")
 const REVEAL = preload("res://art/themes/coral_reef/growth_reveal.gdshader")
+# The 256px canvas is an anchor grid, not the painted line width. Match
+# ordinary coral to the substantial line forming the supplied colony's rim.
+const LINE_BREADTH := 3.0
+const BUD_SCALE := 2.2
+const DETAIL_SCALE := 2.2
 static var textures: Dictionary = {}
 var registry: Dictionary = {}
 var groups: Dictionary = {}
@@ -69,6 +74,21 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			# Child insertion order keeps each complete colony together.
 			_group(event, settled).add_child(sprite)
 			registry[identity] = sprite
+		# Stem anchors stay fixed. Enlarge sprigs uniformly about their attachment
+		# instead of flattening their round tips with the stem's transverse scale.
+		if event.id == "core":
+			sprite.scale = Vector2.ONE * BUD_SCALE
+		elif event.id.begins_with("arm_"):
+			var direction: String = event.id.split("_")[1]
+			sprite.scale = Vector2(LINE_BREADTH, 1) if direction in ["n", "s"] else Vector2(1, LINE_BREADTH)
+		elif event.id.begins_with("detail_"):
+			var parts: PackedStringArray = event.id.split("_")
+			var direction_index: int = Model.DIR_NAMES.find(parts[1])
+			var attachment: Array = Model.specification().components[event.id].start
+			var source := Vector2(attachment[0], attachment[1]) - Vector2(128, 128)
+			var target := Vector2(Model.OFFSETS[direction_index]) * 128 * float(Model.DETAIL_ATTACHMENTS[int(parts[2])])
+			sprite.scale = Vector2.ONE * DETAIL_SCALE
+			sprite.position = event.center * 256 + target - source * DETAIL_SCALE
 		if settled or event.old:
 			sprite.material = null
 		else:

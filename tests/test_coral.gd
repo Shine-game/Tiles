@@ -45,7 +45,7 @@ func _run() -> void:
 	var outward: Dictionary = model.components[Coral.key("arm_e", 1, Vector2i(4, 4))]
 	check(Coral.arrival(outward, 0) < Coral.arrival(outward, 1), "outgoing half arm reveals center before edge")
 	var detail: Dictionary = model.components[Coral.key("detail_e_0", 1, Vector2i(4, 4))]
-	check(is_equal_approx(detail.start, Coral.arrival(outward, 0.34) + 0.08), "detail grows after parent front reaches its attachment")
+	check(is_equal_approx(detail.start, Coral.arrival(outward, Coral.DETAIL_ATTACHMENTS[0]) + 0.08), "detail grows after parent front reaches its attachment")
 	before[4][6] = 1
 	after[4][6] = 1
 	model.build(before, after)
@@ -164,6 +164,26 @@ func _run() -> void:
 		check(scene.board_view.pattern.unions.is_empty(), "invalid shelf removed after " + action)
 		scene.board_view.advance_growth(10)
 		check(scene.board_view.pattern.unions.is_empty(), "canceled work cannot reappear after " + action)
+	# Enlarged artwork must keep seams fixed and stay inside its owning cell.
+	var cross: Array = Rules.empty_board(9)
+	cross[4][4] = 1
+	for offset: Vector2i in Coral.OFFSETS:
+		cross[4 + offset.y][4 + offset.x] = 1
+	scene.board_view.show_settled(cross)
+	for identity: String in scene.board_view.pattern.components:
+		var event: Dictionary = scene.board_view.pattern.components[identity]
+		if not event.id.begins_with("arm_") and not event.id.begins_with("detail_"):
+			continue
+		var sprite: Sprite2D = scene.board_view.coral_visuals.registry[identity]
+		var used := Rect2(sprite.texture.get_image().get_used_rect())
+		used.position -= Vector2(128, 128)
+		var drawn: Rect2 = sprite.transform * used
+		var cell_bounds := Rect2((event.center - Vector2(0.5, 0.5)) * 256, Vector2(256, 256)).grow(0.01)
+		check(cell_bounds.encloses(drawn), "painted branch stays inside its logical cell: " + identity)
+		if event.id.begins_with("arm_"):
+			var meta: Dictionary = Coral.specification().components[event.id]
+			var end := Vector2(meta.end[0], meta.end[1]) - Vector2(128, 128)
+			check((sprite.transform * end).is_equal_approx(event.center * 256 + end), "widened stem keeps its exact edge anchor: " + identity)
 	# Worst-case topology derives every valid feature without arbitrary truncation.
 	var dense: Array = Rules.empty_board(11)
 	for row: Array in dense:
