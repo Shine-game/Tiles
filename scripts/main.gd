@@ -262,7 +262,7 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
 func _design_fingerprint() -> String:
-	return Gallery.fingerprint(game.board, Palette.selected_index, "labyrinth" if Palette.labyrinth else "vines")
+	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id())
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -467,10 +467,10 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
 
 func _layout_palette_menu(pad: float) -> void:
-	var options: Array = [theme_button] + ([] if Palette.labyrinth else palette_options) + [size_picker, new_button, gallery_button]
+	var options: Array = [theme_button] + (palette_options if Palette.theme_id() == "vines" else []) + [size_picker, new_button, gallery_button]
 	for option: Control in palette_options:
-		option.visible = not Palette.labyrinth
-	theme_button.text = "Garden: Labyrinth" if Palette.labyrinth else "Garden: Vines"
+		option.visible = Palette.theme_id() == "vines"
+	theme_button.text = "Garden: " + Palette.theme_name()
 	var row_height: float = clampf((size.y - 2 * pad - 12) / options.size() - 4, 22, 44)
 	var width: float = minf(260, size.x - 2 * pad)
 	var height: float = (row_height + 4) * options.size() + 8
@@ -512,7 +512,11 @@ func _toggle_palette_menu() -> void:
 	palette_menu.visible = not palette_menu.visible
 
 func _toggle_theme() -> void:
-	Palette.labyrinth = not Palette.labyrinth
+	_select_theme(Palette.THEMES[(Palette.THEMES.find(Palette.theme_id()) + 1) % Palette.THEMES.size()])
+
+func _select_theme(id: String) -> void:
+	if not Palette.select_theme(id):
+		return
 	palette_menu.hide()
 	dragging = false
 	_layout()
@@ -603,7 +607,7 @@ func _save_design() -> void:
 	saving = true
 	var snapshot: Array = game.board.duplicate(true)
 	var palette_index: int = Palette.selected_index
-	var theme: String = "labyrinth" if Palette.labyrinth else "vines"
+	var theme: String = Palette.theme_id()
 	var fingerprint := _design_fingerprint()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(900, 900)
@@ -618,6 +622,8 @@ func _save_design() -> void:
 	# Preserve established leaf direction in the clean artwork capture.
 	artwork.direction_by_edge = board_view.direction_by_edge.duplicate(true)
 	artwork._adopt_directions(true)
+	if board_view.coral_visuals != null and artwork.coral_visuals != null:
+		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	await RenderingServer.frame_post_draw
 	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme)
 	viewport.queue_free()

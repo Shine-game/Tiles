@@ -94,7 +94,7 @@ func _run() -> void:
 	scene.board_view.set_process(false)
 	scene.board_view.advance_growth(0.05)
 	var growth_clock: float = scene.board_view.clock
-	scene._toggle_theme()
+	scene._select_theme("vines")
 	check(not Palette.labyrinth and scene.board_view.growing and is_equal_approx(scene.board_view.clock, growth_clock), "switching to vines preserves current growth clock")
 	scene.board_view.set_process(false)
 	scene._toggle_theme()
@@ -104,7 +104,7 @@ func _run() -> void:
 	check(not scene.board_view.growing, "labyrinth finishes only after benches resolve")
 	scene.board_view.show_settled(before)
 	check(scene.board_view.pattern.flowers.size() == 3, "removing a square removes its tree and restores appropriate hedge walls")
-	scene._toggle_theme()
+	scene._select_theme("vines")
 	check(not Palette.labyrinth and scene.palette_options.all(func(option): return option.visible), "vine theme and all five palettes remain available")
 	scene.queue_free()
 	await create_timer(0.12).timeout

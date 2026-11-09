@@ -8,6 +8,8 @@ signal flower_opened(corner: Vector2i, color: int)
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Surface = preload("res://scripts/tile_surface.gd")
+const Coral = preload("res://scripts/coral_growth.gd")
+const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
 const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
 const Growth = preload("res://scripts/growth.gd")
@@ -23,6 +25,8 @@ var announced_flowers: Dictionary = {}
 var show_guides := true
 var growth_before: Array = []
 var labyrinth := false
+var coral_reef := false
+var coral_visuals: CoralVisuals
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -35,6 +39,7 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	board = grid
 	_build_pattern(grid, grid)
 	_adopt_directions(preserve_direction)
+	_sync_coral(true, preserve_direction)
 	clock = 0
 	growing = false
 	set_process(false)
@@ -43,12 +48,13 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 func sync_board(grid: Array) -> void:
 	if pattern.board != grid:
 		show_settled(grid)
-	elif labyrinth != Palette.labyrinth:
+	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef:
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
 	labyrinth = Palette.labyrinth
-	pattern = MazeGrowth.new() if labyrinth else Growth.new()
+	coral_reef = Palette.coral_reef
+	pattern = Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())
 	pattern.build(before, after)
 
 func _restyle() -> void:
@@ -57,12 +63,29 @@ func _restyle() -> void:
 		return
 	_build_pattern(growth_before, board)
 	_adopt_directions(true)
+	_sync_coral(false, true)
 	clock = minf(clock, pattern.duration)
+	if coral_reef:
+		coral_visuals.advance(clock)
 	growing = clock < pattern.duration
 	set_process(growing)
 	if not growing:
 		growth_finished.emit()
 	queue_redraw()
+
+func _sync_coral(settled: bool, preserve: bool) -> void:
+	if coral_visuals != null and not preserve:
+		coral_visuals.clear()
+	if coral_reef:
+		if coral_visuals == null:
+			coral_visuals = CoralLayer.new()
+			coral_visuals.z_index = 1
+			add_child(coral_visuals)
+		coral_visuals.show()
+		coral_visuals.reconcile(pattern, settled, true)
+		coral_visuals.advance(0 if settled else clock)
+	elif coral_visuals != null:
+		coral_visuals.hide()
 
 func animate_growth(before: Array, after: Array) -> void:
 	board = after
@@ -70,6 +93,7 @@ func animate_growth(before: Array, after: Array) -> void:
 	_build_pattern(before, after)
 	_adopt_directions(true)
 	clock = 0
+	_sync_coral(false, true)
 	announced_flowers.clear()
 	growing = pattern.duration > 0
 	set_process(growing)
@@ -81,6 +105,8 @@ func advance_growth(delta: float) -> void:
 	if not growing:
 		return
 	clock = minf(pattern.duration, clock + maxf(0, delta))
+	if coral_reef:
+		coral_visuals.advance(clock)
 	for corner: Vector2i in pattern.flowers:
 		var flower: Dictionary = pattern.flowers[corner]
 		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + Growth.FLOWER_POP * 0.12:
@@ -101,6 +127,9 @@ func update_geometry() -> void:
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	pitch = (side - 16.0) / board.size()
+	if coral_visuals != null:
+		coral_visuals.position = _point(Vector2.ZERO)
+		coral_visuals.scale = Vector2.ONE * pitch / 256.0
 
 func surface_depth() -> float:
 	return Surface.depth(pitch)
@@ -135,6 +164,8 @@ func _draw() -> void:
 	_draw_raised_garden()
 	if show_guides:
 		_draw_guides()
+	if coral_reef:
+		return
 	if labyrinth:
 		MazeRenderer.draw(self)
 		return

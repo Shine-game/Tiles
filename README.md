@@ -23,11 +23,19 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Labyrinth theme
 
-Choose **Settings → Garden: Vines** to switch to **Garden: Labyrinth**, or tap the same entry to return. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
+The **Garden** entry in Settings cycles **Vines → Labyrinth → Coral Reef → Vines**. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
 
 The same side-connected growth schedule extends hedges between matching-color square centers. Walls occupy about 24% of a cell width, with two staggered rows of roses on the flowering shrubs. Ordinary centers grow taller, faceted pyramid hedges with broader bases (36% of a cell width). A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
 
 Paths are visual sandy spaces; there is no player character or route-solving rule. The theme changes the drawing, not the puzzle's symmetry or placement rules. Growth whispers and bell accents accompany hedges and new trees.
+
+## Coral Reef theme
+
+Select **Coral Reef** with the Garden entry in Settings. This third theme uses the supplied transparent salmon and turquoise artwork and grayscale spatial growth fields. Source buds, half-arms, and attached details animate independently; completed coral remains visible while new branches appear. Same-color 2×2 loops grow layered colonies. Overlapping and edge-adjacent colonies form correctly rotated reef shelves; opposite colors and diagonal-only cell contacts never connect. Independent pieces awaken their buds together, and multiple outside sources grow simultaneous fronts.
+
+Place remains locked through all branch, colony, finish, and shelf stages. Undo/Erase reconcile valid layers and preserve established ordering; reset clears active work. Gallery captures use the same artwork ordering and save the theme ID. The pale seafoam floor is an integration choice; the rest of the screen stays white. Existing sounds are reused.
+
+See [the package assessment](docs/coral-reef-analysis.md), [independent audit](docs/coral-reef-audit.json), and [future-theme handoff template](docs/theme-handoff/README.md). Runtime assets are unmodified from the uploaded package; source masters and review videos do not ship in the APK. On-device performance remains unverified, especially the worst-case 11×11 reef with 2,531 components.
 
 ## Local gallery
 
@@ -110,6 +118,7 @@ godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_dep
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd
+godot --headless --path . --script tests/test_coral.gd
 ```
 
 The runners cover generation, symmetry orbits, placement, independent helper budgets, exact-piece Undo, non-refunding erasures, recovery from empty/finished gardens, routed touch and mouse gestures, committed symmetry indicators, the growth gate, audio, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display `tests/test_ui.gd` also writes `/tmp/tiles-godot.png`.
@@ -117,10 +126,14 @@ The runners cover generation, symmetry orbits, placement, independent helper bud
 Run `tests/test_gallery.gd` on a graphical display to additionally test real clean artwork capture, repeated-save deduplication, gallery navigation, and saving a 100% filled board. It writes `build/helpers-preview.png`, `build/gallery-artwork-preview.png`, and `build/gallery-browser-preview.png` for visual review. Tests use isolated temporary gallery directories and remove only their own records.
 Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-driven hedge/tree/bench sequence to `build/labyrinth-frames/`, `build/labyrinth-preview.png`, and clean gallery artwork at `build/labyrinth-artwork.png`.
 
+Run `tests/render_coral.gd` on a graphical display for the real supplied shader, Place-driven colony/shelf growth, clean gallery capture, and undo reconciliation. It writes `build/coral-frames/`, `build/coral-preview.png`, and `build/coral-artwork.png`.
+
 ## Structure
 
 - `scripts/rules.gd`: pure board, placement, and symmetry functions.
 - `scripts/game.gd`: piece generation, progression, game over, history, and limited helpers.
+- `scripts/coral_growth.gd`: directional multi-source reveal schedule and derived colony/shelf events.
+- `scripts/coral_visuals.gd`: persistent keyed sprites, feature order, texture cache, and private active reveal materials.
 - `scripts/gallery.gd`: persistent local artwork and metadata storage.
 - `scripts/labyrinth_growth.gd`: shared-wall openings and bench timing after tree growth.
 - `scripts/labyrinth_renderer.gd`: full green/rose shrub walls, broad pyramid centers, taller trees, and wooden benches.

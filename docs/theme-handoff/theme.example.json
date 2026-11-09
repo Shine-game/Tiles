@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "theme": {"id": "example_theme", "name": "Example Theme", "version": "1.0.0"},
+  "coordinates": {"cell_px": [256, 256], "origin": "top_left", "rotation": "clockwise", "anchors": {"center": [128, 128], "n": [128, 0], "e": [256, 128], "s": [128, 256], "w": [0, 128]}},
+  "colors": [{"logical_id": 1, "variant": "a", "swatch": "#F49F7F"}, {"logical_id": 2, "variant": "b", "swatch": "#69BFAE"}],
+  "floor": {"empty": "#E9F2EF", "occupied": "#F0F6F0", "screen": "#FFFFFF"},
+  "components": [
+    {"id": "core", "artwork": {"a": "artwork/variant-a/core.png", "b": "artwork/variant-b/core.png"}, "canvas_px": [256, 256], "pivot_px": [128, 128], "footprint_cells": [[0, 0]], "layer": "centers", "ownership": "logical_color_and_cell", "reveal": {"mask": "masks/core.png", "encoding": "linear_grayscale", "direction": "forward", "duration_seconds": 0.18, "trigger": "center_reached"}},
+    {"id": "arm_n", "artwork": {"a": "artwork/variant-a/arm_n.png", "b": "artwork/variant-b/arm_n.png"}, "canvas_px": [256, 256], "pivot_px": [128, 128], "footprint_cells": [[0, 0]], "layer": "arms", "ownership": "logical_color_cell_and_direction", "reveal": {"mask": "masks/arm_n.png", "encoding": "linear_grayscale", "zero": "cell_center", "one": "north_edge_midpoint", "direction": "reversible", "duration_seconds": 0.1, "trigger": "matching_neighbor_connected"}}
+  ],
+  "layer_order": ["arms", "centers", "details", "landmark_feature_groups", "joining_feature_groups"],
+  "layer_policy": "Keep each landmark's child layers together; preserve surviving feature creation order.",
+  "assembly_contract": {"connections": "same_logical_color_side_contacts", "unconnected_edges": "no_arm", "multiple_fronts": "earliest_pixel_arrival", "existing_components": "retain", "undo_and_erase": "remove_invalid_keys_and_preserve_survivors", "cold_load": "completed_canonical_order"},
+  "review_fixtures": "../review/scenarios.json",
+  "resource_budget": {"measured": false, "device": null, "peak_texture_bytes": null, "peak_components": null, "frame_time_ms": null},
+  "gameplay_changes": "none; project-owned rules",
+  "rights_document": "../RIGHTS.md"
+}

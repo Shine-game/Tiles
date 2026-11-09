@@ -13,9 +13,24 @@ const INVALID := Color("96999c")
 const INVALID_BORDER := Color("6f7377")
 static var selected_index := 0
 static var labyrinth := false
+static var coral_reef := false
+const THEMES := ["vines", "labyrinth", "coral_reef"]
 const HEDGE_GREEN := Color("119d45")
 const HEDGE_ROSE := Color("f43877")
 const SAND := Color("efe1c3")
+
+static func theme_id() -> String:
+	return "coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines")
+
+static func theme_name() -> String:
+	return {"vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}[theme_id()]
+
+static func select_theme(id: String) -> bool:
+	if id not in THEMES:
+		return false
+	coral_reef = id == "coral_reef"
+	labyrinth = id == "labyrinth"
+	return true
 
 static func select(index: int) -> bool:
 	if index < 0 or index >= PAIRS.size():
@@ -24,6 +39,8 @@ static func select(index: int) -> bool:
 	return true
 
 static func tile(color: int) -> Color:
+	if coral_reef:
+		return Color("f49f7f") if color == 1 else Color("69bfae")
 	if labyrinth:
 		return HEDGE_GREEN if color == 1 else HEDGE_ROSE
 	return PAIRS[selected_index].colors[0 if color == 1 else 1]
@@ -38,6 +55,8 @@ static func blossom(color: int) -> Color:
 	return accent(color)
 
 static func floor_color() -> Color:
+	if coral_reef:
+		return Color("e9f2ef")
 	return SAND if labyrinth else PAIRS[selected_index].floor
 
 static func dark() -> bool:
@@ -59,6 +78,8 @@ static func grid() -> Color:
 	return Color("bbc9e4") if dark() else Color("947c9c")
 
 static func garden() -> Color:
+	if coral_reef:
+		return Color("f0f6f0")
 	if labyrinth:
 		return Color("f6e9ce")
 	# One continuous terrace, including boundaries between the two pigments.

@@ -1,0 +1,4005 @@
+{
+  "schema_version": "1.0.0",
+  "asset_specification_version": "coral-reef-artwork-1.0",
+  "theme": {
+    "id": "coral_reef",
+    "name": "Coral Reef",
+    "engine": "Godot 4.x",
+    "supported_board_sizes": [
+      9,
+      11
+    ],
+    "base_tile_px": [
+      256,
+      256
+    ],
+    "landmark_px": [
+      512,
+      512
+    ],
+    "art_direction": "Broad simplified folds and restrained chunky fingers, fine surface ridges; overhead shallow relief.",
+    "source_catalog": "asset_catalog.json"
+  },
+  "paths": {
+    "root": "directory containing this manifest",
+    "recommended_godot_root": "res://art/themes/coral_reef/",
+    "integration_guide": "CODEX_INTEGRATION.md",
+    "reveal_shader": "growth_reveal.gdshader",
+    "source_units": "pixels"
+  },
+  "color_variants": [
+    {
+      "id": "salmon",
+      "palette_shadow_to_highlight": [
+        "#7a3a3a",
+        "#c96256",
+        "#f49f7f",
+        "#ffdcB7",
+        "#fff2dc"
+      ],
+      "artwork_directory": "artwork/salmon",
+      "tint": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "turquoise",
+      "palette_shadow_to_highlight": [
+        "#1c5656",
+        "#348983",
+        "#69bfae",
+        "#bae7cd",
+        "#e9fae2"
+      ],
+      "artwork_directory": "artwork/turquoise",
+      "tint": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "color_policy": {
+    "geometry_and_masks_shared": true,
+    "runtime_recoloring_required": false,
+    "connection_test": "equal authoritative logical color IDs, not RGB similarity",
+    "opposite_colors_connect": false,
+    "diagonal_cell_contacts_connect": false,
+    "center_seed": "reuse core; its connection eligibility comes from the existing board model, not a hardcoded green treatment"
+  },
+  "coordinates": {
+    "origin": "top-left",
+    "x": "right",
+    "y": "down",
+    "units": "source pixels",
+    "anchors": {
+      "n": [
+        128,
+        0
+      ],
+      "e": [
+        256,
+        128
+      ],
+      "s": [
+        128,
+        256
+      ],
+      "w": [
+        0,
+        128
+      ],
+      "center": [
+        128,
+        128
+      ]
+    },
+    "rotation": "clockwise in degrees about canvas center; connection bits N=1 E=2 S=4 W=8; rotate mask left in a 4-bit word once per quarter turn"
+  },
+  "connection_bits": {
+    "n": 1,
+    "e": 2,
+    "s": 4,
+    "w": 8
+  },
+  "direction_offsets_cells": {
+    "n": [
+      0,
+      -1
+    ],
+    "e": [
+      1,
+      0
+    ],
+    "s": [
+      0,
+      1
+    ],
+    "w": [
+      -1,
+      0
+    ]
+  },
+  "rotation": {
+    "clockwise_positive": true,
+    "degrees": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "mask_one_quarter_turn": "((mask << 1) & 15) | (mask >> 3)",
+    "point_one_quarter_turn_about_canvas_center": "(x,y) -> (H-y,x), new size=(H,W)",
+    "tile_pivot_px": [
+      128,
+      128
+    ],
+    "colony_pivot_px": [
+      256,
+      256
+    ],
+    "union_pivot": "canvas_px/2",
+    "normal_tile_rendering": "Use supplied directional components without rotating the persistent core. Canonical reference tiles are inspection and cold-load alternatives, not growth animations."
+  },
+  "topologies": [
+    {
+      "id": "00_isolated",
+      "connection_mask": 0,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/00_isolated.png",
+        "turquoise": "references/turquoise/00_isolated.png"
+      },
+      "topology_id": 0,
+      "logical_connections": [],
+      "layer_order": [
+        "core"
+      ]
+    },
+    {
+      "id": "01_endpoint",
+      "connection_mask": 1,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/01_endpoint.png",
+        "turquoise": "references/turquoise/01_endpoint.png"
+      },
+      "topology_id": 1,
+      "logical_connections": [
+        "n"
+      ],
+      "layer_order": [
+        "arm_n",
+        "core",
+        "detail_n_0",
+        "detail_n_1"
+      ]
+    },
+    {
+      "id": "02_straight",
+      "connection_mask": 5,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/02_straight.png",
+        "turquoise": "references/turquoise/02_straight.png"
+      },
+      "topology_id": 2,
+      "logical_connections": [
+        "n",
+        "s"
+      ],
+      "layer_order": [
+        "arm_n",
+        "arm_s",
+        "core",
+        "detail_n_0",
+        "detail_n_1",
+        "detail_s_0",
+        "detail_s_1"
+      ]
+    },
+    {
+      "id": "03_corner",
+      "connection_mask": 3,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/03_corner.png",
+        "turquoise": "references/turquoise/03_corner.png"
+      },
+      "topology_id": 3,
+      "logical_connections": [
+        "n",
+        "e"
+      ],
+      "layer_order": [
+        "arm_n",
+        "arm_e",
+        "core",
+        "detail_n_0",
+        "detail_n_1",
+        "detail_e_0",
+        "detail_e_1"
+      ]
+    },
+    {
+      "id": "04_t_junction",
+      "connection_mask": 11,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/04_t_junction.png",
+        "turquoise": "references/turquoise/04_t_junction.png"
+      },
+      "topology_id": 4,
+      "logical_connections": [
+        "n",
+        "e",
+        "w"
+      ],
+      "layer_order": [
+        "arm_n",
+        "arm_e",
+        "arm_w",
+        "core",
+        "detail_n_0",
+        "detail_n_1",
+        "detail_e_0",
+        "detail_e_1",
+        "detail_w_0",
+        "detail_w_1"
+      ]
+    },
+    {
+      "id": "05_crossroads",
+      "connection_mask": 15,
+      "canonical_orientation": "N endpoint; NS straight; NE corner; NEW T; NESW cross",
+      "valid_rotations": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "completed_reference": {
+        "salmon": "references/salmon/05_crossroads.png",
+        "turquoise": "references/turquoise/05_crossroads.png"
+      },
+      "topology_id": 5,
+      "logical_connections": [
+        "n",
+        "e",
+        "s",
+        "w"
+      ],
+      "layer_order": [
+        "arm_n",
+        "arm_e",
+        "arm_s",
+        "arm_w",
+        "core",
+        "detail_n_0",
+        "detail_n_1",
+        "detail_e_0",
+        "detail_e_1",
+        "detail_s_0",
+        "detail_s_1",
+        "detail_w_0",
+        "detail_w_1"
+      ]
+    }
+  ],
+  "components": {
+    "core": {
+      "id": "core",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/core.png",
+        "turquoise": "artwork/turquoise/core.png"
+      },
+      "reveal_mask": "masks/core.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            128,
+            90
+          ]
+        ]
+      },
+      "start": [
+        128,
+        128
+      ],
+      "end": [
+        128,
+        90
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "growth_field": {
+        "kind": "radial_outward",
+        "center_px": [
+          128,
+          128
+        ],
+        "distance_scale_px": 38,
+        "equation": "clamp(length(p-center)/38,0,1)"
+      },
+      "layer": 20,
+      "start_connection": [
+        128,
+        128
+      ],
+      "end_connection": [
+        128,
+        90
+      ],
+      "mask_file": "masks/core.png",
+      "layer_order_hint": 20,
+      "palette_files": {
+        "salmon": "artwork/salmon/core.png",
+        "turquoise": "artwork/turquoise/core.png"
+      },
+      "duration_seconds": 0.18,
+      "instance_key": "core/color/cell"
+    },
+    "arm_n": {
+      "id": "arm_n",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
+      },
+      "reveal_mask": "masks/arm_n.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            128,
+            0
+          ]
+        ]
+      },
+      "start": [
+        128,
+        128
+      ],
+      "end": [
+        128,
+        0
+      ],
+      "allowed_growth": [
+        "center_to_edge",
+        "edge_to_center"
+      ],
+      "reversible": true,
+      "can_branch": true,
+      "dependencies": [
+        {
+          "event": "visible front reaches center or edge anchor"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 10,
+      "direction": "n",
+      "path_length_px": 128,
+      "attachment_points": [
+        {
+          "u": 0.34,
+          "component": "detail_n_0"
+        },
+        {
+          "u": 0.72,
+          "component": "detail_n_1"
+        }
+      ],
+      "start_connection": [
+        128,
+        128
+      ],
+      "end_connection": [
+        128,
+        0
+      ],
+      "mask_file": "masks/arm_n.png",
+      "layer_order_hint": 10,
+      "palette_files": {
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            128
+          ],
+          [
+            128,
+            0
+          ]
+        ],
+        "equation": "clamp(dot(p-start,end-start)/dot(end-start,end-start),0,1)"
+      },
+      "duration_seconds": 0.1,
+      "instance_key": "arm/color/cell/direction"
+    },
+    "detail_n_0": {
+      "id": "detail_n_0",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_n_0.png",
+        "turquoise": "artwork/turquoise/detail_n_0.png"
+      },
+      "reveal_mask": "masks/detail_n_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            84.48
+          ],
+          [
+            100,
+            52.48
+          ]
+        ]
+      },
+      "start": [
+        128,
+        84.48
+      ],
+      "end": [
+        100,
+        52.48
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_n",
+          "at_path_u": 0.34,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        128,
+        84.48
+      ],
+      "end_connection": [
+        100,
+        52.48
+      ],
+      "mask_file": "masks/detail_n_0.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_n_0.png",
+        "turquoise": "artwork/turquoise/detail_n_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            84.48
+          ],
+          [
+            100,
+            52.48
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "detail_n_1": {
+      "id": "detail_n_1",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_n_1.png",
+        "turquoise": "artwork/turquoise/detail_n_1.png"
+      },
+      "reveal_mask": "masks/detail_n_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            35.84
+          ],
+          [
+            156,
+            3.84
+          ]
+        ]
+      },
+      "start": [
+        128,
+        35.84
+      ],
+      "end": [
+        156,
+        3.84
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_n",
+          "at_path_u": 0.72,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        128,
+        35.84
+      ],
+      "end_connection": [
+        156,
+        3.84
+      ],
+      "mask_file": "masks/detail_n_1.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_n_1.png",
+        "turquoise": "artwork/turquoise/detail_n_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            35.84
+          ],
+          [
+            156,
+            3.84
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "arm_e": {
+      "id": "arm_e",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/arm_e.png",
+        "turquoise": "artwork/turquoise/arm_e.png"
+      },
+      "reveal_mask": "masks/arm_e.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ]
+      },
+      "start": [
+        128,
+        128
+      ],
+      "end": [
+        256,
+        128
+      ],
+      "allowed_growth": [
+        "center_to_edge",
+        "edge_to_center"
+      ],
+      "reversible": true,
+      "can_branch": true,
+      "dependencies": [
+        {
+          "event": "visible front reaches center or edge anchor"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 10,
+      "direction": "e",
+      "path_length_px": 128,
+      "attachment_points": [
+        {
+          "u": 0.34,
+          "component": "detail_e_0"
+        },
+        {
+          "u": 0.72,
+          "component": "detail_e_1"
+        }
+      ],
+      "start_connection": [
+        128,
+        128
+      ],
+      "end_connection": [
+        256,
+        128
+      ],
+      "mask_file": "masks/arm_e.png",
+      "layer_order_hint": 10,
+      "palette_files": {
+        "salmon": "artwork/salmon/arm_e.png",
+        "turquoise": "artwork/turquoise/arm_e.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ],
+        "equation": "clamp(dot(p-start,end-start)/dot(end-start,end-start),0,1)"
+      },
+      "duration_seconds": 0.1,
+      "instance_key": "arm/color/cell/direction"
+    },
+    "detail_e_0": {
+      "id": "detail_e_0",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_e_0.png",
+        "turquoise": "artwork/turquoise/detail_e_0.png"
+      },
+      "reveal_mask": "masks/detail_e_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            171.52,
+            128
+          ],
+          [
+            203.52,
+            100
+          ]
+        ]
+      },
+      "start": [
+        171.52,
+        128
+      ],
+      "end": [
+        203.52,
+        100
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_e",
+          "at_path_u": 0.34,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        171.52,
+        128
+      ],
+      "end_connection": [
+        203.52,
+        100
+      ],
+      "mask_file": "masks/detail_e_0.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_e_0.png",
+        "turquoise": "artwork/turquoise/detail_e_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            171.52,
+            128
+          ],
+          [
+            203.52,
+            100
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "detail_e_1": {
+      "id": "detail_e_1",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_e_1.png",
+        "turquoise": "artwork/turquoise/detail_e_1.png"
+      },
+      "reveal_mask": "masks/detail_e_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            220.16,
+            128
+          ],
+          [
+            252.16,
+            156
+          ]
+        ]
+      },
+      "start": [
+        220.16,
+        128
+      ],
+      "end": [
+        252.16,
+        156
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_e",
+          "at_path_u": 0.72,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        220.16,
+        128
+      ],
+      "end_connection": [
+        252.16,
+        156
+      ],
+      "mask_file": "masks/detail_e_1.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_e_1.png",
+        "turquoise": "artwork/turquoise/detail_e_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            220.16,
+            128
+          ],
+          [
+            252.16,
+            156
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "arm_s": {
+      "id": "arm_s",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/arm_s.png",
+        "turquoise": "artwork/turquoise/arm_s.png"
+      },
+      "reveal_mask": "masks/arm_s.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            128,
+            256
+          ]
+        ]
+      },
+      "start": [
+        128,
+        128
+      ],
+      "end": [
+        128,
+        256
+      ],
+      "allowed_growth": [
+        "center_to_edge",
+        "edge_to_center"
+      ],
+      "reversible": true,
+      "can_branch": true,
+      "dependencies": [
+        {
+          "event": "visible front reaches center or edge anchor"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 10,
+      "direction": "s",
+      "path_length_px": 128,
+      "attachment_points": [
+        {
+          "u": 0.34,
+          "component": "detail_s_0"
+        },
+        {
+          "u": 0.72,
+          "component": "detail_s_1"
+        }
+      ],
+      "start_connection": [
+        128,
+        128
+      ],
+      "end_connection": [
+        128,
+        256
+      ],
+      "mask_file": "masks/arm_s.png",
+      "layer_order_hint": 10,
+      "palette_files": {
+        "salmon": "artwork/salmon/arm_s.png",
+        "turquoise": "artwork/turquoise/arm_s.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            128
+          ],
+          [
+            128,
+            256
+          ]
+        ],
+        "equation": "clamp(dot(p-start,end-start)/dot(end-start,end-start),0,1)"
+      },
+      "duration_seconds": 0.1,
+      "instance_key": "arm/color/cell/direction"
+    },
+    "detail_s_0": {
+      "id": "detail_s_0",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_s_0.png",
+        "turquoise": "artwork/turquoise/detail_s_0.png"
+      },
+      "reveal_mask": "masks/detail_s_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            171.52
+          ],
+          [
+            156,
+            203.52
+          ]
+        ]
+      },
+      "start": [
+        128,
+        171.52
+      ],
+      "end": [
+        156,
+        203.52
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_s",
+          "at_path_u": 0.34,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        128,
+        171.52
+      ],
+      "end_connection": [
+        156,
+        203.52
+      ],
+      "mask_file": "masks/detail_s_0.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_s_0.png",
+        "turquoise": "artwork/turquoise/detail_s_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            171.52
+          ],
+          [
+            156,
+            203.52
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "detail_s_1": {
+      "id": "detail_s_1",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_s_1.png",
+        "turquoise": "artwork/turquoise/detail_s_1.png"
+      },
+      "reveal_mask": "masks/detail_s_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            220.16
+          ],
+          [
+            100,
+            252.16
+          ]
+        ]
+      },
+      "start": [
+        128,
+        220.16
+      ],
+      "end": [
+        100,
+        252.16
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_s",
+          "at_path_u": 0.72,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        128,
+        220.16
+      ],
+      "end_connection": [
+        100,
+        252.16
+      ],
+      "mask_file": "masks/detail_s_1.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_s_1.png",
+        "turquoise": "artwork/turquoise/detail_s_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            220.16
+          ],
+          [
+            100,
+            252.16
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "arm_w": {
+      "id": "arm_w",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/arm_w.png",
+        "turquoise": "artwork/turquoise/arm_w.png"
+      },
+      "reveal_mask": "masks/arm_w.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            0,
+            128
+          ]
+        ]
+      },
+      "start": [
+        128,
+        128
+      ],
+      "end": [
+        0,
+        128
+      ],
+      "allowed_growth": [
+        "center_to_edge",
+        "edge_to_center"
+      ],
+      "reversible": true,
+      "can_branch": true,
+      "dependencies": [
+        {
+          "event": "visible front reaches center or edge anchor"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 10,
+      "direction": "w",
+      "path_length_px": 128,
+      "attachment_points": [
+        {
+          "u": 0.34,
+          "component": "detail_w_0"
+        },
+        {
+          "u": 0.72,
+          "component": "detail_w_1"
+        }
+      ],
+      "start_connection": [
+        128,
+        128
+      ],
+      "end_connection": [
+        0,
+        128
+      ],
+      "mask_file": "masks/arm_w.png",
+      "layer_order_hint": 10,
+      "palette_files": {
+        "salmon": "artwork/salmon/arm_w.png",
+        "turquoise": "artwork/turquoise/arm_w.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            128,
+            128
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "equation": "clamp(dot(p-start,end-start)/dot(end-start,end-start),0,1)"
+      },
+      "duration_seconds": 0.1,
+      "instance_key": "arm/color/cell/direction"
+    },
+    "detail_w_0": {
+      "id": "detail_w_0",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_w_0.png",
+        "turquoise": "artwork/turquoise/detail_w_0.png"
+      },
+      "reveal_mask": "masks/detail_w_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            84.48,
+            128
+          ],
+          [
+            52.48,
+            156
+          ]
+        ]
+      },
+      "start": [
+        84.48,
+        128
+      ],
+      "end": [
+        52.48,
+        156
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_w",
+          "at_path_u": 0.34,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        84.48,
+        128
+      ],
+      "end_connection": [
+        52.48,
+        156
+      ],
+      "mask_file": "masks/detail_w_0.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_w_0.png",
+        "turquoise": "artwork/turquoise/detail_w_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            84.48,
+            128
+          ],
+          [
+            52.48,
+            156
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "detail_w_1": {
+      "id": "detail_w_1",
+      "size_px": [
+        256,
+        256
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/detail_w_1.png",
+        "turquoise": "artwork/turquoise/detail_w_1.png"
+      },
+      "reveal_mask": "masks/detail_w_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            35.84,
+            128
+          ],
+          [
+            3.84,
+            100
+          ]
+        ]
+      },
+      "start": [
+        35.84,
+        128
+      ],
+      "end": [
+        3.84,
+        100
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "arm_w",
+          "at_path_u": 0.72,
+          "delay_seconds": 0.08
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 30,
+      "duration_seconds": 0.16,
+      "start_connection": [
+        35.84,
+        128
+      ],
+      "end_connection": [
+        3.84,
+        100
+      ],
+      "mask_file": "masks/detail_w_1.png",
+      "layer_order_hint": 30,
+      "palette_files": {
+        "salmon": "artwork/salmon/detail_w_1.png",
+        "turquoise": "artwork/turquoise/detail_w_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            35.84,
+            128
+          ],
+          [
+            3.84,
+            100
+          ]
+        ]
+      },
+      "instance_key": "detail/color/cell/direction/index"
+    },
+    "colony_fringe": {
+      "id": "colony_fringe",
+      "size_px": [
+        512,
+        512
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/colony_fringe.png",
+        "turquoise": "artwork/turquoise/colony_fringe.png"
+      },
+      "reveal_mask": "masks/colony_fringe.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            401.0,
+            256.0
+          ],
+          [
+            400.3018,
+            270.2125
+          ],
+          [
+            398.2139,
+            284.2881
+          ],
+          [
+            394.7563,
+            298.0913
+          ],
+          [
+            389.9625,
+            311.4891
+          ],
+          [
+            383.8786,
+            324.3525
+          ],
+          [
+            376.5631,
+            336.5577
+          ],
+          [
+            368.0865,
+            347.987
+          ],
+          [
+            358.5305,
+            358.5305
+          ],
+          [
+            347.987,
+            368.0865
+          ],
+          [
+            336.5577,
+            376.5631
+          ],
+          [
+            324.3525,
+            383.8786
+          ],
+          [
+            311.4891,
+            389.9625
+          ],
+          [
+            298.0913,
+            394.7563
+          ],
+          [
+            284.2881,
+            398.2139
+          ],
+          [
+            270.2125,
+            400.3018
+          ],
+          [
+            256.0,
+            401.0
+          ],
+          [
+            241.7875,
+            400.3018
+          ],
+          [
+            227.7119,
+            398.2139
+          ],
+          [
+            213.9087,
+            394.7563
+          ],
+          [
+            200.5109,
+            389.9625
+          ],
+          [
+            187.6475,
+            383.8786
+          ],
+          [
+            175.4423,
+            376.5631
+          ],
+          [
+            164.013,
+            368.0865
+          ],
+          [
+            153.4695,
+            358.5305
+          ],
+          [
+            143.9135,
+            347.987
+          ],
+          [
+            135.4369,
+            336.5577
+          ],
+          [
+            128.1214,
+            324.3525
+          ],
+          [
+            122.0375,
+            311.4891
+          ],
+          [
+            117.2437,
+            298.0913
+          ],
+          [
+            113.7861,
+            284.2881
+          ],
+          [
+            111.6982,
+            270.2125
+          ],
+          [
+            111.0,
+            256.0
+          ],
+          [
+            111.6982,
+            241.7875
+          ],
+          [
+            113.7861,
+            227.7119
+          ],
+          [
+            117.2437,
+            213.9087
+          ],
+          [
+            122.0375,
+            200.5109
+          ],
+          [
+            128.1214,
+            187.6475
+          ],
+          [
+            135.4369,
+            175.4423
+          ],
+          [
+            143.9135,
+            164.013
+          ],
+          [
+            153.4695,
+            153.4695
+          ],
+          [
+            164.013,
+            143.9135
+          ],
+          [
+            175.4423,
+            135.4369
+          ],
+          [
+            187.6475,
+            128.1214
+          ],
+          [
+            200.5109,
+            122.0375
+          ],
+          [
+            213.9087,
+            117.2437
+          ],
+          [
+            227.7119,
+            113.7861
+          ],
+          [
+            241.7875,
+            111.6982
+          ],
+          [
+            256.0,
+            111.0
+          ],
+          [
+            270.2125,
+            111.6982
+          ],
+          [
+            284.2881,
+            113.7861
+          ],
+          [
+            298.0913,
+            117.2437
+          ],
+          [
+            311.4891,
+            122.0375
+          ],
+          [
+            324.3525,
+            128.1214
+          ],
+          [
+            336.5577,
+            135.4369
+          ],
+          [
+            347.987,
+            143.9135
+          ],
+          [
+            358.5305,
+            153.4695
+          ],
+          [
+            368.0865,
+            164.013
+          ],
+          [
+            376.5631,
+            175.4423
+          ],
+          [
+            383.8786,
+            187.6475
+          ],
+          [
+            389.9625,
+            200.5109
+          ],
+          [
+            394.7563,
+            213.9087
+          ],
+          [
+            398.2139,
+            227.7119
+          ],
+          [
+            400.3018,
+            241.7875
+          ],
+          [
+            401.0,
+            256.0
+          ]
+        ]
+      },
+      "start": [
+        401.0,
+        256.0
+      ],
+      "end": [
+        401.0,
+        256.0
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "same_color_2x2_perimeter_visibly_closed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 40,
+      "growth_field": {
+        "kind": "radial_outward",
+        "center_px": [
+          256,
+          256
+        ],
+        "inner_radius_px": 136,
+        "distance_scale_px": 99,
+        "equation": "clamp((length(p-center)-136)/99,0,1)"
+      },
+      "duration_seconds": 0.2,
+      "radial_paths": [
+        [
+          [
+            392.0,
+            256.0
+          ],
+          [
+            491.0,
+            256.0
+          ]
+        ],
+        [
+          [
+            381.64761642153496,
+            308.0449468016522
+          ],
+          [
+            473.1116901401524,
+            345.93060660579613
+          ]
+        ],
+        [
+          [
+            352.16652224137044,
+            352.16652224137044
+          ],
+          [
+            422.17009357883865,
+            422.17009357883865
+          ]
+        ],
+        [
+          [
+            308.0449468016522,
+            381.64761642153496
+          ],
+          [
+            345.93060660579613,
+            473.1116901401524
+          ]
+        ],
+        [
+          [
+            256.0,
+            392.0
+          ],
+          [
+            256.0,
+            491.0
+          ]
+        ],
+        [
+          [
+            203.9550531983478,
+            381.64761642153496
+          ],
+          [
+            166.06939339420393,
+            473.1116901401524
+          ]
+        ],
+        [
+          [
+            159.83347775862956,
+            352.16652224137044
+          ],
+          [
+            89.82990642116135,
+            422.17009357883865
+          ]
+        ],
+        [
+          [
+            130.352383578465,
+            308.0449468016522
+          ],
+          [
+            38.888309859847624,
+            345.93060660579613
+          ]
+        ],
+        [
+          [
+            120.0,
+            256.0
+          ],
+          [
+            21.0,
+            256.00000000000006
+          ]
+        ],
+        [
+          [
+            130.35238357846498,
+            203.9550531983478
+          ],
+          [
+            38.888309859847595,
+            166.06939339420393
+          ]
+        ],
+        [
+          [
+            159.8334777586295,
+            159.83347775862956
+          ],
+          [
+            89.8299064211613,
+            89.82990642116135
+          ]
+        ],
+        [
+          [
+            203.9550531983477,
+            130.35238357846504
+          ],
+          [
+            166.06939339420376,
+            38.88830985984768
+          ]
+        ],
+        [
+          [
+            255.99999999999997,
+            120.0
+          ],
+          [
+            255.99999999999994,
+            21.0
+          ]
+        ],
+        [
+          [
+            308.04494680165226,
+            130.35238357846504
+          ],
+          [
+            345.93060660579613,
+            38.88830985984765
+          ]
+        ],
+        [
+          [
+            352.16652224137044,
+            159.8334777586295
+          ],
+          [
+            422.17009357883865,
+            89.8299064211613
+          ]
+        ],
+        [
+          [
+            381.64761642153496,
+            203.9550531983477
+          ],
+          [
+            473.1116901401523,
+            166.06939339420376
+          ]
+        ]
+      ],
+      "start_connection": [
+        401.0,
+        256.0
+      ],
+      "end_connection": [
+        401.0,
+        256.0
+      ],
+      "mask_file": "masks/colony_fringe.png",
+      "layer_order_hint": 40,
+      "palette_files": {
+        "salmon": "artwork/salmon/colony_fringe.png",
+        "turquoise": "artwork/turquoise/colony_fringe.png"
+      },
+      "path_role": "foundation ring geometry, not a clockwise reveal",
+      "growth_paths": [
+        [
+          [
+            392.0,
+            256.0
+          ],
+          [
+            491.0,
+            256.0
+          ]
+        ],
+        [
+          [
+            381.64761642153496,
+            308.0449468016522
+          ],
+          [
+            473.1116901401524,
+            345.93060660579613
+          ]
+        ],
+        [
+          [
+            352.16652224137044,
+            352.16652224137044
+          ],
+          [
+            422.17009357883865,
+            422.17009357883865
+          ]
+        ],
+        [
+          [
+            308.0449468016522,
+            381.64761642153496
+          ],
+          [
+            345.93060660579613,
+            473.1116901401524
+          ]
+        ],
+        [
+          [
+            256.0,
+            392.0
+          ],
+          [
+            256.0,
+            491.0
+          ]
+        ],
+        [
+          [
+            203.9550531983478,
+            381.64761642153496
+          ],
+          [
+            166.06939339420393,
+            473.1116901401524
+          ]
+        ],
+        [
+          [
+            159.83347775862956,
+            352.16652224137044
+          ],
+          [
+            89.82990642116135,
+            422.17009357883865
+          ]
+        ],
+        [
+          [
+            130.352383578465,
+            308.0449468016522
+          ],
+          [
+            38.888309859847624,
+            345.93060660579613
+          ]
+        ],
+        [
+          [
+            120.0,
+            256.0
+          ],
+          [
+            21.0,
+            256.00000000000006
+          ]
+        ],
+        [
+          [
+            130.35238357846498,
+            203.9550531983478
+          ],
+          [
+            38.888309859847595,
+            166.06939339420393
+          ]
+        ],
+        [
+          [
+            159.8334777586295,
+            159.83347775862956
+          ],
+          [
+            89.8299064211613,
+            89.82990642116135
+          ]
+        ],
+        [
+          [
+            203.9550531983477,
+            130.35238357846504
+          ],
+          [
+            166.06939339420376,
+            38.88830985984768
+          ]
+        ],
+        [
+          [
+            255.99999999999997,
+            120.0
+          ],
+          [
+            255.99999999999994,
+            21.0
+          ]
+        ],
+        [
+          [
+            308.04494680165226,
+            130.35238357846504
+          ],
+          [
+            345.93060660579613,
+            38.88830985984765
+          ]
+        ],
+        [
+          [
+            352.16652224137044,
+            159.8334777586295
+          ],
+          [
+            422.17009357883865,
+            89.8299064211613
+          ]
+        ],
+        [
+          [
+            381.64761642153496,
+            203.9550531983477
+          ],
+          [
+            473.1116901401523,
+            166.06939339420376
+          ]
+        ]
+      ],
+      "instance_key": "colony/color/top_left/fringe"
+    },
+    "colony_lobes": {
+      "id": "colony_lobes",
+      "size_px": [
+        512,
+        512
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/colony_lobes.png",
+        "turquoise": "artwork/turquoise/colony_lobes.png"
+      },
+      "reveal_mask": "masks/colony_lobes.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            256,
+            50
+          ],
+          [
+            256,
+            256
+          ]
+        ]
+      },
+      "start": [
+        256,
+        50
+      ],
+      "end": [
+        256,
+        256
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "same_color_2x2_perimeter_visibly_closed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 50,
+      "growth_field": {
+        "kind": "radial_inward",
+        "center_px": [
+          256,
+          256
+        ],
+        "outer_radius_px": 206,
+        "equation": "clamp((206-length(p-center))/206,0,1)"
+      },
+      "duration_seconds": 0.38,
+      "radial_paths": [
+        [
+          [
+            462.0,
+            256.0
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            359.0,
+            434.4012331795943
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            153.00000000000006,
+            434.4012331795944
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            50.0,
+            256.0
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            152.99999999999991,
+            77.5987668204057
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            358.9999999999999,
+            77.59876682040556
+          ],
+          [
+            256,
+            256
+          ]
+        ]
+      ],
+      "start_connection": [
+        256,
+        50
+      ],
+      "end_connection": [
+        256,
+        256
+      ],
+      "mask_file": "masks/colony_lobes.png",
+      "layer_order_hint": 50,
+      "palette_files": {
+        "salmon": "artwork/salmon/colony_lobes.png",
+        "turquoise": "artwork/turquoise/colony_lobes.png"
+      },
+      "growth_paths": [
+        [
+          [
+            462.0,
+            256.0
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            359.0,
+            434.4012331795943
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            153.00000000000006,
+            434.4012331795944
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            50.0,
+            256.0
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            152.99999999999991,
+            77.5987668204057
+          ],
+          [
+            256,
+            256
+          ]
+        ],
+        [
+          [
+            358.9999999999999,
+            77.59876682040556
+          ],
+          [
+            256,
+            256
+          ]
+        ]
+      ],
+      "instance_key": "colony/color/top_left/lobes"
+    },
+    "colony_finish": {
+      "id": "colony_finish",
+      "size_px": [
+        512,
+        512
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/colony_finish.png",
+        "turquoise": "artwork/turquoise/colony_finish.png"
+      },
+      "reveal_mask": "masks/colony_finish.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            21
+          ]
+        ]
+      },
+      "start": [
+        256,
+        256
+      ],
+      "end": [
+        256,
+        21
+      ],
+      "allowed_growth": [
+        "forward"
+      ],
+      "reversible": false,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "component": "colony_lobes",
+          "event": "complete"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 60,
+      "duration_seconds": 0.12,
+      "start_connection": [
+        256,
+        256
+      ],
+      "end_connection": [
+        256,
+        21
+      ],
+      "mask_file": "masks/colony_finish.png",
+      "layer_order_hint": 60,
+      "palette_files": {
+        "salmon": "artwork/salmon/colony_finish.png",
+        "turquoise": "artwork/turquoise/colony_finish.png"
+      },
+      "growth_field": {
+        "kind": "radial_outward",
+        "center_px": [
+          256,
+          256
+        ],
+        "distance_scale_px": 235
+      },
+      "instance_key": "colony/color/top_left/finish"
+    },
+    "union_1_0": {
+      "id": "union_1_0",
+      "size_px": [
+        768,
+        512
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/union_1_0.png",
+        "turquoise": "artwork/turquoise/union_1_0.png"
+      },
+      "reveal_mask": "masks/union_1_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            198.0,
+            256.0
+          ],
+          [
+            570.0,
+            256.0
+          ]
+        ]
+      },
+      "start": [
+        198.0,
+        256.0
+      ],
+      "end": [
+        570.0,
+        256.0
+      ],
+      "allowed_growth": [
+        "first_to_second",
+        "second_to_first",
+        "both_ends"
+      ],
+      "reversible": true,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "both_colony_joining_regions_developed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 70,
+      "duration_seconds": 0.38,
+      "path_length_px": 372.0,
+      "colony_centers": [
+        [
+          256,
+          256
+        ],
+        [
+          512,
+          256
+        ]
+      ],
+      "normalized_field_axis": {
+        "start": [
+          198.0,
+          256.0
+        ],
+        "end": [
+          570.0,
+          256.0
+        ]
+      },
+      "footprint_clip": "union of two occupied 2x2 footprints",
+      "start_connection": [
+        198.0,
+        256.0
+      ],
+      "end_connection": [
+        570.0,
+        256.0
+      ],
+      "mask_file": "masks/union_1_0.png",
+      "layer_order_hint": 70,
+      "palette_files": {
+        "salmon": "artwork/salmon/union_1_0.png",
+        "turquoise": "artwork/turquoise/union_1_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            198.0,
+            256.0
+          ],
+          [
+            570.0,
+            256.0
+          ]
+        ]
+      },
+      "instance_key": "union/color/sorted_colony_pair",
+      "two_front_stroke_seconds": 0.76
+    },
+    "union_1_1": {
+      "id": "union_1_1",
+      "size_px": [
+        768,
+        768
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/union_1_1.png",
+        "turquoise": "artwork/turquoise/union_1_1.png"
+      },
+      "reveal_mask": "masks/union_1_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            214.98780669118025,
+            214.98780669118025
+          ],
+          [
+            553.0121933088197,
+            553.0121933088197
+          ]
+        ]
+      },
+      "start": [
+        214.98780669118025,
+        214.98780669118025
+      ],
+      "end": [
+        553.0121933088197,
+        553.0121933088197
+      ],
+      "allowed_growth": [
+        "first_to_second",
+        "second_to_first",
+        "both_ends"
+      ],
+      "reversible": true,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "both_colony_joining_regions_developed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 70,
+      "duration_seconds": 0.38,
+      "path_length_px": 478.03867196751236,
+      "colony_centers": [
+        [
+          256,
+          256
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "normalized_field_axis": {
+        "start": [
+          214.98780669118025,
+          214.98780669118025
+        ],
+        "end": [
+          553.0121933088197,
+          553.0121933088197
+        ]
+      },
+      "footprint_clip": "union of two occupied 2x2 footprints",
+      "start_connection": [
+        214.98780669118025,
+        214.98780669118025
+      ],
+      "end_connection": [
+        553.0121933088197,
+        553.0121933088197
+      ],
+      "mask_file": "masks/union_1_1.png",
+      "layer_order_hint": 70,
+      "palette_files": {
+        "salmon": "artwork/salmon/union_1_1.png",
+        "turquoise": "artwork/turquoise/union_1_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            214.98780669118025,
+            214.98780669118025
+          ],
+          [
+            553.0121933088197,
+            553.0121933088197
+          ]
+        ]
+      },
+      "instance_key": "union/color/sorted_colony_pair",
+      "two_front_stroke_seconds": 0.76
+    },
+    "union_2_0": {
+      "id": "union_2_0",
+      "size_px": [
+        1024,
+        512
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/union_2_0.png",
+        "turquoise": "artwork/turquoise/union_2_0.png"
+      },
+      "reveal_mask": "masks/union_2_0.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            198.0,
+            256.0
+          ],
+          [
+            826.0,
+            256.0
+          ]
+        ]
+      },
+      "start": [
+        198.0,
+        256.0
+      ],
+      "end": [
+        826.0,
+        256.0
+      ],
+      "allowed_growth": [
+        "first_to_second",
+        "second_to_first",
+        "both_ends"
+      ],
+      "reversible": true,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "both_colony_joining_regions_developed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 70,
+      "duration_seconds": 0.38,
+      "path_length_px": 628.0,
+      "colony_centers": [
+        [
+          256,
+          256
+        ],
+        [
+          768,
+          256
+        ]
+      ],
+      "normalized_field_axis": {
+        "start": [
+          198.0,
+          256.0
+        ],
+        "end": [
+          826.0,
+          256.0
+        ]
+      },
+      "footprint_clip": "union of two occupied 2x2 footprints",
+      "start_connection": [
+        198.0,
+        256.0
+      ],
+      "end_connection": [
+        826.0,
+        256.0
+      ],
+      "mask_file": "masks/union_2_0.png",
+      "layer_order_hint": 70,
+      "palette_files": {
+        "salmon": "artwork/salmon/union_2_0.png",
+        "turquoise": "artwork/turquoise/union_2_0.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            198.0,
+            256.0
+          ],
+          [
+            826.0,
+            256.0
+          ]
+        ]
+      },
+      "instance_key": "union/color/sorted_colony_pair",
+      "two_front_stroke_seconds": 0.76
+    },
+    "union_2_1": {
+      "id": "union_2_1",
+      "size_px": [
+        1024,
+        768
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/union_2_1.png",
+        "turquoise": "artwork/turquoise/union_2_1.png"
+      },
+      "reveal_mask": "masks/union_2_1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            204.12322292200489,
+            230.06161146100243
+          ],
+          [
+            819.8767770779951,
+            537.9383885389975
+          ]
+        ]
+      },
+      "start": [
+        204.12322292200489,
+        230.06161146100243
+      ],
+      "end": [
+        819.8767770779951,
+        537.9383885389975
+      ],
+      "allowed_growth": [
+        "first_to_second",
+        "second_to_first",
+        "both_ends"
+      ],
+      "reversible": true,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "both_colony_joining_regions_developed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 70,
+      "duration_seconds": 0.38,
+      "path_length_px": 688.4334022399462,
+      "colony_centers": [
+        [
+          256,
+          256
+        ],
+        [
+          768,
+          512
+        ]
+      ],
+      "normalized_field_axis": {
+        "start": [
+          204.12322292200489,
+          230.06161146100243
+        ],
+        "end": [
+          819.8767770779951,
+          537.9383885389975
+        ]
+      },
+      "footprint_clip": "union of two occupied 2x2 footprints",
+      "start_connection": [
+        204.12322292200489,
+        230.06161146100243
+      ],
+      "end_connection": [
+        819.8767770779951,
+        537.9383885389975
+      ],
+      "mask_file": "masks/union_2_1.png",
+      "layer_order_hint": 70,
+      "palette_files": {
+        "salmon": "artwork/salmon/union_2_1.png",
+        "turquoise": "artwork/turquoise/union_2_1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            204.12322292200489,
+            230.06161146100243
+          ],
+          [
+            819.8767770779951,
+            537.9383885389975
+          ]
+        ]
+      },
+      "instance_key": "union/color/sorted_colony_pair",
+      "two_front_stroke_seconds": 0.76
+    },
+    "union_2_m1": {
+      "id": "union_2_m1",
+      "size_px": [
+        1024,
+        768
+      ],
+      "artwork": {
+        "salmon": "artwork/salmon/union_2_m1.png",
+        "turquoise": "artwork/turquoise/union_2_m1.png"
+      },
+      "reveal_mask": "masks/union_2_m1.png",
+      "path": {
+        "format": "polyline",
+        "points": [
+          [
+            204.12322292200489,
+            537.9383885389975
+          ],
+          [
+            819.8767770779951,
+            230.06161146100243
+          ]
+        ]
+      },
+      "start": [
+        204.12322292200489,
+        537.9383885389975
+      ],
+      "end": [
+        819.8767770779951,
+        230.06161146100243
+      ],
+      "allowed_growth": [
+        "first_to_second",
+        "second_to_first",
+        "both_ends"
+      ],
+      "reversible": true,
+      "can_branch": false,
+      "dependencies": [
+        {
+          "event": "both_colony_joining_regions_developed"
+        }
+      ],
+      "completed_state": "original full artwork alpha and color, unchanged",
+      "layer": 70,
+      "duration_seconds": 0.38,
+      "path_length_px": 688.4334022399462,
+      "colony_centers": [
+        [
+          256,
+          512
+        ],
+        [
+          768,
+          256
+        ]
+      ],
+      "normalized_field_axis": {
+        "start": [
+          204.12322292200489,
+          537.9383885389975
+        ],
+        "end": [
+          819.8767770779951,
+          230.06161146100243
+        ]
+      },
+      "footprint_clip": "union of two occupied 2x2 footprints",
+      "start_connection": [
+        204.12322292200489,
+        537.9383885389975
+      ],
+      "end_connection": [
+        819.8767770779951,
+        230.06161146100243
+      ],
+      "mask_file": "masks/union_2_m1.png",
+      "layer_order_hint": 70,
+      "palette_files": {
+        "salmon": "artwork/salmon/union_2_m1.png",
+        "turquoise": "artwork/turquoise/union_2_m1.png"
+      },
+      "growth_field": {
+        "kind": "path_projection",
+        "axis": [
+          [
+            204.12322292200489,
+            537.9383885389975
+          ],
+          [
+            819.8767770779951,
+            230.06161146100243
+          ]
+        ]
+      },
+      "instance_key": "union/color/sorted_colony_pair",
+      "two_front_stroke_seconds": 0.76
+    }
+  },
+  "reveal": {
+    "encoding": "8-bit grayscale PNG; linear data; u=sample.r",
+    "art_alpha": "straight alpha; exact coverage comes from artwork, never from mask alone",
+    "path_geometry_format": "polyline; ordered numeric [x,y] points in component-local coordinates",
+    "mask_authority": "Masks are the actual two-dimensional growth fields; paths describe their axes or radial trajectories. Do not convert every path into a single global scan.",
+    "equation": "arrival=min(enabled0 ? start0+u*stroke_seconds : INF, enabled1 ? start1+(1-u)*stroke_seconds : INF); visibility=smoothstep(0,soft_front_seconds,clock-arrival); output_alpha=art_alpha*visibility",
+    "disabled_front_time": 1000000000.0,
+    "zero_visibility": "clock <= earliest enabled arrival gives zero; layer_enabled=false gives zero",
+    "full_visibility": "force_complete=true gives exact full artwork",
+    "merge": "One material per component; minimum arrival, not additive alpha and not duplicated sprites.",
+    "reverse_only_when_component_reversible": true,
+    "soft_front_seconds": 0.035
+  },
+  "timing": {
+    "seconds_per_cell": 0.2,
+    "stem_pixels_per_second": 1280,
+    "detail_attachment_delay_seconds": 0.08,
+    "detail_duration_seconds": 0.16,
+    "bud_duration_seconds": 0.18,
+    "colony_fringe_seconds": 0.2,
+    "colony_lobes_seconds": 0.38,
+    "finishing_seconds": 0.12,
+    "reef_union_seconds": 0.38
+  },
+  "growth_sequencing": {
+    "placement_inputs": [
+      "before_board",
+      "after_board",
+      "newly_occupied_cells",
+      "placement_revision",
+      "logical_color_to_variant"
+    ],
+    "precondition": "A valid placement has already been accepted by gameplay; renderer never changes its cells or symmetry state.",
+    "previous_animation_policy": "Before planning a new placement, settle still-valid preceding visual work to its target. Do not block the new logical placement or restart completed work.",
+    "target_diff": "Derive desired components from after_board. Preserve every already-visible component with the same key. Schedule only additions. Remove invalid keys on reconciliation.",
+    "external_sources": {
+      "test": "At least one new cell has an orthogonal before_board neighbor of equal logical color.",
+      "source_nodes": "Centers of all such adjacent existing cells, time 0.",
+      "routing_graph": "New-cell centers plus touching existing centers; edges are only new-new and new-existing same-color orthogonal pairs. Old-old connections are already complete, not replayed.",
+      "edge_length_px": 256,
+      "edge_seconds": 0.2,
+      "algorithm": "multi-source Dijkstra; deterministic ties use (arrival,row,column), edges N,E,S,W",
+      "new_core_start": "earliest center arrival",
+      "half_arm_source_times": "For directed half-arm in owner A toward B: start0=t[A], start1=t[B]+0.1; stroke_seconds=0.1. Here u=0 is A center, u=1 is shared edge.",
+      "branching": "All available outgoing target arms start when their center is reached; do not wait for the bud/details to finish.",
+      "details": "For attachment u, evaluate the parent half-arm earliest arrival at u; add 0.08 seconds, then reveal the detail forward over 0.16 seconds."
+    },
+    "without_external_source": {
+      "bud_start_for_every_new_cell": 0,
+      "bud_duration_seconds": 0.18,
+      "internal_edge_center_start_seconds": 0.1,
+      "half_arm_source_times": "start0=0.10, start1=0.20, stroke_seconds=0.10 for both halves of every internal edge",
+      "routing": "All buds are simultaneous; all valid internal edges are bidirectional. No arbitrary single seed and no growth to an unconnected border."
+    },
+    "front_completion": {
+      "half_arm_peak_u": "clamp((start1+stroke_seconds-start0)/(2*stroke_seconds),0,1) when both enabled",
+      "complete_at": "max_u in [0,1] of earliest arrival + soft_front_seconds; forward-only start0+stroke_seconds+soft_front_seconds; reverse-only start1+stroke_seconds+soft_front_seconds",
+      "finalize": "Set force_complete once, unregister from active clock updates; keep artwork permanent."
+    },
+    "circle_event": {
+      "candidate_origins": "For each changed cell p, test p-(0,0), p-(1,0), p-(0,1), p-(1,1); on reset/load scan all valid origins.",
+      "required_occupancy": "All four cells exist and have the same authoritative color ID. Piece identity is irrelevant.",
+      "required_visible_edges": "Eight internal half-arms along the four perimeter edges are complete.",
+      "event_time": "max completion time of those eight half-arms, counting settled components as already complete.",
+      "parallel_start_components": [
+        "colony_fringe",
+        "colony_lobes"
+      ],
+      "finishing_start": "colony_lobes complete, then colony_finish",
+      "keep_foundation": true
+    },
+    "union_event": {
+      "predicate": "Same color and overlap/positive-length edge adjacency of 2x2 footprints.",
+      "detection": "Detect target immediately; creation waits for visual dependencies.",
+      "ready_time": "max(fringe completion and lobe completion for both colonies); finishing glaze may overlap union growth.",
+      "field": "Two enabled fronts with start0=start1=ready_time and stroke_seconds=0.76; resulting growth-front duration is 0.38 before soft tail.",
+      "deduplication": "Exactly one union component per sorted colony pair.",
+      "no_higher_recursion": true
+    },
+    "all_done": "Every target component is full and every active event is retired. No mandatory wait or gameplay gate."
+  },
+  "landmark": {
+    "footprint_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "size_px": [
+      512,
+      512
+    ],
+    "components_bottom_to_top": [
+      "existing four cores and internal connection arms",
+      "colony_fringe",
+      "colony_lobes",
+      "colony_finish"
+    ],
+    "external_ports": {
+      "n": [
+        [
+          128,
+          0
+        ],
+        [
+          384,
+          0
+        ]
+      ],
+      "e": [
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          384
+        ]
+      ],
+      "s": [
+        [
+          128,
+          512
+        ],
+        [
+          384,
+          512
+        ]
+      ],
+      "w": [
+        [
+          0,
+          128
+        ],
+        [
+          0,
+          384
+        ]
+      ]
+    },
+    "external_port_rule": "Add ordinary independently growing arms in the relevant constituent cell only when its outside neighbor has the same color; place below the colony layers. Do not prepaint all external arms.",
+    "id": "coral_colony",
+    "eligibility": "any same-color completed 2x2 circle, including overlapping circles",
+    "identity": "(logical color ID,top-left board cell)",
+    "rotation_degrees": 0,
+    "default_component_rotation": "Keep colony body at 0 degrees for stable lobe arrangement; its port availability is supplied by ordinary cell components underneath.",
+    "position": "top_left_board_cell*256 in ThemeSpace",
+    "formation_stages": [
+      {
+        "id": "foundation",
+        "components": "eight ordinary internal half-arms plus four existing cores",
+        "dependency": "perimeter arms complete"
+      },
+      {
+        "id": "body",
+        "components": [
+          "colony_fringe",
+          "colony_lobes"
+        ],
+        "dependency": "foundation",
+        "parallel": true
+      },
+      {
+        "id": "finish",
+        "components": [
+          "colony_finish"
+        ],
+        "dependency": "colony_lobes complete"
+      }
+    ],
+    "completed_references": {
+      "salmon": "references/salmon/06_colony.png",
+      "turquoise": "references/turquoise/06_colony.png"
+    },
+    "neighbor_behavior": "Retain identity and layers; add independently owned union shelf overlays."
+  },
+  "reef_unions": {
+    "canonical_layouts": [
+      {
+        "id": "union_1_0",
+        "colony_origin_delta": [
+          1,
+          0
+        ],
+        "canvas_px": [
+          768,
+          512
+        ],
+        "first_colony_origin_px": [
+          0,
+          0
+        ],
+        "second_colony_origin_px": [
+          256,
+          0
+        ],
+        "valid_rotations": [
+          0,
+          90,
+          180,
+          270
+        ],
+        "components": [
+          "union_1_0"
+        ]
+      },
+      {
+        "id": "union_1_1",
+        "colony_origin_delta": [
+          1,
+          1
+        ],
+        "canvas_px": [
+          768,
+          768
+        ],
+        "first_colony_origin_px": [
+          0,
+          0
+        ],
+        "second_colony_origin_px": [
+          256,
+          256
+        ],
+        "valid_rotations": [
+          0,
+          90,
+          180,
+          270
+        ],
+        "components": [
+          "union_1_1"
+        ]
+      },
+      {
+        "id": "union_2_0",
+        "colony_origin_delta": [
+          2,
+          0
+        ],
+        "canvas_px": [
+          1024,
+          512
+        ],
+        "first_colony_origin_px": [
+          0,
+          0
+        ],
+        "second_colony_origin_px": [
+          512,
+          0
+        ],
+        "valid_rotations": [
+          0,
+          90,
+          180,
+          270
+        ],
+        "components": [
+          "union_2_0"
+        ]
+      },
+      {
+        "id": "union_2_1",
+        "colony_origin_delta": [
+          2,
+          1
+        ],
+        "canvas_px": [
+          1024,
+          768
+        ],
+        "first_colony_origin_px": [
+          0,
+          0
+        ],
+        "second_colony_origin_px": [
+          512,
+          256
+        ],
+        "valid_rotations": [
+          0,
+          90,
+          180,
+          270
+        ],
+        "components": [
+          "union_2_1"
+        ]
+      },
+      {
+        "id": "union_2_m1",
+        "colony_origin_delta": [
+          2,
+          -1
+        ],
+        "canvas_px": [
+          1024,
+          768
+        ],
+        "first_colony_origin_px": [
+          0,
+          256
+        ],
+        "second_colony_origin_px": [
+          512,
+          0
+        ],
+        "valid_rotations": [
+          0,
+          90,
+          180,
+          270
+        ],
+        "components": [
+          "union_2_m1"
+        ]
+      }
+    ],
+    "adjacency_equation": "(abs(dx)<2 and abs(dy)<2 and (dx,dy)!=(0,0)) or (abs(dx)==2 and abs(dy)<2) or (abs(dy)==2 and abs(dx)<2)",
+    "excluded": "different logical colors; footprint corner-only contacts at (\u00b12,\u00b12); separated footprints",
+    "matching": "For each layout in listed order, rotate its delta k=0..3; accept actual delta equal to rotated delta or its negation. Choose first match.",
+    "placement": "Rotate artwork and mask together about canonical canvas center. Sprite position is the center of the union bounding box of both 2x2 board footprints. Odd quarter-turns swap width/height. No stretch or independent UV rotation.",
+    "draw_order": "Stable creation ordinal, then sorted pair key; later unions overlay earlier ones without deleting them.",
+    "completed_reference_pattern": "references/{variant}/{layout_id}.png"
+  },
+  "rendering": {
+    "technique": "Persistent independently revealable Sprite2D layers; supplied mask + earliest-arrival shader.",
+    "theme_scale": "display_cell_px/256; use one uniformly scaled ThemeSpace Node2D",
+    "sprite_defaults": {
+      "centered": true,
+      "region_enabled": false,
+      "modulate": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "layer_buckets": [
+      {
+        "name": "Arms",
+        "z_index": 10
+      },
+      {
+        "name": "Cores",
+        "z_index": 20
+      },
+      {
+        "name": "Details",
+        "z_index": 30
+      },
+      {
+        "name": "Colonies",
+        "z_index": 40,
+        "within": "feature creation ordinal; each feature fringe then lobes then finish"
+      },
+      {
+        "name": "Unions",
+        "z_index": 70,
+        "within": "feature creation ordinal"
+      }
+    ],
+    "mutable_material_policy": "Independent ShaderMaterial for each active component; share Shader and Texture2D resources, not changing uniform state.",
+    "completed_material_policy": "Full ordinary sprites in an unlit board, or a shared unshaded completed material; never repeatedly rebuild finished references.",
+    "texture_import": {
+      "artwork": {
+        "compression": "Lossless",
+        "mipmaps": true,
+        "fix_alpha_border": true,
+        "premult_alpha": false,
+        "filter": "linear_mipmap",
+        "repeat": false,
+        "sampler_hint": "source_color"
+      },
+      "growth_masks": {
+        "compression": "Lossless",
+        "mipmaps": false,
+        "premult_alpha": false,
+        "filter": "linear",
+        "repeat": false,
+        "sampler_hint": "no source_color",
+        "normal_map_detection": false
+      }
+    },
+    "blending": "straight alpha / blend_mix; do not add growth fronts",
+    "clock": "CPU placement-relative clock advanced by delta; manual pause, no shader TIME",
+    "android": "Update active instances only; reuse finished sprites and cache textures; profile dense 11x11 boards on device. Do not deploy source sheets, masters or review images as runtime textures."
+  },
+  "state_management": {
+    "separation": {
+      "logical_board": "Authoritative occupancy, colors, move validation and symmetry; never modified by renderer.",
+      "target_visuals": "Desired component keys, topology masks, colony origins and union pairs derived from current board.",
+      "visible_components": "Persistent nodes, completion flags, stable creation ordinals and current appearance.",
+      "active_growth": "Front starts, stroke times, dependencies and board revision tokens."
+    },
+    "stable_keys": {
+      "core": "(color,cell,core)",
+      "arm": "(color,cell,direction,arm)",
+      "detail": "(color,cell,direction,index)",
+      "colony": "(color,top_left,layer)",
+      "union": "(color,sorted_colony_pair)"
+    },
+    "ordering": "Allocate monotonically increasing feature ordinals when first scheduled; simultaneous discoveries sorted by (row,column,color) for colonies and sorted pair keys for unions. Preserve ordinals of surviving keys.",
+    "placement": "Settle previous valid animations; commit logic in existing game; diff target and append additions. A caller may commit before notification, provided before_board is supplied.",
+    "undo": "Use the board restored by existing undo. Cancel pending work with a new generation token. Remove only invalid keys, preserve survivors and ordinals, and settle valid survivors. Restore ordinals from visual history if available; cold reconstruction otherwise uses documented canonical order.",
+    "deletion": "Recompute affected cell masks and circles; remove obsolete arms/details, invalid colonies and incident unions. Surviving underlying layers become visible. Do not remove unrelated neighboring artwork.",
+    "reset": "Cancel and detach all active callbacks, increment generation token, clear visual registries, derive fresh target from actual reset board; show its starting core from the ordinary core asset.",
+    "load": "Reconstruct full target from saved logical board; settle it without inventing placement animations. Use saved feature order if available, otherwise canonical row/column/color order.",
+    "interruption": "Set all still-valid components force_complete; cancel dependency callbacks; leave exact target image. For app pause suspend the CPU clock; for discarded scene cancel and free nodes.",
+    "stale_callback_rule": "Every scheduled operation carries generation/revision; discard if invalidated or its component key is no longer in target.",
+    "no_gameplay_changes": true
+  },
+  "supplied_files": [
+    {
+      "path": "CODEX_INTEGRATION.md",
+      "bytes": 21516,
+      "sha256": "58a8ee05fd0c2f0c5b79aa71416fa793494815c0d86314a7a6de17fd18ab3d56"
+    },
+    {
+      "path": "HANDOFF_README.md",
+      "bytes": 1076,
+      "sha256": "a877573345e60f129d2327079e87c87dfc3f5ff7c75dc68c1de64f1c3f7f6e07"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4106,
+      "sha256": "f48fb028036d3bb5560932e7db8f7f52e15bfb58467b109c524d396985a6ef6c"
+    },
+    {
+      "path": "artwork/salmon/arm_e.png",
+      "bytes": 5561,
+      "sha256": "64f31e9d61b87c591b67e21fd94a015cceb33f6817b0c03fc21279a4388c76a3"
+    },
+    {
+      "path": "artwork/salmon/arm_n.png",
+      "bytes": 6216,
+      "sha256": "8465054ac46e53ac66b3e9c4c81b1b28cddbcaa7d9d8f6be8385107d8bc71e64"
+    },
+    {
+      "path": "artwork/salmon/arm_s.png",
+      "bytes": 6263,
+      "sha256": "40eb10e66699965e93ae718c0f40aa9c72e8d32a3b5b50f717c4a1bd3605a808"
+    },
+    {
+      "path": "artwork/salmon/arm_w.png",
+      "bytes": 5575,
+      "sha256": "69016190dd8ea75f8a0ccb271eed4aaba76a5765f57bdc7f185104aba8435b19"
+    },
+    {
+      "path": "artwork/salmon/colony_finish.png",
+      "bytes": 32880,
+      "sha256": "a0097ae417824a586d5ddc0f5628a0a5241c53c796b8ff9e3d0722402b47e4fb"
+    },
+    {
+      "path": "artwork/salmon/colony_fringe.png",
+      "bytes": 231134,
+      "sha256": "619e016a29253073f1ed7628d66f88ee7b25b449bca972c0d693b89304c998cb"
+    },
+    {
+      "path": "artwork/salmon/colony_lobes.png",
+      "bytes": 210129,
+      "sha256": "8e0216aa52f19b1a18d2d36cddbc1df48ca95033e032d179d8bf730a6c29c84c"
+    },
+    {
+      "path": "artwork/salmon/core.png",
+      "bytes": 7974,
+      "sha256": "9c406331ce5b8c97dd1596688e968d18a1f3eb13ea305a55a5c10f3499000c81"
+    },
+    {
+      "path": "artwork/salmon/detail_e_0.png",
+      "bytes": 3327,
+      "sha256": "930f3332133c9074016e826d1fed7c838ae162a9d06f401edffa0f513298461a"
+    },
+    {
+      "path": "artwork/salmon/detail_e_1.png",
+      "bytes": 3336,
+      "sha256": "3c0a2f55b2eee74a32610e6d7d127acfe6c784176a5fd484a0fcb83c375cd1bc"
+    },
+    {
+      "path": "artwork/salmon/detail_n_0.png",
+      "bytes": 3366,
+      "sha256": "f47a4fff02dbb3f197ad85679d484ae260b0ca75501f44594b4739e7435c0a87"
+    },
+    {
+      "path": "artwork/salmon/detail_n_1.png",
+      "bytes": 3371,
+      "sha256": "8bb9fb472677306220a8c5f08632cfa22d45710c50fd8e19300f5f5a9790ba12"
+    },
+    {
+      "path": "artwork/salmon/detail_s_0.png",
+      "bytes": 3317,
+      "sha256": "6bc95cc10ac25762c669108beea96ed7c7faedbc7ecb48bfac842f224c7572fd"
+    },
+    {
+      "path": "artwork/salmon/detail_s_1.png",
+      "bytes": 3357,
+      "sha256": "bba82fc06cb3ade7d83d484d3eba49858de33d260d490389e0fca2e6ef1fd51a"
+    },
+    {
+      "path": "artwork/salmon/detail_w_0.png",
+      "bytes": 3371,
+      "sha256": "5ff776b38d16c740d7e2648115ad664f832dcfd94431f6dd2e630158283d9794"
+    },
+    {
+      "path": "artwork/salmon/detail_w_1.png",
+      "bytes": 3348,
+      "sha256": "cf7284dea31fb1c825854d802f6e11c78147b1c216837340e6f708a2660da833"
+    },
+    {
+      "path": "artwork/salmon/union_1_0.png",
+      "bytes": 90925,
+      "sha256": "0b4b39880612405e71ab9732e88b25659a96d567cdc44dbb678ea5d79f43ae1f"
+    },
+    {
+      "path": "artwork/salmon/union_1_1.png",
+      "bytes": 125281,
+      "sha256": "a1b0d09a32ffd1597ab5a7d0554d1310184912c5de72c297a1a593adc853b6a6"
+    },
+    {
+      "path": "artwork/salmon/union_2_0.png",
+      "bytes": 143195,
+      "sha256": "1fb502a0a8b3b70e3655a6f583901c5f67d1c7fdc2e65e71fb4219241f46bbb5"
+    },
+    {
+      "path": "artwork/salmon/union_2_1.png",
+      "bytes": 174484,
+      "sha256": "e1a0e98bfe6d097be22608d6bdc5641cf980b294ae283428f77aabba159e4dec"
+    },
+    {
+      "path": "artwork/salmon/union_2_m1.png",
+      "bytes": 171501,
+      "sha256": "6a1470d5a0bded24c5bf47490bb6b0fab91c7c7d909130b644fc6b72b7521599"
+    },
+    {
+      "path": "artwork/turquoise/arm_e.png",
+      "bytes": 5651,
+      "sha256": "5530a132f37cfdd7485f229353bdc80f7d0abedf075c52232bb53eebc820d822"
+    },
+    {
+      "path": "artwork/turquoise/arm_n.png",
+      "bytes": 6286,
+      "sha256": "572d5d0f4315e0554754ee287a2814944c49c2f2b8defc03f424970fcec7ed55"
+    },
+    {
+      "path": "artwork/turquoise/arm_s.png",
+      "bytes": 6327,
+      "sha256": "f315d84f03830ec5ee87ed938053cc43a1c6d8f618d164d600399cab40b7166c"
+    },
+    {
+      "path": "artwork/turquoise/arm_w.png",
+      "bytes": 5657,
+      "sha256": "ec7d384d3a9240cebb3a9586ed3cf1178413ac1a870d4878b85613414a3825ae"
+    },
+    {
+      "path": "artwork/turquoise/colony_finish.png",
+      "bytes": 35805,
+      "sha256": "8a4a6b999f2bba644f38f89e5ff5ef329294c3d53100c91e46c829a3f9130498"
+    },
+    {
+      "path": "artwork/turquoise/colony_fringe.png",
+      "bytes": 236643,
+      "sha256": "fd9000f365cd576d51608892dc34d9c461ef56806d331fc66665e868604c4844"
+    },
+    {
+      "path": "artwork/turquoise/colony_lobes.png",
+      "bytes": 215599,
+      "sha256": "1adb19a2f1b07f04290a52c3e77e842cd36daad73cdf776c54fcf0389f28645d"
+    },
+    {
+      "path": "artwork/turquoise/core.png",
+      "bytes": 8210,
+      "sha256": "a7be13e8932a125747528a5e990d52d9db29f78c90cc95b7c0f17581c806a276"
+    },
+    {
+      "path": "artwork/turquoise/detail_e_0.png",
+      "bytes": 3386,
+      "sha256": "87568b79ea7a8e5565ffb5420ec056f452f0e58922c817c566565c05bf001dfb"
+    },
+    {
+      "path": "artwork/turquoise/detail_e_1.png",
+      "bytes": 3416,
+      "sha256": "067711b7886430bc345f1ac9c26ffc87cff7972382bfacb4ced2818a502241c4"
+    },
+    {
+      "path": "artwork/turquoise/detail_n_0.png",
+      "bytes": 3405,
+      "sha256": "f7d991d5a8f6f6b5a2a351b128330140c8b75556b6db6f840f9662979da9b55d"
+    },
+    {
+      "path": "artwork/turquoise/detail_n_1.png",
+      "bytes": 3420,
+      "sha256": "037d8fd9520e8fef5e8011bb388ad9b25f9d03c0d0b598a36caea501ef48c9d1"
+    },
+    {
+      "path": "artwork/turquoise/detail_s_0.png",
+      "bytes": 3356,
+      "sha256": "31dcdc20d9abedd46134b98612efe4a31e1cd0a86f1c6f1b2112d5711a7f2fb6"
+    },
+    {
+      "path": "artwork/turquoise/detail_s_1.png",
+      "bytes": 3415,
+      "sha256": "3a69c3b6166a47138fb4f8d51a3438c0bcd53206ab0fc1005a453640ae98e4e9"
+    },
+    {
+      "path": "artwork/turquoise/detail_w_0.png",
+      "bytes": 3408,
+      "sha256": "9a6f88588584d5bc6942aa8bac166dc643b3cf9ea0c1f7bb225ce1b8b3aa7668"
+    },
+    {
+      "path": "artwork/turquoise/detail_w_1.png",
+      "bytes": 3411,
+      "sha256": "db9a9e56d921f8103ecfde2c032f13b6385fc4e39748ca87c2a851c80ea30621"
+    },
+    {
+      "path": "artwork/turquoise/union_1_0.png",
+      "bytes": 94011,
+      "sha256": "067f32db2f339b104811f9fdc52d63c0770bd5e79b4f7d91afb3d70ef420faec"
+    },
+    {
+      "path": "artwork/turquoise/union_1_1.png",
+      "bytes": 128326,
+      "sha256": "2ab03c3bf6e72a808c3009d54f4107c420af3f3360df8dd105501710a9d6f256"
+    },
+    {
+      "path": "artwork/turquoise/union_2_0.png",
+      "bytes": 146852,
+      "sha256": "bff35c146ae0d219d64d7564147a000698f8776064f7075075a7066c6c937445"
+    },
+    {
+      "path": "artwork/turquoise/union_2_1.png",
+      "bytes": 180400,
+      "sha256": "e0a59fc2cff15713b26557cbe9bdc86048f1878d3f406d7f0381bc30a89ceb85"
+    },
+    {
+      "path": "artwork/turquoise/union_2_m1.png",
+      "bytes": 177260,
+      "sha256": "8e11aeb6c8b6d3a63fac799f8cb4f257f60a0e821bfb489262f01d707c8ecef6"
+    },
+    {
+      "path": "asset_catalog.json",
+      "bytes": 41907,
+      "sha256": "e691242d1fff04602ccad4ec49ee43cb29c0a3ddd72b35cea4d93b8867df7cfd"
+    },
+    {
+      "path": "growth_reveal.gdshader",
+      "bytes": 1430,
+      "sha256": "9b874e5f221f388b409cf6f24acbb83259511ce723daeed922b4db6a2f34468f"
+    },
+    {
+      "path": "masks/arm_e.png",
+      "bytes": 585,
+      "sha256": "a0c401f47f390c8371886a5155043560e8caae5d949f8b5b16ffcf1c5a60c900"
+    },
+    {
+      "path": "masks/arm_n.png",
+      "bytes": 348,
+      "sha256": "64d39de7c7f91716d7250f7d30c8fca02074b5412315cdd260e6a865c3ac9091"
+    },
+    {
+      "path": "masks/arm_s.png",
+      "bytes": 352,
+      "sha256": "b8e6053b363f7df5fa65e642478ce854f56fa12ce91d1a5727dabe6e29c30b44"
+    },
+    {
+      "path": "masks/arm_w.png",
+      "bytes": 586,
+      "sha256": "bd051d9cb524a397acdc1315e64083f7ef03773ceb0626f651cacaea1b96ea2b"
+    },
+    {
+      "path": "masks/colony_finish.png",
+      "bytes": 17318,
+      "sha256": "04cf0cd6dfe77b61fc7ae64d31e2041b351ad77b380767d1a7d299f9685d1841"
+    },
+    {
+      "path": "masks/colony_fringe.png",
+      "bytes": 15357,
+      "sha256": "fca7ec5f3f61ce6bdfabf970472b04ab55cbe97ea1ae5101c127b53d7f28e48a"
+    },
+    {
+      "path": "masks/colony_lobes.png",
+      "bytes": 15754,
+      "sha256": "66b9256b3ccb8b1972b2b055728435b64eae9ad10201296ce08a40d161ce6e27"
+    },
+    {
+      "path": "masks/core.png",
+      "bytes": 2025,
+      "sha256": "0218b849e829757608306e1b9600cbdf21c654202ebbbeb221baea423e305b75"
+    },
+    {
+      "path": "masks/detail_e_0.png",
+      "bytes": 1287,
+      "sha256": "24517c2a710336137c3844f1de70bd4226f6fb8f91f6aa35319e4484895cc14d"
+    },
+    {
+      "path": "masks/detail_e_1.png",
+      "bytes": 1227,
+      "sha256": "65452f56cb231e1f75719670ca0c1ef8f4e223a3909214c439d3ad28f8dbb7c5"
+    },
+    {
+      "path": "masks/detail_n_0.png",
+      "bytes": 1384,
+      "sha256": "7c115bf614305065abae28146a393f0b5ce6e693e3e3d4106d28ec88181bc067"
+    },
+    {
+      "path": "masks/detail_n_1.png",
+      "bytes": 912,
+      "sha256": "1e96268bccd043e4f2b63c8fd0f3e77391aa50b5ea6468b507c56c372aa9a00b"
+    },
+    {
+      "path": "masks/detail_s_0.png",
+      "bytes": 1377,
+      "sha256": "aed88bd4954786a79b1584d548aab882eb75029ae5638220a7604644785ee592"
+    },
+    {
+      "path": "masks/detail_s_1.png",
+      "bytes": 1058,
+      "sha256": "0e40fb8b7a3a4ecaed4ba6b1e083c0f5db8bacec513eb9b5aefc58c78d279e8f"
+    },
+    {
+      "path": "masks/detail_w_0.png",
+      "bytes": 1285,
+      "sha256": "8063fe0b661bf8556a9facc25f59ec7b0d62b045f4053727767ec118c2274138"
+    },
+    {
+      "path": "masks/detail_w_1.png",
+      "bytes": 1229,
+      "sha256": "bd7d00e2ded3595eb95a58f5cd2796b478b19efa61d8ce9a9c44c9647c29fe2e"
+    },
+    {
+      "path": "masks/union_1_0.png",
+      "bytes": 1448,
+      "sha256": "52137048b0523940bca32fb2b372af7a3db6f3993b0e892b199e0b3c34fcd6b9"
+    },
+    {
+      "path": "masks/union_1_1.png",
+      "bytes": 7636,
+      "sha256": "75ce062bfdd576832e3bbeabe01b3b24cdfd7a4b7fa54485a96ab139380f6f3b"
+    },
+    {
+      "path": "masks/union_2_0.png",
+      "bytes": 1646,
+      "sha256": "07d75cce5d058b416b889fbc8b1f775ffa9a835163a65051229f60eab3cbb78c"
+    },
+    {
+      "path": "masks/union_2_1.png",
+      "bytes": 8887,
+      "sha256": "1f1d0b163247458a6c018ec115dff513ac9996538737c2854b0aea0606241b38"
+    },
+    {
+      "path": "masks/union_2_m1.png",
+      "bytes": 9252,
+      "sha256": "2a7acfe0797e10975e60a834f09097ca5edc822e83ab1648d8ce37c7e3f558a5"
+    },
+    {
+      "path": "masters/salmon_00_isolated.ora",
+      "bytes": 23596,
+      "sha256": "36152bf405afca39c2579441db65f4d1e762fcb698d33e8384886e4bfe0cb166"
+    },
+    {
+      "path": "masters/salmon_01_endpoint.ora",
+      "bytes": 49443,
+      "sha256": "7ea5cf966ad140923d00ac69132143dc9c719048e1e3b3d2f4dde37f10d30057"
+    },
+    {
+      "path": "masters/salmon_02_straight.ora",
+      "bytes": 75397,
+      "sha256": "15488c12d580aa8757524fb09a7360cfa945016b9e2b502855531bd687e4ed51"
+    },
+    {
+      "path": "masters/salmon_03_corner.ora",
+      "bytes": 72697,
+      "sha256": "b0c32130d5b85cdd9be3dbe43405fe9cd8a5ad85b190fd3fdbc1b0c2faf8c384"
+    },
+    {
+      "path": "masters/salmon_04_t_junction.ora",
+      "bytes": 95328,
+      "sha256": "78f0b11f81d28b7cb771035b66ac0047b24915bfe6c4fb8046ac9f1541afde18"
+    },
+    {
+      "path": "masters/salmon_05_crossroads.ora",
+      "bytes": 121078,
+      "sha256": "d566e3cca4a6674c9e2dd0df458f9cb60d3590def424250dc380aefdbf344480"
+    },
+    {
+      "path": "masters/salmon_06_colony.ora",
+      "bytes": 972914,
+      "sha256": "22d62d834d84f1853cd462b587b48715afce155412143f6e43d70a60e01ca966"
+    },
+    {
+      "path": "masters/salmon_union_1_0.ora",
+      "bytes": 1105333,
+      "sha256": "2aa3675d07cdd4b85d5cc70468c1c4466a3801134b7a03814bfc9ddefdcab790"
+    },
+    {
+      "path": "masters/salmon_union_1_1.ora",
+      "bytes": 1336713,
+      "sha256": "89def3bdcd449fdf5727ace161768618d52881908feb1ba3c9cc0a2f0b1aad4d"
+    },
+    {
+      "path": "masters/salmon_union_2_0.ora",
+      "bytes": 1188946,
+      "sha256": "6420471f5edd7852b4a67b6642e358d38e84969cf98fe4dbd4c98c1a951ee019"
+    },
+    {
+      "path": "masters/salmon_union_2_1.ora",
+      "bytes": 1437024,
+      "sha256": "d25ef00f620edfecfa75e7e359f3b30242c6ce9cdc7786b785060e589c6b519d"
+    },
+    {
+      "path": "masters/salmon_union_2_m1.ora",
+      "bytes": 1431968,
+      "sha256": "e938400a2de362530266ba0ca3c7e118e09e0ae484a3bfc75a8b1a0d0026f072"
+    },
+    {
+      "path": "masters/turquoise_00_isolated.ora",
+      "bytes": 24224,
+      "sha256": "55d02773a303c4892c4fe0146de4f7746cef13a6bea53964e9947677be5d22e4"
+    },
+    {
+      "path": "masters/turquoise_01_endpoint.ora",
+      "bytes": 50370,
+      "sha256": "d2ce01e6b3def96c44afdec6dafc1ceaa2f2c840c711387b8506b96cd7ac9f96"
+    },
+    {
+      "path": "masters/turquoise_02_straight.ora",
+      "bytes": 76736,
+      "sha256": "8500bf3b29519c200e2e5e599ad9f636de709c2aea91064255b6ac712537dcfe"
+    },
+    {
+      "path": "masters/turquoise_03_corner.ora",
+      "bytes": 74177,
+      "sha256": "d684e0570f9a7f9bc148f50bdf97fcd18e9188785c680b2b8a0d401b3d24eb8b"
+    },
+    {
+      "path": "masters/turquoise_04_t_junction.ora",
+      "bytes": 97200,
+      "sha256": "299b052df61c5f746f7951075d7df378d01b6cafee256483e6d48a1ecc466a73"
+    },
+    {
+      "path": "masters/turquoise_05_crossroads.ora",
+      "bytes": 123337,
+      "sha256": "0833bc923d3defb3cdc910e750d4895c4dc7b8aa57a89bab139abfc1cb695379"
+    },
+    {
+      "path": "masters/turquoise_06_colony.ora",
+      "bytes": 997716,
+      "sha256": "4d6abdefe35ef440e2e08dab7250e0394abce384e24e5f30bfeecfce42692811"
+    },
+    {
+      "path": "masters/turquoise_union_1_0.ora",
+      "bytes": 1135920,
+      "sha256": "cbedc45179f144687395f003d9043b7c08b53758d58f836627e186d0c268434e"
+    },
+    {
+      "path": "masters/turquoise_union_1_1.ora",
+      "bytes": 1373696,
+      "sha256": "72885b5be1aac4068d2dc635b8f29bfb964fcb5a125dee75752e7b967015dc10"
+    },
+    {
+      "path": "masters/turquoise_union_2_0.ora",
+      "bytes": 1222315,
+      "sha256": "54392cb7804f62378c48c6f50bc37abe657caf5bb232e21b939670e5e4737300"
+    },
+    {
+      "path": "masters/turquoise_union_2_1.ora",
+      "bytes": 1479268,
+      "sha256": "f4de6b60265ab544adca226c43c128ea567156c58ea49448dd30145c398dde35"
+    },
+    {
+      "path": "masters/turquoise_union_2_m1.ora",
+      "bytes": 1473752,
+      "sha256": "4440daa6c3f20c179b439ce4d9858a76fbc2d8abc9a277595638fec60fb7ed2c"
+    },
+    {
+      "path": "previews/Coral_Reef_Artwork_Review.png",
+      "bytes": 568532,
+      "sha256": "443cc52ea816a089eeb8ba22876635c80a1c566fe7d050737712d9eaec4ae763"
+    },
+    {
+      "path": "previews/Coral_Reef_Dense_and_Phone.png",
+      "bytes": 364164,
+      "sha256": "d9109ad4457f45c77939576bc70b374ea8423abe7e97303353b8f778bd3d6952"
+    },
+    {
+      "path": "previews/Coral_Reef_Growth_Check.mp4",
+      "bytes": 211436,
+      "sha256": "c8eef2a88e16c2275672112b81474e8619a45c13b8a8e24ef109c7f9a3c6bd05"
+    },
+    {
+      "path": "previews/Coral_Reef_Growth_Stages.png",
+      "bytes": 87475,
+      "sha256": "40af2a088332954ae4f6934fd79fd689d2c4c73e44e7af089a060ff6331a3b90"
+    },
+    {
+      "path": "references/salmon/00_isolated.png",
+      "bytes": 7974,
+      "sha256": "9c406331ce5b8c97dd1596688e968d18a1f3eb13ea305a55a5c10f3499000c81"
+    },
+    {
+      "path": "references/salmon/01_endpoint.png",
+      "bytes": 14715,
+      "sha256": "85d2bd6368719c10b10702b9a713659ad79afa5a902dd872741d130ac8b05701"
+    },
+    {
+      "path": "references/salmon/02_straight.png",
+      "bytes": 21339,
+      "sha256": "aa403d9571af93d3371644ae420a2e4e8d7f19ab496626cf6b15da823b7b5629"
+    },
+    {
+      "path": "references/salmon/03_corner.png",
+      "bytes": 20547,
+      "sha256": "f9baab2e3a7f38b82b380529022a4feed21d0221da9e5591a03a5495805fc417"
+    },
+    {
+      "path": "references/salmon/04_t_junction.png",
+      "bytes": 26086,
+      "sha256": "796073c16fe1603c0e12260fabaa5e08e66da5f4092b3a3a68f88e54b40d5bba"
+    },
+    {
+      "path": "references/salmon/05_crossroads.png",
+      "bytes": 32590,
+      "sha256": "d0992f041141e85c6ce77f68e656d26e8e3d8542c847bc6a800a95f5731253c6"
+    },
+    {
+      "path": "references/salmon/06_colony.png",
+      "bytes": 287868,
+      "sha256": "18b4a1ed8033983fd7cee141f2ef203e3fe7672cb595903fbd921adaa4ff81fc"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_00.png",
+      "bytes": 7974,
+      "sha256": "9c406331ce5b8c97dd1596688e968d18a1f3eb13ea305a55a5c10f3499000c81"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_01.png",
+      "bytes": 14715,
+      "sha256": "85d2bd6368719c10b10702b9a713659ad79afa5a902dd872741d130ac8b05701"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_02.png",
+      "bytes": 13922,
+      "sha256": "153ae8708b6919cb994aeb756d15d737b4e95b59fb2983775fb928374b0c0482"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_03.png",
+      "bytes": 20547,
+      "sha256": "f9baab2e3a7f38b82b380529022a4feed21d0221da9e5591a03a5495805fc417"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_04.png",
+      "bytes": 14763,
+      "sha256": "2ca727c900b60e987f4d88e6d5716fe33e3a03d5920dabfaa7a514a2b4500d39"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_05.png",
+      "bytes": 21339,
+      "sha256": "aa403d9571af93d3371644ae420a2e4e8d7f19ab496626cf6b15da823b7b5629"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_06.png",
+      "bytes": 20571,
+      "sha256": "369336be4ebbd32376e8072dd418bc5c2070fc36d146a0adc89d84ab7f87f2ec"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_07.png",
+      "bytes": 27092,
+      "sha256": "1792aa30c8a5cff4242379ab647f30d6a4a85de10690d6acf239caddfc439fbe"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_08.png",
+      "bytes": 14024,
+      "sha256": "cc439880fd386ffa4b063fe2cb2c4a93b323045aaf6c4d134283ba670cc05219"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_09.png",
+      "bytes": 20608,
+      "sha256": "03cdbeb80c51d4923f3f3ed835e81c195a926ec676f7f442142b28e73287b762"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_10.png",
+      "bytes": 19495,
+      "sha256": "63990279a05f42a0318596b63b6077dadcc232ec04b61b3d0601bf7b1fa1d2fc"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_11.png",
+      "bytes": 26086,
+      "sha256": "796073c16fe1603c0e12260fabaa5e08e66da5f4092b3a3a68f88e54b40d5bba"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_12.png",
+      "bytes": 20638,
+      "sha256": "57a6efaee0e5e12a341d2412e3a038dfc503915882449c4a17c54c72acba3a93"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_13.png",
+      "bytes": 27137,
+      "sha256": "3e57fb158e685e65b5b78ff3f34d74f58d4184764b9942803beca38142cf89a9"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_14.png",
+      "bytes": 26108,
+      "sha256": "a6278c13ba418e1bfa42814d3cd208227e267764f2abca90a951123e17ddc3a4"
+    },
+    {
+      "path": "references/salmon/all_masks/mask_15.png",
+      "bytes": 32590,
+      "sha256": "d0992f041141e85c6ce77f68e656d26e8e3d8542c847bc6a800a95f5731253c6"
+    },
+    {
+      "path": "references/salmon/dense_garden.png",
+      "bytes": 1009681,
+      "sha256": "2a3c3e55af6d6a0431ed3589ef1aab39a95b45dd80e34e51ea39da649603a23e"
+    },
+    {
+      "path": "references/salmon/union_1_0.png",
+      "bytes": 363595,
+      "sha256": "b42574fb8b5cb86d13be36dba751668bb79b6bf7b2d0e5d6d731ead08ef02207"
+    },
+    {
+      "path": "references/salmon/union_1_1.png",
+      "bytes": 550396,
+      "sha256": "dc23b505df3dc8ee7cb99411027bc12fa5984d966a71bf4eaf067f6b87032670"
+    },
+    {
+      "path": "references/salmon/union_2_0.png",
+      "bytes": 412760,
+      "sha256": "4f4a225c7e444bad78c01581f20877b4c6b23e63055058eb8ea6fa521ace8828"
+    },
+    {
+      "path": "references/salmon/union_2_1.png",
+      "bytes": 616560,
+      "sha256": "87ac012fca19b496a090eca679a349823686edb5a0d017446258472775b5b5a2"
+    },
+    {
+      "path": "references/salmon/union_2_m1.png",
+      "bytes": 614954,
+      "sha256": "7fa2de46ac54eb9238b58e98969951cc7553a665dc71cb2ed78653fbb0f406c2"
+    },
+    {
+      "path": "references/turquoise/00_isolated.png",
+      "bytes": 8210,
+      "sha256": "a7be13e8932a125747528a5e990d52d9db29f78c90cc95b7c0f17581c806a276"
+    },
+    {
+      "path": "references/turquoise/01_endpoint.png",
+      "bytes": 15072,
+      "sha256": "d22167b311cd71749314fcafb1d5f2c51958fb5153bbaa2933ffd02bc482982b"
+    },
+    {
+      "path": "references/turquoise/02_straight.png",
+      "bytes": 21803,
+      "sha256": "792ce2d982fcc68d5aa85ac22f6370637869deaf37f3c908b639d811f0aaf3fd"
+    },
+    {
+      "path": "references/turquoise/03_corner.png",
+      "bytes": 21001,
+      "sha256": "f018048a3c325c8109daf1b7a47540e190fdecf8dd7cadf4c877e70d62ec88b3"
+    },
+    {
+      "path": "references/turquoise/04_t_junction.png",
+      "bytes": 26680,
+      "sha256": "a365876197d14fb3baffdb0b1612e49206005aa3f3576b2738bfddbd73940bf1"
+    },
+    {
+      "path": "references/turquoise/05_crossroads.png",
+      "bytes": 33338,
+      "sha256": "63de60d53ac71055ad9b2656328387722c2a1c980fb9b5b517a8aaf5eeb8b244"
+    },
+    {
+      "path": "references/turquoise/06_colony.png",
+      "bytes": 295590,
+      "sha256": "1e8cd17ff06ca7e28188fdee0a9213548cb6152614d9d142ef372be1c34f73dd"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_00.png",
+      "bytes": 8210,
+      "sha256": "a7be13e8932a125747528a5e990d52d9db29f78c90cc95b7c0f17581c806a276"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_01.png",
+      "bytes": 15072,
+      "sha256": "d22167b311cd71749314fcafb1d5f2c51958fb5153bbaa2933ffd02bc482982b"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_02.png",
+      "bytes": 14263,
+      "sha256": "bba9713d6c5ede6155caf88f412b282dafff00ac69415596a9673f5e1c06fb71"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_03.png",
+      "bytes": 21001,
+      "sha256": "f018048a3c325c8109daf1b7a47540e190fdecf8dd7cadf4c877e70d62ec88b3"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_04.png",
+      "bytes": 15095,
+      "sha256": "f285726619a2b66c20b5e656030004ee788acadf4870d3db408b878a020d8ac5"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_05.png",
+      "bytes": 21803,
+      "sha256": "792ce2d982fcc68d5aa85ac22f6370637869deaf37f3c908b639d811f0aaf3fd"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_06.png",
+      "bytes": 20995,
+      "sha256": "a8f5b998ee1410b8fae917d00eaebbd418844778e53711b5b600e54060f392c3"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_07.png",
+      "bytes": 27636,
+      "sha256": "5e39694cdc29b115bdf117b588beae6c110e10430fdde5ead3624497f64bde06"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_08.png",
+      "bytes": 14376,
+      "sha256": "a12e8c71f1280df6a2300a60bd53a80a033a43d7d8a904635ae68ca5105d7b5b"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_09.png",
+      "bytes": 21108,
+      "sha256": "7dfadd7d9041320ff01e2e81662b11415c7d1bb52030d8bc8fac6a95422ae036"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_10.png",
+      "bytes": 19984,
+      "sha256": "3c9ac6c6e64d5514e1809e45306a55594366c17fba25eb47ffde66872989acc6"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_11.png",
+      "bytes": 26680,
+      "sha256": "a365876197d14fb3baffdb0b1612e49206005aa3f3576b2738bfddbd73940bf1"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_12.png",
+      "bytes": 21123,
+      "sha256": "31da98f8db6870ee847e1b2ad24e0324e99516276cdbaa059a7ad95185809fdc"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_13.png",
+      "bytes": 27753,
+      "sha256": "0c50f2b554843ce4ee738b176b022b6d1bd35079b72b7fc45f43335d3c67642c"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_14.png",
+      "bytes": 26694,
+      "sha256": "8a7f8049bf3292b374621556fdfb7b8fcb2beb4a3ad87b450c036a5c502f3155"
+    },
+    {
+      "path": "references/turquoise/all_masks/mask_15.png",
+      "bytes": 33338,
+      "sha256": "63de60d53ac71055ad9b2656328387722c2a1c980fb9b5b517a8aaf5eeb8b244"
+    },
+    {
+      "path": "references/turquoise/dense_garden.png",
+      "bytes": 1044889,
+      "sha256": "d551d1713bd40709530f69b4e0dddade77ffa1dc9aba6048d06a6835b05bb567"
+    },
+    {
+      "path": "references/turquoise/union_1_0.png",
+      "bytes": 374438,
+      "sha256": "1e2fee8577a978dee12876af496174ab9dbbae0e312d77e9b184e419ea18a14b"
+    },
+    {
+      "path": "references/turquoise/union_1_1.png",
+      "bytes": 567398,
+      "sha256": "34b5bd66e8e2782bc54c786e932ae27b51a0a0fc877f7310f865e8e89c7735b0"
+    },
+    {
+      "path": "references/turquoise/union_2_0.png",
+      "bytes": 424854,
+      "sha256": "caa3c676e3770ea1fcf15fb6c22eb569f444f7273b2ddbd7ecf06cc7321fd761"
+    },
+    {
+      "path": "references/turquoise/union_2_1.png",
+      "bytes": 635213,
+      "sha256": "2e77261e75d7b86fa099d309b26a938c92bd4aed59b865f8af07468d8fd0239b"
+    },
+    {
+      "path": "references/turquoise/union_2_m1.png",
+      "bytes": 633370,
+      "sha256": "13872ff0fc19063d1bad83de919536fa4586241dac1f6d596b44836753120f96"
+    },
+    {
+      "path": "source/branch_kit.png",
+      "bytes": 416656,
+      "sha256": "1f853a0cfdec7a016fe5b9e8c15a93840fa9e3549eb33e7e0a81f04cd480d809"
+    },
+    {
+      "path": "source/colony_layers.png",
+      "bytes": 1602933,
+      "sha256": "42b388728805b8828f6d8633f7e5c99b985a8328fae66af6404855c61d62bfc3"
+    },
+    {
+      "path": "source/generation_prompts.json",
+      "bytes": 4356,
+      "sha256": "b742bd3679f9ca5e1d919b090452427a002dbbc463ecfa55eee548049400f6f5"
+    },
+    {
+      "path": "source/reef_shelf.png",
+      "bytes": 1198035,
+      "sha256": "777f3f2c194126125dbf474663370453cc374fe2a08f8b950f3f611b288ca886"
+    },
+    {
+      "path": "tools/build_artwork.py",
+      "bytes": 19165,
+      "sha256": "d6f68896ebd17c66c339f1706640a4864d2738663acc6cbdda5ec3d7c6c1bde1"
+    },
+    {
+      "path": "tools/build_manifest.py",
+      "bytes": 15345,
+      "sha256": "a1f2b56fce46d036d21ebfea88d5ecf8e6c1ddeb37f7fae125f05159d8df5b1f"
+    },
+    {
+      "path": "tools/render_growth_check.py",
+      "bytes": 6386,
+      "sha256": "b6e2091913b11ad1f28c0342fe5034c0a905c826beea0e0e0a897ed41506ae2d"
+    },
+    {
+      "path": "tools/validate_handoff.py",
+      "bytes": 7959,
+      "sha256": "18d5fd175a78d856c8c528a5a6ecddd6c0f276a76e0446b2d93aff5e0c5ba5b2"
+    },
+    {
+      "path": "tools/verify_artwork.py",
+      "bytes": 4869,
+      "sha256": "d8eded6c3e77b4af8557a7c9b6d21577e286a5d5f1afa7bae0370ee126aeac17"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 12957,
+      "sha256": "e2ae718330067371881972d2659840990204a88a3958fe7ac952ed459ddd8ff4"
+    }
+  ]
+}

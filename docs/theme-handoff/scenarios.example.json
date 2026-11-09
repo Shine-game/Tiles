@@ -1,0 +1,12 @@
+{
+  "format": "row-major logical color IDs; 0 empty, 1/2 variants",
+  "notes": "Expected landmarks below illustrate a 2x2 landmark theme; change the contract for another visual design.",
+  "scenarios": [
+    {"id": "isolated", "before": [[0,0,0],[0,0,0],[0,0,0]], "after": [[0,0,0],[0,1,0],[0,0,0]], "expected": {"centers": 1, "side_connections": 0, "landmarks": 0}},
+    {"id": "same-color-side", "before": [[0,0,0],[0,1,0],[0,0,0]], "after": [[0,0,0],[0,1,1],[0,0,0]], "expected": {"centers": 2, "side_connections": 1, "landmarks": 0}},
+    {"id": "different-color-side", "before": [[0,0,0],[0,1,0],[0,0,0]], "after": [[0,0,0],[0,1,2],[0,0,0]], "expected": {"centers": 2, "side_connections": 0, "landmarks": 0}},
+    {"id": "closed-loop", "before": [[1,1,0],[1,0,0],[0,0,0]], "after": [[1,1,0],[1,1,0],[0,0,0]], "expected": {"centers": 4, "side_connections": 4, "landmarks": 1}},
+    {"id": "overlapping-landmarks", "before": [[1,1,1],[1,1,0],[0,0,0]], "after": [[1,1,1],[1,1,1],[0,0,0]], "expected": {"centers": 6, "side_connections": 7, "landmarks": 2, "joining_shelves": 1}},
+    {"id": "erase-support", "before": [[1,1,1],[1,1,1],[0,0,0]], "after": [[1,1,1],[1,1,0],[0,0,0]], "expected": {"centers": 5, "landmarks": 1, "joining_shelves": 0}}
+  ]
+}
