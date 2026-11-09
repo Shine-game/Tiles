@@ -92,8 +92,10 @@ static func symmetry_states(board: Array) -> Array:
 	return result
 
 static func physical_placement(board: Array, cells: Array, anchor: Vector2i) -> Dictionary:
+	if cells.is_empty():
+		return {"ok": false, "reason": "Choose a piece."}
 	var n: int = board.size()
-	var touching := false
+	var touching: bool = not board.any(func(row: Array): return row.any(func(value): return value != 0))
 	for offset: Vector2i in cells:
 		var cell := anchor + offset
 		if cell.x < 0 or cell.y < 0 or cell.x >= n or cell.y >= n:

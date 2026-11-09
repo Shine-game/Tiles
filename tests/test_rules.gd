@@ -71,9 +71,9 @@ func _initialize() -> void:
 		for i in range(3, 0, -1):
 			check(game.undo(), "undo succeeds")
 			check(game.board == snapshots[i].board, "undo restores board")
-			check(not Rules.first_physical_move(game.board, game.piece()).is_empty(), "undo rerolls a physically fitting piece")
+			check(not Rules.first_physical_move(game.board, game.piece()).is_empty(), "returned piece physically fits")
 			check(game.current_color == snapshots[i].color, "undo restores selected color")
-			check(game.restored_cells == game.piece().cells, "rerolled piece starts in its own orientation")
+			check(game.restored_cells == snapshots[i].cells, "undo returns original orientation")
 		check(not game.undo(), "fourth undo unavailable")
 		check(game.moves == 1, "three undos retrace three moves")
 	# A one-cell hole in an otherwise blue board can only accept blue.
@@ -183,32 +183,69 @@ func _initialize() -> void:
 	check(finisher.place(Rules.PIECES.Dot.cells, Vector2i(2, 1)).ok, "final physical space can be filled")
 	check(finisher.over and finisher.no_space and finisher.piece().cells.is_empty(), "full grid completes without an impossible next piece")
 	check(finisher.undo() and not finisher.over and finisher.queue[finisher.index] == "Dot", "completion can be undone")
-	# Back restores the board but rerolls the current offer. It must not rewind
-	# the random stream, otherwise replaying a move repeats the unwanted draw.
+	# Undo returns the exact placed piece without rolling or refunding helpers.
 	var replay = Game.new(9, 888)
+	var returned_name: String = replay.queue[replay.index]
 	var replay_move: Dictionary = Rules.first_legal_move(replay.board, replay.piece())
 	replay.current_color = replay_move.color
 	var restored_board: Array = replay.board.duplicate(true)
 	replay.place(replay_move.cells, replay_move.anchor)
 	var old_offer: String = replay.queue[replay.index]
 	var random_state: int = replay.rng.state
-	check(replay.undo(), "reroll undo succeeds")
-	check(replay.board == restored_board, "reroll restores the board before last placement")
-	check(replay.queue[replay.index] != old_offer, "Back offers a different shape when alternatives fit")
-	check(replay.rng.state != random_state, "Back consumes fresh randomness")
-	check(not Rules.first_physical_move(replay.board, replay.piece()).is_empty(), "rerolled piece physically fits restored board")
-	var replacement: Dictionary = Rules.first_legal_move(replay.board, replay.piece())
-	replay.current_color = replacement.color
-	check(replay.place(replacement.cells, replacement.anchor).ok, "rerolled piece can be played")
-	# Only Dot fits: a reroll must repeat it rather than produce an impossible shape.
-	var forced = Game.new(9, 456)
-	forced.board = Rules.empty_board(9)
-	for row: Array in forced.board:
+	check(replay.undo(), "undo succeeds")
+	check(replay.board == restored_board, "undo removes last placement")
+	check(replay.queue[replay.index] == returned_name and replay.piece().cells == replay_move.cells, "undo returns same shape and orientation")
+	check(replay.rng.state == random_state, "undo does not reroll")
+	check(replay.undo_left == 2 and replay.skip_left == 3 and replay.erase_left == 3, "undo spends only its own charge")
+	check(replay.place(replay_move.cells, replay_move.anchor).ok, "returned piece can be replayed")
+	check(replay.queue[replay.index] == old_offer, "undo preserves the set-aside next offer when it still fits")
+	for i in range(3):
+		var before_skip: Array = replay.board.duplicate(true)
+		var last_offer: String = replay.queue[replay.index]
+		check(replay.skip(), "skip available three times")
+		check(replay.board == before_skip and replay.queue[replay.index] != last_offer, "skip changes offer without touching board")
+		check(not Rules.first_physical_move(replay.board, replay.piece()).is_empty(), "skipped-to shape has physical room")
+	check(not replay.skip() and replay.skip_left == 0, "fourth skip blocked")
+	check(replay.undo() and replay.skip_left == 0 and replay.undo_left == 1, "undo does not refund skip charges")
+	var eraser = Game.new(9, 456)
+	check(not eraser.erase(Vector2i(-1, 0)) and not eraser.erase(Vector2i.ZERO) and eraser.erase_left == 3, "invalid erasures cost nothing")
+	check(eraser.erase(Vector2i(4, 4)) and eraser.erase_left == 2, "original center can be erased")
+	check(not eraser.over, "empty garden still offers placeable pieces")
+	check(Rules.physical_placement(eraser.board, Rules.PIECES.Dot.cells, Vector2i.ZERO).ok, "empty garden can restart anywhere")
+	eraser.queue[eraser.index] = "Domino"
+	check(eraser.place(Rules.PIECES.Domino.cells, Vector2i(1, 1)).ok, "piece placed on emptied field")
+	check(eraser.erase(Vector2i(1, 1)), "one square of placed piece can be erased")
+	check(eraser.undo() and eraser.board == Rules.empty_board(9), "undo does not resurrect erased original center")
+	check(eraser.piece().cells == Rules.PIECES.Domino.cells and eraser.erase_left == 1, "undo returns full piece without refunding erasure")
+	# Erase can split the garden and Undo preserves erasures of older pieces.
+	var split = Game.new(9, 234)
+	split.board = Rules.empty_board(9)
+	for x in range(2, 7):
+		split.board[4][x] = Rules.BLUE
+	split.queue[split.index] = "Dot"
+	split._refresh_over()
+	split.place(Rules.PIECES.Dot.cells, Vector2i(4, 3))
+	check(split.erase(Vector2i(4, 4)), "erase splits a connected line")
+	check(split.undo() and split.board[4][4] == 0 and split.board[4][2] == Rules.BLUE and split.board[4][6] == Rules.BLUE, "undo preserves disconnected fragments and erased older square")
+	check(finisher.erase(Vector2i(0, 0)) and not finisher.over, "erasing reopens completed garden")
+	# Replaying after every Undo must not turn a three-use helper into unlimited Back.
+	var limited = Game.new(9, 78)
+	limited.queue[limited.index] = "Dot"
+	for i in range(3):
+		limited.place(Rules.PIECES.Dot.cells, Vector2i(4, 3))
+		check(limited.undo(), "undo charge can be used between placements")
+	limited.place(Rules.PIECES.Dot.cells, Vector2i(4, 3))
+	check(not limited.history.is_empty() and not limited.undo() and limited.undo_left == 0, "new placement does not replenish exhausted undo")
+	var only_dot = Game.new(9, 13)
+	for row: Array in only_dot.board:
 		row.fill(Rules.BLUE)
-	forced.board[1][2] = 0
-	forced.queue[forced.index] = "Dot"
-	forced._refresh_over()
-	forced.place(Rules.PIECES.Dot.cells, Vector2i(2, 1))
-	check(forced.undo() and forced.queue[forced.index] == "Dot", "reroll repeats the only physically fitting shape")
+	only_dot.board[1][2] = 0
+	only_dot.queue[only_dot.index] = "Dot"
+	only_dot._refresh_over()
+	check(only_dot.skip() and only_dot.queue[only_dot.index] == "Dot", "skip repeats only fitting shape instead of offering impossible piece")
+	check(only_dot.erase(Vector2i(0, 0)) and only_dot.erase(Vector2i(1, 0)) and only_dot.erase(Vector2i(2, 0)), "three erase charges available")
+	check(not only_dot.erase(Vector2i(3, 0)) and only_dot.erase_left == 0 and only_dot.board[0][3] == Rules.BLUE, "fourth erase cannot change board")
+	var fresh = Game.new()
+	check(fresh.undo_left == 3 and fresh.skip_left == 3 and fresh.erase_left == 3, "new game resets all helper budgets")
 	print("Rules: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

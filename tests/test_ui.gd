@@ -74,40 +74,15 @@ func _run() -> void:
 	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic is off when all rotations conflict")
 	scene._preview()
 
-	# Gesture modes must remain distinct: tap mirrors, immediate drag translates,
-	# held circular movement rotates, and releasing never places a piece.
+	# A tap rotates; drag always translates, including after a stationary hold.
 	scene.cells = Rules.PIECES.J.cells.duplicate()
 	scene._refresh()
 	var tap_point := source_point(scene, scene.cells[0])
 	var gesture_cells: Array = scene.cells.duplicate()
 	touch(scene, tap_point, true)
 	touch(scene, tap_point + Vector2(2, 1), false)
-	check(scene.cells == Rules.flip(gesture_cells), "short tap mirrors the source piece")
+	check(scene.cells == Rules.rotate(gesture_cells), "short tap rotates source by 90 degrees")
 	check(not scene.has_hover and scene.game.moves == 0, "tap does not move or commit source")
-	scene.cells = gesture_cells.duplicate()
-	scene._refresh()
-	tap_point = source_point(scene, scene.cells[0])
-	touch(scene, tap_point, true)
-	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
-	var pivot: Vector2 = scene.rotation_pivot
-	var start_vector: Vector2 = scene.rotation_vector
-	drag(scene, pivot + start_vector.rotated(PI / 2))
-	check(scene.cells == Rules.rotate(gesture_cells), "hold and clockwise arc snaps one quarter turn")
-	check(not scene.has_hover, "held rotation does not translate source")
-	drag(scene, pivot + start_vector.rotated(PI))
-	check(scene.cells == Rules.rotate(Rules.rotate(gesture_cells)), "continuing circular movement rotates another quarter turn")
-	touch(scene, pivot + start_vector.rotated(PI), false)
-	check(not scene.dragging and scene.game.moves == 0, "rotation release never places")
-	scene.cells = gesture_cells.duplicate()
-	scene._refresh()
-	tap_point = source_point(scene, scene.cells[0])
-	touch(scene, tap_point, true)
-	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
-	pivot = scene.rotation_pivot
-	start_vector = scene.rotation_vector
-	drag(scene, pivot + start_vector.rotated(-PI / 2))
-	check(scene.cells == Rules.rotate(Rules.rotate(Rules.rotate(gesture_cells))), "counterclockwise held arc rotates backward")
-	touch(scene, pivot + start_vector.rotated(-PI / 2), false)
 	scene.cells = gesture_cells.duplicate()
 	scene._refresh()
 	tap_point = source_point(scene, scene.cells[0])
@@ -118,22 +93,26 @@ func _run() -> void:
 	canceled.pressed = false
 	canceled.canceled = true
 	root.push_input(canceled, true)
-	check(scene.cells == gesture_cells and not scene.dragging, "system-canceled touch never flips")
-	scene.cells = gesture_cells.duplicate()
-	scene._refresh()
-	tap_point = source_point(scene, scene.cells[0])
+	check(scene.cells == gesture_cells and not scene.dragging, "system-canceled touch never rotates")
 	touch(scene, tap_point, true)
-	scene.gesture_age = scene.HOLD_TO_ROTATE + 0.01
+	scene.gesture_age = 0.5
 	touch(scene, tap_point, false)
-	check(scene.cells == gesture_cells and not scene.has_hover, "stationary long hold does not flip or translate")
-	check(is_equal_approx(scene.place_button.size.y, scene.rotate_button.size.y * 2), "Place is twice normal button height")
+	check(scene.cells == gesture_cells and not scene.has_hover, "stationary long hold does nothing")
+	touch(scene, tap_point, true)
+	scene.gesture_age = 0.5
+	drag(scene, board_point(scene, Vector2i(2, 2)))
+	touch(scene, board_point(scene, Vector2i(2, 2)), false)
+	check(scene.cells == gesture_cells and scene.has_hover, "drag after a hold still moves without rotating")
+	scene._clear_selection()
+	scene._preview()
+	check(is_equal_approx(scene.place_button.size.y, scene.flip_button.size.y * 2), "Place is twice normal button height")
 	check(scene.board_view.position.y <= scene.piece_view.get_rect().end.y + 13, "field sits directly below header")
 	for palette_index in range(5):
 		Palette.select(palette_index)
 		check(Palette.background() == Color.WHITE, "surrounding screen remains white in every palette")
 	Palette.select(0)
 	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board spans full phone width")
-	check(scene.place_button.get_global_rect().position.x < scene.undo_button.get_global_rect().position.x, "Place is at bottom left")
+	check(scene.place_button.get_global_rect().position.x > scene.undo_button.get_global_rect().position.x, "Place is at bottom right")
 	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place dock stays within screen")
 	scene.game.queue[scene.game.index] = "J"
 	scene.cells = Rules.PIECES.J.cells
@@ -145,7 +124,7 @@ func _run() -> void:
 	check(scene.cells == Rules.flip(original_cells), "Flip mirrors piece")
 	var move: Dictionary = Rules.first_legal_move(scene.game.board, {"cells": scene.cells, "color": scene.game.current_color}, false, false)
 	for i in range(move.rotation):
-		scene.rotate_button.pressed.emit()
+		scene._rotate()
 	var placed_cells: Array = scene.cells.duplicate()
 	var original_board: Array = scene.game.board.duplicate(true)
 	for grab: Vector2i in placed_cells:
@@ -160,6 +139,14 @@ func _run() -> void:
 		check(scene.selected == move.anchor, "grabbed square retains its offset")
 		check(scene.game.board == original_board and scene.game.moves == 0, "release never places automatically")
 		check(not scene.place_button.disabled, "physically fitting hover enables Place")
+	var hover_anchor: Vector2i = scene.selected
+	var floating_tap := board_point(scene, hover_anchor + placed_cells[0])
+	touch(scene, floating_tap, true)
+	touch(scene, floating_tap, false)
+	check(scene.cells == Rules.rotate(placed_cells) and scene.selected == hover_anchor, "tap rotates hovering piece in place")
+	check(scene.game.board == original_board and scene.has_hover, "hover rotation never commits")
+	scene.cells = placed_cells.duplicate()
+	scene._refresh()
 	# Regrab a non-anchor square of the floating piece and move off the field.
 	var grab: Vector2i = placed_cells.back()
 	touch(scene, board_point(scene, move.anchor + grab), true)
@@ -223,8 +210,9 @@ func _run() -> void:
 	drag(scene, board_point(scene, Vector2i(2, 1)))
 	touch(scene, board_point(scene, Vector2i(2, 1)), false)
 	check(not scene.floating_piece.valid and not scene.place_button.disabled, "symmetry-breaking physical fit remains placeable with gray warning")
-	check(not scene.indicators[0].icon.available.any(func(value): return value), "reflection graphic previews loss of every axis")
-	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic previews loss of every rotation")
+	check(scene.indicators[0].icon.available.all(func(value): return value), "hover does not change committed possibilities")
+	check(not scene.indicators[0].icon.complete.any(func(value): return value), "missing square does not light existing reflection")
+	check(not scene.indicators[1].icon.complete.any(func(value): return value), "hover never lights a completed rotation")
 	scene.place_button.pressed.emit()
 	check(scene.game.lost and scene.game.over, "confirming symmetry conflict ends game")
 	scene.undo_button.pressed.emit()
@@ -302,7 +290,7 @@ func _run() -> void:
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		check(menu_bounds.encloses(scene.palette_menu.get_global_rect()), "palette choices fit without scrolling at " + str(dimensions))
-		for option: Button in scene.palette_options:
+		for option: Button in scene.palette_options + [scene.size_picker, scene.new_button, scene.gallery_button]:
 			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
 		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
@@ -312,6 +300,46 @@ func _run() -> void:
 		for first in range(scene._controls().size()):
 			for second in range(first + 1, scene._controls().size()):
 				check(not scene._controls()[first].get_global_rect().intersects(scene._controls()[second].get_global_rect()), "controls do not overlap at " + str(dimensions))
+	# Helpers are routed through native buttons; erasing is armed then confirmed on a square.
+	scene.requested_size = 9
+	scene._reset()
+	var before_skip: Array = scene.game.board.duplicate(true)
+	var offered: String = scene.game.queue[scene.game.index]
+	touch(scene, scene.skip_button.get_global_rect().get_center(), true)
+	touch(scene, scene.skip_button.get_global_rect().get_center(), false)
+	check(scene.game.skip_left == 2 and scene.game.board == before_skip and scene.game.queue[scene.game.index] != offered, "native skip button spends one use and changes only offer")
+	touch(scene, scene.erase_button.get_global_rect().get_center(), true)
+	touch(scene, scene.erase_button.get_global_rect().get_center(), false)
+	check(scene.erase_mode and scene.place_button.disabled, "erase helper arms square selection and blocks Place")
+	touch(scene, board_point(scene, Vector2i.ZERO), true)
+	touch(scene, board_point(scene, Vector2i.ZERO), false)
+	check(scene.erase_mode and scene.game.erase_left == 3, "empty selection does not waste eraser")
+	touch(scene, board_point(scene, Vector2i(4, 4)), true)
+	touch(scene, board_point(scene, Vector2i(4, 4)), false)
+	check(not scene.erase_mode and scene.game.erase_left == 2 and scene.game.board == Rules.empty_board(9), "erase removes original square and exits selection")
+	check(not scene._can_save(), "empty board cannot be saved")
+	check(not scene.indicators[0].icon.complete.any(func(value): return value), "empty board does not glow")
+	scene._toggle_erase()
+	scene._toggle_erase()
+	check(not scene.erase_mode and scene.game.erase_left == 2, "canceling erase is free")
+	scene.game.board = Rules.empty_board(9)
+	scene.game.board[1][2] = Rules.BLUE
+	scene._refresh()
+	check(not scene._can_save() and not scene.indicators[0].icon.complete.any(func(value): return value) and scene.indicators[0].icon.available.all(func(value): return value), "possible symmetry stays dim when not yet present")
+	scene.game.board[1][6] = Rules.BLUE
+	scene._refresh()
+	check(scene._can_save() and scene.indicators[0].icon.complete[0], "symmetric partial board lights save even with empty spaces")
+	for row: Array in scene.game.board:
+		row.fill(Rules.BLUE)
+	scene.game.queue[scene.game.index] = ""
+	scene.game._refresh_over()
+	scene._refresh()
+	check(scene.game.over and scene._can_save() and scene.indicators[1].icon.complete.all(func(value): return value), "full completed garden keeps save available")
+	scene._open_gallery()
+	check(scene.gallery_panel.visible, "gallery is available through settings")
+	scene.gallery_panel.hide()
+	scene._reset()
+	check(scene.game.undo_left == 3 and scene.game.skip_left == 3 and scene.game.erase_left == 3, "restart resets helper uses")
 	root.size = Vector2i(720, 1100)
 	for i in range(4):
 		await process_frame

@@ -13,6 +13,9 @@ var symmetry_blocked := false
 var no_space := false
 var current_color := Rules.BLUE
 var restored_cells: Array = []
+var undo_left := 3
+var skip_left := 3
+var erase_left := 3
 var rng := RandomNumberGenerator.new()
 
 func _init(n: int = 9, seed_value: int = -1) -> void:
@@ -53,7 +56,7 @@ func _draw_piece(exclude: String = "") -> String:
 	return _choose_from_groups(groups)
 
 func piece() -> Dictionary:
-	return {"cells": [] if queue[index] == "" else Rules.PIECES[queue[index]].cells, "color": current_color}
+	return {"cells": [] if queue[index] == "" else (restored_cells if not restored_cells.is_empty() else Rules.PIECES[queue[index]].cells), "color": current_color}
 
 func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if over:
@@ -62,38 +65,63 @@ func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if not physical.ok:
 		return physical
 	var result: Dictionary = Rules.placement(board, cells, piece().color, anchor)
-	history.append({"board": board, "index": index, "moves": moves, "color": current_color, "cells": cells.duplicate()})
+	history.append({"name": queue[index], "color": current_color, "cells": cells.duplicate(), "anchor": anchor})
 	if history.size() > 3:
 		history.pop_front()
 	moves += 1
-	if not result.ok:
-		board = board.duplicate(true)
-		for cell: Vector2i in cells:
-			board[anchor.y + cell.y][anchor.x + cell.x] = current_color
-		lost = true
-		over = true
-		return {"ok": true, "lost": true}
-	board = result.board
+	restored_cells = []
+	board = board.duplicate(true)
+	for cell: Vector2i in cells:
+		board[anchor.y + cell.y][anchor.x + cell.x] = current_color
+	lost = not result.ok
 	index += 1
-	# Future draws depend on the resulting board; discard any abandoned branch.
-	queue.resize(index)
-	queue.append(_draw_piece())
+	# An offer set aside by Undo stays next if it still physically fits.
+	if index >= queue.size() or queue[index] == "" or Rules.first_physical_move(board, Rules.PIECES[queue[index]]).is_empty():
+		queue.resize(index)
+		queue.append(_draw_piece())
 	_refresh_over()
-	return result
+	return {"ok": true, "lost": lost, "board": board}
 
 func undo() -> bool:
-	if history.is_empty():
+	if history.is_empty() or undo_left <= 0:
 		return false
-	var offered_name: String = queue[index]
 	var previous: Dictionary = history.pop_back()
-	board = previous.board
-	index = previous.index
-	moves = previous.moves
+	board = board.duplicate(true)
+	# Remove only that piece's squares. Later erasures must not be resurrected.
+	for offset: Vector2i in previous.cells:
+		var cell: Vector2i = previous.anchor + offset
+		board[cell.y][cell.x] = 0
+	queue.insert(index, previous.name)
 	current_color = previous.color
-	lost = false
-	queue.resize(index + 1)
-	queue[index] = _draw_piece(offered_name)
-	restored_cells = piece().cells.duplicate()
+	restored_cells = previous.cells.duplicate()
+	moves -= 1
+	undo_left -= 1
+	lost = not Rules.symmetry_states(board).any(func(state: Dictionary): return state.possible)
+	_refresh_over()
+	return true
+
+func skip() -> bool:
+	if over or skip_left <= 0:
+		return false
+	var replacement := _draw_piece(queue[index])
+	if replacement.is_empty():
+		return false
+	queue[index] = replacement
+	restored_cells = []
+	skip_left -= 1
+	_refresh_over()
+	return true
+
+func erase(cell: Vector2i) -> bool:
+	if erase_left <= 0 or cell.x < 0 or cell.y < 0 or cell.x >= board.size() or cell.y >= board.size() or board[cell.y][cell.x] == 0:
+		return false
+	board = board.duplicate(true)
+	board[cell.y][cell.x] = 0
+	erase_left -= 1
+	# Helpers can reopen an ended garden; remaining fragments need not touch.
+	lost = not Rules.symmetry_states(board).any(func(state: Dictionary): return state.possible)
+	if queue[index] == "":
+		queue[index] = _draw_piece()
 	_refresh_over()
 	return true
 

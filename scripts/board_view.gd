@@ -18,6 +18,7 @@ var pitch := 1.0
 var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
 var announced_flowers: Dictionary = {}
+var show_guides := true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -107,7 +108,8 @@ func _draw() -> void:
 	frame.set_corner_radius_all(10)
 	draw_style_box(frame, field)
 	_draw_raised_garden()
-	_draw_guides()
+	if show_guides:
+		_draw_guides()
 	for cell: Vector2i in pattern.arrivals:
 		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
 		if scale > 0:
