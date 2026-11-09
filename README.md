@@ -23,9 +23,9 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Labyrinth theme
 
-Choose **Settings → Garden: Vines** to switch to **Garden: Labyrinth**, or tap the same entry to return. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the narrow walls, creating the appearance of paths. The surrounding screen stays white.
+Choose **Settings → Garden: Vines** to switch to **Garden: Labyrinth**, or tap the same entry to return. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
 
-The same side-connected growth schedule extends hedges between matching-color square centers. Ordinary centers grow taller, faceted pyramid hedges. A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
+The same side-connected growth schedule extends hedges between matching-color square centers. Walls occupy about 24% of a cell width, with two staggered rows of roses on the flowering shrubs. Ordinary centers grow taller, faceted pyramid hedges with broader bases (36% of a cell width). A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
 
 Paths are visual sandy spaces; there is no player character or route-solving rule. The theme changes the drawing, not the puzzle's symmetry or placement rules. Growth whispers and bell accents accompany hedges and new trees.
 
@@ -123,7 +123,7 @@ Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-d
 - `scripts/game.gd`: piece generation, progression, game over, history, and limited helpers.
 - `scripts/gallery.gd`: persistent local artwork and metadata storage.
 - `scripts/labyrinth_growth.gd`: shared-wall openings and bench timing after tree growth.
-- `scripts/labyrinth_renderer.gd`: narrow green/rose hedges, pyramid centers, taller trees, and wooden benches.
+- `scripts/labyrinth_renderer.gd`: full green/rose shrub walls, broad pyramid centers, taller trees, and wooden benches.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
 - `scripts/growth_audio.gd`: synchronized foliage and flower sounds.

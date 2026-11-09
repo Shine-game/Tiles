@@ -6,11 +6,11 @@ const Maze = preload("res://scripts/labyrinth_growth.gd")
 const GREEN := Color("119d45")
 const DEEP := Color("087b35")
 const ROSE := Color("f43877")
-const HEDGE_WIDTH := 0.115
+const HEDGE_WIDTH := 0.24
 
 static func draw(view) -> void:
 	var pattern = view.pattern
-	# Flat, narrow walls leave broad sandy paths on both sides.
+	# Fuller hedge walls frame the sandy paths on both sides.
 	for edge: Dictionary in pattern.edges:
 		var opacity: float = pattern.wall_visibility(Growth.edge_key(edge.a, edge.b), view.clock)
 		if opacity <= 0.001:
@@ -44,7 +44,7 @@ static func draw(view) -> void:
 static func _wall(view, a: Vector2, b: Vector2, color: int, opacity: float) -> void:
 	var pitch: float = view.pitch
 	var width: float = pitch * HEDGE_WIDTH
-	var rise := Vector2(0, -pitch * 0.065 * opacity)
+	var rise := Vector2(0, -pitch * 0.08 * opacity)
 	view.draw_line(a + Vector2(pitch * 0.025, pitch * 0.055), b + Vector2(pitch * 0.025, pitch * 0.055), Color("89754b", 0.16 * opacity), width * 1.6, true)
 	view.draw_line(a, b, Color(DEEP.darkened(0.12), opacity), width, true)
 	view.draw_line(a + rise, b + rise, Color(GREEN, opacity), width, true)
@@ -57,7 +57,10 @@ static func _wall(view, a: Vector2, b: Vector2, color: int, opacity: float) -> v
 		var leaf: Color = GREEN.lightened(0.13 if i % 3 == 0 else 0.03)
 		view.draw_circle(point + normal * width * (0.10 if i % 2 == 0 else -0.10), width * 0.48, Color(leaf, opacity), true, -1, true)
 		if color == 2:
-			_rose(view, point + normal * width * (0.22 if i % 2 == 0 else -0.22), pitch * 0.033, opacity)
+			# Two staggered flower rows cover the broader shrub canopy.
+			for side: int in [-1, 1]:
+				var offset: Vector2 = normal * width * 0.23 * side + direction * pitch * (0.016 if side == 1 else -0.016)
+				_rose(view, point + offset, pitch * 0.038, opacity)
 
 static func _rose(view, point: Vector2, radius: float, opacity: float) -> void:
 	for petal in range(5):
@@ -67,19 +70,19 @@ static func _rose(view, point: Vector2, radius: float, opacity: float) -> void:
 
 static func _pyramid(view, center: Vector2, color: int, scale: float) -> void:
 	var unit: float = view.pitch * scale
-	var left := center + Vector2(-0.115, 0) * unit
-	var right := center + Vector2(0.115, 0) * unit
-	var front := center + Vector2(0, 0.11) * unit
-	var back := center + Vector2(0, -0.08) * unit
-	var peak := center + Vector2(0, -0.23) * unit
-	view.draw_circle(center + Vector2(0.04, 0.04) * unit, unit * 0.13, Color("817246", 0.13), true, -1, true)
+	var left := center + Vector2(-0.18, 0) * unit
+	var right := center + Vector2(0.18, 0) * unit
+	var front := center + Vector2(0, 0.17) * unit
+	var back := center + Vector2(0, -0.13) * unit
+	var peak := center + Vector2(0, -0.28) * unit
+	view.draw_circle(center + Vector2(0.05, 0.055) * unit, unit * 0.19, Color("817246", 0.13), true, -1, true)
 	view.draw_colored_polygon(PackedVector2Array([back, left, peak]), GREEN.lightened(0.13))
 	view.draw_colored_polygon(PackedVector2Array([left, front, peak]), GREEN)
 	view.draw_colored_polygon(PackedVector2Array([front, right, peak]), DEEP)
 	view.draw_line(left, peak, Color("72e894", 0.45), maxf(0.5, unit * 0.012), true)
 	if color == 2:
-		for offset: Vector2 in [Vector2(-0.035, -0.09), Vector2(0.025, -0.16), Vector2(0.045, -0.025)]:
-			_rose(view, center + offset * unit, unit * 0.032, 1)
+		for offset: Vector2 in [Vector2(-0.07, -0.09), Vector2(0.025, -0.20), Vector2(0.075, -0.025), Vector2(-0.025, 0.045)]:
+			_rose(view, center + offset * unit, unit * 0.038, 1)
 
 static func _tree(view, center: Vector2, color: int, scale: float) -> void:
 	var unit: float = view.pitch * scale

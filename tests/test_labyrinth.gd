@@ -54,7 +54,7 @@ func _run() -> void:
 	mixed[4][4] = Rules.BLUE
 	maze.build(mixed, mixed)
 	check(maze.edges.is_empty() and maze.flowers.is_empty() and maze.links.is_empty(), "corner and different-color contact never connect hedges")
-	check(Renderer.HEDGE_WIDTH < 0.15, "hedges occupy under fifteen percent of a cell, leaving sandy paths")
+	check(Renderer.HEDGE_WIDTH < 0.35, "hedges leave clear sandy paths between neighboring walls")
 	check(Gallery.fingerprint(block, 0) != Gallery.fingerprint(block, 0, "labyrinth"), "same board in two themes has distinct gallery identity")
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
