@@ -262,7 +262,7 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
 func _design_fingerprint() -> String:
-	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id())
+	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version())
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -282,6 +282,7 @@ func _preview() -> void:
 
 func _update_floating_position() -> void:
 	floating_piece.pitch = board_view.pitch
+	floating_piece.face_lift = board_view.surface_depth()
 	floating_piece.origin = board_view.get_global_transform_with_canvas() * (board_view.field.position + Vector2(8, 8) + Vector2(selected) * board_view.pitch)
 	floating_piece.queue_redraw()
 
@@ -608,6 +609,7 @@ func _save_design() -> void:
 	var snapshot: Array = game.board.duplicate(true)
 	var palette_index: int = Palette.selected_index
 	var theme: String = Palette.theme_id()
+	var theme_version: String = Palette.theme_version()
 	var fingerprint := _design_fingerprint()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(900, 900)
@@ -625,7 +627,7 @@ func _save_design() -> void:
 	if board_view.coral_visuals != null and artwork.coral_visuals != null:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme)
+	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version)
 	viewport.queue_free()
 	saving = false
 	if result.ok:

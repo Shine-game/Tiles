@@ -5,8 +5,6 @@ const ROOT := "res://art/themes/coral_reef/"
 const SOFT := 0.035
 const CELL_SECONDS := 0.20
 const HALF_SECONDS := 0.10
-# Enlarged side branches attach earlier along each half-arm to stay inside its cell.
-const DETAIL_ATTACHMENTS := [0.18, 0.40]
 const DIR_NAMES := ["n", "e", "s", "w"]
 const OFFSETS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 static var manifest: Dictionary = {}
@@ -16,8 +14,36 @@ var unions: Dictionary = {}
 
 static func specification() -> Dictionary:
 	if manifest.is_empty():
-		manifest = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "theme_manifest.json"))
+		manifest = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "theme.json"))
+		# Normalize runtime metadata without altering the supplied manifest.
+		var by_id: Dictionary = {}
+		for item: Dictionary in manifest.components:
+			item.size_px = item.canvas_px
+			item.layer = item.draw_order
+			item.reveal_mask = item.growth_mask
+			by_id[item.id] = item
+		for item: Dictionary in manifest.ground_components:
+			item.size_px = item.canvas_px
+			item.layer = 0
+			item.artwork = {"salmon": item.artwork, "turquoise": item.artwork}
+			by_id[item.id] = item
+		manifest.components = by_id
 	return manifest
+
+static func ground_choice(cell: Vector2i) -> Dictionary:
+	var hashed: int = ((cell.x * 73856093) ^ (cell.y * 19349663) ^ 1409) & 0xffffffff
+	return {"id": "ground_%02d" % [hashed % 6 + 1], "rotation": (hashed >> 8) % 4}
+
+static func component_duration(id: String) -> float:
+	return float(specification().components[id].animation.duration_seconds)
+
+static func dependent_start(id: String, parents: Dictionary) -> float:
+	var start := -100.0
+	for dependency: Dictionary in specification().components[id].animation.dependencies:
+		var parent: Dictionary = parents[dependency.component]
+		var ready: float = parent.end if dependency.get("event", "") == "complete" else arrival(parent, float(dependency.at_mask_u))
+		start = maxf(start, ready + float(dependency.get("delay_seconds", 0)))
+	return start
 
 static func key(kind: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [kind, color, cell.y, cell.x]
@@ -38,13 +64,10 @@ func _add(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, st
 	return event
 
 static func union_layout(delta: Vector2i) -> Dictionary:
-	for layout: Dictionary in specification().reef_unions.canonical_layouts:
-		var offset := Vector2i(int(layout.colony_origin_delta[0]), int(layout.colony_origin_delta[1]))
-		for turns in range(4):
-			if delta == offset or delta == -offset:
-				return {"id": layout.id, "rotation": turns}
-			offset = Vector2i(-offset.y, offset.x)
-	return {}
+	# Immediate same-color orthogonal neighbors only. No diagonal or skipped join.
+	if absi(delta.x) + absi(delta.y) != 1:
+		return {}
+	return {"rotation": 0 if delta.y == 0 else 1}
 
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
@@ -98,7 +121,11 @@ func build(before: Array, after: Array) -> void:
 		var color: int = value(after, cell)
 		var old: bool = value(before, cell) == color
 		var center := Vector2(cell) + Vector2(0.5, 0.5)
-		_add("core", color, cell, center, old, arrivals[cell], 0.18)
+		var ground := ground_choice(cell)
+		var floor_event := _add(ground.id, color, cell, center, true, -100, 0.01, 0, false, ground.rotation)
+		floor_event.instant = true
+		_add("core", color, cell, center, old, arrivals[cell], component_duration("core"))
+		var arms: Dictionary = {}
 		for direction in range(4):
 			var other: Vector2i = cell + OFFSETS[direction]
 			if value(after, other) != color:
@@ -107,12 +134,18 @@ func build(before: Array, after: Array) -> void:
 			var start: float = 0.10 if independent.has(cell) else maxf(0, arrivals[cell])
 			var reverse: float = 0.20 if independent.has(cell) else maxf(0, arrivals[other]) + HALF_SECONDS
 			var name: String = DIR_NAMES[direction]
-			var arm := _add("arm_" + name, color, cell, center, old_arm, start, HALF_SECONDS, reverse, true)
+			var arm_id := "arm_" + name
+			var arm := _add(arm_id, color, cell, center, old_arm, start, HALF_SECONDS, reverse, true)
+			arms[arm_id] = arm
 			for index in range(2):
-				var u: float = DETAIL_ATTACHMENTS[index]
-				_add("detail_%s_%d" % [name, index], color, cell, center, old_arm, arrival(arm, u) + 0.08, 0.16)
-	# Iterate in canonical row/column order; later placements append their own
-	# feature groups above surviving groups rather than sorting their layers apart.
+				var fingers := "fingers_%s_%d" % [name, index]
+				_add(fingers, color, cell, center, old_arm, dependent_start(fingers, {arm_id: arm}), component_duration(fingers))
+		for junction: String in ["junction_ne", "junction_es", "junction_sw", "junction_wn"]:
+			var dependencies: Array = specification().components[junction].animation.dependencies
+			if arms.has(dependencies[0].component) and arms.has(dependencies[1].component):
+				var old_junction: bool = arms[dependencies[0].component].old and arms[dependencies[1].component].old
+				_add(junction, color, cell, center, old_junction, dependent_start(junction, arms), component_duration(junction))
+	# Keep each colony's body/folds/fingers as one stable feature group.
 	for y in range(board.size() - 1):
 		for x in range(board.size() - 1):
 			var origin := Vector2i(x, y)
@@ -128,10 +161,12 @@ func build(before: Array, after: Array) -> void:
 					if neighbor.x in [0, 1] and neighbor.y in [0, 1]:
 						perimeter = maxf(perimeter, components[key("arm_" + DIR_NAMES[direction], color, origin + offset)].end)
 			var center := Vector2(origin) + Vector2.ONE
-			var fringe := _add("colony_fringe", color, origin, center, old, perimeter, 0.20)
-			var lobes := _add("colony_lobes", color, origin, center, old, perimeter, 0.38)
-			var finish := _add("colony_finish", color, origin, center, old, lobes.end, 0.12)
-			colonies[origin] = {"origin": origin, "color": color, "old": old, "start": perimeter, "ready": maxf(fringe.end, lobes.end), "end": finish.end}
+			var body := _add("colony_body", color, origin, center, old, perimeter, component_duration("colony_body"))
+			var complete: float = body.end
+			for id: String in ["colony_fold_ne", "colony_fold_sw", "colony_fingers_nw", "colony_fingers_se"]:
+				var event := _add(id, color, origin, center, old, dependent_start(id, {"colony_body": body}), component_duration(id))
+				complete = maxf(complete, event.end)
+			colonies[origin] = {"origin": origin, "color": color, "old": old, "start": perimeter, "ready": complete, "end": complete}
 			flowers[corner].start = perimeter
 			flowers[corner].old = old
 	var origins: Array = colonies.keys()
@@ -144,12 +179,23 @@ func build(before: Array, after: Array) -> void:
 			var layout := union_layout(b - a)
 			if layout.is_empty():
 				continue
-			var identity := "union/%d/%d/%d/%d/%d" % [colonies[a].color, a.y, a.x, b.y, b.x]
-			var center := (Vector2(a.min(b)) + Vector2(a.max(b) + Vector2i(2, 2))) / 2
-			var event := _add(layout.id, colonies[a].color, a, center, colonies[a].old and colonies[b].old, maxf(colonies[a].ready, colonies[b].ready), 0.76, maxf(colonies[a].ready, colonies[b].ready), true, layout.rotation, identity)
-			unions[identity] = event
-			unions[identity].a = a
-			unions[identity].b = b
+			var identity := "anemone/%d/%d/%d/%d/%d" % [colonies[a].color, a.y, a.x, b.y, b.x]
+			var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
+			var old: bool = colonies[a].old and colonies[b].old
+			var ready: float = maxf(colonies[a].ready, colonies[b].ready)
+			var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
+			foot.feature = identity
+			var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})
+			var disc_end: float = -100 if old else end_time(disc_start, 0, component_duration("anemone_oral_disc"), false)
+			var finish: float = foot.end
+			for region in range(8):
+				var id := "anemone_region_%d" % region
+				var event := _add(id, colonies[a].color, a, center, old, disc_end, component_duration(id), 0, false, layout.rotation, identity + "/region_%d" % region)
+				event.feature = identity
+				finish = maxf(finish, event.end)
+			var disc := _add("anemone_oral_disc", colonies[a].color, a, center, old, disc_start, component_duration("anemone_oral_disc"), 0, false, layout.rotation, identity + "/disc")
+			disc.feature = identity
+			unions[identity] = {"a": a, "b": b, "color": colonies[a].color, "start": ready, "end": maxf(finish, disc.end), "rotation": layout.rotation, "feature": identity}
 
 func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	if value(board, a) != 0 and value(board, b) == value(board, a):

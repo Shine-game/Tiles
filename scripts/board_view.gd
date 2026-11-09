@@ -84,6 +84,7 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 		coral_visuals.show()
 		coral_visuals.reconcile(pattern, settled, true)
 		coral_visuals.advance(0 if settled else clock)
+		update_geometry()
 	elif coral_visuals != null:
 		coral_visuals.hide()
 
@@ -132,7 +133,7 @@ func update_geometry() -> void:
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0
 
 func surface_depth() -> float:
-	return Surface.depth(pitch)
+	return 0.0 if coral_reef else Surface.depth(pitch)
 
 func _floor_point(position_in_grid: Vector2) -> Vector2:
 	return field.position + Vector2(8, 8) + position_in_grid * pitch
@@ -161,7 +162,8 @@ func _draw() -> void:
 	frame.bg_color = Palette.floor_color()
 	frame.set_corner_radius_all(10)
 	draw_style_box(frame, field)
-	_draw_raised_garden()
+	if not coral_reef:
+		_draw_raised_garden()
 	if show_guides:
 		_draw_guides()
 	if coral_reef:

@@ -1,0 +1,7167 @@
+{
+  "id": "coral_reef",
+  "version": "2.0",
+  "scope": "Consolidated redesigned artwork, growth fields, numeric paths and visual-state integration contract.",
+  "cell_px": [
+    256,
+    256
+  ],
+  "connection_bits": {
+    "n": 1,
+    "e": 2,
+    "s": 4,
+    "w": 8
+  },
+  "anchors_px": {
+    "center": [
+      128,
+      128
+    ],
+    "n": [
+      128,
+      0
+    ],
+    "e": [
+      256,
+      128
+    ],
+    "s": [
+      128,
+      256
+    ],
+    "w": [
+      0,
+      128
+    ]
+  },
+  "proportions": {
+    "nominal_body_width_px": 77,
+    "painted_body_span_px": 78,
+    "ordinary_core_canvas_painted_span_px": 78,
+    "maximum_width_with_fingers_px": 115
+  },
+  "components": [
+    {
+      "id": "core",
+      "artwork": {
+        "salmon": "artwork/salmon/core.png",
+        "turquoise": "artwork/turquoise/core.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        89,
+        89,
+        167,
+        167
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 20,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "cell_center_reached",
+        "origin_px": [
+          127.5,
+          127.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.18,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              127.5,
+              127.5
+            ],
+            [
+              128.5,
+              127.5
+            ],
+            [
+              129.5,
+              127.5
+            ],
+            [
+              130.5,
+              127.5
+            ],
+            [
+              131.5,
+              127.5
+            ],
+            [
+              132.5,
+              127.5
+            ],
+            [
+              133.5,
+              127.5
+            ],
+            [
+              134.5,
+              128.5
+            ],
+            [
+              135.5,
+              129.5
+            ],
+            [
+              136.5,
+              129.5
+            ],
+            [
+              137.5,
+              129.5
+            ],
+            [
+              138.5,
+              129.5
+            ],
+            [
+              139.5,
+              129.5
+            ],
+            [
+              140.5,
+              129.5
+            ],
+            [
+              141.5,
+              129.5
+            ],
+            [
+              142.5,
+              129.5
+            ],
+            [
+              143.5,
+              130.5
+            ],
+            [
+              144.5,
+              130.5
+            ],
+            [
+              145.5,
+              130.5
+            ],
+            [
+              146.5,
+              130.5
+            ],
+            [
+              147.5,
+              130.5
+            ],
+            [
+              148.5,
+              130.5
+            ],
+            [
+              149.5,
+              130.5
+            ],
+            [
+              150.5,
+              130.5
+            ],
+            [
+              151.5,
+              131.5
+            ],
+            [
+              152.5,
+              132.5
+            ],
+            [
+              153.5,
+              133.5
+            ],
+            [
+              154.5,
+              134.5
+            ],
+            [
+              155.5,
+              135.5
+            ],
+            [
+              156.5,
+              136.5
+            ],
+            [
+              157.5,
+              137.5
+            ],
+            [
+              158.5,
+              138.5
+            ],
+            [
+              159.5,
+              139.5
+            ],
+            [
+              160.5,
+              140.5
+            ],
+            [
+              161.5,
+              141.5
+            ],
+            [
+              162.5,
+              142.5
+            ],
+            [
+              163.5,
+              143.5
+            ],
+            [
+              164.5,
+              144.5
+            ],
+            [
+              165.5,
+              145.5
+            ]
+          ]
+        },
+        "path_length_px": 45.4558,
+        "mask": "masks/core.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          127.5,
+          127.5
+        ],
+        "end_px": [
+          165.5,
+          145.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/core.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "arm_n",
+      "artwork": {
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        89,
+        0,
+        167,
+        129
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 10,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "front_reaches_center_or_edge",
+        "origin_px": [
+          128,
+          128
+        ],
+        "direction": "both permitted ends",
+        "duration_seconds": 0.1,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": true,
+        "field_kind": "axis_projection",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              0
+            ]
+          ]
+        },
+        "path_length_px": 128,
+        "mask": "masks/arm_n.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          128,
+          128
+        ],
+        "end_px": [
+          128,
+          0
+        ],
+        "allowed_growth_directions": [
+          "forward",
+          "reverse"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/arm_n.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_n_0",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_n_0.png",
+        "turquoise": "artwork/turquoise/fingers_n_0.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        81,
+        55,
+        111,
+        88
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          93.5,
+          85.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_n",
+            "at_px": [
+              93.5,
+              85.5
+            ],
+            "at_mask_u": 0.332031,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              93.5,
+              85.5
+            ],
+            [
+              93.5,
+              84.5
+            ],
+            [
+              93.5,
+              83.5
+            ],
+            [
+              93.5,
+              82.5
+            ],
+            [
+              93.5,
+              81.5
+            ],
+            [
+              93.5,
+              80.5
+            ],
+            [
+              93.5,
+              79.5
+            ],
+            [
+              94.5,
+              78.5
+            ],
+            [
+              95.5,
+              77.5
+            ],
+            [
+              95.5,
+              76.5
+            ],
+            [
+              95.5,
+              75.5
+            ],
+            [
+              95.5,
+              74.5
+            ],
+            [
+              95.5,
+              73.5
+            ],
+            [
+              95.5,
+              72.5
+            ],
+            [
+              95.5,
+              71.5
+            ],
+            [
+              95.5,
+              70.5
+            ],
+            [
+              96.5,
+              69.5
+            ],
+            [
+              96.5,
+              68.5
+            ],
+            [
+              96.5,
+              67.5
+            ],
+            [
+              96.5,
+              66.5
+            ],
+            [
+              96.5,
+              65.5
+            ],
+            [
+              96.5,
+              64.5
+            ],
+            [
+              97.5,
+              63.5
+            ],
+            [
+              98.5,
+              62.5
+            ],
+            [
+              99.5,
+              61.5
+            ],
+            [
+              100.5,
+              60.5
+            ],
+            [
+              101.5,
+              59.5
+            ],
+            [
+              102.5,
+              58.5
+            ],
+            [
+              103.5,
+              57.5
+            ],
+            [
+              104.5,
+              56.5
+            ]
+          ]
+        },
+        "path_length_px": 33.5563,
+        "mask": "masks/fingers_n_0.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          93.5,
+          85.5
+        ],
+        "end_px": [
+          104.5,
+          56.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_n_0.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_n_1",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_n_1.png",
+        "turquoise": "artwork/turquoise/fingers_n_1.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        145,
+        11,
+        173,
+        46
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          163.5,
+          44.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_n",
+            "at_px": [
+              163.5,
+              44.5
+            ],
+            "at_mask_u": 0.652344,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              163.5,
+              44.5
+            ],
+            [
+              163.5,
+              43.5
+            ],
+            [
+              163.5,
+              42.5
+            ],
+            [
+              163.5,
+              41.5
+            ],
+            [
+              163.5,
+              40.5
+            ],
+            [
+              163.5,
+              39.5
+            ],
+            [
+              163.5,
+              38.5
+            ],
+            [
+              162.5,
+              37.5
+            ],
+            [
+              161.5,
+              36.5
+            ],
+            [
+              161.5,
+              35.5
+            ],
+            [
+              161.5,
+              34.5
+            ],
+            [
+              161.5,
+              33.5
+            ],
+            [
+              161.5,
+              32.5
+            ],
+            [
+              161.5,
+              31.5
+            ],
+            [
+              161.5,
+              30.5
+            ],
+            [
+              161.5,
+              29.5
+            ],
+            [
+              160.5,
+              28.5
+            ],
+            [
+              160.5,
+              27.5
+            ],
+            [
+              160.5,
+              26.5
+            ],
+            [
+              160.5,
+              25.5
+            ],
+            [
+              160.5,
+              24.5
+            ],
+            [
+              160.5,
+              23.5
+            ],
+            [
+              160.5,
+              22.5
+            ],
+            [
+              159.5,
+              21.5
+            ],
+            [
+              159.5,
+              20.5
+            ],
+            [
+              159.5,
+              19.5
+            ],
+            [
+              159.5,
+              18.5
+            ],
+            [
+              158.5,
+              17.5
+            ],
+            [
+              157.5,
+              16.5
+            ],
+            [
+              156.5,
+              15.5
+            ],
+            [
+              155.5,
+              14.5
+            ],
+            [
+              154.5,
+              13.5
+            ],
+            [
+              153.5,
+              12.5
+            ]
+          ]
+        },
+        "path_length_px": 36.1421,
+        "mask": "masks/fingers_n_1.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          163.5,
+          44.5
+        ],
+        "end_px": [
+          153.5,
+          12.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_n_1.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "arm_e",
+      "artwork": {
+        "salmon": "artwork/salmon/arm_e.png",
+        "turquoise": "artwork/turquoise/arm_e.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        127,
+        89,
+        256,
+        167
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 10,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "front_reaches_center_or_edge",
+        "origin_px": [
+          128,
+          128
+        ],
+        "direction": "both permitted ends",
+        "duration_seconds": 0.1,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": true,
+        "field_kind": "axis_projection",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              128,
+              128
+            ],
+            [
+              256,
+              128
+            ]
+          ]
+        },
+        "path_length_px": 128,
+        "mask": "masks/arm_e.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          128,
+          128
+        ],
+        "end_px": [
+          256,
+          128
+        ],
+        "allowed_growth_directions": [
+          "forward",
+          "reverse"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/arm_e.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_e_0",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_e_0.png",
+        "turquoise": "artwork/turquoise/fingers_e_0.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        168,
+        81,
+        201,
+        111
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          170.5,
+          93.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_e",
+            "at_px": [
+              170.5,
+              93.5
+            ],
+            "at_mask_u": 0.332031,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              170.5,
+              93.5
+            ],
+            [
+              171.5,
+              93.5
+            ],
+            [
+              172.5,
+              93.5
+            ],
+            [
+              173.5,
+              93.5
+            ],
+            [
+              174.5,
+              93.5
+            ],
+            [
+              175.5,
+              93.5
+            ],
+            [
+              176.5,
+              93.5
+            ],
+            [
+              177.5,
+              94.5
+            ],
+            [
+              178.5,
+              95.5
+            ],
+            [
+              179.5,
+              95.5
+            ],
+            [
+              180.5,
+              95.5
+            ],
+            [
+              181.5,
+              95.5
+            ],
+            [
+              182.5,
+              95.5
+            ],
+            [
+              183.5,
+              95.5
+            ],
+            [
+              184.5,
+              95.5
+            ],
+            [
+              185.5,
+              95.5
+            ],
+            [
+              186.5,
+              96.5
+            ],
+            [
+              187.5,
+              96.5
+            ],
+            [
+              188.5,
+              96.5
+            ],
+            [
+              189.5,
+              96.5
+            ],
+            [
+              190.5,
+              96.5
+            ],
+            [
+              191.5,
+              96.5
+            ],
+            [
+              192.5,
+              97.5
+            ],
+            [
+              193.5,
+              98.5
+            ],
+            [
+              194.5,
+              99.5
+            ],
+            [
+              195.5,
+              100.5
+            ],
+            [
+              196.5,
+              101.5
+            ],
+            [
+              197.5,
+              102.5
+            ],
+            [
+              198.5,
+              103.5
+            ],
+            [
+              199.5,
+              104.5
+            ]
+          ]
+        },
+        "path_length_px": 33.5563,
+        "mask": "masks/fingers_e_0.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          170.5,
+          93.5
+        ],
+        "end_px": [
+          199.5,
+          104.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_e_0.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_e_1",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_e_1.png",
+        "turquoise": "artwork/turquoise/fingers_e_1.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        210,
+        145,
+        245,
+        173
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          211.5,
+          163.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_e",
+            "at_px": [
+              211.5,
+              163.5
+            ],
+            "at_mask_u": 0.652344,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              211.5,
+              163.5
+            ],
+            [
+              212.5,
+              163.5
+            ],
+            [
+              213.5,
+              163.5
+            ],
+            [
+              214.5,
+              163.5
+            ],
+            [
+              215.5,
+              163.5
+            ],
+            [
+              216.5,
+              163.5
+            ],
+            [
+              217.5,
+              163.5
+            ],
+            [
+              218.5,
+              162.5
+            ],
+            [
+              219.5,
+              161.5
+            ],
+            [
+              220.5,
+              161.5
+            ],
+            [
+              221.5,
+              161.5
+            ],
+            [
+              222.5,
+              161.5
+            ],
+            [
+              223.5,
+              161.5
+            ],
+            [
+              224.5,
+              161.5
+            ],
+            [
+              225.5,
+              161.5
+            ],
+            [
+              226.5,
+              161.5
+            ],
+            [
+              227.5,
+              160.5
+            ],
+            [
+              228.5,
+              160.5
+            ],
+            [
+              229.5,
+              160.5
+            ],
+            [
+              230.5,
+              160.5
+            ],
+            [
+              231.5,
+              160.5
+            ],
+            [
+              232.5,
+              160.5
+            ],
+            [
+              233.5,
+              160.5
+            ],
+            [
+              234.5,
+              159.5
+            ],
+            [
+              235.5,
+              159.5
+            ],
+            [
+              236.5,
+              159.5
+            ],
+            [
+              237.5,
+              159.5
+            ],
+            [
+              238.5,
+              158.5
+            ],
+            [
+              239.5,
+              157.5
+            ],
+            [
+              240.5,
+              156.5
+            ],
+            [
+              241.5,
+              155.5
+            ],
+            [
+              242.5,
+              154.5
+            ],
+            [
+              243.5,
+              153.5
+            ]
+          ]
+        },
+        "path_length_px": 36.1421,
+        "mask": "masks/fingers_e_1.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          211.5,
+          163.5
+        ],
+        "end_px": [
+          243.5,
+          153.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_e_1.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "arm_s",
+      "artwork": {
+        "salmon": "artwork/salmon/arm_s.png",
+        "turquoise": "artwork/turquoise/arm_s.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        89,
+        127,
+        167,
+        256
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 10,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "front_reaches_center_or_edge",
+        "origin_px": [
+          128,
+          128
+        ],
+        "direction": "both permitted ends",
+        "duration_seconds": 0.1,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": true,
+        "field_kind": "axis_projection",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              128,
+              128
+            ],
+            [
+              128,
+              256
+            ]
+          ]
+        },
+        "path_length_px": 128,
+        "mask": "masks/arm_s.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          128,
+          128
+        ],
+        "end_px": [
+          128,
+          256
+        ],
+        "allowed_growth_directions": [
+          "forward",
+          "reverse"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/arm_s.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_s_0",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_s_0.png",
+        "turquoise": "artwork/turquoise/fingers_s_0.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        145,
+        168,
+        175,
+        201
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          162.5,
+          170.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_s",
+            "at_px": [
+              162.5,
+              170.5
+            ],
+            "at_mask_u": 0.332031,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              162.5,
+              170.5
+            ],
+            [
+              162.5,
+              171.5
+            ],
+            [
+              162.5,
+              172.5
+            ],
+            [
+              162.5,
+              173.5
+            ],
+            [
+              162.5,
+              174.5
+            ],
+            [
+              162.5,
+              175.5
+            ],
+            [
+              162.5,
+              176.5
+            ],
+            [
+              161.5,
+              177.5
+            ],
+            [
+              160.5,
+              178.5
+            ],
+            [
+              160.5,
+              179.5
+            ],
+            [
+              160.5,
+              180.5
+            ],
+            [
+              160.5,
+              181.5
+            ],
+            [
+              160.5,
+              182.5
+            ],
+            [
+              160.5,
+              183.5
+            ],
+            [
+              160.5,
+              184.5
+            ],
+            [
+              160.5,
+              185.5
+            ],
+            [
+              159.5,
+              186.5
+            ],
+            [
+              159.5,
+              187.5
+            ],
+            [
+              159.5,
+              188.5
+            ],
+            [
+              159.5,
+              189.5
+            ],
+            [
+              159.5,
+              190.5
+            ],
+            [
+              159.5,
+              191.5
+            ],
+            [
+              158.5,
+              192.5
+            ],
+            [
+              157.5,
+              193.5
+            ],
+            [
+              156.5,
+              194.5
+            ],
+            [
+              155.5,
+              195.5
+            ],
+            [
+              154.5,
+              196.5
+            ],
+            [
+              153.5,
+              197.5
+            ],
+            [
+              152.5,
+              198.5
+            ],
+            [
+              151.5,
+              199.5
+            ]
+          ]
+        },
+        "path_length_px": 33.5563,
+        "mask": "masks/fingers_s_0.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          162.5,
+          170.5
+        ],
+        "end_px": [
+          151.5,
+          199.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_s_0.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_s_1",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_s_1.png",
+        "turquoise": "artwork/turquoise/fingers_s_1.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        83,
+        210,
+        111,
+        245
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          92.5,
+          211.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_s",
+            "at_px": [
+              92.5,
+              211.5
+            ],
+            "at_mask_u": 0.652344,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              92.5,
+              211.5
+            ],
+            [
+              92.5,
+              212.5
+            ],
+            [
+              92.5,
+              213.5
+            ],
+            [
+              92.5,
+              214.5
+            ],
+            [
+              92.5,
+              215.5
+            ],
+            [
+              92.5,
+              216.5
+            ],
+            [
+              92.5,
+              217.5
+            ],
+            [
+              93.5,
+              218.5
+            ],
+            [
+              94.5,
+              219.5
+            ],
+            [
+              94.5,
+              220.5
+            ],
+            [
+              94.5,
+              221.5
+            ],
+            [
+              94.5,
+              222.5
+            ],
+            [
+              94.5,
+              223.5
+            ],
+            [
+              94.5,
+              224.5
+            ],
+            [
+              94.5,
+              225.5
+            ],
+            [
+              94.5,
+              226.5
+            ],
+            [
+              95.5,
+              227.5
+            ],
+            [
+              95.5,
+              228.5
+            ],
+            [
+              95.5,
+              229.5
+            ],
+            [
+              95.5,
+              230.5
+            ],
+            [
+              95.5,
+              231.5
+            ],
+            [
+              95.5,
+              232.5
+            ],
+            [
+              95.5,
+              233.5
+            ],
+            [
+              96.5,
+              234.5
+            ],
+            [
+              96.5,
+              235.5
+            ],
+            [
+              96.5,
+              236.5
+            ],
+            [
+              96.5,
+              237.5
+            ],
+            [
+              97.5,
+              238.5
+            ],
+            [
+              98.5,
+              239.5
+            ],
+            [
+              99.5,
+              240.5
+            ],
+            [
+              100.5,
+              241.5
+            ],
+            [
+              101.5,
+              242.5
+            ],
+            [
+              102.5,
+              243.5
+            ]
+          ]
+        },
+        "path_length_px": 36.1421,
+        "mask": "masks/fingers_s_1.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          92.5,
+          211.5
+        ],
+        "end_px": [
+          102.5,
+          243.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_s_1.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "arm_w",
+      "artwork": {
+        "salmon": "artwork/salmon/arm_w.png",
+        "turquoise": "artwork/turquoise/arm_w.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        89,
+        129,
+        167
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 10,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "front_reaches_center_or_edge",
+        "origin_px": [
+          128,
+          128
+        ],
+        "direction": "both permitted ends",
+        "duration_seconds": 0.1,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": true,
+        "field_kind": "axis_projection",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              128,
+              128
+            ],
+            [
+              0,
+              128
+            ]
+          ]
+        },
+        "path_length_px": 128,
+        "mask": "masks/arm_w.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          128,
+          128
+        ],
+        "end_px": [
+          0,
+          128
+        ],
+        "allowed_growth_directions": [
+          "forward",
+          "reverse"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/arm_w.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_w_0",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_w_0.png",
+        "turquoise": "artwork/turquoise/fingers_w_0.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        55,
+        145,
+        88,
+        175
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          85.5,
+          162.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_w",
+            "at_px": [
+              85.5,
+              162.5
+            ],
+            "at_mask_u": 0.332031,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              85.5,
+              162.5
+            ],
+            [
+              84.5,
+              162.5
+            ],
+            [
+              83.5,
+              162.5
+            ],
+            [
+              82.5,
+              162.5
+            ],
+            [
+              81.5,
+              162.5
+            ],
+            [
+              80.5,
+              162.5
+            ],
+            [
+              79.5,
+              162.5
+            ],
+            [
+              78.5,
+              161.5
+            ],
+            [
+              77.5,
+              160.5
+            ],
+            [
+              76.5,
+              160.5
+            ],
+            [
+              75.5,
+              160.5
+            ],
+            [
+              74.5,
+              160.5
+            ],
+            [
+              73.5,
+              160.5
+            ],
+            [
+              72.5,
+              160.5
+            ],
+            [
+              71.5,
+              160.5
+            ],
+            [
+              70.5,
+              160.5
+            ],
+            [
+              69.5,
+              159.5
+            ],
+            [
+              68.5,
+              159.5
+            ],
+            [
+              67.5,
+              159.5
+            ],
+            [
+              66.5,
+              159.5
+            ],
+            [
+              65.5,
+              159.5
+            ],
+            [
+              64.5,
+              159.5
+            ],
+            [
+              63.5,
+              158.5
+            ],
+            [
+              62.5,
+              157.5
+            ],
+            [
+              61.5,
+              156.5
+            ],
+            [
+              60.5,
+              155.5
+            ],
+            [
+              59.5,
+              154.5
+            ],
+            [
+              58.5,
+              153.5
+            ],
+            [
+              57.5,
+              152.5
+            ],
+            [
+              56.5,
+              151.5
+            ]
+          ]
+        },
+        "path_length_px": 33.5563,
+        "mask": "masks/fingers_w_0.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          85.5,
+          162.5
+        ],
+        "end_px": [
+          56.5,
+          151.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_w_0.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "fingers_w_1",
+      "artwork": {
+        "salmon": "artwork/salmon/fingers_w_1.png",
+        "turquoise": "artwork/turquoise/fingers_w_1.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        11,
+        83,
+        46,
+        111
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 30,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "parent_arm_attachment_reached",
+        "origin_px": [
+          44.5,
+          92.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.16,
+        "dependencies": [
+          {
+            "component": "arm_w",
+            "at_px": [
+              44.5,
+              92.5
+            ],
+            "at_mask_u": 0.652344,
+            "delay_seconds": 0.08
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              44.5,
+              92.5
+            ],
+            [
+              43.5,
+              92.5
+            ],
+            [
+              42.5,
+              92.5
+            ],
+            [
+              41.5,
+              92.5
+            ],
+            [
+              40.5,
+              92.5
+            ],
+            [
+              39.5,
+              92.5
+            ],
+            [
+              38.5,
+              92.5
+            ],
+            [
+              37.5,
+              93.5
+            ],
+            [
+              36.5,
+              94.5
+            ],
+            [
+              35.5,
+              94.5
+            ],
+            [
+              34.5,
+              94.5
+            ],
+            [
+              33.5,
+              94.5
+            ],
+            [
+              32.5,
+              94.5
+            ],
+            [
+              31.5,
+              94.5
+            ],
+            [
+              30.5,
+              94.5
+            ],
+            [
+              29.5,
+              94.5
+            ],
+            [
+              28.5,
+              95.5
+            ],
+            [
+              27.5,
+              95.5
+            ],
+            [
+              26.5,
+              95.5
+            ],
+            [
+              25.5,
+              95.5
+            ],
+            [
+              24.5,
+              95.5
+            ],
+            [
+              23.5,
+              95.5
+            ],
+            [
+              22.5,
+              95.5
+            ],
+            [
+              21.5,
+              96.5
+            ],
+            [
+              20.5,
+              96.5
+            ],
+            [
+              19.5,
+              96.5
+            ],
+            [
+              18.5,
+              96.5
+            ],
+            [
+              17.5,
+              97.5
+            ],
+            [
+              16.5,
+              98.5
+            ],
+            [
+              15.5,
+              99.5
+            ],
+            [
+              14.5,
+              100.5
+            ],
+            [
+              13.5,
+              101.5
+            ],
+            [
+              12.5,
+              102.5
+            ]
+          ]
+        },
+        "path_length_px": 36.1421,
+        "mask": "masks/fingers_w_1.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          44.5,
+          92.5
+        ],
+        "end_px": [
+          12.5,
+          102.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/fingers_w_1.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "junction_ne",
+      "artwork": {
+        "salmon": "artwork/salmon/junction_ne.png",
+        "turquoise": "artwork/turquoise/junction_ne.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        166,
+        75,
+        181,
+        90
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 11,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "both_adjacent_arms_reach_elbow",
+        "origin_px": [
+          166.5,
+          88.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.12,
+        "dependencies": [
+          {
+            "component": "arm_n",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          },
+          {
+            "component": "arm_e",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              166.5,
+              88.5
+            ],
+            [
+              167.5,
+              88.5
+            ],
+            [
+              168.5,
+              88.5
+            ],
+            [
+              169.5,
+              88.5
+            ],
+            [
+              170.5,
+              88.5
+            ],
+            [
+              171.5,
+              88.5
+            ],
+            [
+              172.5,
+              88.5
+            ],
+            [
+              173.5,
+              88.5
+            ],
+            [
+              174.5,
+              88.5
+            ],
+            [
+              175.5,
+              88.5
+            ],
+            [
+              176.5,
+              88.5
+            ],
+            [
+              177.5,
+              89.5
+            ],
+            [
+              178.5,
+              89.5
+            ],
+            [
+              179.5,
+              89.5
+            ],
+            [
+              180.5,
+              89.5
+            ]
+          ]
+        },
+        "path_length_px": 14.4142,
+        "mask": "masks/junction_ne.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          166.5,
+          88.5
+        ],
+        "end_px": [
+          180.5,
+          89.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/junction_ne.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "junction_es",
+      "artwork": {
+        "salmon": "artwork/salmon/junction_es.png",
+        "turquoise": "artwork/turquoise/junction_es.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        166,
+        166,
+        181,
+        181
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 11,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "both_adjacent_arms_reach_elbow",
+        "origin_px": [
+          166.5,
+          166.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.12,
+        "dependencies": [
+          {
+            "component": "arm_e",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          },
+          {
+            "component": "arm_s",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              166.5,
+              166.5
+            ],
+            [
+              167.5,
+              166.5
+            ],
+            [
+              168.5,
+              166.5
+            ],
+            [
+              169.5,
+              166.5
+            ],
+            [
+              170.5,
+              166.5
+            ],
+            [
+              171.5,
+              166.5
+            ],
+            [
+              172.5,
+              166.5
+            ],
+            [
+              173.5,
+              166.5
+            ],
+            [
+              174.5,
+              166.5
+            ],
+            [
+              175.5,
+              166.5
+            ],
+            [
+              176.5,
+              166.5
+            ],
+            [
+              177.5,
+              166.5
+            ],
+            [
+              178.5,
+              166.5
+            ],
+            [
+              179.5,
+              166.5
+            ],
+            [
+              180.5,
+              166.5
+            ]
+          ]
+        },
+        "path_length_px": 14.0,
+        "mask": "masks/junction_es.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          166.5,
+          166.5
+        ],
+        "end_px": [
+          180.5,
+          166.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/junction_es.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "junction_sw",
+      "artwork": {
+        "salmon": "artwork/salmon/junction_sw.png",
+        "turquoise": "artwork/turquoise/junction_sw.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        75,
+        166,
+        90,
+        181
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 11,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "both_adjacent_arms_reach_elbow",
+        "origin_px": [
+          88.5,
+          166.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.12,
+        "dependencies": [
+          {
+            "component": "arm_s",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          },
+          {
+            "component": "arm_w",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              88.5,
+              166.5
+            ],
+            [
+              88.5,
+              167.5
+            ],
+            [
+              88.5,
+              168.5
+            ],
+            [
+              88.5,
+              169.5
+            ],
+            [
+              88.5,
+              170.5
+            ],
+            [
+              88.5,
+              171.5
+            ],
+            [
+              88.5,
+              172.5
+            ],
+            [
+              88.5,
+              173.5
+            ],
+            [
+              88.5,
+              174.5
+            ],
+            [
+              88.5,
+              175.5
+            ],
+            [
+              88.5,
+              176.5
+            ],
+            [
+              89.5,
+              177.5
+            ],
+            [
+              89.5,
+              178.5
+            ],
+            [
+              89.5,
+              179.5
+            ],
+            [
+              89.5,
+              180.5
+            ]
+          ]
+        },
+        "path_length_px": 14.4142,
+        "mask": "masks/junction_sw.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          88.5,
+          166.5
+        ],
+        "end_px": [
+          89.5,
+          180.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/junction_sw.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "junction_wn",
+      "artwork": {
+        "salmon": "artwork/salmon/junction_wn.png",
+        "turquoise": "artwork/turquoise/junction_wn.png"
+      },
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        75,
+        75,
+        90,
+        90
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "draw_order": 11,
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "existing_layers_retained": "Keep all previous components; add only newly required arms/details.",
+      "core_orientation": "Fixed when created, not changed by topology updates.",
+      "animation": {
+        "trigger": "both_adjacent_arms_reach_elbow",
+        "origin_px": [
+          87.5,
+          88.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.12,
+        "dependencies": [
+          {
+            "component": "arm_w",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          },
+          {
+            "component": "arm_n",
+            "at_mask_u": 0.31,
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              87.5,
+              88.5
+            ],
+            [
+              87.5,
+              87.5
+            ],
+            [
+              87.5,
+              86.5
+            ],
+            [
+              87.5,
+              85.5
+            ],
+            [
+              87.5,
+              84.5
+            ],
+            [
+              87.5,
+              83.5
+            ],
+            [
+              87.5,
+              82.5
+            ],
+            [
+              88.5,
+              81.5
+            ],
+            [
+              89.5,
+              80.5
+            ],
+            [
+              89.5,
+              79.5
+            ],
+            [
+              89.5,
+              78.5
+            ],
+            [
+              89.5,
+              77.5
+            ],
+            [
+              89.5,
+              76.5
+            ],
+            [
+              89.5,
+              75.5
+            ]
+          ]
+        },
+        "path_length_px": 13.8284,
+        "mask": "masks/junction_wn.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          87.5,
+          88.5
+        ],
+        "end_px": [
+          89.5,
+          75.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/junction_wn.png",
+      "motif_position": "ordinary supporting cell"
+    },
+    {
+      "id": "colony_body",
+      "artwork": {
+        "salmon": "artwork/salmon/colony_body.png",
+        "turquoise": "artwork/turquoise/colony_body.png"
+      },
+      "canvas_px": [
+        512,
+        512
+      ],
+      "pivot_px": [
+        256,
+        256
+      ],
+      "painted_bounds_px": [
+        20,
+        20,
+        491,
+        491
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 40,
+      "existing_layers_retained": "Four ordinary centers and the eight ordinary half-arms forming the circle remain underneath.",
+      "placement": "Top-left origin of any same-color occupied 2x2; piece identity does not matter.",
+      "seed_geometry": {
+        "format": "stroked_polyline",
+        "points": [
+          [
+            128,
+            128
+          ],
+          [
+            384,
+            128
+          ],
+          [
+            384,
+            384
+          ],
+          [
+            128,
+            384
+          ],
+          [
+            128,
+            128
+          ]
+        ],
+        "half_width_px": 38.5
+      },
+      "animation": {
+        "trigger": "2x2_perimeter_visibly_complete",
+        "origin_px": [
+          255.5,
+          166.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.38,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "multi_source_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              255.5,
+              166.5
+            ],
+            [
+              255.5,
+              168.5
+            ],
+            [
+              255.5,
+              170.5
+            ],
+            [
+              255.5,
+              172.5
+            ],
+            [
+              255.5,
+              175.5
+            ],
+            [
+              255.5,
+              177.5
+            ],
+            [
+              255.5,
+              179.5
+            ],
+            [
+              255.5,
+              181.5
+            ],
+            [
+              255.5,
+              184.5
+            ],
+            [
+              255.5,
+              186.5
+            ],
+            [
+              255.5,
+              188.5
+            ],
+            [
+              255.5,
+              191.5
+            ],
+            [
+              255.5,
+              193.5
+            ],
+            [
+              255.5,
+              195.5
+            ],
+            [
+              255.5,
+              197.5
+            ],
+            [
+              255.5,
+              200.5
+            ],
+            [
+              255.5,
+              202.5
+            ],
+            [
+              255.5,
+              204.5
+            ],
+            [
+              255.5,
+              207.5
+            ],
+            [
+              255.5,
+              209.5
+            ],
+            [
+              255.5,
+              211.5
+            ],
+            [
+              255.5,
+              213.5
+            ],
+            [
+              255.5,
+              216.5
+            ],
+            [
+              255.5,
+              218.5
+            ],
+            [
+              255.5,
+              220.5
+            ],
+            [
+              255.5,
+              223.5
+            ],
+            [
+              255.5,
+              225.5
+            ],
+            [
+              255.5,
+              227.5
+            ],
+            [
+              255.5,
+              229.5
+            ],
+            [
+              255.5,
+              232.5
+            ],
+            [
+              255.5,
+              234.5
+            ],
+            [
+              255.5,
+              236.5
+            ],
+            [
+              255.5,
+              239.5
+            ],
+            [
+              255.5,
+              241.5
+            ],
+            [
+              255.5,
+              243.5
+            ],
+            [
+              255.5,
+              245.5
+            ],
+            [
+              255.5,
+              248.5
+            ],
+            [
+              255.5,
+              250.5
+            ],
+            [
+              255.5,
+              252.5
+            ],
+            [
+              255.5,
+              255.5
+            ]
+          ]
+        },
+        "path_length_px": 89.0,
+        "mask": "masks/colony_body.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          255.5,
+          166.5
+        ],
+        "end_px": [
+          255.5,
+          255.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/colony_body.png",
+      "motif_position": "shared corner of the four supporting cells"
+    },
+    {
+      "id": "colony_fold_ne",
+      "artwork": {
+        "salmon": "artwork/salmon/colony_fold_ne.png",
+        "turquoise": "artwork/turquoise/colony_fold_ne.png"
+      },
+      "canvas_px": [
+        512,
+        512
+      ],
+      "pivot_px": [
+        256,
+        256
+      ],
+      "painted_bounds_px": [
+        123,
+        49,
+        463,
+        261
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 41,
+      "existing_layers_retained": "Four ordinary centers and the eight ordinary half-arms forming the circle remain underneath.",
+      "placement": "Top-left origin of any same-color occupied 2x2; piece identity does not matter.",
+      "animation": {
+        "trigger": "colony_body_reaches_attachment",
+        "origin_px": [
+          339.5,
+          149.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.22,
+        "dependencies": [
+          {
+            "component": "colony_body",
+            "at_px": [
+              339.5,
+              149.5
+            ],
+            "at_mask_u": 0.0,
+            "delay_seconds": 0.06
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              339.5,
+              149.5
+            ],
+            [
+              334.5,
+              149.5
+            ],
+            [
+              329.5,
+              149.5
+            ],
+            [
+              323.5,
+              149.5
+            ],
+            [
+              318.5,
+              149.5
+            ],
+            [
+              312.5,
+              149.5
+            ],
+            [
+              307.5,
+              149.5
+            ],
+            [
+              301.5,
+              149.5
+            ],
+            [
+              296.5,
+              149.5
+            ],
+            [
+              290.5,
+              149.5
+            ],
+            [
+              285.5,
+              149.5
+            ],
+            [
+              279.5,
+              144.5
+            ],
+            [
+              274.5,
+              139.5
+            ],
+            [
+              268.5,
+              133.5
+            ],
+            [
+              263.5,
+              128.5
+            ],
+            [
+              258.5,
+              123.5
+            ],
+            [
+              252.5,
+              117.5
+            ],
+            [
+              247.5,
+              112.5
+            ],
+            [
+              241.5,
+              106.5
+            ],
+            [
+              236.5,
+              101.5
+            ],
+            [
+              230.5,
+              98.5
+            ],
+            [
+              225.5,
+              98.5
+            ],
+            [
+              219.5,
+              98.5
+            ],
+            [
+              214.5,
+              98.5
+            ],
+            [
+              208.5,
+              98.5
+            ],
+            [
+              203.5,
+              98.5
+            ],
+            [
+              197.5,
+              98.5
+            ],
+            [
+              192.5,
+              98.5
+            ],
+            [
+              187.5,
+              98.5
+            ],
+            [
+              181.5,
+              98.5
+            ],
+            [
+              176.5,
+              98.5
+            ],
+            [
+              170.5,
+              98.5
+            ],
+            [
+              165.5,
+              98.5
+            ],
+            [
+              159.5,
+              98.5
+            ],
+            [
+              154.5,
+              98.5
+            ],
+            [
+              148.5,
+              98.5
+            ],
+            [
+              143.5,
+              98.5
+            ],
+            [
+              137.5,
+              98.5
+            ],
+            [
+              132.5,
+              98.5
+            ],
+            [
+              126.5,
+              98.5
+            ]
+          ]
+        },
+        "path_length_px": 234.1249,
+        "mask": "masks/colony_fold_ne.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          339.5,
+          149.5
+        ],
+        "end_px": [
+          126.5,
+          98.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/colony_fold_ne.png",
+      "motif_position": "shared corner of the four supporting cells"
+    },
+    {
+      "id": "colony_fold_sw",
+      "artwork": {
+        "salmon": "artwork/salmon/colony_fold_sw.png",
+        "turquoise": "artwork/turquoise/colony_fold_sw.png"
+      },
+      "canvas_px": [
+        512,
+        512
+      ],
+      "pivot_px": [
+        256,
+        256
+      ],
+      "painted_bounds_px": [
+        44,
+        259,
+        291,
+        452
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 42,
+      "existing_layers_retained": "Four ordinary centers and the eight ordinary half-arms forming the circle remain underneath.",
+      "placement": "Top-left origin of any same-color occupied 2x2; piece identity does not matter.",
+      "animation": {
+        "trigger": "colony_body_reaches_attachment",
+        "origin_px": [
+          149.5,
+          364.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.22,
+        "dependencies": [
+          {
+            "component": "colony_body",
+            "at_px": [
+              149.5,
+              364.5
+            ],
+            "at_mask_u": 0.0,
+            "delay_seconds": 0.06
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              149.5,
+              364.5
+            ],
+            [
+              152.5,
+              364.5
+            ],
+            [
+              156.5,
+              364.5
+            ],
+            [
+              159.5,
+              364.5
+            ],
+            [
+              163.5,
+              364.5
+            ],
+            [
+              166.5,
+              364.5
+            ],
+            [
+              170.5,
+              364.5
+            ],
+            [
+              173.5,
+              364.5
+            ],
+            [
+              177.5,
+              364.5
+            ],
+            [
+              180.5,
+              364.5
+            ],
+            [
+              184.5,
+              364.5
+            ],
+            [
+              187.5,
+              364.5
+            ],
+            [
+              191.5,
+              368.5
+            ],
+            [
+              195.5,
+              372.5
+            ],
+            [
+              198.5,
+              375.5
+            ],
+            [
+              202.5,
+              379.5
+            ],
+            [
+              205.5,
+              382.5
+            ],
+            [
+              209.5,
+              386.5
+            ],
+            [
+              212.5,
+              389.5
+            ],
+            [
+              216.5,
+              393.5
+            ],
+            [
+              219.5,
+              396.5
+            ],
+            [
+              223.5,
+              400.5
+            ],
+            [
+              226.5,
+              403.5
+            ],
+            [
+              230.5,
+              407.5
+            ],
+            [
+              233.5,
+              410.5
+            ],
+            [
+              237.5,
+              414.5
+            ],
+            [
+              241.5,
+              418.5
+            ],
+            [
+              244.5,
+              421.5
+            ],
+            [
+              248.5,
+              425.5
+            ],
+            [
+              251.5,
+              427.5
+            ],
+            [
+              255.5,
+              427.5
+            ],
+            [
+              258.5,
+              427.5
+            ],
+            [
+              262.5,
+              427.5
+            ],
+            [
+              265.5,
+              427.5
+            ],
+            [
+              269.5,
+              427.5
+            ],
+            [
+              272.5,
+              427.5
+            ],
+            [
+              276.5,
+              427.5
+            ],
+            [
+              279.5,
+              427.5
+            ],
+            [
+              283.5,
+              427.5
+            ],
+            [
+              287.5,
+              427.5
+            ]
+          ]
+        },
+        "path_length_px": 164.0955,
+        "mask": "masks/colony_fold_sw.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          149.5,
+          364.5
+        ],
+        "end_px": [
+          287.5,
+          427.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/colony_fold_sw.png",
+      "motif_position": "shared corner of the four supporting cells"
+    },
+    {
+      "id": "colony_fingers_nw",
+      "artwork": {
+        "salmon": "artwork/salmon/colony_fingers_nw.png",
+        "turquoise": "artwork/turquoise/colony_fingers_nw.png"
+      },
+      "canvas_px": [
+        512,
+        512
+      ],
+      "pivot_px": [
+        256,
+        256
+      ],
+      "painted_bounds_px": [
+        46,
+        35,
+        140,
+        139
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 43,
+      "existing_layers_retained": "Four ordinary centers and the eight ordinary half-arms forming the circle remain underneath.",
+      "placement": "Top-left origin of any same-color occupied 2x2; piece identity does not matter.",
+      "animation": {
+        "trigger": "colony_body_reaches_attachment",
+        "origin_px": [
+          93.5,
+          129.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.18,
+        "dependencies": [
+          {
+            "component": "colony_body",
+            "at_px": [
+              93.5,
+              129.5
+            ],
+            "at_mask_u": 0.0,
+            "delay_seconds": 0.06
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              93.5,
+              129.5
+            ],
+            [
+              93.5,
+              127.5
+            ],
+            [
+              93.5,
+              125.5
+            ],
+            [
+              93.5,
+              122.5
+            ],
+            [
+              93.5,
+              120.5
+            ],
+            [
+              93.5,
+              117.5
+            ],
+            [
+              93.5,
+              115.5
+            ],
+            [
+              93.5,
+              113.5
+            ],
+            [
+              93.5,
+              110.5
+            ],
+            [
+              93.5,
+              108.5
+            ],
+            [
+              93.5,
+              105.5
+            ],
+            [
+              93.5,
+              103.5
+            ],
+            [
+              93.5,
+              101.5
+            ],
+            [
+              93.5,
+              98.5
+            ],
+            [
+              93.5,
+              96.5
+            ],
+            [
+              93.5,
+              93.5
+            ],
+            [
+              93.5,
+              91.5
+            ],
+            [
+              93.5,
+              89.5
+            ],
+            [
+              93.5,
+              86.5
+            ],
+            [
+              93.5,
+              84.5
+            ],
+            [
+              93.5,
+              81.5
+            ],
+            [
+              93.5,
+              79.5
+            ],
+            [
+              93.5,
+              76.5
+            ],
+            [
+              93.5,
+              74.5
+            ],
+            [
+              93.5,
+              72.5
+            ],
+            [
+              93.5,
+              69.5
+            ],
+            [
+              93.5,
+              67.5
+            ],
+            [
+              93.5,
+              64.5
+            ],
+            [
+              93.5,
+              62.5
+            ],
+            [
+              93.5,
+              60.5
+            ],
+            [
+              93.5,
+              57.5
+            ],
+            [
+              93.5,
+              55.5
+            ],
+            [
+              93.5,
+              52.5
+            ],
+            [
+              93.5,
+              50.5
+            ],
+            [
+              93.5,
+              48.5
+            ],
+            [
+              93.5,
+              45.5
+            ],
+            [
+              93.5,
+              43.5
+            ],
+            [
+              94.5,
+              40.5
+            ],
+            [
+              96.5,
+              38.5
+            ],
+            [
+              99.5,
+              35.5
+            ]
+          ]
+        },
+        "path_length_px": 96.4853,
+        "mask": "masks/colony_fingers_nw.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          93.5,
+          129.5
+        ],
+        "end_px": [
+          99.5,
+          35.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/colony_fingers_nw.png",
+      "motif_position": "shared corner of the four supporting cells"
+    },
+    {
+      "id": "colony_fingers_se",
+      "artwork": {
+        "salmon": "artwork/salmon/colony_fingers_se.png",
+        "turquoise": "artwork/turquoise/colony_fingers_se.png"
+      },
+      "canvas_px": [
+        512,
+        512
+      ],
+      "pivot_px": [
+        256,
+        256
+      ],
+      "painted_bounds_px": [
+        372,
+        373,
+        466,
+        477
+      ],
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 44,
+      "existing_layers_retained": "Four ordinary centers and the eight ordinary half-arms forming the circle remain underneath.",
+      "placement": "Top-left origin of any same-color occupied 2x2; piece identity does not matter.",
+      "animation": {
+        "trigger": "colony_body_reaches_attachment",
+        "origin_px": [
+          419.5,
+          374.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.18,
+        "dependencies": [
+          {
+            "component": "colony_body",
+            "at_px": [
+              419.5,
+              374.5
+            ],
+            "at_mask_u": 0.0,
+            "delay_seconds": 0.06
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              419.5,
+              374.5
+            ],
+            [
+              419.5,
+              376.5
+            ],
+            [
+              419.5,
+              379.5
+            ],
+            [
+              419.5,
+              381.5
+            ],
+            [
+              419.5,
+              384.5
+            ],
+            [
+              419.5,
+              387.5
+            ],
+            [
+              419.5,
+              389.5
+            ],
+            [
+              419.5,
+              392.5
+            ],
+            [
+              419.5,
+              394.5
+            ],
+            [
+              419.5,
+              397.5
+            ],
+            [
+              419.5,
+              400.5
+            ],
+            [
+              419.5,
+              402.5
+            ],
+            [
+              419.5,
+              405.5
+            ],
+            [
+              419.5,
+              408.5
+            ],
+            [
+              419.5,
+              410.5
+            ],
+            [
+              419.5,
+              413.5
+            ],
+            [
+              419.5,
+              415.5
+            ],
+            [
+              419.5,
+              418.5
+            ],
+            [
+              419.5,
+              421.5
+            ],
+            [
+              419.5,
+              423.5
+            ],
+            [
+              419.5,
+              426.5
+            ],
+            [
+              419.5,
+              428.5
+            ],
+            [
+              419.5,
+              431.5
+            ],
+            [
+              419.5,
+              434.5
+            ],
+            [
+              419.5,
+              436.5
+            ],
+            [
+              419.5,
+              439.5
+            ],
+            [
+              419.5,
+              442.5
+            ],
+            [
+              419.5,
+              444.5
+            ],
+            [
+              419.5,
+              447.5
+            ],
+            [
+              419.5,
+              449.5
+            ],
+            [
+              419.5,
+              452.5
+            ],
+            [
+              419.5,
+              455.5
+            ],
+            [
+              419.5,
+              457.5
+            ],
+            [
+              419.5,
+              460.5
+            ],
+            [
+              419.5,
+              462.5
+            ],
+            [
+              419.5,
+              465.5
+            ],
+            [
+              419.5,
+              468.5
+            ],
+            [
+              418.5,
+              470.5
+            ],
+            [
+              415.5,
+              473.5
+            ],
+            [
+              412.5,
+              476.5
+            ]
+          ]
+        },
+        "path_length_px": 104.8995,
+        "mask": "masks/colony_fingers_se.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          419.5,
+          374.5
+        ],
+        "end_px": [
+          412.5,
+          476.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/colony_fingers_se.png",
+      "motif_position": "shared corner of the four supporting cells"
+    },
+    {
+      "id": "anemone_foot",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_foot.png",
+        "turquoise": "artwork/turquoise/anemone_foot.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        75,
+        71,
+        181,
+        441
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 70,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "both_supporting_colonies_developed",
+        "origin_px": [
+          127.5,
+          255.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.2,
+        "dependencies": [],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              127.5,
+              255.5
+            ],
+            [
+              127.5,
+              259.5
+            ],
+            [
+              127.5,
+              264.5
+            ],
+            [
+              127.5,
+              268.5
+            ],
+            [
+              127.5,
+              273.5
+            ],
+            [
+              127.5,
+              278.5
+            ],
+            [
+              127.5,
+              282.5
+            ],
+            [
+              127.5,
+              287.5
+            ],
+            [
+              127.5,
+              292.5
+            ],
+            [
+              127.5,
+              296.5
+            ],
+            [
+              127.5,
+              301.5
+            ],
+            [
+              127.5,
+              306.5
+            ],
+            [
+              127.5,
+              310.5
+            ],
+            [
+              127.5,
+              315.5
+            ],
+            [
+              127.5,
+              319.5
+            ],
+            [
+              127.5,
+              324.5
+            ],
+            [
+              127.5,
+              329.5
+            ],
+            [
+              127.5,
+              333.5
+            ],
+            [
+              127.5,
+              338.5
+            ],
+            [
+              127.5,
+              343.5
+            ],
+            [
+              127.5,
+              347.5
+            ],
+            [
+              125.5,
+              352.5
+            ],
+            [
+              120.5,
+              357.5
+            ],
+            [
+              116.5,
+              361.5
+            ],
+            [
+              111.5,
+              366.5
+            ],
+            [
+              106.5,
+              371.5
+            ],
+            [
+              104.5,
+              375.5
+            ],
+            [
+              104.5,
+              380.5
+            ],
+            [
+              104.5,
+              384.5
+            ],
+            [
+              104.5,
+              389.5
+            ],
+            [
+              104.5,
+              394.5
+            ],
+            [
+              104.5,
+              398.5
+            ],
+            [
+              104.5,
+              403.5
+            ],
+            [
+              104.5,
+              408.5
+            ],
+            [
+              104.5,
+              412.5
+            ],
+            [
+              104.5,
+              417.5
+            ],
+            [
+              104.5,
+              422.5
+            ],
+            [
+              104.5,
+              426.5
+            ],
+            [
+              104.5,
+              431.5
+            ],
+            [
+              104.5,
+              436.5
+            ]
+          ]
+        },
+        "path_length_px": 190.5269,
+        "mask": "masks/anemone_foot.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          127.5,
+          255.5
+        ],
+        "end_px": [
+          104.5,
+          436.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/anemone_foot.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_0",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_0.png",
+        "turquoise": "artwork/turquoise/anemone_region_0.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        13,
+        179,
+        106,
+        257
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_0.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_0.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_1",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_1.png",
+        "turquoise": "artwork/turquoise/anemone_region_1.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        51,
+        111,
+        128,
+        235
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_1.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_1.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_2",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_2.png",
+        "turquoise": "artwork/turquoise/anemone_region_2.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        128,
+        89,
+        207,
+        234
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_2.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_2.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_3",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_3.png",
+        "turquoise": "artwork/turquoise/anemone_region_3.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        150,
+        178,
+        237,
+        256
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_3.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_3.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_4",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_4.png",
+        "turquoise": "artwork/turquoise/anemone_region_4.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        151,
+        256,
+        237,
+        334
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_4.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_4.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_5",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_5.png",
+        "turquoise": "artwork/turquoise/anemone_region_5.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        129,
+        278,
+        205,
+        427
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_5.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_5.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_6",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_6.png",
+        "turquoise": "artwork/turquoise/anemone_region_6.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        36,
+        279,
+        129,
+        449
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_6.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_6.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_region_7",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_region_7.png",
+        "turquoise": "artwork/turquoise/anemone_region_7.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        13,
+        257,
+        107,
+        349
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 71,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "oral_disc_developed",
+        "origin_px": [
+          118.5,
+          285.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.28,
+        "dependencies": [
+          {
+            "component": "anemone_oral_disc",
+            "event": "complete",
+            "delay_seconds": 0
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "shared_crown_geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              118.5,
+              285.5
+            ],
+            [
+              118.5,
+              289.5
+            ],
+            [
+              118.5,
+              293.5
+            ],
+            [
+              118.5,
+              297.5
+            ],
+            [
+              118.5,
+              301.5
+            ],
+            [
+              118.5,
+              305.5
+            ],
+            [
+              118.5,
+              310.5
+            ],
+            [
+              118.5,
+              314.5
+            ],
+            [
+              118.5,
+              318.5
+            ],
+            [
+              118.5,
+              322.5
+            ],
+            [
+              118.5,
+              326.5
+            ],
+            [
+              118.5,
+              330.5
+            ],
+            [
+              118.5,
+              335.5
+            ],
+            [
+              118.5,
+              339.5
+            ],
+            [
+              118.5,
+              343.5
+            ],
+            [
+              118.5,
+              347.5
+            ],
+            [
+              118.5,
+              351.5
+            ],
+            [
+              118.5,
+              356.5
+            ],
+            [
+              118.5,
+              360.5
+            ],
+            [
+              118.5,
+              364.5
+            ],
+            [
+              118.5,
+              368.5
+            ],
+            [
+              118.5,
+              372.5
+            ],
+            [
+              118.5,
+              376.5
+            ],
+            [
+              118.5,
+              381.5
+            ],
+            [
+              118.5,
+              385.5
+            ],
+            [
+              118.5,
+              389.5
+            ],
+            [
+              118.5,
+              393.5
+            ],
+            [
+              118.5,
+              397.5
+            ],
+            [
+              118.5,
+              402.5
+            ],
+            [
+              118.5,
+              406.5
+            ],
+            [
+              117.5,
+              410.5
+            ],
+            [
+              116.5,
+              414.5
+            ],
+            [
+              116.5,
+              418.5
+            ],
+            [
+              116.5,
+              422.5
+            ],
+            [
+              116.5,
+              427.5
+            ],
+            [
+              116.5,
+              431.5
+            ],
+            [
+              116.5,
+              435.5
+            ],
+            [
+              116.5,
+              439.5
+            ],
+            [
+              116.5,
+              443.5
+            ],
+            [
+              121.5,
+              448.5
+            ]
+          ]
+        },
+        "path_length_px": 165.8995,
+        "mask": "masks/anemone_region_7.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          118.5,
+          285.5
+        ],
+        "end_px": [
+          121.5,
+          448.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": true
+      },
+      "growth_mask": "masks/anemone_region_7.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    },
+    {
+      "id": "anemone_oral_disc",
+      "artwork": {
+        "salmon": "artwork/salmon/anemone_oral_disc.png",
+        "turquoise": "artwork/turquoise/anemone_oral_disc.png"
+      },
+      "canvas_px": [
+        256,
+        512
+      ],
+      "pivot_px": [
+        128,
+        256
+      ],
+      "attachment_px": [
+        128,
+        256
+      ],
+      "painted_bounds_px": [
+        97,
+        225,
+        160,
+        288
+      ],
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "draw_order": 72,
+      "footprint": "Clip to the union of the supporting pair of 2x2 colonies; never infer occupancy from alpha.",
+      "existing_layers_retained": "Keep both colony bodies and ordinary coral beneath this artwork.",
+      "animation": {
+        "trigger": "anemone_foot_reaches_disc",
+        "origin_px": [
+          127.5,
+          255.5
+        ],
+        "direction": "outward from declared source through actual alpha geometry",
+        "duration_seconds": 0.12,
+        "dependencies": [
+          {
+            "component": "anemone_foot",
+            "at_mask_u": 0,
+            "delay_seconds": 0.04
+          }
+        ],
+        "zero": "invisible; ground remains visible",
+        "finished": "exact original component RGBA, retained permanently",
+        "reverse_supported": false,
+        "field_kind": "geodesic",
+        "path": {
+          "format": "polyline",
+          "points": [
+            [
+              127.5,
+              255.5
+            ],
+            [
+              128.5,
+              255.5
+            ],
+            [
+              129.5,
+              255.5
+            ],
+            [
+              130.5,
+              255.5
+            ],
+            [
+              131.5,
+              255.5
+            ],
+            [
+              132.5,
+              255.5
+            ],
+            [
+              133.5,
+              255.5
+            ],
+            [
+              134.5,
+              256.5
+            ],
+            [
+              135.5,
+              257.5
+            ],
+            [
+              136.5,
+              257.5
+            ],
+            [
+              137.5,
+              257.5
+            ],
+            [
+              138.5,
+              257.5
+            ],
+            [
+              139.5,
+              257.5
+            ],
+            [
+              140.5,
+              257.5
+            ],
+            [
+              141.5,
+              257.5
+            ],
+            [
+              142.5,
+              257.5
+            ],
+            [
+              143.5,
+              258.5
+            ],
+            [
+              144.5,
+              258.5
+            ],
+            [
+              145.5,
+              258.5
+            ],
+            [
+              146.5,
+              259.5
+            ],
+            [
+              147.5,
+              260.5
+            ],
+            [
+              148.5,
+              261.5
+            ],
+            [
+              149.5,
+              262.5
+            ],
+            [
+              150.5,
+              263.5
+            ],
+            [
+              151.5,
+              264.5
+            ],
+            [
+              152.5,
+              265.5
+            ],
+            [
+              153.5,
+              266.5
+            ],
+            [
+              154.5,
+              267.5
+            ],
+            [
+              155.5,
+              268.5
+            ],
+            [
+              156.5,
+              269.5
+            ]
+          ]
+        },
+        "path_length_px": 34.799,
+        "mask": "masks/anemone_oral_disc.png",
+        "mask_authoritative": true,
+        "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
+        "start_px": [
+          127.5,
+          255.5
+        ],
+        "end_px": [
+          156.5,
+          269.5
+        ],
+        "allowed_growth_directions": [
+          "forward"
+        ],
+        "branching_allowed": false
+      },
+      "growth_mask": "masks/anemone_oral_disc.png",
+      "footprint_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "motif_position": "midpoint between two immediate orthogonal colony centers"
+    }
+  ],
+  "topology_examples": [
+    {
+      "id": "isolated",
+      "mask": 0,
+      "references": {
+        "salmon": "../review/references/salmon/mask_00.png",
+        "turquoise": "../review/references/turquoise/mask_00.png"
+      }
+    },
+    {
+      "id": "endpoint",
+      "mask": 1,
+      "references": {
+        "salmon": "../review/references/salmon/mask_01.png",
+        "turquoise": "../review/references/turquoise/mask_01.png"
+      }
+    },
+    {
+      "id": "straight",
+      "mask": 5,
+      "references": {
+        "salmon": "../review/references/salmon/mask_05.png",
+        "turquoise": "../review/references/turquoise/mask_05.png"
+      }
+    },
+    {
+      "id": "corner",
+      "mask": 3,
+      "references": {
+        "salmon": "../review/references/salmon/mask_03.png",
+        "turquoise": "../review/references/turquoise/mask_03.png"
+      }
+    },
+    {
+      "id": "t_junction",
+      "mask": 11,
+      "references": {
+        "salmon": "../review/references/salmon/mask_11.png",
+        "turquoise": "../review/references/turquoise/mask_11.png"
+      }
+    },
+    {
+      "id": "cross",
+      "mask": 15,
+      "references": {
+        "salmon": "../review/references/salmon/mask_15.png",
+        "turquoise": "../review/references/turquoise/mask_15.png"
+      }
+    }
+  ],
+  "ground": "Six approved ground PNGs copied unchanged; appear instantly, independently of coral growth.",
+  "palette": "Salmon bodies have turquoise tips; turquoise bodies have salmon tips; alpha and geometry are identical.",
+  "ground_components": [
+    {
+      "id": "ground_01",
+      "artwork": "artwork/ground/ground_01.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    },
+    {
+      "id": "ground_02",
+      "artwork": "artwork/ground/ground_02.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    },
+    {
+      "id": "ground_03",
+      "artwork": "artwork/ground/ground_03.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    },
+    {
+      "id": "ground_04",
+      "artwork": "artwork/ground/ground_04.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    },
+    {
+      "id": "ground_05",
+      "artwork": "artwork/ground/ground_05.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    },
+    {
+      "id": "ground_06",
+      "artwork": "artwork/ground/ground_06.png",
+      "canvas_px": [
+        256,
+        256
+      ],
+      "pivot_px": [
+        128,
+        128
+      ],
+      "painted_bounds_px": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "growth": "instant"
+    }
+  ],
+  "landmark": {
+    "id": "colony",
+    "canvas_px": [
+      512,
+      512
+    ],
+    "footprint_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "body_painted_bounds_px": [
+      20,
+      20,
+      491,
+      491
+    ],
+    "body_painted_span_px": [
+      471,
+      471
+    ],
+    "ordinary_enclosing_body_width_px": 77,
+    "rim": "Sculpted lip in the body artwork, not an enlarged ordinary connection stroke.",
+    "eligibility": "Every same-color occupied 2x2, including overlapping circles and circles formed over multiple placements.",
+    "external_ports_px": [
+      [
+        128,
+        0
+      ],
+      [
+        384,
+        0
+      ],
+      [
+        512,
+        128
+      ],
+      [
+        512,
+        384
+      ],
+      [
+        384,
+        512
+      ],
+      [
+        128,
+        512
+      ],
+      [
+        0,
+        384
+      ],
+      [
+        0,
+        128
+      ]
+    ],
+    "components_bottom_to_top": [
+      "colony_body",
+      "colony_fold_ne",
+      "colony_fold_sw",
+      "colony_fingers_nw",
+      "colony_fingers_se"
+    ],
+    "orientation": "Keep the body orientation stable when later neighbors are added.",
+    "anemones": "Immediate orthogonal neighboring colonies develop one joint anemone."
+  },
+  "anemone": {
+    "components_bottom_to_top": [
+      "anemone_foot",
+      "anemone_region_0",
+      "anemone_region_1",
+      "anemone_region_2",
+      "anemone_region_3",
+      "anemone_region_4",
+      "anemone_region_5",
+      "anemone_region_6",
+      "anemone_region_7",
+      "anemone_oral_disc"
+    ],
+    "canvas_px": [
+      256,
+      512
+    ],
+    "pivot_px": [
+      128,
+      256
+    ],
+    "crown_painted_target_px": [
+      224,
+      360
+    ],
+    "foot_painted_target_px": [
+      106,
+      370
+    ],
+    "eligible_origin_deltas": [
+      [
+        1,
+        0
+      ],
+      [
+        -1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        -1
+      ]
+    ],
+    "excluded": "Diagonal colony offsets, corner-only contacts, separated or opposite-colored colonies.",
+    "count": "One per immediate horizontal/vertical neighboring colony pair; no joins across intervening colonies.",
+    "position": "Midpoint of colony centers. Vertical artwork for horizontally adjacent colonies; rotate 90 degrees for vertically adjacent colonies.",
+    "regions": "Eight reveal partitions use the same crown geodesic mask and timeline; they are not separate anatomical tentacle animations.",
+    "center_policy": "Warm oral disc retained in both variants; reciprocal tentacle accents differ.",
+    "three_by_three": "Four overlapping 2x2 colonies, four anemones, no central or diagonal anemone."
+  },
+  "date": "2026-11-10",
+  "status": "Ready for integration; Godot and Android verification pending",
+  "growth_contract": {
+    "source": "Accepted logical placement; no changes to move legality, symmetry, controls, helper budgets or Place-button gate.",
+    "logical_and_visible_states_separate": true,
+    "ground": "Show immediately on occupied cells; no growth mask or animation.",
+    "main_speed_px_per_second": 1280,
+    "half_arm_length_px": 128,
+    "half_arm_seconds": 0.1,
+    "soft_front_seconds": 0.035,
+    "mask_decode": "8-bit grayscale linear data, u=red/255; not source_color.",
+    "arrival": "min(enabled0 ? start0+u*duration : INF, enabled1 ? start1+(1-u)*duration : INF)",
+    "visibility": "smoothstep(0,soft_front_seconds,clock-arrival); multiply artwork alpha once.",
+    "completion": "Force full original artwork only after every visible pixel has finished; keep node and stop active updates.",
+    "existing_sources": "Multi-source Dijkstra over new-new and new-existing same-color orthogonal center edges, 0.20 seconds per cell. Existing completed source centers start at 0.",
+    "half_arm_fronts": "For A->B, start0=t_center[A], start1=t_center[B]+0.10, duration=0.10. Both enabled; earlier front wins.",
+    "no_external_source": "All new cells bud at t=0; internal half-arms use start0=0.10, start1=0.20, duration=0.10. No outward arms at empty/opposite-color edges.",
+    "branching": "All newly required arms can propagate once their center is reached; details follow attachment dependencies.",
+    "circle": "All eight ordinary half-arms on a same-color 2x2 perimeter must be visibly complete; then grow colony_body from the existing 77px-thick circle. Overlapping circles are allowed.",
+    "anemone": "Wait for both supporting immediate-neighbor colony component sets to develop. Foot then oral disc then shared-clock crown growth.",
+    "stable_keys": "(color,cell,component), (color,colony_origin,component), (color,sorted_immediate_colony_pair,component). Preserve completed nodes and feature creation order.",
+    "painter_order": "Arms 10, junction fills 11, cores 20, fingers 30. Colony containers in creation order, body/folds/fingers within each. Anemones above colonies, foot/regions/disc within each.",
+    "undo_delete": "Receive restored authoritative board. Invalidate stale callbacks, remove invalid component/colony/pair keys only, preserve surviving artwork. Restore saved visual state if supplied; otherwise settle surviving target. Ground follows occupancy.",
+    "reset_theme_switch": "Invalidate callbacks, clear old theme registries, derive target from actual board. Theme switch may build the current board fully complete; never alter its logical colors or symmetry.",
+    "interruption": "Follow project-owned animation/gate policy; no imposed settle-on-next-placement behavior. Use explicit settle/cancel hooks only when requested by the project.",
+    "current_growth_rule": "Four colonies/four anemones in 3x3; three colonies/two anemones in filled 4x2 or 2x4.",
+    "active_existing_source": "If a logical source is still growing, borrow its predicted visible center/edge arrival from the existing visual timeline. Do not treat invisible artwork as complete, do not seed locally when a logical same-color orthogonal source exists, and do not force it to finish merely because another placement arrives."
+  },
+  "rendering": {
+    "root_scale": "display_cell_px/256",
+    "shader": "shaders/growth_reveal.gdshader",
+    "sampling": "Linear, clamp, lossless. Disable mipmaps for exact ground port profile compatibility; GPU mipmapped seams not verified.",
+    "art_alpha": "Straight RGBA; ground opaque over full occupied cell, other artwork transparent.",
+    "mask_color_space": "Linear scalar data, no source_color.",
+    "art_color_space": "source_color sampler hint.",
+    "active_materials": "Independent mutable ShaderMaterial per component; share immutable textures and Shader.",
+    "clock": "CPU clock controlled by project pause/cancel policy, not shader TIME."
+  },
+  "maximum_complexity": 4,
+  "topologies": [
+    {
+      "id": "isolated",
+      "topology_id": 0,
+      "connection_mask": 0,
+      "directions": [],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "core"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_00.png",
+        "turquoise": "../review/references/turquoise/mask_00.png"
+      },
+      "references_required_at_runtime": false
+    },
+    {
+      "id": "endpoint",
+      "topology_id": 1,
+      "connection_mask": 1,
+      "directions": [
+        "n"
+      ],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "arm_n",
+        "core",
+        "fingers_n_0",
+        "fingers_n_1"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_01.png",
+        "turquoise": "../review/references/turquoise/mask_01.png"
+      },
+      "references_required_at_runtime": false
+    },
+    {
+      "id": "straight",
+      "topology_id": 2,
+      "connection_mask": 5,
+      "directions": [
+        "n",
+        "s"
+      ],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "arm_n",
+        "arm_s",
+        "core",
+        "fingers_n_0",
+        "fingers_n_1",
+        "fingers_s_0",
+        "fingers_s_1"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_05.png",
+        "turquoise": "../review/references/turquoise/mask_05.png"
+      },
+      "references_required_at_runtime": false
+    },
+    {
+      "id": "corner",
+      "topology_id": 3,
+      "connection_mask": 3,
+      "directions": [
+        "n",
+        "e"
+      ],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "arm_n",
+        "arm_e",
+        "junction_ne",
+        "core",
+        "fingers_n_0",
+        "fingers_n_1",
+        "fingers_e_0",
+        "fingers_e_1"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_03.png",
+        "turquoise": "../review/references/turquoise/mask_03.png"
+      },
+      "references_required_at_runtime": false
+    },
+    {
+      "id": "t_junction",
+      "topology_id": 4,
+      "connection_mask": 11,
+      "directions": [
+        "n",
+        "e",
+        "w"
+      ],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "arm_n",
+        "arm_e",
+        "arm_w",
+        "junction_ne",
+        "junction_wn",
+        "core",
+        "fingers_n_0",
+        "fingers_n_1",
+        "fingers_e_0",
+        "fingers_e_1",
+        "fingers_w_0",
+        "fingers_w_1"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_11.png",
+        "turquoise": "../review/references/turquoise/mask_11.png"
+      },
+      "references_required_at_runtime": false
+    },
+    {
+      "id": "cross",
+      "topology_id": 5,
+      "connection_mask": 15,
+      "directions": [
+        "n",
+        "e",
+        "s",
+        "w"
+      ],
+      "canonical_orientation": "as direction list",
+      "allowed_rotations_clockwise": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "components_bottom_to_top": [
+        "arm_n",
+        "arm_e",
+        "arm_s",
+        "arm_w",
+        "junction_ne",
+        "junction_es",
+        "junction_sw",
+        "junction_wn",
+        "core",
+        "fingers_n_0",
+        "fingers_n_1",
+        "fingers_e_0",
+        "fingers_e_1",
+        "fingers_s_0",
+        "fingers_s_1",
+        "fingers_w_0",
+        "fingers_w_1"
+      ],
+      "completed_reference": {
+        "salmon": "../review/references/salmon/mask_15.png",
+        "turquoise": "../review/references/turquoise/mask_15.png"
+      },
+      "references_required_at_runtime": false
+    }
+  ],
+  "rotation_convention": {
+    "origin": "top-left",
+    "x": "right",
+    "y": "down",
+    "positive": "clockwise",
+    "mask_quarter_turn": "((mask<<1)&15)|(mask>>3)",
+    "sprite_rotation": "about fixed pivot; rotate artwork and growth mask together",
+    "core": "Preserve core orientation once created; use the supplied directional components to add connections."
+  },
+  "normalized_anchors": {
+    "center": [
+      0.5,
+      0.5
+    ],
+    "n": [
+      0.5,
+      0
+    ],
+    "e": [
+      1,
+      0.5
+    ],
+    "s": [
+      0.5,
+      1
+    ],
+    "w": [
+      0,
+      0.5
+    ]
+  },
+  "ground_selection": {
+    "algorithm": "h=((x*73856093) XOR (y*19349663) XOR 1409) masked to 32 bits; component=ground_components[h%6]; rotation_quarters=(h>>8)%4",
+    "depends_only_on_board_coordinates": true,
+    "piece_rotation_changes_ground": false
+  },
+  "schema_version": "2.0.0",
+  "source_artwork_creator": "OpenAI image generation, directed and approved by the user; technical assembly by Codex",
+  "runtime_paths_relative_to": "runtime/theme.json containing directory",
+  "ordinary_center_rule": "Use the ordinary core at the existing starting occupied cell; preserve project-owned logical color assignment."
+}

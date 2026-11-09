@@ -1,0 +1,3275 @@
+[
+  {
+    "id": "filled_4x2",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "expected_colony_count": 3,
+    "expected_anemone_count": 2,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "filled_3x3",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "expected_colony_count": 4,
+    "expected_anemone_count": 4,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "center_cell_units": [
+          2.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          2.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phone_9x9",
+    "board_size": 9,
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        0,
+        6,
+        "salmon"
+      ],
+      [
+        0,
+        7,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        5,
+        "salmon"
+      ],
+      [
+        1,
+        6,
+        "salmon"
+      ],
+      [
+        1,
+        7,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "turquoise"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        1,
+        "salmon"
+      ],
+      [
+        4,
+        2,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        4,
+        "salmon"
+      ],
+      [
+        5,
+        4,
+        "turquoise"
+      ],
+      [
+        5,
+        5,
+        "turquoise"
+      ],
+      [
+        5,
+        6,
+        "turquoise"
+      ],
+      [
+        5,
+        7,
+        "salmon"
+      ],
+      [
+        6,
+        6,
+        "turquoise"
+      ],
+      [
+        6,
+        7,
+        "turquoise"
+      ],
+      [
+        6,
+        8,
+        "turquoise"
+      ],
+      [
+        7,
+        6,
+        "turquoise"
+      ],
+      [
+        7,
+        7,
+        "turquoise"
+      ],
+      [
+        7,
+        8,
+        "turquoise"
+      ],
+      [
+        8,
+        6,
+        "turquoise"
+      ],
+      [
+        8,
+        7,
+        "turquoise"
+      ],
+      [
+        8,
+        8,
+        "turquoise"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        6,
+        "salmon"
+      ],
+      [
+        6,
+        6,
+        "turquoise"
+      ],
+      [
+        7,
+        6,
+        "turquoise"
+      ],
+      [
+        6,
+        7,
+        "turquoise"
+      ],
+      [
+        7,
+        7,
+        "turquoise"
+      ]
+    ],
+    "expected_colony_count": 9,
+    "expected_anemone_count": 8,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            0,
+            1,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            6,
+            6,
+            "turquoise"
+          ],
+          [
+            7,
+            6,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            6,
+            6,
+            "turquoise"
+          ],
+          [
+            6,
+            7,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            7,
+            6,
+            "turquoise"
+          ],
+          [
+            7,
+            7,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            6,
+            7,
+            "turquoise"
+          ],
+          [
+            7,
+            7,
+            "turquoise"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phone_11x11",
+    "board_size": 11,
+    "before_cells": [],
+    "after_cells": [
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        3,
+        "salmon"
+      ],
+      [
+        1,
+        7,
+        "salmon"
+      ],
+      [
+        1,
+        8,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        6,
+        "salmon"
+      ],
+      [
+        2,
+        7,
+        "salmon"
+      ],
+      [
+        2,
+        8,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        5,
+        "salmon"
+      ],
+      [
+        4,
+        2,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "turquoise"
+      ],
+      [
+        4,
+        5,
+        "salmon"
+      ],
+      [
+        5,
+        2,
+        "salmon"
+      ],
+      [
+        5,
+        3,
+        "salmon"
+      ],
+      [
+        5,
+        4,
+        "salmon"
+      ],
+      [
+        5,
+        5,
+        "salmon"
+      ],
+      [
+        6,
+        5,
+        "turquoise"
+      ],
+      [
+        6,
+        6,
+        "turquoise"
+      ],
+      [
+        6,
+        7,
+        "turquoise"
+      ],
+      [
+        6,
+        8,
+        "salmon"
+      ],
+      [
+        7,
+        7,
+        "turquoise"
+      ],
+      [
+        7,
+        8,
+        "turquoise"
+      ],
+      [
+        7,
+        9,
+        "turquoise"
+      ],
+      [
+        8,
+        7,
+        "turquoise"
+      ],
+      [
+        8,
+        8,
+        "turquoise"
+      ],
+      [
+        8,
+        9,
+        "turquoise"
+      ],
+      [
+        9,
+        7,
+        "turquoise"
+      ],
+      [
+        9,
+        8,
+        "turquoise"
+      ],
+      [
+        9,
+        9,
+        "turquoise"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        7,
+        "salmon"
+      ],
+      [
+        7,
+        7,
+        "turquoise"
+      ],
+      [
+        8,
+        7,
+        "turquoise"
+      ],
+      [
+        7,
+        8,
+        "turquoise"
+      ],
+      [
+        8,
+        8,
+        "turquoise"
+      ]
+    ],
+    "expected_colony_count": 9,
+    "expected_anemone_count": 8,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            1,
+            1,
+            "salmon"
+          ],
+          [
+            2,
+            1,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            1,
+            "salmon"
+          ],
+          [
+            1,
+            2,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            2,
+            1,
+            "salmon"
+          ],
+          [
+            2,
+            2,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            2,
+            "salmon"
+          ],
+          [
+            2,
+            2,
+            "salmon"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            7,
+            7,
+            "turquoise"
+          ],
+          [
+            8,
+            7,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            7,
+            7,
+            "turquoise"
+          ],
+          [
+            7,
+            8,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            8,
+            7,
+            "turquoise"
+          ],
+          [
+            8,
+            8,
+            "turquoise"
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            7,
+            8,
+            "turquoise"
+          ],
+          [
+            8,
+            8,
+            "turquoise"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "growth_1",
+    "title": "Continuous growth through a bend",
+    "before_cells": [
+      [
+        1,
+        4,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        1,
+        4,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "growth_2",
+    "title": "A stable junction gains a branch",
+    "before_cells": [
+      [
+        1,
+        4,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        1,
+        4,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        5,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "growth_3",
+    "title": "All isolated-piece cells bud together",
+    "before_cells": [],
+    "after_cells": [
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "growth_4",
+    "title": "A completed circle develops its colony",
+    "before_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        2,
+        3
+      ]
+    ],
+    "expected_colony_count": 1,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "growth_5",
+    "title": "An immediate colony join grows its anemone",
+    "before_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        4,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 1,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "growth_6",
+    "title": "3\u00d73 assembly: four colonies, four anemones",
+    "before_cells": [
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        2,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        4,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        2,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        4,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "expected_colony_count": 4,
+    "expected_anemone_count": 4,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      },
+      {
+        "origins": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isolated",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "endpoint",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "straight",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "corner",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "t_junction",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "cross",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        4,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "same_color_side",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "different_color_side",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        3,
+        "turquoise"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "corner_only_cells",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        3,
+        3,
+        "salmon"
+      ],
+      [
+        4,
+        4,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "overlap_h",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 1,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "overlap_v",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 1,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            0,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          1.5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "diagonal_overlapping",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "corner_only_colonies",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "distant_colonies",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ],
+      [
+        4,
+        0,
+        "salmon"
+      ],
+      [
+        4,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "opposite_color_colonies",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "turquoise"
+      ],
+      [
+        2,
+        1,
+        "turquoise"
+      ],
+      [
+        3,
+        0,
+        "turquoise"
+      ],
+      [
+        3,
+        1,
+        "turquoise"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "turquoise"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "dense_4x2",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 3,
+    "expected_anemone_count": 2,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dense_2x4",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        0,
+        3,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 3,
+    "expected_anemone_count": 2,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            0,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1,
+            "salmon"
+          ],
+          [
+            0,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          2.5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dense_3x3",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 4,
+    "expected_anemone_count": 4,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            0,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          2.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dense_4x4",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        0,
+        3,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        3,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        3,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        2,
+        "salmon"
+      ],
+      [
+        3,
+        3,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        0,
+        2,
+        "salmon"
+      ],
+      [
+        1,
+        2,
+        "salmon"
+      ],
+      [
+        2,
+        2,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 9,
+    "expected_anemone_count": 12,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            0,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            2,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          3.0,
+          1.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1,
+            "salmon"
+          ],
+          [
+            1,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          2.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            1,
+            "salmon"
+          ],
+          [
+            0,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.0,
+          2.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            1,
+            "salmon"
+          ],
+          [
+            2,
+            1,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          2.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            1,
+            "salmon"
+          ],
+          [
+            1,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.0,
+          2.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            2,
+            1,
+            "salmon"
+          ],
+          [
+            2,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          3.0,
+          2.5
+        ]
+      },
+      {
+        "origins": [
+          [
+            0,
+            2,
+            "salmon"
+          ],
+          [
+            1,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          3.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            2,
+            "salmon"
+          ],
+          [
+            2,
+            2,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          3.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "remove_support",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 2,
+    "expected_anemone_count": 1,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "undo_restoration",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 3,
+    "expected_anemone_count": 2,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      }
+    ]
+  },
+  {
+    "id": "border_completion",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 1,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "reset",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        4,
+        4,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [],
+    "expected_colony_count": 0,
+    "expected_anemone_count": 0,
+    "expected_joins": []
+  },
+  {
+    "id": "theme_switch_same_logic",
+    "fixture_scope": "Renderer state transition, not a complete legal move history.",
+    "before_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "after_cells": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        0,
+        1,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        1,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        1,
+        "salmon"
+      ],
+      [
+        3,
+        0,
+        "salmon"
+      ],
+      [
+        3,
+        1,
+        "salmon"
+      ]
+    ],
+    "expected_colonies": [
+      [
+        0,
+        0,
+        "salmon"
+      ],
+      [
+        1,
+        0,
+        "salmon"
+      ],
+      [
+        2,
+        0,
+        "salmon"
+      ]
+    ],
+    "expected_colony_count": 3,
+    "expected_anemone_count": 2,
+    "expected_joins": [
+      {
+        "origins": [
+          [
+            0,
+            0,
+            "salmon"
+          ],
+          [
+            1,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          1.5,
+          1.0
+        ]
+      },
+      {
+        "origins": [
+          [
+            1,
+            0,
+            "salmon"
+          ],
+          [
+            2,
+            0,
+            "salmon"
+          ]
+        ],
+        "center_cell_units": [
+          2.5,
+          1.0
+        ]
+      }
+    ]
+  }
+]

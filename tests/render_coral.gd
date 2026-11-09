@@ -17,7 +17,7 @@ func _run() -> void:
 	for y in range(9):
 		for x in range(9):
 			board[y][x] = int(rows[y][x])
-	# One final square closes two neighboring 2x2 colonies and their reef shelf.
+	# One final square closes two neighboring 2x2 colonies and their anemone.
 	board[2][6] = 0
 	scene.game.board = board
 	scene.game.queue[scene.game.index] = "Dot"
@@ -54,13 +54,32 @@ func _run() -> void:
 	var preserved: Dictionary = scene.board_view.coral_visuals.ordinals.duplicate()
 	scene._undo()
 	if scene.board_view.pattern.unions.size() != 3:
-		push_error("Undo failed to reconcile coral shelves")
+		push_error("Undo failed to reconcile coral anemones")
 		quit(1)
 		return
 	for name: String in DirAccess.open(scene.gallery.directory).get_files():
 		DirAccess.remove_absolute(scene.gallery.directory.path_join(name))
 	DirAccess.remove_absolute(scene.gallery.directory)
-	print("Coral shader, growth, gallery, and undo rendered successfully; saved order entries: ", preserved.size())
+	var fixtures: Array = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/coral_redesign_scenarios.json"))
+	for size_choice in [9, 11]:
+		var fixture: Dictionary = fixtures.filter(func(value: Dictionary): return value.id == "phone_%dx%d" % [size_choice, size_choice])[0]
+		scene._ask_reset(size_choice)
+		var review_board: Array = Rules.empty_board(size_choice)
+		for cell: Array in fixture.after_cells:
+			review_board[int(cell[1])][int(cell[0])] = 1 if cell[2] == "salmon" else 2
+		scene.game.board = review_board
+		scene.board_view.show_settled(review_board)
+		scene.game._refresh_over()
+		scene._refresh()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://build/coral-redesign-%dx%d.png" % [size_choice, size_choice])
+		if scene.board_view.pattern.colonies.size() != 9 or scene.board_view.pattern.unions.size() != 8:
+			push_error("Supplied phone review fixture failed")
+			quit(1)
+			return
+	print("Coral v2 shader, growth, gallery, undo, and 9x9/11x11 supplied reviews rendered successfully; saved order entries: ", preserved.size())
+
 	scene.queue_free()
 	await create_timer(0.12).timeout
 	quit()

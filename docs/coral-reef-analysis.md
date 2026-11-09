@@ -1,43 +1,43 @@
-# Coral Reef handoff assessment and integration
+# Coral Reef redesign v2 — implementation assessment
 
-Source: `Coral_Reef_Handoff_01.zip`, SHA-256 `deaec0f390d3b83c69453c3525b5826aaa20340c84585051b10de22c009b101c`.
+Current source: `Coral_Reef_Redesign_01.zip`, SHA-256 `16062dceea0d2a5138393cad894407ec24987c2d2a6fc6f7f30ad22d4a62325b`. This supersedes the original reef runtime assets and its broad fusion policy. The earlier assessment and original artwork remain available in Git history and previously saved gallery PNGs.
 
-## What was supplied and checked
+## Verified package
 
-The archive contains 21 component types in two color variants (42 transparent PNGs), 21 grayscale growth fields, a reveal shader, a consolidated manifest, reference assemblies, editable OpenRaster masters, review images/video, and artwork-generation tools. Cells use 256×256 source pixels; colonies use 512×512; joining shelves use larger native canvases. Salmon and turquoise share the same silhouette.
+The single current manifest, `runtime/theme.json`, describes 32 independently growing component types, 64 variant PNGs, 32 masks, and six opaque ground textures. Source artwork, layered masters, reviews, and optional tools are kept out of the APK. No uploaded build scripts were executed and no PNG artwork was regenerated, stretched, or recolored.
 
-Independent inspection verified all 167 listed file checksums, every runtime component's dimensions and mask alignment, matching alpha between color variants, and all 32 directional reference assemblies. `coral-reef-audit.json` records the results and hashes of the unmodified runtime files. The supplied validation reports are evidence from the handoff, not substitutes for these checks or Godot runtime tests. Uploaded Python build tools were not executed and production artwork was not regenerated or recolored.
+Independent checks verified all 209 supplied checksums, all component dimensions and painted alpha bounds, identical alpha geometry between reciprocal palettes, identical crown fields across eight regions, and all 1,152 facing-edge combinations of the 24 oriented ground variants. `coral-reef-audit.json` records the results and runtime hashes. All 34 supplied logical scenario fixtures are copied into the test suite and checked against derived colonies, joins, and join positions.
 
-The separate artwork/masks are appropriate animation input. The full topology references are useful acceptance images, not a reason to swap a finished tile texture over a growing one. The layered ORA files remain useful for future artist edits, but should not ship in the Android application.
+The supplied guide is asset/integration guidance, not authority over unrelated game behavior. This task authorizes the redesigned appearance and its explicit immediate-neighbor join rule. Placement legality, logical color IDs, symmetry, controls, helper budgets, and the existing Place-until-growth-finishes gate remain project-owned. The synchronous CPU schedule needs no deferred callbacks that could revive invalid artwork after a helper action.
 
-## Authority and project decisions
+## Appearance and geometry
 
-The user's request is to inspect, improve the handoff process, and integrate a third visual theme. Statements in `CODEX_INTEGRATION.md` and the manifest are supplied implementation proposals. They do not override established game rules.
+The redesigned line is already 77 source pixels wide in a 256px cell. Ordinary components now render at native 1:1 scale. The earlier 3× line scaling, enlarged buds, and relocated finger attachments are removed. Ground appears immediately on occupied cells using the supplied fixed coordinate hash for variant and quarter-turn rotation. Polyomino rotation, color selection, undo, and redraw do not reroll that floor. Empty squares and the rest of the screen are white. The old pale seafoam floor, neutral raised tile faces, and generated terrace shadows are omitted for this theme; the supplied ground and illustrated material relief provide its appearance.
 
-In particular, the handoff proposes accepting further moves while settling an interrupted animation. This project retains its established **Place gate until all growth finishes**. Logical color IDs, placement legality, symmetry, three-use helpers, and touch controls remain owned by the game. The source's colony/union rules are decorative events derived from those cells, not new placement permissions.
+Body, folds, fingers, foot, oral disc, and crown use their supplied geodesic masks. Artwork and masks rotate together. Shader sampling is linear/clamped with lossless straight-alpha imports and **mipmaps disabled**, matching the package's tested ground-edge contract.
 
-The manifest is used for artwork paths, component dimensions, and union-layout definitions. The supplied two-front shader is used for progressive revelation. The adapter schedules 0.20-second cell traversal, radial buds, attached details, perimeter-triggered colony folds, and the third-level shelf. No fourth-level structure is generated.
+## Fusion correction
 
-## Result
+Every completely occupied same-color 2×2 creates a colony, including overlapping ones. Only origins differing by exactly (±1,0) or (0,±1) get an anemone. Each sorted pair is counted once. Diagonal origins, colonies across an intervening colony, footprint-corner contact, and opposite colors do not join. The old union shelf assets and five broad offset layouts are removed from runtime.
 
-Settings cycles Vines → Labyrinth → Coral Reef. Coral uses salmon/turquoise controls and a pale seafoam floor; the surrounding screen stays white. Same-color side contacts create arms; diagonal or opposite-color contacts do not. Independent components awaken all buds simultaneously. Completed layers persist while additions grow. Every qualifying 2×2 grows a colony, including overlapping ones; eligible same-color pairs add one correctly rotated shelf per pair.
+- Filled 4×2 or 2×4: three colonies and two anemones.
+- Filled 3×3: four colonies and four anemones.
+- Filled 4×4: nine colonies and twelve anemones.
 
-Undo and Erase remove obsolete components and expose underlying coral, retaining valid sprite identities and feature creation order. Reset clears both pending work and ordering. Gallery captures copy the same ordering and identify Coral Reef separately from the two existing themes. Cold reconstruction uses canonical row/column order. Geometry used by symmetry remains the logical colored grid; the supplied illustrated folds and shading are not themselves guaranteed to be reflection-invariant.
+A horizontal pair uses the native vertical 256×512 anemone at the midpoint between colony centers; a vertical pair rotates all its layers by 90°. Underlying colony and ordinary coral artwork remains present.
 
-Only runtime PNGs, masks, shader, and manifest are copied into `art/themes/coral_reef/`. Artwork imports use lossless compression, straight alpha, and mipmaps; masks use lossless linear scalar sampling without mipmaps. Completed components shed their reveal materials; active components each have a private material and a shared CPU clock. The manifest is explicitly included in Android exports.
+## Growth and lifecycle
 
-## Proportion correction from the original artwork reference
+Matching outside sources propagate at 0.20 seconds per cell through simultaneous fronts. Independent new pieces awaken every bud at once. Fingers and junction fillets use the actual attachment positions and dependencies in the new manifest.
 
-The delivered PNGs place a 24px-wide main stem inside a 256px cell canvas. The original artist reference shows a substantially broader ordinary coral line, comparable to the line forming the enclosing colony rim. The renderer therefore expands arms **3× across the stem**, keeping their longitudinal dimensions and anchors fixed. Buds and side branches use **2.2×** uniform scale. Side branches are re-anchored at u=0.18/0.40 of each half-arm, with their reveal timing following those actual attachment positions; this preserves rounded tips and keeps them inside their cells. The supplied colony fringe, bloom folds, finish, and joining shelves retain their original scale. Masks inherit the same sprite transforms as their artwork, so reveal alignment remains exact. The source PNGs are unchanged.
+A colony body starts after its eight perimeter half-arms finish. Folds and fingers follow body-attachment arrival plus their declared delays. Once both supporting colonies finish, their anemone foot grows; the oral disc begins after the foot reaches its center, and all eight crown regions begin together when the disc finishes. Those regions share a mask and schedule so they reveal a continuous crown rather than independent wedges. The Place gate covers the final crown's soft reveal tail.
 
-## Future handoff improvements
-
-Use the structure and example manifest in [theme-handoff/README.md](theme-handoff/README.md). The main improvements are a single current contract, explicit geometry and lifecycle examples, and separation of runtime content, editable sources, reviews, and tooling. The original archive mixes an older artwork README with a newer authoritative integration guide and several large overlapping catalogs. Its narrative contains repeated timing and gameplay directions that can drift apart. Keep normative asset data in one versioned manifest; label illustrative engine code and gameplay suggestions as optional notes.
-
-Include the intended floor palette, tested phone-scale examples, usage/provenance information, and a resource budget with future themes. This package supplies source-generation prompts but no explicit rights/license file or standalone floor design. The pale seafoam floor is an integration choice.
+Stable keyed sprites and feature containers preserve surviving artwork and order. Undo and Erase remove only invalid target components and settle survivors; Reset clears all active work. Gallery captures copy the same feature order and record visual version `2.0`, so saving the same logical board with redesigned artwork does not return an old v1 image. Existing gallery images are kept.
 
 ## Validation and limits
 
-`tests/test_coral.gd` covers component presence, source routing, multiple fronts, simultaneous buds, detail timing, colony layering, all oriented union arrangements, invalid contacts, third-theme cycling, erasure/undo reconciliation, reset, gallery identity, layout, and the Place gate. `tests/render_coral.gd` exercises the actual shader and real Place/gallery flows on the native renderer.
+`tests/test_coral.gd` checks all supplied fixtures, forbidden joins, declared timings and dependencies, fixed ground selection, 1:1 artwork geometry, in-cell coverage, helper cancellation, theme behavior, versioned gallery identity, and screen fitting. `tests/render_coral.gd` exercises the real shader, Place-driven growth, gallery capture, undo, and both supplied phone-board review fixtures on the native renderer. Existing rules, UI, audio, gallery, vine, and labyrinth runners remain regression checks.
 
-A worst-case same-color 11×11 board derives **2,531 components, 100 colonies, and 790 shelves**. Geometry is not arbitrarily truncated to hide this cost. Finished textures are cached and only active materials receive clock updates, but mobile draw calls, overlap, frame time, and memory still require testing on an Android device. Desktop rendering and a signed APK are not an Android performance claim. No new coral-specific audio was supplied; the existing growth sounds remain in use.
+The worst-case same-color 11×11 derives **4,262 components, 100 colonies, and 180 anemones**. There are fewer joins than v1, but each anemone has ten independently layered components. Only active components receive private shader/clock updates; completed sprites use cached textures. Actual Android frame time and memory still require testing on a device. Desktop capture and a signed APK do not establish dense-board mobile performance.
+
+Provenance and use terms supplied with the redesign are preserved in `coral-reef-rights.md`. The future-theme handoff template remains under `docs/theme-handoff/`.

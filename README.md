@@ -29,17 +29,21 @@ The same side-connected growth schedule extends hedges between matching-color sq
 
 Paths are visual sandy spaces; there is no player character or route-solving rule. The theme changes the drawing, not the puzzle's symmetry or placement rules. Growth whispers and bell accents accompany hedges and new trees.
 
-## Coral Reef theme
+## Coral Reef theme — redesign v2
 
-Select **Coral Reef** with the Garden entry in Settings. This third theme uses the supplied transparent salmon and turquoise artwork and grayscale spatial growth fields. Ordinary stems are drawn three times broader across their length, with uniformly enlarged 2.2× buds and side branches, to match the original artwork proportions and the coral-line rim of a colony. Stem center/edge anchors and length stay fixed; side-branch attachments move inward to keep their rounded shapes inside their squares; the supplied bloom, fringe, and shelf artwork retain their scale. Source buds, half-arms, and attached details animate independently; completed coral remains visible while new branches appear. Same-color 2×2 loops grow layered colonies. Overlapping and edge-adjacent colonies form correctly rotated reef shelves; opposite colors and diagonal-only cell contacts never connect. Independent pieces awaken their buds together, and multiple outside sources grow simultaneous fronts.
+Select **Coral Reef** with the Garden entry in Settings. The third theme uses the supplied redesigned salmon/turquoise coral with reciprocal accent fingers and a warm anemone disc. All artwork renders at its supplied scale: the ordinary body is 77px wide on a 256px cell canvas. The earlier scaling workaround is removed.
 
-Place remains locked through all branch, colony, finish, and shelf stages. Undo/Erase reconcile valid layers and preserve established ordering; reset clears active work. Gallery captures use the same artwork ordering and save the theme ID. The pale seafoam floor is an integration choice; the rest of the screen stays white. Existing sounds are reused.
+Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares and the surrounding screen stay white. The theme uses its supplied material relief, without the older neutral raised terrace and generated shadows.
 
-See [the package assessment](docs/coral-reef-analysis.md), [independent audit](docs/coral-reef-audit.json), and [future-theme handoff template](docs/theme-handoff/README.md). Runtime assets are unmodified from the uploaded package; source masters and review videos do not ship in the APK. On-device performance remains unverified, especially the worst-case 11×11 reef with 2,531 components.
+Same-color 2×2 loops develop body/fold/finger colony layers. **Only immediate horizontal or vertical colony neighbors join**, with one anemone per pair. A filled 4×2 area has three colonies/two anemones; a filled 3×3 has four colonies/four anemones. Diagonal and longer-distance joins are removed. The foot, oral disc, and continuous curved crown reveal in stages through the supplied geodesic fields; the crown's eight regions share one clock.
+
+Place remains locked until the full sequence resolves. Undo/Erase preserve valid underlying coral and remove invalid features; reset cancels pending work. Gallery captures copy painter order and record reef version `2.0`, preserving older saved images while allowing the redesigned board to be saved separately.
+
+See [the assessment](docs/coral-reef-analysis.md), [independent audit](docs/coral-reef-audit.json), and [supplied provenance](docs/coral-reef-rights.md). Runtime artwork, masks, manifest, and shader are copied unchanged from `Coral_Reef_Redesign_01.zip`. Source masters and review videos do not ship in the APK. Artwork and masks use lossless linear/clamped sampling without mipmaps, matching the validated ground seams. Device performance remains unverified, especially the 4,262-component worst-case 11×11 reef.
 
 ## Local gallery
 
-Symmetric designs are stored as clean 900×900 PNG artwork and board/palette/theme JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette/theme again does not duplicate it. The empty board cannot be saved. This is an app-private gallery and needs no Android photo/storage or Internet permission. It does not export to the system Photos app or resume a saved game.
+Symmetric designs are stored as clean 900×900 PNG artwork and board/palette/theme/version JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette/theme/version again does not duplicate it. The empty board cannot be saved. This is an app-private gallery and needs no Android photo/storage or Internet permission. It does not export to the system Photos app or resume a saved game.
 
 ## Symmetry rule
 
@@ -126,7 +130,7 @@ The runners cover generation, symmetry orbits, placement, independent helper bud
 Run `tests/test_gallery.gd` on a graphical display to additionally test real clean artwork capture, repeated-save deduplication, gallery navigation, and saving a 100% filled board. It writes `build/helpers-preview.png`, `build/gallery-artwork-preview.png`, and `build/gallery-browser-preview.png` for visual review. Tests use isolated temporary gallery directories and remove only their own records.
 Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-driven hedge/tree/bench sequence to `build/labyrinth-frames/`, `build/labyrinth-preview.png`, and clean gallery artwork at `build/labyrinth-artwork.png`.
 
-Run `tests/render_coral.gd` on a graphical display for the real supplied shader, Place-driven colony/shelf growth, clean gallery capture, and undo reconciliation. It writes `build/coral-frames/`, `build/coral-preview.png`, and `build/coral-artwork.png`.
+Run `tests/render_coral.gd` on a graphical display for the real supplied shader, Place-driven colony/anemone growth, clean gallery capture, and undo reconciliation. It writes `build/coral-frames/`, `build/coral-preview.png`, `build/coral-artwork.png`, and `build/coral-redesign-9x9.png`/`build/coral-redesign-11x11.png`.
 
 ## Structure
 

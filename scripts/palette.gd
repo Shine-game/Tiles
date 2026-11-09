@@ -22,6 +22,9 @@ const SAND := Color("efe1c3")
 static func theme_id() -> String:
 	return "coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines")
 
+static func theme_version() -> String:
+	return "2.0" if coral_reef else ""
+
 static func theme_name() -> String:
 	return {"vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}[theme_id()]
 
@@ -56,7 +59,7 @@ static func blossom(color: int) -> Color:
 
 static func floor_color() -> Color:
 	if coral_reef:
-		return Color("e9f2ef")
+		return Color.WHITE
 	return SAND if labyrinth else PAIRS[selected_index].floor
 
 static func dark() -> bool:
@@ -79,7 +82,7 @@ static func grid() -> Color:
 
 static func garden() -> Color:
 	if coral_reef:
-		return Color("f0f6f0")
+		return Color.WHITE
 	if labyrinth:
 		return Color("f6e9ce")
 	# One continuous terrace, including boundaries between the two pigments.

@@ -102,6 +102,11 @@ func _run() -> void:
 	check(gallery.entries().any(func(record: Dictionary): return record.id == maze_record.id and record.theme == "labyrinth"), "gallery persists visual theme metadata")
 	check(gallery.save_design(board, 0, image, "labyrinth").id == maze_record.id and gallery.entries().size() == previous_count + 1, "labyrinth saves also deduplicate")
 	check(Gallery.fingerprint(board, 0) == JSON.stringify([board, 0]).sha256_text(), "legacy vine save identity remains compatible")
+	var pre_redesign: int = gallery.entries().size()
+	var redesigned: Dictionary = gallery.save_design(board, 0, image, "coral_reef", "2.0")
+	check(redesigned.ok and gallery.entries().size() == pre_redesign + 1, "redesigned reef saves separately from previous artwork")
+	check(gallery.entries().any(func(record: Dictionary): return record.id == redesigned.id and record.theme_version == "2.0"), "gallery records visual version")
+	check(gallery.save_design(board, 0, image, "coral_reef", "2.0").id == redesigned.id and gallery.entries().size() == pre_redesign + 1, "redesigned reef deduplicates its own version")
 	# Delete only this runner's isolated test directory.
 	var folder := DirAccess.open(gallery.directory)
 	for name: String in folder.get_files():

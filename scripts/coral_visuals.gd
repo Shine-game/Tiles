@@ -2,12 +2,7 @@ class_name CoralVisuals
 extends Node2D
 
 const Model = preload("res://scripts/coral_growth.gd")
-const REVEAL = preload("res://art/themes/coral_reef/growth_reveal.gdshader")
-# The 256px canvas is an anchor grid, not the painted line width. Match
-# ordinary coral to the substantial line forming the supplied colony's rim.
-const LINE_BREADTH := 3.0
-const BUD_SCALE := 2.2
-const DETAIL_SCALE := 2.2
+const REVEAL = preload("res://art/themes/coral_reef/shaders/growth_reveal.gdshader")
 static var textures: Dictionary = {}
 var registry: Dictionary = {}
 var groups: Dictionary = {}
@@ -34,13 +29,13 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 	var identity: String
 	if event.id.begins_with("colony_"):
 		identity = Model.key("colony", event.color, Vector2i(event.center) - Vector2i.ONE)
-	elif event.id.begins_with("union_"):
-		identity = event.key
+	elif event.id.begins_with("anemone_"):
+		identity = event.feature
 	else:
 		identity = "bucket/%d" % event.bucket
 	if not groups.has(identity):
 		var node := Node2D.new()
-		node.z_index = 4 if event.id.begins_with("colony_") else int(event.bucket / 10)
+		node.z_index = 4 if event.id.begins_with("colony_") else (7 if event.id.begins_with("anemone_") else (2 if event.id.begins_with("junction_") else (3 if event.id == "core" else int(event.bucket / 10))))
 		add_child(node)
 		groups[identity] = node
 		if not ordinals.has(identity) or (not restored and not event.old):
@@ -68,27 +63,12 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			var variant: String = "salmon" if event.color == 1 else "turquoise"
 			sprite = Sprite2D.new()
 			sprite.texture = texture(meta.artwork[variant])
-			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			sprite.position = event.center * 256
 			sprite.rotation = event.rotation * PI / 2
 			# Child insertion order keeps each complete colony together.
 			_group(event, settled).add_child(sprite)
 			registry[identity] = sprite
-		# Stem anchors stay fixed. Enlarge sprigs uniformly about their attachment
-		# instead of flattening their round tips with the stem's transverse scale.
-		if event.id == "core":
-			sprite.scale = Vector2.ONE * BUD_SCALE
-		elif event.id.begins_with("arm_"):
-			var direction: String = event.id.split("_")[1]
-			sprite.scale = Vector2(LINE_BREADTH, 1) if direction in ["n", "s"] else Vector2(1, LINE_BREADTH)
-		elif event.id.begins_with("detail_"):
-			var parts: PackedStringArray = event.id.split("_")
-			var direction_index: int = Model.DIR_NAMES.find(parts[1])
-			var attachment: Array = Model.specification().components[event.id].start
-			var source := Vector2(attachment[0], attachment[1]) - Vector2(128, 128)
-			var target := Vector2(Model.OFFSETS[direction_index]) * 128 * float(Model.DETAIL_ATTACHMENTS[int(parts[2])])
-			sprite.scale = Vector2.ONE * DETAIL_SCALE
-			sprite.position = event.center * 256 + target - source * DETAIL_SCALE
 		if settled or event.old:
 			sprite.material = null
 		else:

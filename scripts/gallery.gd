@@ -30,14 +30,16 @@ func entries() -> Array:
 	result.sort_custom(func(a: Dictionary, b: Dictionary): return str(a.id) > str(b.id))
 	return result
 
-static func fingerprint(board: Array, palette_index: int, theme: String = "vines") -> String:
+static func fingerprint(board: Array, palette_index: int, theme: String = "vines", theme_version: String = "") -> String:
+	if not theme_version.is_empty():
+		return JSON.stringify([board, palette_index, theme, theme_version]).sha256_text()
 	# Preserve legacy vine fingerprints so old saves still deduplicate.
 	return JSON.stringify([board, palette_index] if theme == "vines" else [board, palette_index, theme]).sha256_text()
 
-func save_design(board: Array, palette_index: int, image: Image, theme: String = "vines") -> Dictionary:
+func save_design(board: Array, palette_index: int, image: Image, theme: String = "vines", theme_version: String = "") -> Dictionary:
 	if image == null or image.is_empty():
 		return {"ok": false}
-	var design_key := fingerprint(board, palette_index, theme)
+	var design_key := fingerprint(board, palette_index, theme, theme_version)
 	for record: Dictionary in entries():
 		if record.get("fingerprint", "") == design_key:
 			return {"ok": true, "id": record.id}
@@ -51,7 +53,7 @@ func save_design(board: Array, palette_index: int, image: Image, theme: String =
 	if file == null:
 		DirAccess.remove_absolute(path + ".png")
 		return {"ok": false}
-	file.store_string(JSON.stringify({"id": id, "fingerprint": design_key, "board": board, "palette": palette_index, "theme": theme}))
+	file.store_string(JSON.stringify({"id": id, "fingerprint": design_key, "board": board, "palette": palette_index, "theme": theme, "theme_version": theme_version}))
 	file.close()
 	return {"ok": true, "id": id}
 
