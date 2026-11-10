@@ -103,7 +103,7 @@ func _run() -> void:
 	scene._toggle_theme()
 	scene._toggle_theme()
 	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.0", "third theme is redesigned Coral Reef")
-	check(is_zero_approx(scene.board_view.surface_depth()) and scene.board_view.coral_visuals.position == scene.board_view._floor_point(Vector2.ZERO), "flat reef floor aligns exactly with placement grid")
+	check((scene.board_view.coral_visuals.position + Vector2(0, scene.board_view.surface_depth())).is_equal_approx(scene.board_view._floor_point(Vector2.ZERO)), "reef ground and coral share the elevated surface above the placement grid")
 	check(scene.game.moves == 0 and scene.game.undo_left == 3, "theme does not change gameplay or helper budgets")
 	scene.game.board = block
 	scene.board_view.show_settled(before)
@@ -129,11 +129,11 @@ func _run() -> void:
 	scene.cells = Rules.PIECES.Dot.cells
 	scene._preview()
 	check(scene.place_button.disabled, "Place remains disabled during growth")
-	var rim_point: Vector2 = scene.floating_piece.origin + Vector2(1, 1)
-	check(scene._start_drag(rim_point, 0), "flat reef hover can be grabbed at its upper rim")
+	var rim_point: Vector2 = scene.floating_piece.origin + Vector2(1, 1 - scene.board_view.surface_depth())
+	check(scene._start_drag(rim_point, 0), "raised reef hover can be grabbed at its upper rim")
 	scene._move_gesture(rim_point + Vector2(scene.board_view.pitch, 0))
 	scene._finish_gesture(rim_point + Vector2(scene.board_view.pitch, 0))
-	check(scene.selected == Vector2i(2, 2), "flat reef regrab preserves row and grabbed-cell offset")
+	check(scene.selected == Vector2i(2, 2), "raised reef regrab preserves row and grabbed-cell offset")
 	scene.board_view.advance_growth(scene.board_view.pattern.duration + 1)
 	check(not scene.board_view.growing and scene.board_view.coral_visuals.active.is_empty(), "all crown layers resolve and release updates")
 	var order: Dictionary = scene.board_view.coral_visuals.ordinals.duplicate()

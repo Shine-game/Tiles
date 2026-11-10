@@ -107,6 +107,11 @@ func _run() -> void:
 	check(redesigned.ok and gallery.entries().size() == pre_redesign + 1, "redesigned reef saves separately from previous artwork")
 	check(gallery.entries().any(func(record: Dictionary): return record.id == redesigned.id and record.theme_version == "2.0"), "gallery records visual version")
 	check(gallery.save_design(board, 0, image, "coral_reef", "2.0").id == redesigned.id and gallery.entries().size() == pre_redesign + 1, "redesigned reef deduplicates its own version")
+	var before_raised: int = gallery.entries().size()
+	var raised: Dictionary = gallery.save_design(board, 0, image, "coral_reef", "2.0", "raised24-v1")
+	check(raised.ok and gallery.entries().size() == before_raised + 1, "raised appearance saves separately from old flat artwork")
+	check(gallery.save_design(board, 0, image, "coral_reef", "2.0", "raised24-v1").id == raised.id, "raised appearance deduplicates repeated captures")
+	check(gallery.entries().any(func(record: Dictionary): return record.id == raised.id and record.get("surface_revision", "") == "raised24-v1"), "surface revision is persisted without changing art version")
 	# Delete only this runner's isolated test directory.
 	var folder := DirAccess.open(gallery.directory)
 	for name: String in folder.get_files():

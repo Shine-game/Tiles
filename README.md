@@ -21,6 +21,12 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - The Settings button opens a Vines/Labyrinth theme switch, five vine palette choices, the 9×9/11×11 size switch, Restart, and Gallery. Palette changes preserve play; changing size or restarting begins a new game with fresh helper budgets. Menus and gallery pages fit without scrolling.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
 
+## Raised occupied platform
+
+All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat white. A board-wide occupancy shader beneath the existing textures draws exposed lower sidewalls, a fine upper lip, and a narrow contact shadow. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
+
+Ground, wall, and shadow appear as soon as placement commits. Undo/Erase update the outline immediately; plant growth runs independently on the upper face. Coral keeps all six original rotating ground textures. The shader adds no background paper. Gallery captures include the platform and preserve older images separately. See [the platform implementation notes](docs/raised-platform.md).
+
 ## Labyrinth theme
 
 The **Garden** entry in Settings cycles **Vines → Labyrinth → Coral Reef → Vines**. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
@@ -33,7 +39,7 @@ Paths are visual sandy spaces; there is no player character or route-solving rul
 
 Select **Coral Reef** with the Garden entry in Settings. The third theme uses the supplied redesigned salmon/turquoise coral with reciprocal accent fingers and a warm anemone disc. All artwork renders at its supplied scale: the ordinary body is 77px wide on a 256px cell canvas. The earlier scaling workaround is removed.
 
-Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares and the surrounding screen stay white. The theme uses its supplied material relief, without the older neutral raised terrace and generated shadows.
+Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares and the surrounding screen stay white. The theme keeps its supplied material relief above the shared raised-platform shader; the earlier per-cell bevel/shadow renderer is removed.
 
 Same-color 2×2 loops develop body/fold/finger colony layers. **Only immediate horizontal or vertical colony neighbors join**, with one anemone per pair. A filled 4×2 area has three colonies/two anemones; a filled 3×3 has four colonies/four anemones. Diagonal and longer-distance joins are removed. The foot, oral disc, and continuous curved crown reveal in stages through the supplied geodesic fields; the crown's eight regions share one clock.
 
@@ -75,7 +81,7 @@ Placed cells keep their logical colors but lose their solid backgrounds. Curved 
 - Every occupied center has four delicate shoots with tiny buds/stars pointing up, down, left, and right. Unconnected directions extend farther with two pairs of larger leaves. They remain within the cell and do not create logical connections into empty or different-color neighbors.
 - Every completed same-color 2×2 loop opens an eight-petal flower at its common corner. The maximum petal reach is one-third of a cell. A stem and two pairs of leaves sprout from underneath to support the flower, within the four participating corner quarters. Petals and foliage use a reusable, procedurally generated watercolor texture with directional veins.
 - Horizontally/vertically neighboring flowers develop a connecting vine with popping stars. Four flowers in a 2×2 arrangement create a ring. Existing flowers and connections are preserved, with no locks or exclusive cell ownership.
-- The faint placement grid is drawn as individual cell-boundary segments. Same-color segments fade after growth crosses them; filled different-color neighbors also lose their shared line as their surfaces merge. This visual merge never connects different-color vines. Guides around empty cells and the outer edge stay visible; Back restores guides in newly cleared spaces.
+- The faint placement grid remains on empty white space. Ground and its outline replace guides adjacent to occupied cells immediately; shared filled edges never retain separation lines.
 - **Place remains disabled until centers, vines, flowers, and stars finish.** The next piece can still be dragged, flipped, rotated, and recolored meanwhile; its preview never participates in committed growth.
 - Back, board-size changes, and reset cancel pending animation and rebuild the restored board as a settled pattern. There are no delayed callbacks that can decorate an obsolete board.
 
@@ -89,7 +95,7 @@ Growth has a soft, original stereo foliage whisper. Each new flower produces a q
 
 `assets/audio/foliage.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
 
-The surrounding screen stays white in all palettes. The field sits directly below the header, and Place has twice the height of the other action buttons. Filled cells form a subtly tinted raised garden terrace, with exposed-edge bevels and shadows. Placed cells have square edges that merge without internal seams. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming and hovering pieces have thicker slabs with softly rounded corners, a matching colored face, darker underside, and soft shadow. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
+The surrounding screen stays white in all palettes. The field sits directly below the header, and Place has twice the height of the other action buttons. Filled cells form one raised surface with a board-wide edge shader. Placed cells have square edges that merge without internal seams. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming and hovering pieces have thicker slabs with softly rounded corners, a matching colored face, darker underside, and soft shadow. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
 
 `tests/test_sound_and_depth.gd` runs 29 checks for idle silence, growth whispers, bell timing, duplicate suppression, cancellation, audio fade races, raised surfaces, stable placement coordinates, and raised-rim dragging.
 
@@ -123,6 +129,7 @@ godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd
 godot --headless --path . --script tests/test_coral.gd
+godot --headless --path . --script tests/test_platform.gd
 ```
 
 The runners cover generation, symmetry orbits, placement, independent helper budgets, exact-piece Undo, non-refunding erasures, recovery from empty/finished gardens, routed touch and mouse gestures, committed symmetry indicators, the growth gate, audio, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display `tests/test_ui.gd` also writes `/tmp/tiles-godot.png`.
@@ -131,6 +138,8 @@ Run `tests/test_gallery.gd` on a graphical display to additionally test real cle
 Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-driven hedge/tree/bench sequence to `build/labyrinth-frames/`, `build/labyrinth-preview.png`, and clean gallery artwork at `build/labyrinth-artwork.png`.
 
 Run `tests/render_coral.gd` on a graphical display for the real supplied shader, Place-driven colony/anemone growth, clean gallery capture, and undo reconciliation. It writes `build/coral-frames/`, `build/coral-preview.png`, `build/coral-artwork.png`, and `build/coral-redesign-9x9.png`/`build/coral-redesign-11x11.png`.
+
+Run `tests/render_platform.gd` on a graphical display for shader assertions and all-theme stepped/hole previews.
 
 ## Structure
 
@@ -144,6 +153,7 @@ Run `tests/render_coral.gd` on a graphical display for the real supplied shader,
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
 - `scripts/growth_audio.gd`: synchronized foliage and flower sounds.
+- `scripts/occupied_platform.gd` and `shaders/occupied_platform.gdshader`: board-wide occupancy, raised outline, lip, and transparent contact shadow.
 - `scripts/tile_surface.gd`: shallow depth for draggable pieces.
 - `scripts/botanical_brush.gd`: a cached, tintable watercolor brush with root-to-tip leaf veins.
 - `scripts/palette.gd`: five pure color pairs, adaptive field/control colors, and dull gray invalid previews.

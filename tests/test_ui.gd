@@ -25,7 +25,7 @@ func drag(scene, point: Vector2) -> void:
 	root.push_input(event, true)
 
 func board_point(scene, cell: Vector2i) -> Vector2:
-	return scene.board_view.get_global_transform_with_canvas() * (scene.board_view.field.position + Vector2(8, 8) + (Vector2(cell) + Vector2(0.5, 0.5)) * scene.board_view.pitch)
+	return scene.board_view.get_global_transform_with_canvas() * scene.board_view._floor_point(Vector2(cell) + Vector2(0.5, 0.5))
 
 func source_point(scene, cell: Vector2i) -> Vector2:
 	var layout: Dictionary = scene.piece_view.geometry()

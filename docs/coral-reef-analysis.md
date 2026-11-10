@@ -34,6 +34,10 @@ A colony body starts after its eight perimeter half-arms finish. Folds and finge
 
 Stable keyed sprites and feature containers preserve surviving artwork and order. Undo and Erase remove only invalid target components and settle survivors; Reset clears all active work. Gallery captures copy the same feature order and record visual version `2.0`, so saving the same logical board with redesigned artwork does not return an old v1 image. Existing gallery images are kept.
 
+## Overall platform appearance update
+
+A later user-directed appearance update raises occupied ground by 24 source pixels per 256px cell across all themes. The source PNGs remain unchanged. A separate occupancy-driven shader supplies the sidewall, rim, and contact shadow below the coral ground. Empty areas remain white, and source grain/rotation remains untouched. This supersedes the flat occupied-floor presentation described above; see `raised-platform.md` for layering, clipping, and immediate helper updates.
+
 ## Validation and limits
 
 `tests/test_coral.gd` checks all supplied fixtures, forbidden joins, declared timings and dependencies, fixed ground selection, 1:1 artwork geometry, in-cell coverage, helper cancellation, theme behavior, versioned gallery identity, and screen fitting. `tests/render_coral.gd` exercises the real shader, Place-driven growth, gallery capture, undo, and both supplied phone-board review fixtures on the native renderer. Existing rules, UI, audio, gallery, vine, and labyrinth runners remain regression checks.

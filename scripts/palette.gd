@@ -87,3 +87,7 @@ static func garden() -> Color:
 		return Color("f6e9ce")
 	# One continuous terrace, including boundaries between the two pigments.
 	return floor_color().lightened(0.09) if dark() else floor_color().darkened(0.035)
+
+static func platform_color() -> Color:
+	# Ivory sampled from the shared reef ground family, independent of player color.
+	return Color("edd7ad") if coral_reef else garden()

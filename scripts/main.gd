@@ -3,6 +3,7 @@ extends Control
 const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Game = preload("res://scripts/game.gd")
+const Platform = preload("res://scripts/occupied_platform.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
 const FloatingPiece = preload("res://scripts/floating_piece.gd")
@@ -262,7 +263,7 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
 func _design_fingerprint() -> String:
-	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version())
+	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version(), Platform.SURFACE_REVISION)
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -283,14 +284,14 @@ func _preview() -> void:
 func _update_floating_position() -> void:
 	floating_piece.pitch = board_view.pitch
 	floating_piece.face_lift = board_view.surface_depth()
-	floating_piece.origin = board_view.get_global_transform_with_canvas() * (board_view.field.position + Vector2(8, 8) + Vector2(selected) * board_view.pitch)
+	floating_piece.origin = board_view.get_global_transform_with_canvas() * board_view._floor_point(Vector2(selected))
 	floating_piece.queue_redraw()
 
 func _drag_to(point: Vector2) -> void:
 	last_pointer = point
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
 	local += Vector2(0, board_view.surface_depth())
-	var relative: Vector2 = (local - board_view.field.position - Vector2(8, 8)) / board_view.pitch
+	var relative: Vector2 = (local - board_view._floor_point(Vector2.ZERO)) / board_view.pitch
 	selected = Vector2i(floori(relative.x), floori(relative.y)) - grabbed_cell
 	has_hover = true
 	_preview()
@@ -333,7 +334,7 @@ func _finish_gesture(point: Vector2) -> void:
 func _erase_cell_at(point: Vector2) -> Vector2i:
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
 	local += Vector2(0, board_view.surface_depth())
-	var relative: Vector2 = (local - board_view.field.position - Vector2(8, 8)) / board_view.pitch
+	var relative: Vector2 = (local - board_view._floor_point(Vector2.ZERO)) / board_view.pitch
 	return Vector2i(floori(relative.x), floori(relative.y))
 
 func _input(event: InputEvent) -> void:
@@ -627,7 +628,7 @@ func _save_design() -> void:
 	if board_view.coral_visuals != null and artwork.coral_visuals != null:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version)
+	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, Platform.SURFACE_REVISION)
 	viewport.queue_free()
 	saving = false
 	if result.ok:

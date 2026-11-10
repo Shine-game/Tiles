@@ -2,7 +2,7 @@ class_name TileSurface
 extends RefCounted
 
 static func depth(unit: float) -> float:
-	return clampf(unit * 0.095, 2.0, 7.0)
+	return unit * 24.0 / 256.0
 
 # A shallow colored slab for the incoming/hovering piece. Its logical face
 # keeps the original footprint; thickness and shadow never change placement.
