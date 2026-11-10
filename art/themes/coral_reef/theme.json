@@ -7163,5 +7163,295 @@
   "schema_version": "2.0.0",
   "source_artwork_creator": "OpenAI image generation, directed and approved by the user; technical assembly by Codex",
   "runtime_paths_relative_to": "runtime/theme.json containing directory",
-  "ordinary_center_rule": "Use the ordinary core at the existing starting occupied cell; preserve project-owned logical color assignment."
+  "ordinary_center_rule": "Use the ordinary core at the existing starting occupied cell; preserve project-owned logical color assignment.",
+  "audio": {
+    "schema": "symmetrical_tiles.audio.v1",
+    "theme_id": "coral_reef",
+    "version": "0.1.0",
+    "status": "Draft audition; listening balance and Godot/Android verification pending",
+    "assets": [
+      {
+        "id": "reef_ambience",
+        "path": "res://assets/audio/coral_reef/reef_ambience.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 8.687791666666667,
+        "loop": true,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 8.687791666666667,
+        "gain_db": -5,
+        "source_edits": [
+          {
+            "source": "magiaz-coral-379819.mp3",
+            "range_seconds": [
+              0,
+              5.093895833333334
+            ]
+          },
+          {
+            "source": "magiaz-coral-379835.mp3",
+            "range_seconds": [
+              0,
+              5.093895833333334
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -8.68433666229248
+      },
+      {
+        "id": "growth_01",
+        "path": "res://assets/audio/coral_reef/growth_01.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.87,
+        "loop": true,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.87,
+        "gain_db": -3,
+        "source_edits": [
+          {
+            "source": "freesound_community-plant-95044.mp3",
+            "range_seconds": [
+              1.15,
+              2.2
+            ]
+          },
+          {
+            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
+            "range_seconds": [
+              9.15,
+              10.200000000000001
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -7.000000476837158
+      },
+      {
+        "id": "growth_02",
+        "path": "res://assets/audio/coral_reef/growth_02.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.87,
+        "loop": true,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.87,
+        "gain_db": -3,
+        "source_edits": [
+          {
+            "source": "freesound_community-plant-95044.mp3",
+            "range_seconds": [
+              3.05,
+              4.1
+            ]
+          },
+          {
+            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
+            "range_seconds": [
+              12.25,
+              13.3
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -7.000000476837158
+      },
+      {
+        "id": "growth_03",
+        "path": "res://assets/audio/coral_reef/growth_03.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.87,
+        "loop": true,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.87,
+        "gain_db": -3,
+        "source_edits": [
+          {
+            "source": "freesound_community-plant-95044.mp3",
+            "range_seconds": [
+              5.1,
+              6.1499999999999995
+            ]
+          },
+          {
+            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
+            "range_seconds": [
+              33.05,
+              34.099999999999994
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -7.000000476837158
+      },
+      {
+        "id": "bubble_short_01",
+        "path": "res://assets/audio/coral_reef/bubble_short_01.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.57,
+        "loop": false,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.57,
+        "gain_db": -2,
+        "source_edits": [
+          {
+            "source": "krnbeatz-bubble-in-water-422579.mp3",
+            "range_seconds": [
+              0.3,
+              0.87
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -7.448630332946777
+      },
+      {
+        "id": "bubble_short_02",
+        "path": "res://assets/audio/coral_reef/bubble_short_02.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.57,
+        "loop": false,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.57,
+        "gain_db": -2,
+        "source_edits": [
+          {
+            "source": "krnbeatz-bubble-in-water-422579.mp3",
+            "range_seconds": [
+              1.73,
+              2.3
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -7.223212242126465
+      },
+      {
+        "id": "bubble_short_03",
+        "path": "res://assets/audio/coral_reef/bubble_short_03.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 0.57,
+        "loop": false,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 0.57,
+        "gain_db": -2,
+        "source_edits": [
+          {
+            "source": "krnbeatz-bubble-in-water-422579.mp3",
+            "range_seconds": [
+              4.1,
+              4.67
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -6.22615909576416
+      },
+      {
+        "id": "bubble_long_01",
+        "path": "res://assets/audio/coral_reef/bubble_long_01.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 1.58,
+        "loop": false,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 1.58,
+        "gain_db": -2,
+        "source_edits": [
+          {
+            "source": "krnbeatz-bubble-in-water-422579.mp3",
+            "range_seconds": [
+              4.02,
+              5.6
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -6.000000953674316
+      },
+      {
+        "id": "bubble_long_02",
+        "path": "res://assets/audio/coral_reef/bubble_long_02.ogg",
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "duration_seconds": 1.58,
+        "loop": false,
+        "loop_begin_seconds": 0,
+        "loop_end_seconds": 1.58,
+        "gain_db": -2,
+        "source_edits": [
+          {
+            "source": "krnbeatz-bubble-in-water-422579.mp3",
+            "range_seconds": [
+              6.72,
+              8.3
+            ]
+          }
+        ],
+        "uncompressed_peak_dbfs": -6.000000953674316
+      }
+    ],
+    "events": {
+      "ambience": {
+        "asset": "reef_ambience",
+        "bus": "ReefAmbience",
+        "fade_in_seconds": 1.5,
+        "fade_out_seconds": 0.6
+      },
+      "ordinary_growth": {
+        "assets": [
+          "growth_01",
+          "growth_02",
+          "growth_03"
+        ],
+        "bus": "ReefGrowth",
+        "trigger": "visible ordinary growth begins",
+        "stop": "last ordinary component in placement completes or is canceled",
+        "scope": "one texture per active placement, never one per cell or arm",
+        "fade_in_seconds": 0.025,
+        "fade_out_seconds": 0.08,
+        "maximum_voices": 2,
+        "selection": "stable placement ID modulo 3; do not use logical color"
+      },
+      "colony": {
+        "assets": [
+          "bubble_short_01",
+          "bubble_short_02",
+          "bubble_short_03"
+        ],
+        "bus": "ReefFeatures",
+        "trigger": "colony foundation visibly begins after its cycle completes",
+        "maximum_voices": 2
+      },
+      "anemone": {
+        "assets": [
+          "bubble_long_01",
+          "bubble_long_02"
+        ],
+        "bus": "ReefFeatures",
+        "trigger": "anemone foot visibly begins after supporting colonies become ready",
+        "maximum_voices": 2
+      }
+    },
+    "mix": {
+      "feature_coalescing_seconds": 0.12,
+      "scope": "same event type in the same placement",
+      "simultaneous_colony_and_anemone": "both eligible; features bus cap 2 voices, prioritize anemone if full",
+      "selection": "stable feature key hash; no immediate repeat when alternatives exist",
+      "ambience_duck_db": 2,
+      "duck_attack_seconds": 0.04,
+      "duck_release_seconds": 0.25,
+      "master_limiter_ceiling_db": -1,
+      "pan": "centered; shared mix for both logical colors"
+    },
+    "lifecycle": {
+      "undo_delete": "cancel invalid event IDs, fade active growth in 80ms; never replay survivors",
+      "reset_theme_switch": "cancel pending events, fade active SFX 80ms and ambience 600ms",
+      "save_load": "start ambience; render settled board silently",
+      "pause": "pause visual clock and audio together; do not advance cue clocks",
+      "rules": "audio follows visual callbacks and never changes occupancy, symmetry, controls or placement gates"
+    },
+    "review": {
+      "schedule": "../review/events.json",
+      "audio": "../review/reef_soundscape.mp3",
+      "video": "../review/growth_with_audio.mp4"
+    }
+  }
 }

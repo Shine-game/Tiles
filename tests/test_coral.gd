@@ -182,7 +182,10 @@ func _run() -> void:
 	check(model.colonies.size() == 100 and model.unions.size() == 180, "dense 11x11 reef has exactly 180 immediate-neighbor joins")
 	print("Dense reef v2: %d components, 100 colonies, 180 anemones" % model.components.size())
 	scene.queue_free()
-	await create_timer(0.12).timeout
+	# Allow the audio mixer to release stopped Ogg playback before shutdown.
+	var mixer_deadline := Time.get_ticks_msec() + 120
+	while Time.get_ticks_msec() < mixer_deadline:
+		await process_frame
 	Palette.select_theme("vines")
 	print("Coral v2: %d checks, %d failures (%d supplied scenarios)" % [checks, failures, fixtures.size()])
 	quit(1 if failures else 0)

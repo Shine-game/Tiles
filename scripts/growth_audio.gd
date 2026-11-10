@@ -1,6 +1,8 @@
 class_name GrowthAudio
 extends Node
 
+const Palette = preload("res://scripts/palette.gd")
+const Reef = preload("res://scripts/coral_audio.gd")
 const FOLIAGE = preload("res://assets/audio/foliage.wav")
 const BELL = preload("res://assets/audio/flower_bell.wav")
 # C, D, E, G, A: overlapping blossoms remain in one gentle pentatonic palette.
@@ -14,6 +16,8 @@ var fade: Tween
 var elapsed := 0.0
 var active := false
 var note_count := 0
+var reef: CoralAudio
+var visual_theme := ""
 
 func _ready() -> void:
 	whisper = AudioStreamPlayer.new()
@@ -32,9 +36,31 @@ func _ready() -> void:
 		player.max_polyphony = 2
 		add_child(player)
 		bells.append(player)
+	reef = Reef.new()
+	add_child(reef)
 	set_process(false)
 
+func attach_board(board) -> void:
+	board.visual_state_changed.connect(_visual_state_changed)
+	board.visual_clock_advanced.connect(reef.advance)
+
+func _visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int) -> void:
+	var changed: bool = visual_theme != Palette.theme_id()
+	visual_theme = Palette.theme_id()
+	if Palette.coral_reef:
+		_cancel_legacy()
+		active = animating
+		reef.reconcile(pattern, animating, preserve, clock, placement_id)
+	else:
+		if reef.theme_active:
+			reef.deactivate()
+		if changed and animating:
+			begin()
+
 func begin() -> void:
+	if Palette.coral_reef:
+		active = true
+		return
 	if fade != null:
 		fade.kill()
 	active = true
@@ -49,7 +75,7 @@ func begin() -> void:
 	set_process(true)
 
 func bloom(corner: Vector2i, _color: int) -> void:
-	if not active:
+	if Palette.coral_reef or not active:
 		return
 	var slot: int = posmod(corner.x + corner.y * 3, PITCHES.size())
 	if elapsed - float(last_note[slot]) < 0.085:
@@ -62,6 +88,10 @@ func _process(delta: float) -> void:
 	elapsed += delta
 
 func finish() -> void:
+	if Palette.coral_reef:
+		active = false
+		reef.invalidate()
+		return
 	active = false
 	set_process(false)
 	if fade != null:
@@ -72,6 +102,11 @@ func finish() -> void:
 	# Bell tails may decay naturally; they never keep Place locked.
 
 func cancel() -> void:
+	_cancel_legacy()
+	if reef != null and reef.is_inside_tree():
+		reef.invalidate()
+
+func _cancel_legacy() -> void:
 	active = false
 	set_process(false)
 	if fade != null:
@@ -82,4 +117,4 @@ func cancel() -> void:
 		player.stop()
 
 func _exit_tree() -> void:
-	cancel()
+	_cancel_legacy()

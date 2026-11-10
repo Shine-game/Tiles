@@ -28,7 +28,7 @@ func _run() -> void:
 	scene.has_hover = true
 	scene._refresh()
 	DirAccess.make_dir_recursive_absolute("res://build/coral-frames")
-	for frame in range(75):
+	for frame in range(105):
 		if frame == 6:
 			scene._place()
 			scene.board_view.set_process(false)
@@ -37,6 +37,9 @@ func _run() -> void:
 		root.get_texture().get_image().save_png("res://build/coral-frames/%03d.png" % frame)
 		if frame >= 6:
 			scene.board_view.advance_growth(1.0 / 30.0)
+	var audio_events := FileAccess.open("res://build/coral-audio-events.json", FileAccess.WRITE)
+	audio_events.store_string(JSON.stringify({"duration": 3.5, "placement_offset": 0.2, "events": scene.sounds.reef.event_log}, "\t"))
+	audio_events.close()
 	root.get_texture().get_image().save_png("res://build/coral-preview.png")
 	if scene.board_view.growing or not scene._can_save():
 		push_error("Coral did not reach a savable symmetric final state")

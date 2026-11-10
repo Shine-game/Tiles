@@ -109,6 +109,7 @@ func _build_interface() -> void:
 	board_view.flower_opened.connect(sounds.bloom)
 	board_view.growth_finished.connect(sounds.finish)
 	board_view.growth_canceled.connect(sounds.cancel)
+	sounds.attach_board(board_view)
 	flip_button = _button("Flip", _flip)
 	blue_button = _button("", func(): _choose_color(Rules.BLUE))
 	coral_button = _button("", func(): _choose_color(Rules.CORAL))

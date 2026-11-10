@@ -1,0 +1,18 @@
+{
+  "source_archive": "Coral_Reef_Audio_01.zip",
+  "archive_sha256": "9fac48b55fc7427b46d5f3c610a51b0602a108b5eeca1cd28c39be254bc10865",
+  "verified_checksum_entries": 27,
+  "mismatches": [],
+  "asset_count": 9,
+  "runtime_audio_sha256": {
+    "bubble_long_02.ogg": "b309ef56c17875d3ad6df5c8cea02f2d704b444b808fecd704f34484ca10be2e",
+    "bubble_short_03.ogg": "b065adee23d63b4009dd86ff827a112abe378fad1125ec6a4503a68fe0374b26",
+    "growth_03.ogg": "65b7dc66c9983522f05923ed09ae2356b3ce61c71fe025d92d3e20799e6a16d6",
+    "bubble_long_01.ogg": "d0fe739a6e4a21812065e2a376aed5b69fb36cdf8edbfa5c7efed4cebfdc538d",
+    "reef_ambience.ogg": "51694146eed47828bfdd3e204b5e5d811c63439e0ab25e05f1785c49d4a7b8b4",
+    "growth_02.ogg": "7f6436120ea919c858772db5d8d5e2cedf7be4b1da9a5ede05c32d75006b5196",
+    "bubble_short_01.ogg": "9776279e959c42e518a26ed14ff0ad3f7898691d28c9d4d7d4d0f33db907e7f3",
+    "bubble_short_02.ogg": "915fc46c6d1dc4fe45c847c642a855d1a4f3df304e6ee73c02da2c97dc982c91",
+    "growth_01.ogg": "3d9db10f92f3e10845b0e7c45056f54a22179b0ad462d8e94605f59c668321dd"
+  }
+}

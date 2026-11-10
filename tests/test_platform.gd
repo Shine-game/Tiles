@@ -104,7 +104,10 @@ func _run() -> void:
 	scene._erase(Vector2i(4, 4))
 	check(not scene.board_view.occupied_platform.visible, "erasing final square returns to a completely flat board")
 	scene.queue_free()
-	await create_timer(0.12).timeout
+	# Allow the audio mixer to release stopped Ogg playback before shutdown.
+	var mixer_deadline := Time.get_ticks_msec() + 120
+	while Time.get_ticks_msec() < mixer_deadline:
+		await process_frame
 	Palette.select_theme("vines")
 	print("Platform: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

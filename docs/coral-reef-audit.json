@@ -14,7 +14,7 @@
   "ground_edge_mismatches": 0,
   "supplied_logical_scenarios": 34,
   "runtime_sha256": {
-    "theme.json": "7e7e275deb8cc26fac28c585e6ca1c0eec870a5add48cead67a42e9a6877a505",
+    "theme.json": "2b29301a04b41b15f0a78f44ba252cb123d1f501c43b84c24dd44b55684c7f04",
     "shaders/growth_reveal.gdshader": "db473bb2102e605dafc89c7cb56786d85e72f68773499808c755c6805c480eeb",
     "masks/junction_sw.png": "9a1c32327977b16e629d75ba5afa3aaf29800e67c1fcf2347e236cc239cf5047",
     "masks/colony_fingers_nw.png": "b9db12b1f9968bbab03002d005107a6817145f5bb46d4a57987bd4c7f9ccd916",
@@ -118,5 +118,6 @@
     "artwork/turquoise/junction_wn.png": "fa0a68b0b9865120e956ef39a6a20bf78628320c7885ced78996d158af70697a",
     "artwork/turquoise/fingers_e_1.png": "5325aa964ad6af9a0deb16affb6e53afe47d93a81d0b0eafc47e7fda81efa80f",
     "artwork/turquoise/fingers_n_0.png": "6b46e0294d914667f26c1b71d12400cd0a61419ee3508f02339de78e3b2942ec"
-  }
+  },
+  "audio_addendum": "Coral_Reef_Audio_01 metadata consolidated under theme.audio; visual metadata and original artwork unchanged."
 }

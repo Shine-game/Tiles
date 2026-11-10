@@ -91,7 +91,7 @@ To capture a reproducible graphical preview, run `godot --path . --script tests/
 
 ## Sound and shallow depth
 
-Growth has a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. No ambient sound runs while the board is idle.
+Vines and Labyrinth growth have a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. These two themes remain silent while the board is idle. Coral Reef uses the supplied looping reef ambience, three growth textures, three short colony bubbles and two long anemone bubbles. Cues follow the visual timeline, coalesce nearby feature starts and fade safely on cancellation. See [Coral audio integration](docs/coral-audio.md) for levels, routing and provenance.
 
 `assets/audio/foliage.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
 
@@ -125,6 +125,7 @@ godot --headless --editor --path . --import --quit
 godot --headless --path . --script tests/test_rules.gd
 godot --headless --path . --script tests/test_growth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_coral_audio.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd

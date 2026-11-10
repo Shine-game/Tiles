@@ -5,6 +5,8 @@ signal growth_finished
 signal growth_started
 signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
+signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
+signal visual_clock_advanced(clock: float)
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
@@ -29,6 +31,7 @@ var labyrinth := false
 var coral_reef := false
 var coral_visuals: CoralVisuals
 var occupied_platform: OccupiedPlatform
+var placement_revision := 0
 
 func _ready() -> void:
 	z_index = 1
@@ -46,6 +49,9 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	clock = 0
 	growing = false
 	set_process(false)
+	if not preserve_direction:
+		placement_revision = 0
+	visual_state_changed.emit(pattern, false, preserve_direction, clock, placement_revision)
 	queue_redraw()
 
 func sync_board(grid: Array) -> void:
@@ -77,6 +83,7 @@ func _restyle() -> void:
 		coral_visuals.advance(clock)
 	growing = clock < pattern.duration
 	set_process(growing)
+	visual_state_changed.emit(pattern, growing, true, clock, placement_revision)
 	if not growing:
 		growth_finished.emit()
 	queue_redraw()
@@ -97,6 +104,7 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 		coral_visuals.hide()
 
 func animate_growth(before: Array, after: Array) -> void:
+	placement_revision += 1
 	board = after
 	growth_before = before.duplicate(true)
 	_build_pattern(before, after)
@@ -106,6 +114,7 @@ func animate_growth(before: Array, after: Array) -> void:
 	announced_flowers.clear()
 	growing = pattern.duration > 0
 	set_process(growing)
+	visual_state_changed.emit(pattern, growing, true, clock, placement_revision)
 	if growing:
 		growth_started.emit()
 	queue_redraw()
@@ -116,6 +125,7 @@ func advance_growth(delta: float) -> void:
 	clock = minf(pattern.duration, clock + maxf(0, delta))
 	if coral_reef:
 		coral_visuals.advance(clock)
+	visual_clock_advanced.emit(clock)
 	for corner: Vector2i in pattern.flowers:
 		var flower: Dictionary = pattern.flowers[corner]
 		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + Growth.FLOWER_POP * 0.12:
