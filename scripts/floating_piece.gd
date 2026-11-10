@@ -22,13 +22,8 @@ func cell_at(point: Vector2) -> Vector2i:
 	return cell if cells.has(cell) else Vector2i(-1, -1)
 
 func _draw() -> void:
+	Surface.begin(self)
 	for cell: Vector2i in cells:
 		var face := Rect2(origin + Vector2(cell) * pitch - Vector2(0, lift()), Vector2.ONE * (pitch - 4))
 		var ink: Color = Palette.tile(color) if valid else Palette.INVALID
 		Surface.draw(self, face, ink, Surface.depth(pitch))
-		var outline := StyleBoxFlat.new()
-		outline.bg_color = Color.TRANSPARENT
-		outline.border_color = Palette.tile(color).darkened(0.3) if valid else Palette.INVALID_BORDER
-		outline.set_border_width_all(1)
-		outline.set_corner_radius_all(roundi(face.size.x * 0.16))
-		draw_style_box(outline, face.grow(-0.5))

@@ -31,6 +31,7 @@ func cell_at(point: Vector2) -> Vector2i:
 	return cell if cells.has(cell) else Vector2i(-1, -1)
 
 func _draw() -> void:
+	Surface.begin(self)
 	if cells.is_empty():
 		return
 	var layout: Dictionary = geometry()

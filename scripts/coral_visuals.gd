@@ -2,6 +2,7 @@ class_name CoralVisuals
 extends Node2D
 
 const Model = preload("res://scripts/coral_growth.gd")
+const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
 const REVEAL = preload("res://art/themes/coral_reef/shaders/growth_reveal.gdshader")
 static var textures: Dictionary = {}
 var registry: Dictionary = {}
@@ -9,6 +10,8 @@ var groups: Dictionary = {}
 var ordinals: Dictionary = {}
 var next_ordinal := 0
 var active: Dictionary = {}
+var ground_sprites: Array[Sprite2D] = []
+var surface_signature: Array = []
 
 static func texture(path: String) -> Texture2D:
 	if not textures.has(path):
@@ -20,6 +23,8 @@ func clear() -> void:
 		remove_child(child)
 		child.queue_free()
 	registry.clear()
+	ground_sprites.clear()
+	surface_signature.clear()
 	groups.clear()
 	ordinals.clear()
 	active.clear()
@@ -53,6 +58,8 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			sprite.queue_free()
 			registry.erase(identity)
 	active.clear()
+	ground_sprites.clear()
+	surface_signature.clear()
 	for identity: String in model.components:
 		var event: Dictionary = model.components[identity]
 		var sprite: Sprite2D
@@ -69,7 +76,15 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			# Child insertion order keeps each complete colony together.
 			_group(event, settled).add_child(sprite)
 			registry[identity] = sprite
-		if settled or event.old:
+		if event.id.begins_with("ground_"):
+			ground_sprites.append(sprite)
+			if sprite.material == null:
+				var surface := ShaderMaterial.new()
+				surface.shader = GROUND_SURFACE
+				sprite.material = surface
+			sprite.material.set_shader_parameter("cell_center", event.center)
+			sprite.material.set_shader_parameter("quarter_turn", float(event.rotation))
+		elif settled or event.old:
 			sprite.material = null
 		else:
 			var material := ShaderMaterial.new()
@@ -111,3 +126,14 @@ func advance(clock: float) -> void:
 			active.erase(identity)
 		else:
 			(sprite.material as ShaderMaterial).set_shader_parameter("clock_seconds", clock)
+
+func configure_surface(platform) -> void:
+	var signature: Array = [platform.mask_texture, platform.mask_revision, platform.grid_size, platform.cell_pixels]
+	if signature == surface_signature:
+		return
+	surface_signature = signature
+	for sprite: Sprite2D in ground_sprites:
+		sprite.material.set_shader_parameter("occupancy_mask", platform.mask_texture)
+		sprite.material.set_shader_parameter("grid_size", platform.grid_size)
+		sprite.material.set_shader_parameter("cell_pixels", 256.0)
+		sprite.material.set_shader_parameter("screen_pixel", 256.0 / platform.cell_pixels)

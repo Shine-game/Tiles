@@ -4,7 +4,7 @@ extends ColorRect
 const EDGE_SHADER = preload("res://shaders/occupied_platform.gdshader")
 const SOURCE_CELL := 256.0
 const SOURCE_DEPTH := 24.0
-const SURFACE_REVISION := "raised24-v1"
+const SURFACE_REVISION := "rounded24-v2"
 var occupancy: Image
 var mask_texture: ImageTexture
 var occupancy_bytes := PackedByteArray()
@@ -49,7 +49,7 @@ func configure(origin: Vector2, pitch: float, ink: Color) -> void:
 	top_origin = origin
 	cell_pixels = pitch
 	depth_pixels = depth(pitch)
-	var margin: float = maxf(2.0, pitch * 0.035 + 1)
+	var margin: float = depth_pixels * 2.0 + 1.0
 	position = origin - Vector2.ONE * margin
 	size = Vector2(grid_size * pitch, grid_size * pitch + depth_pixels) + Vector2.ONE * 2 * margin
 	var shader_material := material as ShaderMaterial
@@ -59,7 +59,8 @@ func configure(origin: Vector2, pitch: float, ink: Color) -> void:
 	shader_material.set_shader_parameter("rect_pixels", size)
 	shader_material.set_shader_parameter("ground_color", ink)
 
-# Same geometric contract as the shader, useful for input/geometry verification.
+# Logical occupancy for input/geometry verification; rounded rendering does not
+# remove any playable area from a cell.
 # p is expressed in cells relative to the raised top origin.
 func filled(point: Vector2) -> bool:
 	var cell := Vector2i(floori(point.x), floori(point.y))

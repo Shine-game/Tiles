@@ -147,7 +147,7 @@ func update_geometry() -> void:
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	# Keep the raised north edge and its shadow inside the field, including
 	# high-resolution gallery captures. The logical board remains square.
-	var edge_allowance: float = Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.035
+	var edge_allowance: float = 3.0 * Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.02
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
 	if occupied_platform != null:
@@ -155,6 +155,7 @@ func update_geometry() -> void:
 	if coral_visuals != null:
 		coral_visuals.position = _point(Vector2.ZERO)
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0
+		coral_visuals.configure_surface(occupied_platform)
 
 func surface_depth() -> float:
 	return Platform.depth(pitch)
@@ -184,8 +185,6 @@ func _draw() -> void:
 	update_geometry()
 	if show_guides:
 		_draw_guides()
-	if not coral_reef:
-		_draw_occupied_faces()
 	if coral_reef:
 		return
 	if labyrinth:
@@ -206,11 +205,6 @@ func _draw() -> void:
 		_draw_holding_motif(cell)
 	for corner: Vector2i in pattern.flowers:
 		_draw_flower(corner, pattern.flowers[corner])
-
-func _draw_occupied_faces() -> void:
-	# One color-independent surface; the board-wide shader owns its outline.
-	for cell: Vector2i in pattern.arrivals:
-		draw_rect(Rect2(_point(Vector2(cell)), Vector2.ONE * pitch), Palette.garden())
 
 func _draw_guides() -> void:
 	var n: int = board.size()

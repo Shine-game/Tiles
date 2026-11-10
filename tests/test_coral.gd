@@ -115,7 +115,7 @@ func _run() -> void:
 	check(scene.board_view.coral_visuals.registry[core_key] == core and core.scale == Vector2.ONE, "retained core uses supplied native proportions")
 	var ground_key := Coral.key(Coral.ground_choice(origin).id, 1, origin)
 	var ground: Sprite2D = scene.board_view.coral_visuals.registry[ground_key]
-	check(ground.material == null, "new occupied ground does not wait for coral")
+	check(ground.material != null and ground.material.shader == scene.board_view.coral_visuals.GROUND_SURFACE, "new ground immediately uses shared rounded surface without growth reveal")
 	for event: Dictionary in scene.board_view.pattern.components.values():
 		var sprite: Sprite2D = scene.board_view.coral_visuals.registry[event.key]
 		check(sprite.scale == Vector2.ONE, "no old scaling workaround: " + event.id)

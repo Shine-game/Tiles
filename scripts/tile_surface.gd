@@ -1,27 +1,39 @@
 class_name TileSurface
 extends RefCounted
 
-static func depth(unit: float) -> float:
-	return unit * 24.0 / 256.0
+const Platform = preload("res://scripts/occupied_platform.gd")
 
-# A shallow colored slab for the incoming/hovering piece. Its logical face
-# keeps the original footprint; thickness and shadow never change placement.
+static func depth(unit: float) -> float:
+	return Platform.depth(unit)
+
+# Reuse the exact occupied-ground renderer for each separate incoming square.
+# Children are reused on redraw; hiding unused slabs handles shape changes.
+static func begin(canvas: CanvasItem) -> void:
+	canvas.set_meta("slab_index", 0)
+	for child: Node in canvas.get_children():
+		if child.has_meta("tile_slab"):
+			child.hide()
+
 static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float) -> void:
-	var shadow := StyleBoxFlat.new()
-	shadow.bg_color = Color(0, 0, 0, 0.10)
-	var radius := roundi(minf(face.size.x, face.size.y) * 0.16)
-	shadow.set_corner_radius_all(radius)
-	shadow.shadow_color = Color(0, 0, 0, 0.13)
-	shadow.shadow_size = roundi(thickness)
-	shadow.shadow_offset = Vector2(thickness * 0.25, thickness * 0.7)
-	canvas.draw_style_box(shadow, Rect2(face.position + Vector2(0, thickness), face.size))
-	var side := StyleBoxFlat.new()
-	side.bg_color = color.darkened(0.25)
-	side.set_corner_radius_all(radius)
-	canvas.draw_style_box(side, Rect2(face.position + Vector2(0, thickness), face.size))
-	var top := StyleBoxFlat.new()
-	top.bg_color = color
-	top.set_corner_radius_all(radius)
-	canvas.draw_style_box(top, face)
-	var highlight := Rect2(face.position + Vector2(radius, 1), Vector2(maxf(0, face.size.x - 2 * radius), 0))
-	canvas.draw_line(highlight.position, highlight.end, Color(1, 1, 1, 0.30), 1, true)
+	var index: int = canvas.get_meta("slab_index", 0)
+	canvas.set_meta("slab_index", index + 1)
+	var name := "TileSlab%d" % index
+	var slab = canvas.get_node_or_null(NodePath(name))
+	if slab == null:
+		slab = Platform.new()
+		slab.name = name
+		slab.set_meta("tile_slab", true)
+		canvas.add_child(slab)
+		slab.sync([[1]])
+		slab.z_index = 0
+	slab.configure(face.position, face.size.x, color)
+	# The four-pixel inter-square gap is not part of the logical cell pitch.
+	# Keep the same depth as a committed cell despite this smaller face.
+	slab.depth_pixels = thickness
+	var margin: float = thickness * 2.0 + 1.0
+	slab.position = face.position - Vector2.ONE * margin
+	slab.size = face.size + Vector2(0, thickness) + Vector2.ONE * 2 * margin
+	slab.material.set_shader_parameter("depth_pixels", thickness)
+	slab.material.set_shader_parameter("margin_pixels", margin)
+	slab.material.set_shader_parameter("rect_pixels", slab.size)
+	slab.show()

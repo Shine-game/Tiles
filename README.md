@@ -23,7 +23,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Raised occupied platform
 
-All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat white. A board-wide occupancy shader beneath the existing textures draws exposed lower sidewalls, a fine upper lip, and a narrow contact shadow. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
+All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat white. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
 
 Ground, wall, and shadow appear as soon as placement commits. Undo/Erase update the outline immediately; plant growth runs independently on the upper face. Coral keeps all six original rotating ground textures. The shader adds no background paper. Gallery captures include the platform and preserve older images separately. See [the platform implementation notes](docs/raised-platform.md).
 

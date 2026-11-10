@@ -2,6 +2,7 @@
 extends SceneTree
 
 const Platform = preload("res://scripts/occupied_platform.gd")
+const Surface = preload("res://scripts/tile_surface.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
 var checks := 0
@@ -41,16 +42,35 @@ func _run() -> void:
 	var lower: Color = shot.get_pixel(180, 217)
 	check(upper.a > 0.99 and lower.a > 0.99, "native shader draws all six pixels of requested extrusion")
 	check(upper.r > lower.r, "sidewall shades softly from upper lip toward base")
-	check(shot.get_pixel(180, 180).a < 0.001, "shader leaves top interiors to original ground textures")
-	check(shot.get_pixel(147, 180).a > 0 and shot.get_pixel(147, 180).a < 0.8, "upper perimeter lip is narrow and translucent")
+	check(shot.get_pixel(180, 180).a > 0.99, "shared renderer supplies the opaque top beneath textures")
+	check(shot.get_pixel(148, 180).r > shot.get_pixel(152, 180).r, "fine upper lip rounds the transition into the side")
+	check(shot.get_pixel(149, 149).a < 0.1 and shot.get_pixel(159, 149).a > 0.99, "exposed convex corners are rounded")
 	check(shot.get_pixel(180, 218).a > shot.get_pixel(180, 219).a and shot.get_pixel(180, 219).a > 0, "contact shadow fades down onto surrounding surface")
-	check(is_zero_approx(shot.get_pixel(180, 222).a), "shadow becomes fully transparent away from platform")
+	check(is_zero_approx(shot.get_pixel(180, 230).a), "shadow becomes fully transparent away from platform")
+	# An isolated placed cell and an unplaced square use identical pixels,
+	# including the rounded face, bevel, extrusion and offset soft shadow.
+	var single: Image = shot
+	platform.hide()
+	var incoming := Node2D.new()
+	viewport.add_child(incoming)
+	Surface.begin(incoming)
+	Surface.draw(incoming, Rect2(148, 148, 64, 64), Color("edd7ad"), 6)
+	shot = await capture(viewport)
+	var placed_pixels: PackedByteArray = single.get_data()
+	var incoming_pixels: PackedByteArray = shot.get_data()
+	var largest_error := 0
+	for byte in range(placed_pixels.size()):
+		largest_error = maxi(largest_error, absi(int(placed_pixels[byte]) - int(incoming_pixels[byte])))
+	# Different rectangle UV scales can round one 8-bit channel differently.
+	check(largest_error <= 1, "placed and unplaced isolated surfaces match within 8-bit rounding")
+	incoming.queue_free()
+	platform.show()
 	grid[3][2] = 2
 	grid[2][3] = 2
 	platform.sync(grid)
 	shot = await capture(viewport)
-	check(shot.get_pixel(180, 215).a < 0.001, "different-color lower neighbor removes shared wall in shader")
-	check(shot.get_pixel(213, 180).a < 0.001, "different-color side neighbor has no internal rim")
+	check(shot.get_pixel(180, 215).is_equal_approx(shot.get_pixel(180, 220)), "different-color lower neighbor removes shared wall and lip")
+	check(shot.get_pixel(213, 180).is_equal_approx(shot.get_pixel(218, 180)), "different-color side neighbor has no internal rim")
 	check(shot.get_pixel(244, 215).a > 0.99, "stepped exposed lower segment stays raised")
 	var original: PackedByteArray = shot.get_data()
 	grid[3][2] = 1
@@ -70,12 +90,12 @@ func _run() -> void:
 	grid[6][6] = 2
 	platform.sync(grid)
 	shot = await capture(viewport)
-	check(shot.get_pixel(436, 407).a < 0.001, "hole closure removes rim and wall immediately")
+	check(shot.get_pixel(436, 407).is_equal_approx(shot.get_pixel(436, 436)), "hole closure removes rim and wall immediately")
 	grid[8][8] = 1
 	platform.sync(grid)
 	shot = await capture(viewport)
 	check(shot.get_pixel(564, 599).a > 0.99, "outer board bottom extrusion is not clipped")
-	check(shot.get_pixel(564, 607).a < 0.001, "no opaque shader rectangle beyond the contact shadow")
+	check(shot.get_pixel(564, 614).a < 0.001, "no opaque shader rectangle beyond the contact shadow")
 	DirAccess.make_dir_recursive_absolute("res://build")
 	shot.save_png("res://build/platform-edge-validation.png")
 	viewport.queue_free()
@@ -103,7 +123,12 @@ func _run() -> void:
 		var side_point: Vector2 = view.global_position + view._point(Vector2(2.5, 5)) + Vector2(0, view.surface_depth() * 0.5)
 		var contact: Color = image.get_pixelv(Vector2i(side_point))
 		check(contact.r < 0.98 or contact.g < 0.98 or contact.b < 0.98, theme + ": sidewall remains visible below actual ground and plants")
+		var corner_point: Vector2 = view.global_position + view._point(Vector2(2.015, 2.015))
+		var corner: Color = image.get_pixelv(Vector2i(corner_point))
+		check(minf(corner.r, minf(corner.g, corner.b)) > 0.94, theme + ": actual top fill respects rounded exposed corners")
 	scene.queue_free()
-	await create_timer(0.12).timeout
+	var mixer_deadline := Time.get_ticks_msec() + 120
+	while Time.get_ticks_msec() < mixer_deadline:
+		await process_frame
 	print("Native platform: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
