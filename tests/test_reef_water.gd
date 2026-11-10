@@ -72,8 +72,8 @@ func _run() -> void:
 					light_rows += 1
 				if difference < -0.04:
 					shadow_rows += 1
-		check(light_rows > 100 and shadow_rows > 100, "uneven water surface produces both clear light rows and shadow rows")
-		water.freeze_phase(20)
+		check(light_rows > 100 and shadow_rows > 100, "cellular caustics produce bright filaments and shaded pools")
+		water.freeze_phase(1.0)
 		var second: Image = await capture()
 		var empty_changes := 0
 		var occupied_changes := 0
@@ -94,12 +94,12 @@ func _run() -> void:
 						occupied_changes += 1
 					else:
 						empty_changes += 1
-		check(empty_changes > 100 and occupied_changes > 100, "wave lighting visibly changes empty water and occupied sand/coral by over 4% while idle")
+		check(empty_changes > 100 and occupied_changes > 100, "caustics visibly oscillate over empty water and occupied sand/coral within one second")
 		check(outside_changes == 0, "lighting never spills onto the white interface")
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
-		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-waves24-v4", "gallery captures the new environment under its own revision")
+		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-caustics24-v5", "gallery captures the new environment under its own revision")
 		if records.size() == 1:
 			var picture: Image = scene.gallery.picture(records[0]).get_image()
 			var saved_water: Color = picture.get_pixel(790, 790)
