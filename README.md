@@ -23,7 +23,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Shared theme frames
 
-All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef's original PNG is currently pending as a downloadable attachment; its profile is prepared, and the existing layout stays unframed until the source texture is installed. Vines/Labyrinth await their own material artwork.
+All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. Vines/Labyrinth await their own material artwork.
 
 ## Raised occupied platform
 

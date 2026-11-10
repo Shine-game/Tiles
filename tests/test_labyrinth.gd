@@ -107,6 +107,9 @@ func _run() -> void:
 	scene._select_theme("vines")
 	check(not Palette.labyrinth and scene.palette_options.all(func(option): return option.visible), "vine theme and all five palettes remain available")
 	scene.queue_free()
-	await create_timer(0.12).timeout
+	# Wait for real mixer frames, even after a long artwork-loading frame.
+	var mixer_deadline := Time.get_ticks_msec() + 150
+	while Time.get_ticks_msec() < mixer_deadline:
+		await process_frame
 	print("Labyrinth: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

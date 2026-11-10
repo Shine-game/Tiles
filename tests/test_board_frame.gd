@@ -34,6 +34,9 @@ func _run() -> void:
 	var has_art: bool = ResourceLoader.exists(Frame.profile("coral_reef").texture, "Texture2D")
 	check(frame.apply_theme("coral_reef") == has_art, "production frame is enabled only when original artwork exists")
 	print("Original Coral Reef frame PNG available: ", has_art)
+	if has_art:
+		check(frame.texture.get_size() == Vector2(256, 266), "production artwork has the exact source dimensions")
+		check(frame.texture.get_image().get_region(Rect2i(14, 14, 228, 228)).is_invisible(), "lossless import preserves the fully transparent production opening")
 	var artwork := fixture()
 	check(frame.apply_theme("coral_reef", artwork), "injected geometry fixture enables the common renderer")
 	for available: Rect2 in [Rect2(10, 20, 240, 160), Rect2(0, 0, 900, 900), Rect2(0, 0, 320, 440)]:

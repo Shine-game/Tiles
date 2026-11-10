@@ -26,10 +26,10 @@ The frame draws above the occupied ground/coral perimeter. Coral Reef's existing
 
 The JSON is explicitly included in Android export. Missing or disabled artwork leaves the existing unframed layout intact; it does not create placeholder artwork or reduce the board for an invisible frame.
 
-## Coral Reef profile and current asset status
+## Coral Reef profile and source verification
 
 The supplied `CODEX_FRAME_HANDOFF.md` defines bleached wreck timber, rounded relief, a cool shaded flank, turquoise inner reveal and restrained marine deposits. Those details are recorded in the Coral Reef profile. The source image is described as generated from the approved mockup and technically aligned with ImageMagick; no additional rights or exclusivity are asserted.
 
-The original `coral_reef_frame.png` has not been exposed as a downloadable file in this session. The inline preview is visible, but its original PNG bytes are unavailable for import. The profile is prepared; no replacement has been generated. The runtime will activate the frame when the actual PNG is installed. Vines and Labyrinth profiles are present but await their own artwork.
+The original `coral_reef_frame.png` from the user-supplied `Coral_Reef_Frame.zip` is installed unchanged and enabled. Its 256×266 RGBA dimensions, fully transparent 228×228 opening and lower sidewall region were independently checked. Archive SHA-256: `d947fa6f60460e4ff51e47a3ba9be16dd81ca495f1653618aedac433acb6ecba`. PNG SHA-256: `66c1e60140e7d0eff36d10ad27f58a7bcaed31bd828694a134516fe88643d933`. Vines and Labyrinth profiles await their own artwork.
 
-`tests/test_board_frame.gd` uses a clearly marked technical color-patch fixture to check nine-slice geometry, transparency, corner/sidewall preservation, responsive fitting, edge-cell input and lighting coordinates. The fixture is never installed as game artwork. Native pixel checks do not constitute validation of the missing production PNG.
+`tests/test_board_frame.gd` uses a clearly marked technical color-patch fixture to check nine-slice geometry, transparency, corner/sidewall preservation, responsive fitting, edge-cell input and lighting coordinates. The fixture is never installed as game artwork. The original PNG is additionally checked for exact dimensions and transparent opening, and exercised by the normal game/theme/gallery tests.

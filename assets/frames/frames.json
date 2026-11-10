@@ -23,7 +23,7 @@
       "texture": "res://assets/frames/coral_reef_frame.png",
       "appearance": "bleached-wreck-timber-v1",
       "material": "Pale bleached wreck timber, rounded relief, cool shaded flank, turquoise inner reveal, restrained marine encrustation.",
-      "provenance": "User-provided CODEX_FRAME_HANDOFF.md and inline preview. Original PNG attachment pending."
+      "provenance": "User-supplied Coral_Reef_Frame.zip; original 256x266 RGBA PNG installed unchanged, geometry verified against CODEX_FRAME_HANDOFF.md."
     }
   }
 }
