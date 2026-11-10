@@ -314,11 +314,16 @@ func advance(clock: float) -> void:
 		var event: Dictionary = entry.event
 		var sprite: Sprite2D = entry.node
 		var progress := _progress(event, clock)
-		if event.id == "T01" and sprite.material != null:
-			if clock >= event.end:
-				sprite.material = null
-			else:
-				sprite.material.set_shader_parameter("visual_clock", clock)
+		if event.id == "T01":
+			# An incoming front can finish before this cell emits its own front.
+			# The reveal shader owns tube visibility; generic start-time fading
+			# would hide a completed incoming tube until that later emission.
+			sprite.modulate.a = 1.0
+			if sprite.material != null:
+				if clock >= event.end:
+					sprite.material = null
+				else:
+					sprite.material.set_shader_parameter("visual_clock", clock)
 		elif event.id in ["C01", "C02", "L01", "L02", "L03"]:
 			sprite.material.set_shader_parameter("rise", progress)
 			if event.id == "C02":

@@ -2,6 +2,9 @@ class_name ClockworkGrowth
 extends "res://scripts/growth.gd"
 
 const ROOT := "res://art/themes/clockwork_workshop/"
+const HALF_TRAVEL := 0.20
+const REVEAL_TAIL := 0.035
+const CORE_EMIT_DELAY := 0.15
 const DIRS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 const NAMES := ["N", "E", "S", "W"]
 static var manifest: Dictionary = {}
@@ -39,6 +42,39 @@ func add_part(id: String, color: int, cell: Vector2i, center: Vector2, old: bool
 		duration = maxf(duration, event.end)
 	return event
 
+# Arrival means the incoming edge-to-center front is fully visible, not just
+# that its first half has reached the shared cell boundary.
+func _schedule_centers(before: Array) -> void:
+	var frontier: Array[Vector2i] = []
+	for cell: Vector2i in arrivals:
+		if arrivals[cell] < 0 or is_zero_approx(arrivals[cell]):
+			# Existing cells, and every bud in a source-free component, retain
+			# the established independent-start rule from the base graph.
+			continue
+		arrivals[cell] = INF
+		for direction: Vector2i in DIRS:
+			if value(before, cell + direction) == value(board, cell):
+				arrivals[cell] = 2.0 * HALF_TRAVEL + REVEAL_TAIL
+				frontier.append(cell)
+				break
+	var cursor := 0
+	while cursor < frontier.size():
+		var cell: Vector2i = frontier[cursor]
+		cursor += 1
+		for direction: Vector2i in DIRS:
+			var other := cell + direction
+			if value(board, other) != value(board, cell): continue
+			var reached: float = arrivals[cell] + CORE_EMIT_DELAY + 2.0 * HALF_TRAVEL + REVEAL_TAIL
+			if float(arrivals[other]) > reached:
+				arrivals[other] = reached
+				frontier.append(other)
+
+func _emission(cell: Vector2i) -> float:
+	return 0.0 if arrivals[cell] < 0 else float(arrivals[cell]) + CORE_EMIT_DELAY
+
+static func arm_arrival(arm: Dictionary, u: float) -> float:
+	return minf(arm.start + u * arm.seconds, arm.edge_start + (1.0 - u) * arm.seconds)
+
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
 	components.clear()
@@ -47,8 +83,7 @@ func build(before: Array, after: Array) -> void:
 	powered.clear()
 	pins.clear()
 	duration = 0
-	for cell: Vector2i in arrivals:
-		arrivals[cell] = float(arrivals[cell]) * 0.20 / STEP if arrivals[cell] >= 0 else -100.0
+	_schedule_centers(before)
 	for cell: Vector2i in arrivals:
 		var color: int = value(after, cell)
 		var old: bool = value(before, cell) == color
@@ -60,19 +95,20 @@ func build(before: Array, after: Array) -> void:
 			if value(after, other) != color:
 				continue
 			var old_arm: bool = old and value(before, other) == color
-			var arm := add_part("T01", color, cell, Vector2(cell) + Vector2.ONE * 0.5, old_arm, maxf(0, at) + (0.0 if old else 0.15), 0.235, (direction - 1) * PI / 2, key("T01_" + NAMES[direction], color, cell))
+			var arm := add_part("T01", color, cell, Vector2(cell) + Vector2.ONE * 0.5, old_arm, _emission(cell), HALF_TRAVEL + REVEAL_TAIL, (direction - 1) * PI / 2, key("T01_" + NAMES[direction], color, cell))
 			arm.direction = direction
 			# Always use the canonical core field; shader supplies its reverse front.
-			var neighbor_start: float = 0.0 if value(before, other) == color else maxf(0, float(arrivals.get(other, 0))) + 0.15
-			arm.edge_start = -100.0 if old_arm else neighbor_start + 0.20
-			arm.seconds = 0.20
+			arm.edge_start = -100.0 if old_arm else _emission(other) + HALF_TRAVEL
+			arm.seconds = HALF_TRAVEL
 			var peak: float = clampf((arm.edge_start + arm.seconds - arm.start) / (2 * arm.seconds), 0, 1)
-			arm.end = -100.0 if old_arm else minf(arm.start + peak * arm.seconds, arm.edge_start + (1.0 - peak) * arm.seconds) + 0.035
+			arm.end = -100.0 if old_arm else minf(arm.start + peak * arm.seconds, arm.edge_start + (1.0 - peak) * arm.seconds) + REVEAL_TAIL
 			if not old_arm:
 				duration = maxf(duration, arm.end)
-			add_part("T02", color, cell, arm.center, old_arm, maxf(0, arm.start) + 0.12, 0.13, arm.rotation, key("T02_" + NAMES[direction], color, cell))
+			var attachment: Array = specification().components.T02.geometry.east_socket_attachment
+			var collar_u: float = (float(attachment[0]) - 128.0) / 128.0
+			add_part("T02", color, cell, arm.center, old_arm, arm_arrival(arm, collar_u) + REVEAL_TAIL, 0.13, arm.rotation, key("T02_" + NAMES[direction], color, cell))
 			if direction in [1, 2]:
-				var coupling := add_part("T03", color, cell, Vector2(cell) + Vector2.ONE * 0.5 + Vector2(DIRS[direction]) * 0.5, old_arm, minf(maxf(0, arm.start) + 0.20, maxf(0, arm.edge_start)), 0.14, arm.rotation)
+				var coupling := add_part("T03", color, cell, Vector2(cell) + Vector2.ONE * 0.5 + Vector2(DIRS[direction]) * 0.5, old_arm, arm_arrival(arm, 1.0) + REVEAL_TAIL, 0.14, arm.rotation)
 				coupling.key = key("T03_" + NAMES[direction], color, cell)
 				components.erase(key("T03", color, cell))
 				components[coupling.key] = coupling
@@ -88,6 +124,8 @@ func build(before: Array, after: Array) -> void:
 				var arm_key := key("T01_" + NAMES[direction], flower.color, cell + offset)
 				if components.has(arm_key):
 					start = maxf(start, float(components[arm_key].end))
+				var collar_key := key("T02_" + NAMES[direction], flower.color, cell + offset)
+				if components.has(collar_key): start = maxf(start, float(components[collar_key].end))
 		var mechanism := {"origin": cell, "center": Vector2(corner), "color": flower.color, "old": flower.old, "start": -100.0 if flower.old else start, "ready": -100.0 if flower.old else start + 1.95, "directions": [], "chain_end": -100.0}
 		mechanisms[cell] = mechanism
 		flower.start = mechanism.start
