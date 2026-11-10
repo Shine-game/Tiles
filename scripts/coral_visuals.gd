@@ -136,4 +136,5 @@ func configure_surface(platform) -> void:
 		sprite.material.set_shader_parameter("occupancy_mask", platform.mask_texture)
 		sprite.material.set_shader_parameter("grid_size", platform.grid_size)
 		sprite.material.set_shader_parameter("cell_pixels", 256.0)
+		sprite.material.set_shader_parameter("submerged", true)
 		sprite.material.set_shader_parameter("screen_pixel", 256.0 / platform.cell_pixels)

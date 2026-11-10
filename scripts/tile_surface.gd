@@ -1,6 +1,7 @@
 class_name TileSurface
 extends RefCounted
 
+const Palette = preload("res://scripts/palette.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 
 static func depth(unit: float) -> float:
@@ -26,7 +27,7 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 		canvas.add_child(slab)
 		slab.sync([[1]])
 		slab.z_index = 0
-	slab.configure(face.position, face.size.x, color)
+	slab.configure(face.position, face.size.x, color, Palette.coral_reef)
 	# The four-pixel inter-square gap is not part of the logical cell pitch.
 	# Keep the same depth as a committed cell despite this smaller face.
 	slab.depth_pixels = thickness

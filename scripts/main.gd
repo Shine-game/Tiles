@@ -264,7 +264,7 @@ func _update_summaries(board: Array) -> void:
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
 func _design_fingerprint() -> String:
-	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version(), Platform.SURFACE_REVISION)
+	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version(), Platform.surface_revision(Palette.theme_id()))
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -629,7 +629,7 @@ func _save_design() -> void:
 	if board_view.coral_visuals != null and artwork.coral_visuals != null:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, Platform.SURFACE_REVISION)
+	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, Platform.surface_revision(theme))
 	viewport.queue_free()
 	saving = false
 	if result.ok:

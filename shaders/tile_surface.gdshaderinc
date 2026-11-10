@@ -3,6 +3,7 @@ uniform sampler2D occupancy_mask : filter_nearest, repeat_disable;
 uniform int grid_size = 9;
 uniform float cell_pixels = 64.0;
 uniform float corner_ratio = 0.16;
+uniform bool submerged = false;
 
 float occupied_cell(vec2 cell) {
     if (cell.x < 0.0 || cell.y < 0.0 || cell.x >= float(grid_size) || cell.y >= float(grid_size)) {
@@ -60,6 +61,6 @@ float surface_coverage(float distance_to_surface, float pixel) {
 }
 
 vec3 surface_lip(vec3 ink, float distance_to_surface, float pixel) {
-    float lip = 0.30 * smoothstep(-1.25 * pixel, -0.15 * pixel, distance_to_surface);
+    float lip = (submerged ? 0.07 : 0.30) * smoothstep(-1.25 * pixel, -0.15 * pixel, distance_to_surface);
     return mix(ink, vec3(1.0), lip);
 }

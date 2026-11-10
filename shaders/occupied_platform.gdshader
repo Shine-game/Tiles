@@ -19,14 +19,16 @@ void fragment() {
         float top = surface_coverage(top_distance, 1.0);
         float slab = surface_coverage(slab_distance, 1.0);
         // Same offset, softness and contact shading for every tile surface.
-        vec2 shadow_offset = vec2(depth_pixels * 0.25, depth_pixels * 0.7);
+        vec2 shadow_offset = vec2(depth_pixels * (submerged ? 0.15 : 0.25), depth_pixels * (submerged ? 0.24 : 0.7));
         float shadow_distance = surface_distance(p - shadow_offset, depth_pixels);
-        float shadow = 0.18 * (1.0 - smoothstep(0.0, max(1.0, depth_pixels), shadow_distance));
-        vec4 result = vec4(vec3(0.0), shadow);
+        float shadow = (submerged ? 0.075 : 0.18) * (1.0 - smoothstep(0.0, max(1.0, depth_pixels * (submerged ? 1.35 : 1.0)), shadow_distance));
+        vec3 shadow_ink = submerged ? vec3(0.25, 0.52, 0.51) : vec3(0.0);
+        vec4 result = vec4(shadow_ink, shadow);
         float wall_t = clamp(top_distance / max(depth_pixels, 0.001), 0.0, 1.0);
-        vec3 wall = ground_color.rgb * mix(0.84, 0.75, smoothstep(0.0, 1.0, wall_t));
+        vec3 wall = ground_color.rgb * mix(submerged ? 0.94 : 0.84, submerged ? 0.86 : 0.75, smoothstep(0.0, 1.0, wall_t));
+        if (submerged) { wall = mix(wall, vec3(0.60, 0.80, 0.76), 0.18); }
         float alpha = slab + shadow * (1.0 - slab);
-        vec3 rgb = wall * slab / max(alpha, 0.00001);
+        vec3 rgb = (wall * slab + shadow_ink * shadow * (1.0 - slab)) / max(alpha, 0.00001);
         result = vec4(rgb, alpha);
         vec3 top_ink = surface_lip(ground_color.rgb, top_distance, 1.0);
         alpha = top + result.a * (1.0 - top);

@@ -47,6 +47,15 @@ func _run() -> void:
 	check(shot.get_pixel(149, 149).a < 0.1 and shot.get_pixel(159, 149).a > 0.99, "exposed convex corners are rounded")
 	check(shot.get_pixel(180, 218).a > shot.get_pixel(180, 219).a and shot.get_pixel(180, 219).a > 0, "contact shadow fades down onto surrounding surface")
 	check(is_zero_approx(shot.get_pixel(180, 230).a), "shadow becomes fully transparent away from platform")
+	var dry: Image = shot
+	platform.configure(Vector2(20, 20), 64, Color("edd7ad"), true)
+	shot = await capture(viewport)
+	check(shot.get_pixel(180, 217).a > 0.99, "submerged sidewall retains the full 24/256 thickness")
+	check(shot.get_pixel(180, 217).r > dry.get_pixel(180, 217).r, "submerged wall has softer shading")
+	check(shot.get_pixel(180, 220).a < dry.get_pixel(180, 220).a and shot.get_pixel(180, 220).g > shot.get_pixel(180, 220).r, "submerged shadow is softer and blue-green")
+	check(shot.get_pixel(148, 180).r < dry.get_pixel(148, 180).r, "submerged upper rim is restrained")
+	platform.configure(Vector2(20, 20), 64, Color("edd7ad"))
+	shot = await capture(viewport)
 	# An isolated placed cell and an unplaced square use identical pixels,
 	# including the rounded face, bevel, extrusion and offset soft shadow.
 	var single: Image = shot
@@ -125,7 +134,9 @@ func _run() -> void:
 		check(contact.r < 0.98 or contact.g < 0.98 or contact.b < 0.98, theme + ": sidewall remains visible below actual ground and plants")
 		var corner_point: Vector2 = view.global_position + view._point(Vector2(2.015, 2.015))
 		var corner: Color = image.get_pixelv(Vector2i(corner_point))
-		check(minf(corner.r, minf(corner.g, corner.b)) > 0.94, theme + ": actual top fill respects rounded exposed corners")
+		var empty_point: Vector2 = view.global_position + view._point(Vector2(1.85, 1.85))
+		var empty_ink: Color = image.get_pixelv(Vector2i(empty_point))
+		check(maxf(absf(corner.r - empty_ink.r), maxf(absf(corner.g - empty_ink.g), absf(corner.b - empty_ink.b))) < 0.065, theme + ": actual top fill respects rounded exposed corners")
 	scene.queue_free()
 	var mixer_deadline := Time.get_ticks_msec() + 120
 	while Time.get_ticks_msec() < mixer_deadline:

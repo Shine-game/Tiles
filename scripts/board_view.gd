@@ -11,6 +11,7 @@ const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
+const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
 const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
@@ -32,6 +33,7 @@ var coral_reef := false
 var coral_visuals: CoralVisuals
 var occupied_platform: OccupiedPlatform
 var placement_revision := 0
+var reef_water: ReefWater
 
 func _ready() -> void:
 	z_index = 1
@@ -65,6 +67,13 @@ func _build_pattern(before: Array, after: Array) -> void:
 	coral_reef = Palette.coral_reef
 	pattern = Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())
 	pattern.build(before, after)
+	if reef_water == null and coral_reef:
+		reef_water = Water.new()
+		# Insert before the platform: both floor layers share z=-1.
+		add_child(reef_water)
+		move_child(reef_water, 0)
+	if reef_water != null:
+		reef_water.visible = coral_reef
 	if occupied_platform == null:
 		occupied_platform = Platform.new()
 		add_child(occupied_platform)
@@ -151,7 +160,9 @@ func update_geometry() -> void:
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
 	if occupied_platform != null:
-		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color())
+		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef)
+	if reef_water != null:
+		reef_water.configure(field, _point(Vector2.ZERO), pitch)
 	if coral_visuals != null:
 		coral_visuals.position = _point(Vector2.ZERO)
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0

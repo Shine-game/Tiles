@@ -45,7 +45,10 @@ func sync(grid: Array) -> void:
 	(material as ShaderMaterial).set_shader_parameter("occupancy_mask", mask_texture)
 	(material as ShaderMaterial).set_shader_parameter("grid_size", n)
 
-func configure(origin: Vector2, pitch: float, ink: Color) -> void:
+static func surface_revision(theme: String) -> String:
+	return "lagoon24-v3" if theme == "coral_reef" else SURFACE_REVISION
+
+func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false) -> void:
 	top_origin = origin
 	cell_pixels = pitch
 	depth_pixels = depth(pitch)
@@ -58,6 +61,7 @@ func configure(origin: Vector2, pitch: float, ink: Color) -> void:
 	shader_material.set_shader_parameter("margin_pixels", margin)
 	shader_material.set_shader_parameter("rect_pixels", size)
 	shader_material.set_shader_parameter("ground_color", ink)
+	shader_material.set_shader_parameter("submerged", underwater)
 
 # Logical occupancy for input/geometry verification; rounded rendering does not
 # remove any playable area from a cell.

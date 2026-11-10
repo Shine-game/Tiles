@@ -1,0 +1,13 @@
+# Coral Reef underwater environment
+
+The Coral Reef board has one pale lagoon floor beneath both occupied and empty cells. The surrounding interface remains white. A smooth board-wide color gradient adds depth without a repeating image. Original sandy ground textures, rotations, coral artwork and growth masks are unchanged.
+
+`ReefWater` owns two input-transparent rectangles. The background is inserted below occupied ground; an additive lighting rectangle sits above the complete coral/sand stack but below the floating piece. Both match the board's field rectangle. The caustic shader derives its coordinates from the same raised top origin and cell pitch as the artwork, rather than sprite UVs or screen pixels. Two softly folded analytical light bands add at most about 2% light and evolve on shader `TIME` independently of the placement/growth clock. Resizing and changing grid size retain the coordinate contract. Lighting continues while the board is idle or completely empty. Hiding the Coral Reef theme hides both layers.
+
+Thickness stays 24 source pixels per 256px cell. The shared slab renderer offers a reef shading mode: the upper lip drops from 30% to 7% white, the lower sidewall has less contrast and a slight lagoon tint, and the contact shadow drops from 18% to 7.5% opacity with a blue-green color, a shorter downward offset and wider softness. Incoming pieces use the same reef shading mode. Fusion and playable footprints are unchanged.
+
+Gallery snapshots include the water background and one instantaneous lighting phase, using reef surface revision `lagoon24-v3`. Other themes retain `rounded24-v2`; existing gallery images are preserved.
+
+`tests/test_reef_water.gd` checks layering, theme isolation, input transparency, 9x9/11x11 sizing, fixed thickness, independent time, state preservation and gallery identity. On a native display it additionally verifies lagoon color, a white surrounding interface, and changing light in both occupied and empty regions without spill outside the board. `tests/render_platform.gd` verifies the retained extrusion, reduced rim and softer tinted shadow.
+
+Living-structure sway is deliberately deferred for discussion. A suitable next pass is an anchored shader bend on completed finger and anemone crown artwork only, driven by a shared slow current field. Roots, foot, disc, colony body and main network stay fixed. Region-partitioned crowns must use exactly the same deformation across all eight layers to avoid seams. Dedicated flexibility masks would allow precise fixed attachment zones; existing growth-distance masks could serve as a first prototype. This does not require new frame-by-frame artwork or affect placement/growth timing. Android GPU performance still needs device measurement.

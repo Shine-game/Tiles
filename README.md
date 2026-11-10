@@ -23,7 +23,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Raised occupied platform
 
-All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat white. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
+All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat: white in Vines/Labyrinth and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
 
 Ground, wall, and shadow appear as soon as placement commits. Undo/Erase update the outline immediately; plant growth runs independently on the upper face. Coral keeps all six original rotating ground textures. The shader adds no background paper. Gallery captures include the platform and preserve older images separately. See [the platform implementation notes](docs/raised-platform.md).
 
@@ -39,7 +39,7 @@ Paths are visual sandy spaces; there is no player character or route-solving rul
 
 Select **Coral Reef** with the Garden entry in Settings. The third theme uses the supplied redesigned salmon/turquoise coral with reciprocal accent fingers and a warm anemone disc. All artwork renders at its supplied scale: the ordinary body is 77px wide on a 256px cell canvas. The earlier scaling workaround is removed.
 
-Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares and the surrounding screen stay white. The theme keeps its supplied material relief above the shared raised-platform shader; the earlier per-cell bevel/shadow renderer is removed.
+Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares share a continuous pale lagoon background; the surrounding interface stays white. A broad, soft caustic layer drifts across water, sand and coral in board coordinates, independently of placement/growth. Reef sidewalls retain the 24/256 thickness with softened blue-green shadows and a reduced rim. See [the underwater environment](docs/reef-environment.md). The theme keeps its supplied material relief above the shared raised-platform shader; the earlier per-cell bevel/shadow renderer is removed.
 
 Same-color 2×2 loops develop body/fold/finger colony layers. **Only immediate horizontal or vertical colony neighbors join**, with one anemone per pair. A filled 4×2 area has three colonies/two anemones; a filled 3×3 has four colonies/four anemones. Diagonal and longer-distance joins are removed. The foot, oral disc, and continuous curved crown reveal in stages through the supplied geodesic fields; the crown's eight regions share one clock.
 
@@ -95,7 +95,7 @@ Vines and Labyrinth growth have a soft, original stereo foliage whisper. Each ne
 
 `assets/audio/foliage.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
 
-The surrounding screen stays white in all palettes. The field sits directly below the header, and Place has twice the height of the other action buttons. Filled cells form one raised surface with a board-wide edge shader. Placed cells have square edges that merge without internal seams. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming and hovering pieces have thicker slabs with softly rounded corners, a matching colored face, darker underside, and soft shadow. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
+The surrounding screen stays white in all palettes. The field sits directly below the header, and Place has twice the height of the other action buttons. Filled cells form one raised surface with a board-wide edge shader. Placed cells have rounded exposed corners and merge without internal seams. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming, hovering and placed tiles share one slab renderer with the same thickness, corner rounding, bevel and shadow rules. Reef shading uses a softer underwater treatment. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
 
 `tests/test_sound_and_depth.gd` runs 29 checks for idle silence, growth whispers, bell timing, duplicate suppression, cancellation, audio fade races, raised surfaces, stable placement coordinates, and raised-rim dragging.
 
@@ -126,6 +126,7 @@ godot --headless --path . --script tests/test_rules.gd
 godot --headless --path . --script tests/test_growth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_coral_audio.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_reef_water.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd
