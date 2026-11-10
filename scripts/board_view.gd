@@ -9,6 +9,7 @@ signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: flo
 signal visual_clock_advanced(clock: float)
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
+const Frame = preload("res://scripts/board_frame.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Water = preload("res://scripts/reef_water.gd")
@@ -34,6 +35,7 @@ var coral_visuals: CoralVisuals
 var occupied_platform: OccupiedPlatform
 var placement_revision := 0
 var reef_water: ReefWater
+var board_frame: BoardFrame
 
 func _ready() -> void:
 	z_index = 1
@@ -67,6 +69,10 @@ func _build_pattern(before: Array, after: Array) -> void:
 	coral_reef = Palette.coral_reef
 	pattern = Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())
 	pattern.build(before, after)
+	if board_frame == null:
+		board_frame = Frame.new()
+		add_child(board_frame)
+	board_frame.apply_theme(Palette.theme_id())
 	if reef_water == null and coral_reef:
 		reef_water = Water.new()
 		# Insert before the platform: both floor layers share z=-1.
@@ -154,6 +160,10 @@ func update_geometry() -> void:
 		return
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
+	if board_frame != null and board_frame.is_present():
+		field = Frame.fit(Rect2(Vector2.ZERO, size))
+		side = field.size.x
+		board_frame.surround(field)
 	# Keep the raised north edge and its shadow inside the field, including
 	# high-resolution gallery captures. The logical board remains square.
 	var edge_allowance: float = 3.0 * Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.02
@@ -162,7 +172,8 @@ func update_geometry() -> void:
 	if occupied_platform != null:
 		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef)
 	if reef_water != null:
-		reef_water.configure(field, _point(Vector2.ZERO), pitch)
+		var framed: bool = board_frame != null and board_frame.is_present()
+		reef_water.configure(field, _point(Vector2.ZERO), pitch, board_frame.get_rect() if framed else field, board_frame.texture if framed else null)
 	if coral_visuals != null:
 		coral_visuals.position = _point(Vector2.ZERO)
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0

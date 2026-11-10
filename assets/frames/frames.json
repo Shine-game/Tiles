@@ -1,0 +1,29 @@
+{
+  "schema": "tiles.board_frames.v1",
+  "geometry": {
+    "source_size": [256, 266],
+    "rim": 14,
+    "sidewall": 10
+  },
+  "themes": {
+    "vines": {
+      "enabled": false,
+      "texture": "",
+      "appearance": "",
+      "material": "Awaiting theme artwork; use the shared frame geometry."
+    },
+    "labyrinth": {
+      "enabled": false,
+      "texture": "",
+      "appearance": "",
+      "material": "Awaiting theme artwork; use the shared frame geometry."
+    },
+    "coral_reef": {
+      "enabled": true,
+      "texture": "res://assets/frames/coral_reef_frame.png",
+      "appearance": "bleached-wreck-timber-v1",
+      "material": "Pale bleached wreck timber, rounded relief, cool shaded flank, turquoise inner reveal, restrained marine encrustation.",
+      "provenance": "User-provided CODEX_FRAME_HANDOFF.md and inline preview. Original PNG attachment pending."
+    }
+  }
+}

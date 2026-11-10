@@ -263,8 +263,14 @@ func _update_summaries(board: Array) -> void:
 		style.border_color = Color(Palette.tile(1), 0.6)
 		indicator.panel.add_theme_stylebox_override("normal", style)
 
+func _surface_revision(theme: String) -> String:
+	var revision: String = Platform.surface_revision(theme)
+	if board_view.board_frame != null and board_view.board_frame.is_present():
+		revision += "/frame-" + board_view.board_frame.appearance
+	return revision
+
 func _design_fingerprint() -> String:
-	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version(), Platform.surface_revision(Palette.theme_id()))
+	return Gallery.fingerprint(game.board, Palette.selected_index, Palette.theme_id(), Palette.theme_version(), _surface_revision(Palette.theme_id()))
 
 func _can_save() -> bool:
 	return game.board.any(func(row: Array): return row.any(func(value): return value != 0)) and Rules.symmetry_states(game.board).any(func(state: Dictionary): return state.complete)
@@ -613,6 +619,7 @@ func _save_design() -> void:
 	var theme: String = Palette.theme_id()
 	var theme_version: String = Palette.theme_version()
 	var fingerprint := _design_fingerprint()
+	var surface_revision := _surface_revision(theme)
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(900, 900)
 	viewport.disable_3d = true
@@ -623,13 +630,16 @@ func _save_design() -> void:
 	artwork.show_guides = false
 	viewport.add_child(artwork)
 	artwork.show_settled(snapshot)
+	if board_view.board_frame != null and board_view.board_frame.is_present():
+		artwork.board_frame.apply_theme(theme, board_view.board_frame.texture)
+		artwork.update_geometry()
 	# Preserve established leaf direction in the clean artwork capture.
 	artwork.direction_by_edge = board_view.direction_by_edge.duplicate(true)
 	artwork._adopt_directions(true)
 	if board_view.coral_visuals != null and artwork.coral_visuals != null:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, Platform.surface_revision(theme))
+	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, surface_revision)
 	viewport.queue_free()
 	saving = false
 	if result.ok:

@@ -21,6 +21,10 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - The Settings button opens a Vines/Labyrinth theme switch, five vine palette choices, the 9×9/11×11 size switch, Restart, and Gallery. Palette changes preserve play; changing size or restarting begins a new game with fresh helper budgets. Menus and gallery pages fit without scrolling.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
 
+## Shared theme frames
+
+All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef's original PNG is currently pending as a downloadable attachment; its profile is prepared, and the existing layout stays unframed until the source texture is installed. Vines/Labyrinth await their own material artwork.
+
 ## Raised occupied platform
 
 All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat: white in Vines/Labyrinth and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
@@ -127,6 +131,7 @@ godot --headless --path . --script tests/test_growth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_coral_audio.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_reef_water.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_board_frame.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd

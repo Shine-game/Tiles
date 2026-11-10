@@ -109,9 +109,9 @@ func _run() -> void:
 	check(Platform.surface_revision("coral_reef") != Platform.SURFACE_REVISION and Platform.surface_revision("vines") == Platform.SURFACE_REVISION, "gallery identifies the new reef environment separately")
 	for size_choice in [9, 11]:
 		scene._ask_reset(size_choice)
-		check(water.light_plane.get_rect() == view.field and water.floor_plane.get_rect() == view.field, "water covers the complete %dx%d board" % [size_choice, size_choice])
+		check(water.light_plane.get_rect() == (view.board_frame.get_rect() if view.board_frame.is_present() else view.field) and water.floor_plane.get_rect() == view.field, "water covers the complete %dx%d board" % [size_choice, size_choice])
 		check(is_equal_approx(view.surface_depth(), view.pitch * 24 / 256), "water does not change tile thickness")
-		check(water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - view.field.position), "caustics use the same board coordinates as sand and coral")
+		check(water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - water.light_plane.position), "caustics use the same board coordinates as sand and coral")
 	scene._ask_reset(9)
 	var garden: Array = Rules.empty_board(9)
 	for y in range(2, 7):
@@ -146,7 +146,7 @@ func _run() -> void:
 		var empty_changes := 0
 		var occupied_changes := 0
 		var outside_changes := 0
-		var board_rect: Rect2 = Rect2(view.global_position + view.field.position, view.field.size)
+		var board_rect: Rect2 = Rect2(view.global_position + water.light_plane.position, water.light_plane.size)
 		for y in range(0, first.get_height(), 4):
 			for x in range(0, first.get_width(), 4):
 				var a: Color = first.get_pixel(x, y)
@@ -167,7 +167,7 @@ func _run() -> void:
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
-		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-adaptive24-v6", "gallery captures the new environment under its own revision")
+		check(records.size() == 1 and records[0].get("surface_revision", "") == scene._surface_revision("coral_reef"), "gallery captures the new environment under its own revision")
 		if records.size() == 1:
 			var picture: Image = scene.gallery.picture(records[0]).get_image()
 			var saved_water: Color = picture.get_pixel(790, 790)

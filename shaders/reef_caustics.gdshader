@@ -7,6 +7,31 @@ uniform vec2 rect_pixels = vec2(640.0);
 // A fixed phase supports native render checks; gameplay uses shader time.
 uniform float time_override = -1.0;
 
+// The existing lighting pass also covers a frame, without lighting its
+// transparent exterior corners or adding a separate frame animation.
+uniform bool frame_enabled = false;
+uniform sampler2D frame_artwork : filter_linear, repeat_disable;
+uniform vec2 frame_source_pixels = vec2(1.0);
+uniform vec4 frame_margins = vec4(0.0);
+
+float patch_coordinate(float value, float destination, float source, float before, float after) {
+    if (value < before) { return value; }
+    if (value >= destination - after) { return source - (destination - value); }
+    return before + (value - before) * (source - before - after) / max(destination - before - after, 0.001);
+}
+
+float frame_coverage(vec2 pixel) {
+    if (!frame_enabled) { return 1.0; }
+    if (pixel.x >= frame_margins.x && pixel.y >= frame_margins.y
+            && pixel.x < rect_pixels.x - frame_margins.z && pixel.y < rect_pixels.y - frame_margins.w) {
+        return 1.0;
+    }
+    vec2 source = vec2(
+        patch_coordinate(pixel.x, rect_pixels.x, frame_source_pixels.x, frame_margins.x, frame_margins.z),
+        patch_coordinate(pixel.y, rect_pixels.y, frame_source_pixels.y, frame_margins.y, frame_margins.w));
+    return texture(frame_artwork, source / frame_source_pixels).a;
+}
+
 vec2 site_hash(vec2 site) {
     // Algebraic hash avoids extra trigonometric work for every candidate.
     vec3 p = fract(vec3(site.x, site.y, site.x) * vec3(0.1031, 0.1030, 0.0973));
@@ -80,5 +105,5 @@ void fragment() {
     float alpha = light_alpha + shade_alpha;
     vec3 illumination = (vec3(0.92, 0.995, 0.98) * light_alpha
         + vec3(0.25, 0.55, 0.57) * shade_alpha) / max(alpha, 0.00001);
-    COLOR = vec4(illumination, alpha);
+    COLOR = vec4(illumination, alpha * frame_coverage(UV * rect_pixels));
 }
