@@ -20,6 +20,74 @@ func capture() -> Image:
 	await RenderingServer.frame_post_draw
 	return root.get_texture().get_image()
 
+func pool_areas(image: Image, threshold: float) -> Array:
+	var width := image.get_width()
+	var height := image.get_height()
+	var dark := PackedByteArray()
+	dark.resize(width * height)
+	for y in range(height):
+		for x in range(width):
+			dark[y * width + x] = 1 if image.get_pixel(x, y).get_luminance() < threshold else 0
+	var areas: Array = []
+	var offsets := PackedInt32Array([-1, 1, -width, width])
+	for start in range(dark.size()):
+		if dark[start] == 0:
+			continue
+		var queue := PackedInt32Array([start])
+		dark[start] = 0
+		var cursor := 0
+		var border := false
+		while cursor < queue.size():
+			var current: int = queue[cursor]
+			cursor += 1
+			var x: int = current % width
+			var y: int = current / width
+			border = border or x == 0 or y == 0 or x == width - 1 or y == height - 1
+			for offset: int in offsets:
+				var next: int = current + offset
+				if next >= 0 and next < dark.size() and absi(next % width - x) <= 1 and dark[next] != 0:
+					dark[next] = 0
+					queue.append(next)
+		if not border and queue.size() >= 20:
+			areas.append(queue.size())
+	return areas
+
+func check_reorganization(shader: Shader) -> void:
+	# Isolate the light on a flat surface so artwork cannot masquerade as pools.
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(240, 240)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	var floor_plane := ColorRect.new()
+	floor_plane.size = Vector2(240, 240)
+	floor_plane.color = Color(0.90, 0.94, 0.92)
+	viewport.add_child(floor_plane)
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var threshold: float = viewport.get_texture().get_image().get_pixel(120, 120).get_luminance() - 0.004
+	var light := ColorRect.new()
+	light.size = Vector2(240, 240)
+	var ink := ShaderMaterial.new()
+	ink.shader = shader
+	ink.set_shader_parameter("cell_pixels", 240.0 / 9.0)
+	ink.set_shader_parameter("rect_pixels", Vector2(240, 240))
+	light.material = ink
+	viewport.add_child(light)
+	var counts: Array = []
+	var mixed_sizes := false
+	for phase: float in [0.0, 6.0, 12.0, 18.0]:
+		ink.set_shader_parameter("time_override", phase)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var areas: Array = pool_areas(viewport.get_texture().get_image(), threshold)
+		counts.append(areas.size())
+		if areas.size() > 1 and float(areas.max()) > 3.0 * float(areas.min()):
+			mixed_sizes = true
+	check(mixed_sizes, "rendered caustics mix large and small pools")
+	check(int(counts.max()) - int(counts.min()) >= 3, "rendered pool count changes as the mesh splits and merges")
+	print("Reef interior pool counts at 0/6/12/18 seconds: ", counts)
+	viewport.queue_free()
+
 func _run() -> void:
 	root.size = Vector2i(720, 1100)
 	var scene = load("res://main.tscn").instantiate()
@@ -73,7 +141,7 @@ func _run() -> void:
 				if difference < -0.04:
 					shadow_rows += 1
 		check(light_rows > 100 and shadow_rows > 100, "cellular caustics produce bright filaments and shaded pools")
-		water.freeze_phase(1.0)
+		water.freeze_phase(1.5)
 		var second: Image = await capture()
 		var empty_changes := 0
 		var occupied_changes := 0
@@ -94,12 +162,12 @@ func _run() -> void:
 						occupied_changes += 1
 					else:
 						empty_changes += 1
-		check(empty_changes > 100 and occupied_changes > 100, "caustics visibly oscillate over empty water and occupied sand/coral within one second")
+		check(empty_changes > 100 and occupied_changes > 100, "caustics visibly oscillate over empty water and occupied sand/coral within 1.5 seconds")
 		check(outside_changes == 0, "lighting never spills onto the white interface")
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
-		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-caustics24-v5", "gallery captures the new environment under its own revision")
+		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-adaptive24-v6", "gallery captures the new environment under its own revision")
 		if records.size() == 1:
 			var picture: Image = scene.gallery.picture(records[0]).get_image()
 			var saved_water: Color = picture.get_pixel(790, 790)
@@ -108,6 +176,7 @@ func _run() -> void:
 			DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
 		DirAccess.remove_absolute(scene.gallery.directory)
 		water.freeze_phase(-1)
+		await check_reorganization(water.CAUSTICS)
 	check(view.occupied_platform.mask_revision == mask_revision and scene.game.board == board_snapshot, "lighting never changes occupancy or puzzle state")
 	var before: Array = garden.duplicate(true)
 	garden[1][2] = 1
