@@ -60,6 +60,19 @@ func _run() -> void:
 		var empty: Color = first.get_pixelv(Vector2i(view.global_position + view._floor_point(Vector2(7.5, 7.5))))
 		check(outside.is_equal_approx(Color.WHITE), "native renderer confines lagoon to the board")
 		check(empty.g > empty.r + 0.025 and empty.b > empty.r + 0.015, "native empty squares read as pale lagoon water")
+		water.light_plane.hide()
+		var unlit: Image = await capture()
+		water.light_plane.show()
+		var light_rows := 0
+		var shadow_rows := 0
+		for y in range(int(view.global_position.y + view.field.position.y), int(view.global_position.y + view.field.end.y), 4):
+			for x in range(int(view.global_position.x + view.field.position.x), int(view.global_position.x + view.field.end.x), 4):
+				var difference: float = first.get_pixel(x, y).get_luminance() - unlit.get_pixel(x, y).get_luminance()
+				if difference > 0.015:
+					light_rows += 1
+				if difference < -0.04:
+					shadow_rows += 1
+		check(light_rows > 100 and shadow_rows > 100, "uneven water surface produces both clear light rows and shadow rows")
 		water.freeze_phase(20)
 		var second: Image = await capture()
 		var empty_changes := 0
@@ -70,23 +83,23 @@ func _run() -> void:
 			for x in range(0, first.get_width(), 4):
 				var a: Color = first.get_pixel(x, y)
 				var b: Color = second.get_pixel(x, y)
-				if maxf(absf(a.r - b.r), maxf(absf(a.g - b.g), absf(a.b - b.b))) < 1.5 / 255:
-					continue
+				var change: float = maxf(absf(a.r - b.r), maxf(absf(a.g - b.g), absf(a.b - b.b)))
 				var p := Vector2(x, y)
 				if not board_rect.has_point(p):
-					outside_changes += 1
-				else:
+					if change > 1.5 / 255:
+						outside_changes += 1
+				elif change > 0.04:
 					var cell: Vector2 = (p - view.global_position - view._point(Vector2.ZERO)) / view.pitch
 					if view.occupied_platform.filled(cell):
 						occupied_changes += 1
 					else:
 						empty_changes += 1
-		check(empty_changes > 100 and occupied_changes > 100, "continuous caustics move across empty water and occupied sand/coral while idle")
+		check(empty_changes > 100 and occupied_changes > 100, "wave lighting visibly changes empty water and occupied sand/coral by over 4% while idle")
 		check(outside_changes == 0, "lighting never spills onto the white interface")
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
-		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon24-v3", "gallery captures the new environment under its own revision")
+		check(records.size() == 1 and records[0].get("surface_revision", "") == "lagoon-waves24-v4", "gallery captures the new environment under its own revision")
 		if records.size() == 1:
 			var picture: Image = scene.gallery.picture(records[0]).get_image()
 			var saved_water: Color = picture.get_pixel(790, 790)

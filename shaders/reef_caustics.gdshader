@@ -1,5 +1,5 @@
 shader_type canvas_item;
-render_mode unshaded, blend_add;
+render_mode unshaded, blend_mix;
 
 uniform vec2 cell_origin = vec2(0.0);
 uniform float cell_pixels = 64.0;
@@ -10,15 +10,20 @@ uniform float time_override = -1.0;
 
 void fragment() {
     vec2 p = (UV * rect_pixels - cell_origin) / cell_pixels;
-    float t = (time_override < 0.0 ? TIME : time_override) * 0.16;
-    // Slowly refracted broad bands, shared over every structure and empty cell.
-    vec2 flow = p + vec2(sin(p.y * 0.53 + t) * 0.32, cos(p.x * 0.47 - t * 0.8) * 0.28);
-    float a = sin(flow.x * 1.45 + flow.y * 1.08 + t * 0.62);
-    float b = sin(flow.x * -1.02 + flow.y * 1.61 - t * 0.75 + 1.8);
-    float c = sin(flow.x * 0.79 - flow.y * 0.66 + t * 0.39 + 0.5);
-    float folded = a + b * 0.65 + c * 0.35;
-    float light = exp(-folded * folded * 7.0);
-    float second = exp(-pow(a * 0.62 - b + c * 0.30, 2.0) * 9.0);
-    // At most ~2% added light. Soft edges and slow drift preserve legibility.
-    COLOR = vec4(vec3(0.78, 0.96, 0.93), (light * 0.013 + second * 0.007));
+    float t = (time_override < 0.0 ? TIME : time_override) * 0.26;
+    // A gently uneven water surface refracts broad traveling rows. The rows
+    // curve together rather than flashing or restarting on individual cells.
+    float uneven = sin(p.x * 0.75 + t * 0.55) * 0.65
+        + sin(p.y * 0.60 + p.x * 0.22 - t * 0.35) * 0.24;
+    float phase = p.y * 1.85 + p.x * 0.40 + uneven - t * 0.90;
+    float wave = sin(phase);
+    float light = smoothstep(0.05, 0.95, wave);
+    float shade = smoothstep(0.05, 0.95, -wave);
+    float crest = pow(max(0.0, wave), 6.0);
+    float light_alpha = light * 0.20 + crest * 0.025;
+    float shade_alpha = shade * 0.19;
+    float alpha = light_alpha + shade_alpha;
+    vec3 illumination = (vec3(0.96, 1.0, 0.98) * light_alpha
+        + vec3(0.25, 0.55, 0.56) * shade_alpha) / max(alpha, 0.00001);
+    COLOR = vec4(illumination, alpha);
 }

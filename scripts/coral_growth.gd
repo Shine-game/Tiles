@@ -137,9 +137,7 @@ func build(before: Array, after: Array) -> void:
 			var arm_id := "arm_" + name
 			var arm := _add(arm_id, color, cell, center, old_arm, start, HALF_SECONDS, reverse, true)
 			arms[arm_id] = arm
-			for index in range(2):
-				var fingers := "fingers_%s_%d" % [name, index]
-				_add(fingers, color, cell, center, old_arm, dependent_start(fingers, {arm_id: arm}), component_duration(fingers))
+			# Tiny path fingers are omitted for phone-scale readability.
 		for junction: String in ["junction_ne", "junction_es", "junction_sw", "junction_wn"]:
 			var dependencies: Array = specification().components[junction].animation.dependencies
 			if arms.has(dependencies[0].component) and arms.has(dependencies[1].component):

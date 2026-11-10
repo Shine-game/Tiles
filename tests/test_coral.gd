@@ -69,10 +69,8 @@ func _run() -> void:
 	check(is_equal_approx(model.arrivals[Vector2i(4, 4)], 0.2) and is_equal_approx(model.arrivals[Vector2i(5, 4)], 0.4), "outside growth propagates cell by cell")
 	var inward: Dictionary = model.components[Coral.key("arm_w", 1, Vector2i(4, 4))]
 	check(Coral.arrival(inward, 1) < Coral.arrival(inward, 0), "incoming arm enters from boundary")
-	var outward: Dictionary = model.components[Coral.key("arm_e", 1, Vector2i(4, 4))]
-	var finger: Dictionary = model.components[Coral.key("fingers_e_0", 1, Vector2i(4, 4))]
-	var attachment: Dictionary = spec.components.fingers_e_0.animation.dependencies[0]
-	check(is_equal_approx(finger.start, Coral.arrival(outward, attachment.at_mask_u) + attachment.delay_seconds), "fingers use supplied attachment values")
+	check(model.components.values().all(func(event: Dictionary): return not event.id.begins_with("fingers_")), "tiny fingers are omitted from paths and their growth schedule")
+	check(model.components.has(Coral.key("arm_e", 1, Vector2i(4, 4))), "simplified paths retain their connected arms")
 	var block: Array = Rules.empty_board(9)
 	for y in range(2, 5):
 		for x in range(2, 5):
@@ -81,6 +79,7 @@ func _run() -> void:
 	before[2][2] = 0
 	model.build(before, block)
 	check(model.colonies.size() == 4 and model.unions.size() == 4, "3x3 gives four colonies and four anemones")
+	check(model.components.values().any(func(event: Dictionary): return event.id.begins_with("colony_fingers_")), "large colony fingers remain in the reef")
 	var origin := Vector2i(2, 2)
 	var body: Dictionary = model.components[Coral.key("colony_body", 1, origin)]
 	var fold: Dictionary = model.components[Coral.key("colony_fold_ne", 1, origin)]
