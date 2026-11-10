@@ -7,6 +7,11 @@ const RISE = preload("res://shaders/clockwork_rise.gdshader")
 const REVEAL = preload("res://shaders/clockwork_reveal.gdshader")
 const CHAIN = preload("res://shaders/clockwork_chain.gdshader")
 const GROUND = preload("res://shaders/ground_surface.gdshader")
+const CHAIN_LINK_SCALE := 2.0
+const CHAIN_PITCH := 29.0 * CHAIN_LINK_SCALE
+const CHAIN_CANVAS := 64.0 * CHAIN_LINK_SCALE
+const CHAIN_RUN_OFFSET := 28.0
+const CHAIN_HOUSING_SCALE := 1.2
 const OMEGA := TAU / 6.0
 static var textures: Dictionary = {}
 var registry: Dictionary = {}
@@ -48,7 +53,7 @@ class FXLayer extends Node2D:
 # Artwork choice is independent of logical color, connectivity and motion.
 # Alternate the stacked driving layers so their silhouettes remain readable.
 static func art_variant(id: String, logical_color: int) -> String:
-	var artwork_color: int = 3 - logical_color if id in ["L01", "CH01_link"] else logical_color
+	var artwork_color: int = 3 - logical_color if id in ["L03", "CH01_link"] else logical_color
 	return "copper" if artwork_color == 1 else "gunmetal"
 
 static func texture(path: String) -> Texture2D:
@@ -207,6 +212,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				sprite.texture = texture(Model.specification().components[event.id].assets[variant])
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			sprite.position = event.center * 256
+			if event.id == "J00_chain_junction": sprite.scale = Vector2.ONE * CHAIN_HOUSING_SCALE
 			sprite.z_index = layer(event.id)
 			add_child(sprite)
 			if reverse and event.get("terminal", false):
@@ -258,12 +264,13 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			for run in range(2):
 				var strip := ColorRect.new()
 				strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				strip.position = Vector2(0, (-28 if run == 0 else 28) - 32)
-				strip.size = Vector2(256, 64)
+				strip.position = Vector2(0, (-CHAIN_RUN_OFFSET if run == 0 else CHAIN_RUN_OFFSET) - CHAIN_CANVAS * 0.5)
+				strip.size = Vector2(256, CHAIN_CANVAS)
 				var ink := ShaderMaterial.new()
 				ink.shader = CHAIN
 				ink.set_shader_parameter("link_art", texture(Model.specification().components.CH01_link.assets[art_variant("CH01_link", event.color)]))
 				ink.set_shader_parameter("reverse_run", run == 1)
+				ink.set_shader_parameter("link_scale", CHAIN_LINK_SCALE)
 				strip.material = ink
 				parent.add_child(strip)
 				strips.append(strip)
