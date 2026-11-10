@@ -25,6 +25,7 @@ func fixture() -> Texture2D:
 	return ImageTexture.create_from_image(image)
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var frame := Frame.new()
 	root.add_child(frame)
 	check(frame.mouse_filter == Control.MOUSE_FILTER_IGNORE and not frame.draw_center, "frame is input-transparent with no painted center")

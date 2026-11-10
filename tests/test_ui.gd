@@ -35,6 +35,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
 	for i in range(4):

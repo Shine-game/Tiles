@@ -9,6 +9,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var explicit_palette := -1
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--palette="):

@@ -17,6 +17,7 @@ func near(a: float, b: float) -> bool:
 	return absf(a - b) < 0.00001
 
 func _initialize() -> void:
+	Palette.select_theme("vines")
 	var before: Array = Rules.empty_board(9)
 	before[2][0] = Rules.BLUE
 	var after: Array = before.duplicate(true)

@@ -123,7 +123,7 @@ func _build_interface() -> void:
 	size_picker = _button("9 × 9", func(): _ask_reset(11 if game.board.size() == 9 else 9))
 	palette_button = _button("⚙", _toggle_palette_menu)
 	gallery_button = _button("Gallery", _open_gallery)
-	theme_button = _button("Garden: Vines", _toggle_theme)
+	theme_button = _button("Theme: " + Palette.theme_name(), _toggle_theme)
 	palette_menu = PanelContainer.new()
 	palette_menu.visible = false
 	palette_menu.z_index = 80
@@ -474,12 +474,17 @@ func _reset() -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
+	if Palette.clockwork:
+		var paper := ClockworkVisuals.texture("artwork/background/drafting_paper_1080x1650.png")
+		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
+		var extent: Vector2 = paper.get_size() * factor
+		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 
 func _layout_palette_menu(pad: float) -> void:
 	var options: Array = [theme_button] + (palette_options if Palette.theme_id() == "vines" else []) + [size_picker, new_button, gallery_button]
 	for option: Control in palette_options:
 		option.visible = Palette.theme_id() == "vines"
-	theme_button.text = "Garden: " + Palette.theme_name()
+	theme_button.text = "Theme: " + Palette.theme_name()
 	var row_height: float = clampf((size.y - 2 * pad - 12) / options.size() - 4, 22, 44)
 	var width: float = minf(260, size.x - 2 * pad)
 	var height: float = (row_height + 4) * options.size() + 8
@@ -628,6 +633,7 @@ func _save_design() -> void:
 	var artwork = BoardView.new()
 	artwork.size = Vector2(900, 900)
 	artwork.show_guides = false
+	artwork.paper_background = Palette.clockwork
 	viewport.add_child(artwork)
 	artwork.show_settled(snapshot)
 	if board_view.board_frame != null and board_view.board_frame.is_present():
@@ -638,6 +644,8 @@ func _save_design() -> void:
 	artwork._adopt_directions(true)
 	if board_view.coral_visuals != null and artwork.coral_visuals != null:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
+	if board_view.clockwork_visuals != null and artwork.clockwork_visuals != null:
+		artwork.clockwork_visuals.copy_motion(board_view.clockwork_visuals)
 	await RenderingServer.frame_post_draw
 	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, surface_revision)
 	viewport.queue_free()

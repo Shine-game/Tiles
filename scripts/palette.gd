@@ -14,23 +14,25 @@ const INVALID_BORDER := Color("6f7377")
 static var selected_index := 0
 static var labyrinth := false
 static var coral_reef := false
-const THEMES := ["vines", "labyrinth", "coral_reef"]
+static var clockwork := true
+const THEMES := ["clockwork", "vines", "labyrinth", "coral_reef"]
 const HEDGE_GREEN := Color("119d45")
 const HEDGE_ROSE := Color("f43877")
 const SAND := Color("efe1c3")
 
 static func theme_id() -> String:
-	return "coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines")
+	return "clockwork" if clockwork else ("coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines"))
 
 static func theme_version() -> String:
-	return "2.0" if coral_reef else ""
+	return "1.0" if clockwork else ("2.0" if coral_reef else "")
 
 static func theme_name() -> String:
-	return {"vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}[theme_id()]
+	return {"clockwork": "Clockwork Workshop", "vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}[theme_id()]
 
 static func select_theme(id: String) -> bool:
 	if id not in THEMES:
 		return false
+	clockwork = id == "clockwork"
 	coral_reef = id == "coral_reef"
 	labyrinth = id == "labyrinth"
 	return true
@@ -42,6 +44,8 @@ static func select(index: int) -> bool:
 	return true
 
 static func tile(color: int) -> Color:
+	if clockwork:
+		return Color("bc783d") if color == 1 else Color("59676e")
 	if coral_reef:
 		return Color("f49f7f") if color == 1 else Color("69bfae")
 	if labyrinth:
@@ -58,6 +62,8 @@ static func blossom(color: int) -> Color:
 	return accent(color)
 
 static func floor_color() -> Color:
+	if clockwork:
+		return Color("c4b99b")
 	if coral_reef:
 		return Color.WHITE
 	return SAND if labyrinth else PAIRS[selected_index].floor
@@ -66,10 +72,10 @@ static func dark() -> bool:
 	return floor_color().get_luminance() < 0.4
 
 static func background() -> Color:
-	return Color.WHITE
+	return Color("e5d4ae") if clockwork else Color.WHITE
 
 static func controls() -> Color:
-	return Color("eeedf3")
+	return Color("e4d6bb") if clockwork else Color("eeedf3")
 
 static func text() -> Color:
 	return Color("40334d")
@@ -81,6 +87,8 @@ static func grid() -> Color:
 	return Color("bbc9e4") if dark() else Color("947c9c")
 
 static func garden() -> Color:
+	if clockwork:
+		return Color("a3a29a")
 	if coral_reef:
 		return Color.WHITE
 	if labyrinth:

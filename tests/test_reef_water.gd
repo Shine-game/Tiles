@@ -89,6 +89,7 @@ func check_reorganization(shader: Shader) -> void:
 	viewport.queue_free()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	root.size = Vector2i(720, 1100)
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)

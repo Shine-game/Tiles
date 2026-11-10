@@ -21,19 +21,23 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - The Settings button opens a Vines/Labyrinth theme switch, five vine palette choices, the 9×9/11×11 size switch, Restart, and Gallery. Palette changes preserve play; changing size or restarting begins a new game with fresh helper budgets. Menus and gallery pages fit without scrolling.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
 
+## Clockwork Workshop — default theme
+
+The game opens in **Clockwork Workshop**, first in the theme selector ahead of Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
+
 ## Shared theme frames
 
 All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. Vines/Labyrinth await their own material artwork.
 
 ## Raised occupied platform
 
-All themes share a raised occupied surface **24 source pixels thick per 256px cell**. Empty space stays flat: white in Vines/Labyrinth and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
+Vines, Labyrinth and Coral Reef share a raised occupied surface **24 source pixels thick per 256px cell**; Clockwork uses **4 UI units** as specified in its handoff. Empty space stays flat: white in Vines/Labyrinth and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
 
 Ground, wall, and shadow appear as soon as placement commits. Undo/Erase update the outline immediately; plant growth runs independently on the upper face. Coral keeps all six original rotating ground textures. The shader adds no background paper. Gallery captures include the platform and preserve older images separately. See [the platform implementation notes](docs/raised-platform.md).
 
 ## Labyrinth theme
 
-The **Garden** entry in Settings cycles **Vines → Labyrinth → Coral Reef → Vines**. Switching themes preserves the board, offered piece, helper budgets, and running growth clock. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
+The **Theme** entry in Settings cycles **Clockwork Workshop → Vines → Labyrinth → Coral Reef → Clockwork Workshop**. Switching themes preserves the board, offered piece and helper budgets. Clockwork derives completed mechanisms on entry; the other themes retain their existing growth-clock behavior. The five original palettes remain available for Vines. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen stays white.
 
 The same side-connected growth schedule extends hedges between matching-color square centers. Walls occupy about 24% of a cell width, with two staggered rows of roses on the flowering shrubs. Ordinary centers grow taller, faceted pyramid hedges with broader bases (36% of a cell width). A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
 
@@ -41,7 +45,7 @@ Paths are visual sandy spaces; there is no player character or route-solving rul
 
 ## Coral Reef theme — redesign v2
 
-Select **Coral Reef** with the Garden entry in Settings. The third theme uses the supplied redesigned salmon/turquoise coral with reciprocal colony accents and a warm anemone disc. Tiny fingers along the ordinary paths are currently omitted for readability. All artwork renders at its supplied scale: the ordinary body is 77px wide on a 256px cell canvas. The earlier scaling workaround is removed.
+Select **Coral Reef** with the Theme entry in Settings. The reef theme uses the supplied redesigned salmon/turquoise coral with reciprocal colony accents and a warm anemone disc. Tiny fingers along the ordinary paths are currently omitted for readability. All artwork renders at its supplied scale: the ordinary body is 77px wide on a 256px cell canvas. The earlier scaling workaround is removed.
 
 Six porous ivory ground textures appear immediately in occupied cells. A fixed board-coordinate hash chooses variant and quarter-turn rotation; piece rotation and undo do not reroll the ground. Empty squares share a continuous pale lagoon background; the surrounding interface stays white. A moving web of bright, softly glowing caustic filaments encloses irregular shaded pools across water, sand and coral. Large and small pools gradually split and merge as the mesh reorganizes. The softer pattern oscillates over about 7–8 seconds in board coordinates, independently of placement/growth. Reef sidewalls retain the 24/256 thickness with softened blue-green shadows and a reduced rim. See [the underwater environment](docs/reef-environment.md). The theme keeps its supplied material relief above the shared raised-platform shader; the earlier per-cell bevel/shadow renderer is removed.
 
@@ -132,6 +136,7 @@ godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_dep
 godot --headless --audio-driver Dummy --path . --script tests/test_coral_audio.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_reef_water.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_board_frame.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_clockwork.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_labyrinth.gd

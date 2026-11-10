@@ -2,6 +2,7 @@ class_name GrowthAudio
 extends Node
 
 const Palette = preload("res://scripts/palette.gd")
+const Workshop = preload("res://scripts/clockwork_audio.gd")
 const Reef = preload("res://scripts/coral_audio.gd")
 const FOLIAGE = preload("res://assets/audio/foliage.wav")
 const BELL = preload("res://assets/audio/flower_bell.wav")
@@ -18,6 +19,7 @@ var active := false
 var note_count := 0
 var reef: CoralAudio
 var visual_theme := ""
+var workshop: ClockworkAudio
 
 func _ready() -> void:
 	whisper = AudioStreamPlayer.new()
@@ -36,17 +38,28 @@ func _ready() -> void:
 		player.max_polyphony = 2
 		add_child(player)
 		bells.append(player)
+	workshop = Workshop.new()
+	add_child(workshop)
 	reef = Reef.new()
 	add_child(reef)
 	set_process(false)
 
 func attach_board(board) -> void:
+	board.workshop_cue.connect(workshop.play)
 	board.visual_state_changed.connect(_visual_state_changed)
 	board.visual_clock_advanced.connect(reef.advance)
 
 func _visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int) -> void:
 	var changed: bool = visual_theme != Palette.theme_id()
 	visual_theme = Palette.theme_id()
+	if Palette.clockwork:
+		_cancel_legacy()
+		if reef.theme_active: reef.deactivate()
+		workshop.activate()
+		active = animating
+		if pattern.dismantling: workshop.play("clunk")
+		return
+	if workshop.active: workshop.deactivate()
 	if Palette.coral_reef:
 		_cancel_legacy()
 		active = animating
@@ -58,7 +71,7 @@ func _visual_state_changed(pattern, animating: bool, preserve: bool, clock: floa
 			begin()
 
 func begin() -> void:
-	if Palette.coral_reef:
+	if Palette.coral_reef or Palette.clockwork:
 		active = true
 		return
 	if fade != null:
@@ -75,7 +88,7 @@ func begin() -> void:
 	set_process(true)
 
 func bloom(corner: Vector2i, _color: int) -> void:
-	if Palette.coral_reef or not active:
+	if Palette.coral_reef or Palette.clockwork or not active:
 		return
 	var slot: int = posmod(corner.x + corner.y * 3, PITCHES.size())
 	if elapsed - float(last_note[slot]) < 0.085:
@@ -88,6 +101,9 @@ func _process(delta: float) -> void:
 	elapsed += delta
 
 func finish() -> void:
+	if Palette.clockwork:
+		active = false
+		return
 	if Palette.coral_reef:
 		active = false
 		reef.invalidate()
@@ -103,6 +119,7 @@ func finish() -> void:
 
 func cancel() -> void:
 	_cancel_legacy()
+	if workshop != null: workshop.cancel_effects()
 	if reef != null and reef.is_inside_tree():
 		reef.invalidate()
 

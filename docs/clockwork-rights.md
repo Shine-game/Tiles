@@ -1,0 +1,5 @@
+# RIGHTS and provenance
+
+P01 and P02 painted sprite content is derived from AI-generated images from this conversation, isolated and aligned programmatically. P03 chain sprites were extracted from the AI-generated P03 concept illustration; P04 caps from the AI-generated P04 preview; P05 metal plates, background and walnut frame from the theme images in this conversation. Corner-pin sprites were already supplied/generated in the earlier production step. Programmatic resampling, matte extraction, masking, and structural texture preparation preserved that visual source where possible. The small steam puff fields, 90px junction reduction, growth fields, edge strips, and small shutter primitives were created programmatically for runtime use.
+
+This package does not claim exclusivity, third-party rights, or legal clearance beyond what is established by the project. It contains no outside font files, music, or unrelated assets. Source artwork and previews are excluded from runtime deliverables, but are traceable by their names in this note.

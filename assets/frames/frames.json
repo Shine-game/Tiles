@@ -1,7 +1,10 @@
 {
   "schema": "tiles.board_frames.v1",
   "geometry": {
-    "source_size": [256, 266],
+    "source_size": [
+      256,
+      266
+    ],
     "rim": 14,
     "sidewall": 10
   },
@@ -24,6 +27,13 @@
       "appearance": "bleached-wreck-timber-v1",
       "material": "Pale bleached wreck timber, rounded relief, cool shaded flank, turquoise inner reveal, restrained marine encrustation.",
       "provenance": "User-supplied Coral_Reef_Frame.zip; original 256x266 RGBA PNG installed unchanged, geometry verified against CODEX_FRAME_HANDOFF.md."
+    },
+    "clockwork": {
+      "enabled": true,
+      "texture": "res://art/themes/clockwork_workshop/artwork/frame.png",
+      "appearance": "walnut-workshop-v1",
+      "material": "Aged walnut workshop frame with the shared 14-unit rim and 10-unit lower sidewall.",
+      "provenance": "Original artwork from Clockwork_Workshop_v1_Codex.zip."
     }
   }
 }

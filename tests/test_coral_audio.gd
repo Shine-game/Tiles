@@ -25,6 +25,7 @@ func wait_seconds(seconds: float) -> void:
 	await process_frame
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	check(Plan.stable_hash(["a"]) == 0xe40c292c, "feature choice uses standard unsigned FNV-1a")
 	check(Plan.stable_hash(["b", "a"]) == Plan.stable_hash(["a", "b"]), "feature choice is independent of discovery order")
 	var empty: Array = Rules.empty_board(9)

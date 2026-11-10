@@ -23,6 +23,7 @@ func capture(viewport: SubViewport) -> Image:
 	return viewport.get_texture().get_image()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(640, 640)
 	viewport.transparent_bg = true

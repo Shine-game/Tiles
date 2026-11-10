@@ -23,6 +23,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var spec := Coral.specification()
 	check(spec.components.size() == 38, "32 growing components plus six ground variants")
 	for id: String in spec.components:

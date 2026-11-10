@@ -16,6 +16,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var gallery = Gallery.new()
 	gallery.directory = "user://gallery-test-%d" % Time.get_ticks_usec()
 	check(gallery.entries().is_empty(), "missing gallery is empty")

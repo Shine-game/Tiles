@@ -8,7 +8,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	root.size = Vector2i(720, 1100)
-	Palette.labyrinth = true
+	Palette.select_theme("labyrinth")
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
 	for frame in range(4):

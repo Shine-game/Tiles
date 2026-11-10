@@ -16,6 +16,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var platform = Platform.new()
 	root.add_child(platform)
 	var grid: Array = Rules.empty_board(9)

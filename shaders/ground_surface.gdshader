@@ -2,6 +2,8 @@ shader_type canvas_item;
 render_mode unshaded, blend_mix;
 #include "res://shaders/tile_surface.gdshaderinc"
 
+uniform bool metal_surface = false;
+uniform sampler2D metal_lip : filter_linear, repeat_disable;
 uniform vec2 cell_center = vec2(0.5);
 uniform float quarter_turn = 0.0;
 uniform float screen_pixel = 4.0;
@@ -20,6 +22,10 @@ void fragment() {
     float distance_to_surface = surface_distance(p, 0.0);
     vec4 artwork = texture(TEXTURE, UV) * vertex_tint;
     artwork.rgb = surface_lip(artwork.rgb, distance_to_surface, screen_pixel);
+    if (metal_surface && distance_to_surface > -2.0 * screen_pixel) {
+        vec4 lip = texture(metal_lip, vec2(0.5, clamp(-distance_to_surface / (2.0 * screen_pixel), 0.0, 1.0)));
+        artwork.rgb = mix(artwork.rgb, lip.rgb, lip.a);
+    }
     artwork.a *= surface_coverage(distance_to_surface, screen_pixel);
     COLOR = artwork;
 }

@@ -9,7 +9,7 @@ func _ready() -> void:
 
 func _draw() -> void:
 	var index: int = Palette.selected_index if pair_index < 0 else pair_index
-	var colors: Array = Palette.PAIRS[index].colors
+	var colors: Array = [Palette.tile(1), Palette.tile(2)] if pair_index < 0 and Palette.theme_id() != "vines" else Palette.PAIRS[index].colors
 	var radius: float = minf(size.x, size.y) * (0.22 if pair_index < 0 else 0.17)
 	var center := size / 2 if pair_index < 0 else Vector2(size.x - radius * 3.4, size.y / 2)
 	for i in range(2):

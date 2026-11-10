@@ -1,6 +1,7 @@
 class_name TileBoardView
 extends Control
 
+signal workshop_cue(kind: String)
 signal growth_finished
 signal growth_started
 signal growth_canceled
@@ -11,6 +12,8 @@ const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
+const Clock = preload("res://scripts/clockwork_growth.gd")
+const Workshop = preload("res://scripts/clockwork_visuals.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
@@ -36,6 +39,9 @@ var occupied_platform: OccupiedPlatform
 var placement_revision := 0
 var reef_water: ReefWater
 var board_frame: BoardFrame
+var clockwork := false
+var clockwork_visuals: ClockworkVisuals
+var paper_background := false
 
 func _ready() -> void:
 	z_index = 1
@@ -44,30 +50,35 @@ func _ready() -> void:
 	set_process(false)
 
 func show_settled(grid: Array, preserve_direction: bool = false) -> void:
+	var reverse: bool = preserve_direction and clockwork and clockwork_visuals != null and board != grid
 	growth_canceled.emit()
 	announced_flowers.clear()
 	board = grid
 	_build_pattern(grid, grid)
 	_adopt_directions(preserve_direction)
 	_sync_coral(true, preserve_direction)
+	_sync_workshop(true, preserve_direction, reverse)
 	clock = 0
-	growing = false
-	set_process(false)
+	growing = clockwork and pattern.duration > 0
+	set_process(growing)
 	if not preserve_direction:
 		placement_revision = 0
-	visual_state_changed.emit(pattern, false, preserve_direction, clock, placement_revision)
+	visual_state_changed.emit(pattern, growing, preserve_direction, clock, placement_revision)
 	queue_redraw()
 
 func sync_board(grid: Array) -> void:
 	if pattern.board != grid:
 		show_settled(grid)
-	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef:
+	elif Palette.clockwork and not clockwork:
+		show_settled(grid, true)
+	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef or clockwork != Palette.clockwork:
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
 	labyrinth = Palette.labyrinth
+	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
-	pattern = Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())
+	pattern = Clock.new() if clockwork else (Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new()))
 	pattern.build(before, after)
 	if board_frame == null:
 		board_frame = Frame.new()
@@ -93,6 +104,7 @@ func _restyle() -> void:
 	_build_pattern(growth_before, board)
 	_adopt_directions(true)
 	_sync_coral(false, true)
+	_sync_workshop(false, true)
 	clock = minf(clock, pattern.duration)
 	if coral_reef:
 		coral_visuals.advance(clock)
@@ -118,6 +130,24 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 	elif coral_visuals != null:
 		coral_visuals.hide()
 
+func _sync_workshop(settled: bool, preserve: bool, reverse: bool = false) -> void:
+	if clockwork_visuals != null and not preserve:
+		clockwork_visuals.clear()
+	if clockwork:
+		if clockwork_visuals == null:
+			clockwork_visuals = Workshop.new()
+			add_child(clockwork_visuals)
+			clockwork_visuals.cue.connect(workshop_cue.emit)
+		clockwork_visuals.show()
+		clockwork_visuals.reconcile(pattern, settled, preserve, reverse)
+		if reverse:
+			pattern.dismantling = true
+			pattern.duration = maxf(pattern.duration, clockwork_visuals.retire_duration)
+		clockwork_visuals.advance(0)
+		update_geometry()
+	elif clockwork_visuals != null:
+		clockwork_visuals.hide()
+
 func animate_growth(before: Array, after: Array) -> void:
 	placement_revision += 1
 	board = after
@@ -126,6 +156,7 @@ func animate_growth(before: Array, after: Array) -> void:
 	_adopt_directions(true)
 	clock = 0
 	_sync_coral(false, true)
+	_sync_workshop(false, true)
 	announced_flowers.clear()
 	growing = pattern.duration > 0
 	set_process(growing)
@@ -140,6 +171,8 @@ func advance_growth(delta: float) -> void:
 	clock = minf(pattern.duration, clock + maxf(0, delta))
 	if coral_reef:
 		coral_visuals.advance(clock)
+	if clockwork and clockwork_visuals != null:
+		clockwork_visuals.advance(clock)
 	visual_clock_advanced.emit(clock)
 	for corner: Vector2i in pattern.flowers:
 		var flower: Dictionary = pattern.flowers[corner]
@@ -170,7 +203,11 @@ func update_geometry() -> void:
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
 	if occupied_platform != null:
-		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef)
+		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork else -1.0)
+	if clockwork_visuals != null:
+		clockwork_visuals.position = _point(Vector2.ZERO)
+		clockwork_visuals.scale = Vector2.ONE * pitch / 256.0
+		clockwork_visuals.configure_surface(occupied_platform)
 	if reef_water != null:
 		var framed: bool = board_frame != null and board_frame.is_present()
 		reef_water.configure(field, _point(Vector2.ZERO), pitch, board_frame.get_rect() if framed else field, board_frame.texture if framed else null)
@@ -180,7 +217,7 @@ func update_geometry() -> void:
 		coral_visuals.configure_surface(occupied_platform)
 
 func surface_depth() -> float:
-	return Platform.depth(pitch)
+	return 4.0 if clockwork else Platform.depth(pitch)
 
 func _floor_point(position_in_grid: Vector2) -> Vector2:
 	return field.position + Vector2.ONE * grid_inset + position_in_grid * pitch
@@ -205,9 +242,14 @@ func _draw() -> void:
 	if board.is_empty():
 		return
 	update_geometry()
+	if clockwork and paper_background:
+		var paper := Workshop.texture("artwork/background/drafting_paper_1080x1650.png")
+		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
+		var extent: Vector2 = paper.get_size() * factor
+		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 	if show_guides:
 		_draw_guides()
-	if coral_reef:
+	if coral_reef or clockwork:
 		return
 	if labyrinth:
 		MazeRenderer.draw(self)

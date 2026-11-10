@@ -5,7 +5,7 @@ const Palette = preload("res://scripts/palette.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 
 static func depth(unit: float) -> float:
-	return Platform.depth(unit)
+	return 4.0 if Palette.clockwork else Platform.depth(unit)
 
 # Reuse the exact occupied-ground renderer for each separate incoming square.
 # Children are reused on redraw; hiding unused slabs handles shape changes.
@@ -27,7 +27,7 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 		canvas.add_child(slab)
 		slab.sync([[1]])
 		slab.z_index = 0
-	slab.configure(face.position, face.size.x, color, Palette.coral_reef)
+	slab.configure(face.position, face.size.x, color, Palette.coral_reef, 4.0 if Palette.clockwork else -1.0)
 	# The four-pixel inter-square gap is not part of the logical cell pitch.
 	# Keep the same depth as a committed cell despite this smaller face.
 	slab.depth_pixels = thickness

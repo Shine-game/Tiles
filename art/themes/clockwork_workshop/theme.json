@@ -1,0 +1,728 @@
+{
+  "format_version": 1,
+  "id": "clockwork-workshop",
+  "version": "1.0.0",
+  "title": "Clockwork Workshop",
+  "status": "offline-assets-verified; Godot-and-Android-untested",
+  "source_cell": [
+    256,
+    256
+  ],
+  "source_landmark": [
+    512,
+    512
+  ],
+  "palettes": {
+    "0": "copper",
+    "1": "gunmetal"
+  },
+  "accent_rule": "Each primary metal has small details of the opposite metal; logical colors come only from game state.",
+  "frame": {
+    "path": "artwork/frame.png",
+    "source_size": [
+      256,
+      266
+    ],
+    "top_face": [
+      256,
+      256
+    ],
+    "opening_xywh": [
+      14,
+      14,
+      228,
+      228
+    ],
+    "depth_ui_px": 10,
+    "nine_slice_margins": {
+      "left": 14,
+      "top": 14,
+      "right": 14,
+      "bottom": 24
+    },
+    "draw_center": false,
+    "mouse_ignore": true
+  },
+  "ground": {
+    "plate_paths": [
+      "artwork/ground/plate_01.png",
+      "artwork/ground/plate_02.png"
+    ],
+    "texture_size": [
+      256,
+      256
+    ],
+    "thickness_ui_px": 4,
+    "sidewall_path": "artwork/ground/sidewall_4ui.png",
+    "lip_path": "artwork/ground/edge_lip_2ui.png",
+    "pin_paths": {
+      "copper": "artwork/pins/plate_pin_copper.png",
+      "gunmetal": "artwork/pins/plate_pin_gunmetal.png"
+    },
+    "pin_canvas": [
+      48,
+      48
+    ],
+    "pin_diameter_nominal": 32,
+    "pin_rule": "Only exposed occupied-outline corners; one pin at a corner, color from designated supporting cell; deterministic smallest (row,col) among incident occupied perimeter cells in a mixed-color tie.",
+    "internal_seams": false,
+    "variant_selection": "stable hash(board seed,row,column) % 2; rotation stable hash % 4",
+    "background": "artwork/background/drafting_paper_1080x1650.png"
+  },
+  "coordinate_system": {
+    "origin": "source top-left",
+    "cell_center": [
+      128,
+      128
+    ],
+    "landmark_center": [
+      256,
+      256
+    ],
+    "east_boundary": [
+      256,
+      128
+    ],
+    "quarter_turns": "clockwise for positive rotation",
+    "basis_to_display": "world_scale=actual_cell_ui_size/256; landmark canvas 512 represents 2x2 cells"
+  },
+  "component_id_scheme": {
+    "core": "(row,col,color,component_id)",
+    "tube": "(row,col,direction,color)",
+    "coupling": "sorted adjacent occupied cell pair",
+    "landmark": "(top_left_row,top_left_col,color)",
+    "chain": "sorted neighboring landmark pair"
+  },
+  "components": {
+    "C01": {
+      "assets": {
+        "copper": "artwork/copper/C01.png",
+        "gunmetal": "artwork/gunmetal/C01.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        180,
+        180
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "core stationary rim/socket",
+      "layer": 20
+    },
+    "C02": {
+      "assets": {
+        "copper": "artwork/copper/C02.png",
+        "gunmetal": "artwork/gunmetal/C02.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        160,
+        160
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "negative-central",
+      "role": "core rotating cogwheel",
+      "layer": 30
+    },
+    "C03": {
+      "assets": {
+        "copper": "artwork/copper/C03.png",
+        "gunmetal": "artwork/gunmetal/C03.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        43,
+        43
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "stationary central axle cap",
+      "layer": 31
+    },
+    "T01": {
+      "assets": {
+        "copper": "artwork/copper/T01.png",
+        "gunmetal": "artwork/gunmetal/T01.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        128,
+        130
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "quarter-turn",
+      "role": "half-tube outward from center toward cell boundary",
+      "layer": 18,
+      "geometry": {
+        "east_core_to_edge": [
+          [
+            128,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ],
+        "length": 128,
+        "reverse": true
+      },
+      "growth_field": "masks/T01_from_core_E.png"
+    },
+    "T02": {
+      "assets": {
+        "copper": "artwork/copper/T02.png",
+        "gunmetal": "artwork/gunmetal/T02.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        26,
+        134
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "quarter-turn",
+      "role": "socket-side collar",
+      "layer": 21,
+      "geometry": {
+        "east_socket_attachment": [
+          216,
+          128
+        ]
+      }
+    },
+    "T03": {
+      "assets": {
+        "copper": "artwork/copper/T03.png",
+        "gunmetal": "artwork/gunmetal/T03.png"
+      },
+      "canvas": [
+        256,
+        256
+      ],
+      "painted_size_nominal": [
+        34,
+        138
+      ],
+      "pivot": [
+        128.0,
+        128.0
+      ],
+      "anchor": "center",
+      "rotation": "quarter-turn",
+      "role": "shared boundary coupling",
+      "layer": 22,
+      "geometry": {
+        "boundary_pivot_local": [
+          128,
+          128
+        ],
+        "placement": "shared edge midpoint"
+      }
+    },
+    "L01": {
+      "assets": {
+        "copper": "artwork/copper/L01.png",
+        "gunmetal": "artwork/gunmetal/L01.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        224,
+        224
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "clockwise",
+      "role": "lower central driving gear",
+      "layer": 35
+    },
+    "L02": {
+      "assets": {
+        "copper": "artwork/copper/L02.png",
+        "gunmetal": "artwork/gunmetal/L02.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        56,
+        56
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "top-down telescoping axle end",
+      "layer": 40
+    },
+    "L03": {
+      "assets": {
+        "copper": "artwork/copper/L03.png",
+        "gunmetal": "artwork/gunmetal/L03.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        236,
+        236
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "clockwise_locked_to_L01",
+      "role": "upper ornate gear",
+      "layer": 45
+    },
+    "H00_plain_hatch": {
+      "assets": {
+        "copper": "artwork/copper/H00_plain_hatch.png",
+        "gunmetal": "artwork/gunmetal/H00_plain_hatch.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "plain bolted hatch, closed",
+      "layer": 65
+    },
+    "H01_valve": {
+      "assets": {
+        "copper": "artwork/copper/H01_valve.png",
+        "gunmetal": "artwork/gunmetal/H01_valve.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "stationary four-spoke valve",
+      "layer": 65
+    },
+    "H02_rotating": {
+      "assets": {
+        "copper": "artwork/copper/H02_rotating.png",
+        "gunmetal": "artwork/gunmetal/H02_rotating.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "slow_independent",
+      "role": "rotating decorative wheel",
+      "layer": 65
+    },
+    "H03_exhaust": {
+      "assets": {
+        "copper": "artwork/copper/H03_exhaust.png",
+        "gunmetal": "artwork/gunmetal/H03_exhaust.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "steam exhaust stationary grille",
+      "layer": 65
+    },
+    "J00_chain_junction": {
+      "assets": {
+        "copper": "artwork/copper/J00_chain_junction.png",
+        "gunmetal": "artwork/gunmetal/J00_chain_junction.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        90,
+        90
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "opaque chain return housing beneath cap",
+      "layer": 60
+    },
+    "H00_left_shutter": {
+      "assets": {
+        "copper": "artwork/copper/H00_left_shutter.png",
+        "gunmetal": "artwork/gunmetal/H00_left_shutter.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "plain hatch opening left half",
+      "layer": 64
+    },
+    "H00_right_shutter": {
+      "assets": {
+        "copper": "artwork/copper/H00_right_shutter.png",
+        "gunmetal": "artwork/gunmetal/H00_right_shutter.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "plain hatch opening right half",
+      "layer": 64
+    },
+    "H03_opaque_underlay": {
+      "assets": {
+        "copper": "artwork/copper/H03_opaque_underlay.png",
+        "gunmetal": "artwork/gunmetal/H03_opaque_underlay.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "steam exhaust opaque underlay",
+      "layer": 64
+    },
+    "H03_shutters_left": {
+      "assets": {
+        "copper": "artwork/copper/H03_shutters_left.png",
+        "gunmetal": "artwork/gunmetal/H03_shutters_left.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "vent left shutters",
+      "layer": 64
+    },
+    "H03_shutters_right": {
+      "assets": {
+        "copper": "artwork/copper/H03_shutters_right.png",
+        "gunmetal": "artwork/gunmetal/H03_shutters_right.png"
+      },
+      "canvas": [
+        512,
+        512
+      ],
+      "painted_size_nominal": [
+        60,
+        60
+      ],
+      "pivot": [
+        256.0,
+        256.0
+      ],
+      "anchor": "center",
+      "rotation": "none",
+      "role": "vent right shutters",
+      "layer": 64
+    },
+    "CH01_link": {
+      "assets": {
+        "copper": "artwork/copper/CH01_link.png",
+        "gunmetal": "artwork/gunmetal/CH01_link.png"
+      },
+      "canvas": [
+        64,
+        64
+      ],
+      "painted_size_nominal": [
+        54,
+        24
+      ],
+      "pivot": [
+        32.0,
+        32.0
+      ],
+      "anchor": "run-link",
+      "rotation": "translate",
+      "role": "individual repeating link, translate by 29 px per link",
+      "layer": 55,
+      "direction_of_source_link": "left-to-right",
+      "painted_anchors_nominal": [
+        [
+          17,
+          32
+        ],
+        [
+          46,
+          32
+        ]
+      ]
+    }
+  },
+  "topology": {
+    "mask_bits": {
+      "N": 1,
+      "E": 2,
+      "S": 4,
+      "W": 8
+    },
+    "canonical_masks": {
+      "isolated": 0,
+      "endpoint_N": 1,
+      "straight_NS": 5,
+      "corner_NE": 3,
+      "T_NEW": 11,
+      "cross": 15
+    },
+    "rotation_rule": "((mask << 1) & 15) | (mask >> 3)",
+    "connections_only": "orthogonal neighbors sharing logical color",
+    "new_components_no_source": "all newly placed cells bud simultaneously"
+  },
+  "landmarks": {
+    "trigger": "each completed same-color 2x2 (any combination of placements)",
+    "anchor": "top-left support cell, pivot at central shared corner",
+    "overlaps_allowed": true,
+    "core_axes_relative_to_landmark": [
+      [
+        128,
+        128
+      ],
+      [
+        384,
+        128
+      ],
+      [
+        128,
+        384
+      ],
+      [
+        384,
+        384
+      ]
+    ],
+    "center_axis": [
+      256,
+      256
+    ],
+    "lower_outer_diameter": 224,
+    "upper_outer_diameter": 236,
+    "core_outer_diameter": 160,
+    "core_to_center_axis_distance": 181.019336,
+    "nominal_tooth_tip_overlap": 10.980664,
+    "tooth_meshing_verified": false,
+    "stages": [
+      {
+        "name": "rise_and_elevate",
+        "begin": 0.0,
+        "end": 0.4
+      },
+      {
+        "name": "engage_and_spin",
+        "begin": 0.4,
+        "end": 0.85
+      },
+      {
+        "name": "axle_telescopes",
+        "begin": 0.85,
+        "end": 1.2
+      },
+      {
+        "name": "upper_wheel_seats",
+        "begin": 1.2,
+        "end": 1.7
+      },
+      {
+        "name": "hatch_seats",
+        "begin": 1.7,
+        "end": 1.95
+      }
+    ]
+  },
+  "chains": {
+    "trigger": "same-color landmark pairs with top-left offsets exactly (+/-1,0) or (0,+/-1)",
+    "axle_separation_source_px": 256,
+    "run_width_px": 24,
+    "run_center_offset_perpendicular_px": 28,
+    "run_center_separation_px": 56,
+    "link_pitch_px": 29,
+    "link_sprite_canvas": [
+      64,
+      64
+    ],
+    "link_anchors_in_sprite": [
+      [
+        17,
+        32
+      ],
+      [
+        46,
+        32
+      ]
+    ],
+    "chain_link_component": "CH01_link",
+    "junction_diameter": 90,
+    "terminal_cover_diameter": 60,
+    "sag": 0,
+    "assembly_seconds_range": [
+      0.35,
+      0.5
+    ],
+    "upper_run": "left-to-right; link by link starting at left axle",
+    "lower_run": "right-to-left; link by link starting at right axle",
+    "vertical_convention": "rotate full pair by 90 degrees from horizontal",
+    "active_rotation": "central clockwise; core counterclockwise; upper run left-to-right; lower run right-to-left",
+    "mechanical_truth": "visible links move consistently; multiple crossed transmissions are hidden by junction, not physically modeled as independent sprockets"
+  },
+  "timing": {
+    "ordinary_socket_wheel_pin_seconds": [
+      0.3,
+      0.4
+    ],
+    "tube_half_arm_seconds": [
+      0.15,
+      0.25
+    ],
+    "landmark_total_seconds": 1.95,
+    "chain_seconds": [
+      0.35,
+      0.5
+    ],
+    "reveal_tail_seconds": 0.035
+  },
+  "motion": {
+    "central_rotation": "clockwise",
+    "core_rotation": "counterclockwise",
+    "upper_rotation": "clockwise on same axle as lower central",
+    "default_central_rpm_example": 10,
+    "core_to_central_angular_speed_nominal": 1.4,
+    "gear_speed_note": "only approximate ratio from tooth-tip sizes; use verified pitch radii and tooth counts for exact meshing",
+    "isolated_cores": "stationary until a valid landmark activates them",
+    "phase_policy": "global visual clock; do not reset existing gear motion when new overlapping landmarks activate",
+    "hatch": "opaque closed state; shutter halves slide apart for next level",
+    "steam": "periodic restrained puff above vent; covers always opaque beneath shutters"
+  },
+  "lifecycle": {
+    "undo": "selectively retract/dismantle unsupported components; preserve unaffected motion",
+    "reset": "discard construction callbacks and restore logical starting state",
+    "load": "instantiate completed components without replaying growth",
+    "theme_switch": "rebuild from logical board, no reanimation",
+    "during_growth": "respect currently visible or predicted attachment arrival; do not force old components complete",
+    "callback_invalidation": "revision/generation id"
+  },
+  "file_role_note": "This manifest describes sprite composition and motion for Codex; it is not a drop-in Godot autoload or automatic gameplay replacement."
+}

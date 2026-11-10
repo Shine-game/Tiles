@@ -21,3 +21,5 @@ Gallery records identify the rounded appearance with surface revision `rounded24
 - Existing gameplay, input, gallery, art, and audio runners remain regression checks. Android performance still needs device testing.
 
 Coral Reef retains the shared thickness and rounding but reduces the upper rim, softens wall shading, and applies a shorter, lighter blue-green shadow. Its original ground textures remain unchanged. See `reef-environment.md`.
+
+Clockwork Workshop adds a theme-specific fixed 4-UI-unit depth using the same occupancy/rounding renderer, its supplied sidewall and 2-unit lip strips, and opaque neutral metal plate textures. Offered/hovering pieces share the same depth; other themes retain their original ratios.

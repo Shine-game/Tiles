@@ -19,6 +19,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var block: Array = Rules.empty_board(9)
 	for y in range(3):
 		for x in range(3):

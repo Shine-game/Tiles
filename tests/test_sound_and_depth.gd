@@ -1,5 +1,7 @@
 extends SceneTree
 
+const Palette = preload("res://scripts/palette.gd")
+
 const Rules = preload("res://scripts/rules.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Surface = preload("res://scripts/tile_surface.gd")
@@ -17,6 +19,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Palette.select_theme("vines")
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
 	for i in range(4):

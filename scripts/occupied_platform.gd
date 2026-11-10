@@ -46,12 +46,12 @@ func sync(grid: Array) -> void:
 	(material as ShaderMaterial).set_shader_parameter("grid_size", n)
 
 static func surface_revision(theme: String) -> String:
-	return "lagoon-adaptive24-v6" if theme == "coral_reef" else SURFACE_REVISION
+	return "workshop4-v1" if theme == "clockwork" else ("lagoon-adaptive24-v6" if theme == "coral_reef" else SURFACE_REVISION)
 
-func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false) -> void:
+func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false, fixed_depth: float = -1.0) -> void:
 	top_origin = origin
 	cell_pixels = pitch
-	depth_pixels = depth(pitch)
+	depth_pixels = fixed_depth if fixed_depth >= 0 else depth(pitch)
 	var margin: float = depth_pixels * 2.0 + 1.0
 	position = origin - Vector2.ONE * margin
 	size = Vector2(grid_size * pitch, grid_size * pitch + depth_pixels) + Vector2.ONE * 2 * margin
@@ -62,6 +62,10 @@ func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = fal
 	shader_material.set_shader_parameter("rect_pixels", size)
 	shader_material.set_shader_parameter("ground_color", ink)
 	shader_material.set_shader_parameter("submerged", underwater)
+	shader_material.set_shader_parameter("metal_mode", fixed_depth >= 0)
+	if fixed_depth >= 0:
+		shader_material.set_shader_parameter("metal_wall", load("res://art/themes/clockwork_workshop/artwork/ground/sidewall_4ui.png"))
+		shader_material.set_shader_parameter("metal_lip", load("res://art/themes/clockwork_workshop/artwork/ground/edge_lip_2ui.png"))
 
 # Logical occupancy for input/geometry verification; rounded rendering does not
 # remove any playable area from a cell.
@@ -71,4 +75,5 @@ func filled(point: Vector2) -> bool:
 	return cell.x >= 0 and cell.y >= 0 and cell.x < grid_size and cell.y < grid_size and occupancy_bytes[cell.y * grid_size + cell.x] != 0
 
 func side_at(point: Vector2) -> bool:
-	return not filled(point) and filled(point - Vector2(0, SOURCE_DEPTH / SOURCE_CELL))
+	var ratio: float = depth_pixels / cell_pixels if depth_pixels > 0 else SOURCE_DEPTH / SOURCE_CELL
+	return not filled(point) and filled(point - Vector2(0, ratio))
