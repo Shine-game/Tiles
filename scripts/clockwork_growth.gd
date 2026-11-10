@@ -104,9 +104,6 @@ func build(before: Array, after: Array) -> void:
 			arm.end = -100.0 if old_arm else minf(arm.start + peak * arm.seconds, arm.edge_start + (1.0 - peak) * arm.seconds) + REVEAL_TAIL
 			if not old_arm:
 				duration = maxf(duration, arm.end)
-			var attachment: Array = specification().components.T02.geometry.east_socket_attachment
-			var collar_u: float = (float(attachment[0]) - 128.0) / 128.0
-			add_part("T02", color, cell, arm.center, old_arm, arm_arrival(arm, collar_u) + REVEAL_TAIL, 0.13, arm.rotation, key("T02_" + NAMES[direction], color, cell))
 			if direction in [1, 2]:
 				var coupling := add_part("T03", color, cell, Vector2(cell) + Vector2.ONE * 0.5 + Vector2(DIRS[direction]) * 0.5, old_arm, arm_arrival(arm, 1.0) + REVEAL_TAIL, 0.14, arm.rotation)
 				coupling.key = key("T03_" + NAMES[direction], color, cell)
@@ -124,8 +121,6 @@ func build(before: Array, after: Array) -> void:
 				var arm_key := key("T01_" + NAMES[direction], flower.color, cell + offset)
 				if components.has(arm_key):
 					start = maxf(start, float(components[arm_key].end))
-				var collar_key := key("T02_" + NAMES[direction], flower.color, cell + offset)
-				if components.has(collar_key): start = maxf(start, float(components[collar_key].end))
 		var mechanism := {"origin": cell, "center": Vector2(corner), "color": flower.color, "old": flower.old, "start": -100.0 if flower.old else start, "ready": -100.0 if flower.old else start + 1.95, "directions": [], "chain_end": -100.0}
 		mechanisms[cell] = mechanism
 		flower.start = mechanism.start

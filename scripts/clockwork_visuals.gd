@@ -53,7 +53,7 @@ class FXLayer extends Node2D:
 # Artwork choice is independent of logical color, connectivity and motion.
 # Alternate the stacked driving layers so their silhouettes remain readable.
 static func art_variant(id: String, logical_color: int) -> String:
-	var artwork_color: int = 3 - logical_color if id in ["L03", "CH01_link"] else logical_color
+	var artwork_color: int = 3 - logical_color if id == "L03" else logical_color
 	return "copper" if artwork_color == 1 else "gunmetal"
 
 static func texture(path: String) -> Texture2D:
@@ -98,7 +98,7 @@ func clear() -> void:
 static func layer(id: String) -> int:
 	if id.begins_with("plate_"): return 0
 	if id == "T01": return 1
-	if id in ["C01", "T02", "T03", "pin"]: return 2
+	if id in ["C01", "T03", "pin"]: return 2
 	if id in ["C02", "C03"]: return 3
 	if id == "L01": return 4
 	if id == "L02": return 5
@@ -362,7 +362,7 @@ func advance(clock: float) -> void:
 			announced[event.key] = true
 			if event.id == "T03":
 				puff(event.center, true)
-			if (event.id in ["T02", "T03", "H00_plain_hatch"] or event.get("terminal", false)) and fx_clock - last_click > 0.075:
+			if (event.id in ["T03", "H00_plain_hatch"] or event.get("terminal", false)) and fx_clock - last_click > 0.075:
 				last_click = fx_clock
 				cue.emit("click")
 			if event.id in ["L01", "L03"] and fx_clock - last_clunk > 0.10:

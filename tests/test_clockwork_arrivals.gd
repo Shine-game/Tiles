@@ -52,8 +52,7 @@ func _run() -> void:
 					var core: Dictionary = model.components[Clock.key(id, color, cell)]
 					check(core.start >= incoming_center - 0.000001, "socket, gear and pin cannot precede incoming pressure")
 				check(arm.start >= model.arrivals[cell] + Clock.CORE_EMIT_DELAY - 0.000001, "new center cannot emit an outward front before it wakes")
-				var collar: Dictionary = model.components[Clock.key("T02_" + Clock.NAMES[direction], color, cell)]
-				check(is_equal_approx(collar.start, Clock.arm_arrival(arm, 88.0 / 128.0) + Clock.REVEAL_TAIL), "collar timing follows tube arrival at its painted attachment")
+				check(not model.components.has(Clock.key("T02_" + Clock.NAMES[direction], color, cell)), "tube-to-wheel collars are omitted in every orientation")
 				parent = cell
 				expected += 0.585
 	# Multiple entry fronts use the earliest arrival rather than serialized buds.
