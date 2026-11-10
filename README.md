@@ -23,7 +23,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 ## Clockwork Workshop — default theme
 
-The game opens in **Clockwork Workshop**, first in the theme selector ahead of Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
+The game opens in **Clockwork Workshop**, first in the theme selector ahead of Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms alternate primary-metal cores, tubes, ornate upper gears and tops with opposite-metal lower gears and chains. They assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
 
 ## Shared theme frames
 

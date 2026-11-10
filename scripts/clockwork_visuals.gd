@@ -45,6 +45,12 @@ class FXLayer extends Node2D:
 			else:
 				draw_circle(item.center, item.radius, Color(0.10, 0.08, 0.05, item.alpha), true, -1, true)
 
+# Artwork choice is independent of logical color, connectivity and motion.
+# Alternate the stacked driving layers so their silhouettes remain readable.
+static func art_variant(id: String, logical_color: int) -> String:
+	var artwork_color: int = 3 - logical_color if id in ["L01", "CH01_link"] else logical_color
+	return "copper" if artwork_color == 1 else "gunmetal"
+
 static func texture(path: String) -> Texture2D:
 	if not textures.has(path):
 		textures[path] = load(Model.ROOT + path)
@@ -192,7 +198,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				next.duration = maxf(next.duration, event.end)
 		else:
 			var sprite := Sprite2D.new()
-			var variant: String = "copper" if event.color == 1 else "gunmetal"
+			var variant: String = art_variant(event.id, event.color)
 			if event.id.begins_with("plate_"):
 				sprite.texture = texture("artwork/ground/" + event.id + ".png")
 			elif event.id == "pin":
@@ -256,7 +262,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				strip.size = Vector2(256, 64)
 				var ink := ShaderMaterial.new()
 				ink.shader = CHAIN
-				ink.set_shader_parameter("link_art", texture(Model.specification().components.CH01_link.assets["copper" if event.color == 1 else "gunmetal"]))
+				ink.set_shader_parameter("link_art", texture(Model.specification().components.CH01_link.assets[art_variant("CH01_link", event.color)]))
 				ink.set_shader_parameter("reverse_run", run == 1)
 				strip.material = ink
 				parent.add_child(strip)
