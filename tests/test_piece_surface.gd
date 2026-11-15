@@ -39,11 +39,22 @@ func _run() -> void:
 	for theme: String in Palette.THEMES:
 		scene._select_theme(theme)
 		for button: Button in [scene.flip_button, scene.place_button, scene.new_button, scene.size_picker, scene.skip_button]:
-			check(button.get_theme_stylebox("normal").bg_color == Palette.controls(), "ordinary buttons share the idle symmetry background")
+			check(button.get_theme_stylebox("normal").bg_color == Palette.controls().lerp(Palette.tile(1), 0.20), "ordinary buttons share the tinted symmetry background")
 		var active: StyleBoxFlat = scene.blue_button.get_theme_stylebox("normal")
 		var symmetry: StyleBoxFlat = scene.indicators[0].panel.get_theme_stylebox("normal")
 		check(active.bg_color == symmetry.bg_color and active.border_color == symmetry.border_color, "selected color button shares active symmetry styling")
-		check(scene.blue_button.get_theme_stylebox("hover_pressed").border_width_left == 2, "selected color remains outlined while pressed")
+		check(scene.blue_button.get_theme_stylebox("hover_pressed").border_width_left == 3, "selected color remains outlined while pressed")
+		for button: Button in scene.themed_buttons:
+			for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+				var style: StyleBoxFlat = button.get_theme_stylebox(state)
+				check(style.border_width_left >= 2 and style.border_width_right >= 2 and style.border_width_top >= 2 and style.border_width_bottom >= 2, "every button has a visible border, including disabled and menu controls")
+				check(style.bg_color != Palette.controls() and style.bg_color.a == 1.0, "every button retains its theme tint in every state")
+		for page: String in ["Settings", "Themes", "Difficulty", "Sound Settings", "Vine colors"]:
+			scene._show_menu(page)
+			for button: Button in scene.menu_buttons:
+				if button.visible:
+					check(button.get_theme_stylebox("normal").border_width_left >= 2, "opening a menu preserves entry outlines")
+			scene.palette_menu.hide()
 		var source_view := viewport()
 		var floating_view := viewport()
 		var placed_view := viewport()

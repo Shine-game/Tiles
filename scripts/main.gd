@@ -10,6 +10,7 @@ const FloatingPiece = preload("res://scripts/floating_piece.gd")
 const GrowthSounds = preload("res://scripts/growth_audio.gd")
 const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
+const Frame = preload("res://scripts/board_frame.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
 const ColorMark = preload("res://scripts/color_mark.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
@@ -55,6 +56,7 @@ var new_button: Button
 var palette_button: Button
 var palette_menu: PanelContainer
 var palette_list: Control
+var menu_frame: BoardFrame
 var palette_options: Array = []
 var indicators: Array = []
 var size_picker: Button
@@ -65,11 +67,13 @@ var menu_buttons: Array = []
 var theme_options: Array = []
 var difficulty_options: Array = []
 var settings_options: Array = []
+var menu_close: Button
 var back_button: Button
 var vine_colors_button: Button
 var themes_back_button: Button
 var background_button: Button
 var effects_button: Button
+var axes_button: Button
 var menu_title: Label
 var confirmation: ConfirmationDialog
 var pending_change: Callable
@@ -155,6 +159,9 @@ func _build_interface() -> void:
 	add_child(palette_menu)
 	palette_list = Control.new()
 	palette_menu.add_child(palette_list)
+	menu_frame = Frame.new()
+	menu_frame.name = "SettingsFrame"
+	palette_list.add_child(menu_frame)
 	_build_settings()
 	reef_background = ColorRect.new()
 	reef_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -520,6 +527,7 @@ func _build_settings() -> void:
 	menu_title = Label.new()
 	menu_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	palette_list.add_child(menu_title)
+	menu_close = _menu_button("×", func(): palette_menu.hide())
 	back_button = _menu_button("‹ Settings", func(): _show_menu("Settings"))
 	for page: String in ["Themes", "Difficulty", "Gallery", "Sound Settings"]:
 		settings_options.append(_menu_button(page, _open_gallery if page == "Gallery" else _show_menu.bind(page)))
@@ -533,6 +541,8 @@ func _build_settings() -> void:
 		theme_options.append(option)
 	for level in range(3):
 		difficulty_options.append(_menu_button(["Easy", "Moderate", "Difficult"][level], _request_difficulty.bind(level)))
+	axes_button = _menu_button("Show axes on field: Off", _toggle_axes)
+	axes_button.toggle_mode = true
 	vine_colors_button = _menu_button("Vine colors", _show_menu.bind("Vine colors"))
 	themes_back_button = _menu_button("‹ Themes", _show_menu.bind("Themes"))
 	for i in range(Palette.PAIRS.size()):
@@ -568,55 +578,95 @@ func _layout_palette_menu(pad: float) -> void:
 	elif menu_page == "Vine colors":
 		options = [themes_back_button] + palette_options
 	elif menu_page == "Difficulty":
-		options = [back_button] + difficulty_options + [size_picker, new_button]
+		options = [back_button] + difficulty_options + [axes_button, size_picker, new_button]
 	elif menu_page == "Sound Settings":
 		options = [back_button, background_button, effects_button]
-	var width: float = minf(360, size.x - 2 * pad)
-	var row_height: float = minf(64, (size.y - 4 * pad - 42) / options.size() - 6)
-	var height: float = 38 + (row_height + 6) * options.size() + 12
+	menu_frame.apply_theme(Palette.theme_id())
+	_refresh_menu_style()
+	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
+	var desired_height: float = (38 + 70 * options.size() + 12) * 1.5
+	var width: float = minf(540, size.x - 2 * pad)
+	var height: float = minf(desired_height, size.y - 2 * pad)
+	var scale_factor: float = minf(1, minf(width / 540, height / desired_height))
+	var content_width: float = width - inset.x - inset.z
+	var content_height: float = height - inset.y - inset.w
+	var title_height: float = 57 * scale_factor
+	var gap: float = 9 * scale_factor
+	var bottom: float = 18 * scale_factor
+	var row_height: float = (content_height - title_height - bottom - gap * (options.size() - 1)) / options.size()
 	var y: float = minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
 	_set_rect(palette_menu, Rect2((size.x - width) / 2, maxf(pad, y), width, height))
+	_set_rect(palette_list, Rect2(Vector2(inset.x, inset.y), Vector2(content_width, content_height)))
+	menu_frame.surround(Rect2(Vector2.ZERO, Vector2(content_width, content_height)))
 	menu_title.text = menu_page
-	menu_title.add_theme_font_size_override("font_size", 20)
-	_set_rect(menu_title, Rect2(0, 0, width - 12, 32))
+	menu_title.add_theme_font_size_override("font_size", maxi(12, roundi(40 * scale_factor)))
+	var close_side: float = maxf(22, 48 * scale_factor)
+	menu_close.show()
+	menu_close.add_theme_font_size_override("font_size", maxi(11, roundi(28 * scale_factor)))
+	_set_rect(menu_close, Rect2(content_width - close_side, 0, close_side, close_side))
+	_set_rect(menu_title, Rect2(close_side + gap, 0, maxf(1, content_width - 2 * (close_side + gap)), title_height - gap))
 	new_button.text = "Restart"
+	axes_button.text = "Show axes on field: " + ("On" if board_view.show_axes else "Off")
+	axes_button.set_pressed_no_signal(board_view.show_axes)
 	background_button.text = "Background noises: " + ("On" if sounds.background_enabled else "Off")
 	effects_button.text = "Special effects: " + ("On" if sounds.effects_enabled else "Off")
 	for i in range(theme_options.size()):
 		var id: String = Palette.THEMES[i]
 		theme_options[i].text = ("✓ " if id == Palette.theme_id() else "") + Palette.theme_label(id)
-		# Space at the left leaves the core tile fully visible.
-		theme_options[i].add_theme_constant_override("h_separation", 12)
 		var tile: Control = theme_options[i].get_child(0)
-		_set_rect(tile, Rect2(width - row_height - 24, 8, row_height - 16, row_height - 16))
+		var tile_side: float = maxf(16, row_height - 16 * scale_factor)
+		theme_options[i].set_meta("menu_right_inset", tile_side + 20)
+		_set_rect(tile, Rect2(content_width - tile_side - 12, (row_height - tile_side) / 2, tile_side, tile_side))
 	for i in range(difficulty_options.size()):
 		difficulty_options[i].text = ("✓ " if i == difficulty else "") + ["Easy", "Moderate", "Difficult"][i]
 	for i in range(options.size()):
-		options[i].show()
-		_set_rect(options[i], Rect2(0, 38 + i * (row_height + 6), width - 12, row_height))
-		var font_size: int = clampi(roundi(row_height * 0.3), 11, 18)
-		if theme_options.has(options[i]):
-			font_size = mini(font_size, maxi(10, int((width - 100) / 12.5)))
-		options[i].add_theme_font_size_override("font_size", font_size)
+		var button: Button = options[i]
+		button.show()
+		if palette_options.has(button):
+			button.set_meta("menu_right_inset", row_height + 12)
+		var text_width: float = content_width - (18 if theme_options.has(button) else 6) - float(button.get_meta("menu_right_inset", 6))
+		var font_size: int = maxi(11, roundi(36 * scale_factor))
+		var font: Font = button.get_theme_font("font")
+		while font_size > 10 and font.get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > text_width:
+			font_size -= 1
+		button.add_theme_font_size_override("font_size", font_size)
+		_set_rect(button, Rect2(0, title_height + i * (row_height + gap), content_width, row_height))
+
+func _refresh_menu_style() -> void:
+	var menu_style := _style(Palette.controls())
+	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
+	menu_style.content_margin_left = inset.x
+	menu_style.content_margin_top = inset.y
+	menu_style.content_margin_right = inset.z
+	menu_style.content_margin_bottom = inset.w
+	menu_style.set_border_width_all(0 if menu_frame.is_present() else 2)
+	menu_style.border_color = Color(Palette.tile(1), 0.6)
+	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _apply_button_style(button: Button, active: bool = false, color: int = 1) -> void:
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var ink: Color = Palette.controls().lerp(Palette.tile(color), 0.20) if active else Palette.controls()
+		var ink: Color = Palette.controls().lerp(Palette.tile(color), 0.30 if active else 0.20)
 		if state == "hover": ink = ink.lightened(0.04)
 		if state in ["pressed", "hover_pressed"]: ink = ink.darkened(0.025)
 		var style := _style(ink)
-		style.set_border_width_all(2 if active else 0)
+		style.set_border_width_all(3 if active else 2)
 		style.border_color = Color(Palette.tile(color), 0.6)
 		if button in [undo_button, skip_button, erase_button]:
 			style.content_margin_top = 2
 			style.content_margin_bottom = 2
 		if theme_options.has(button):
 			style.content_margin_left = 18
-			style.content_margin_right = 70
+			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
+		elif palette_options.has(button):
+			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		button.add_theme_stylebox_override(state, style)
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
 		button.add_theme_color_override(state, Palette.text())
 	button.add_theme_color_override("font_disabled_color", Palette.muted())
+	var focus := _style(Color.TRANSPARENT)
+	focus.set_border_width_all(2)
+	focus.border_color = Color(Palette.tile(color), 0.9)
+	button.add_theme_stylebox_override("focus", focus)
 
 func _refresh_theme() -> void:
 	reef_background.visible = Palette.coral_reef
@@ -634,15 +684,14 @@ func _refresh_theme() -> void:
 			active = sounds.background_enabled
 		elif button == effects_button:
 			active = sounds.effects_enabled
+		elif button == axes_button:
+			active = board_view.show_axes
 		elif button == erase_button:
 			active = erase_mode
 		_apply_button_style(button, active, color)
 	for button: Button in [blue_button, coral_button]:
 		button.get_child(0).queue_redraw()
-	var menu_style := _style(Palette.controls())
-	menu_style.set_border_width_all(2)
-	menu_style.border_color = Color(Palette.text(), 0.3)
-	palette_menu.add_theme_stylebox_override("panel", menu_style)
+	_refresh_menu_style()
 	menu_title.add_theme_color_override("font_color", Palette.text())
 	queue_redraw()
 
@@ -674,6 +723,12 @@ func _request_difficulty(level: int) -> void:
 	_confirm_new_game("Switch to %s and start a new game?" % ["Easy", "Moderate", "Difficult"][level], func():
 		difficulty = level as Game.Difficulty
 		_reset())
+
+func _toggle_axes() -> void:
+	board_view.show_axes = not board_view.show_axes
+	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
+	_refresh_theme()
+	_update_summaries(game.board)
 
 func _toggle_background() -> void:
 	sounds.set_background_enabled(not sounds.background_enabled)
@@ -780,6 +835,7 @@ func _save_design() -> void:
 	var artwork = BoardView.new()
 	artwork.size = Vector2(900, 900)
 	artwork.show_guides = false
+	artwork.show_axes = false
 	artwork.complete_background = true
 	artwork.paper_background = Palette.clockwork
 	viewport.add_child(artwork)

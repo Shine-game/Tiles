@@ -19,6 +19,7 @@ const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
 const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
+const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 var board: Array = []
 var pattern = Growth.new()
@@ -30,6 +31,11 @@ var grid_inset := 8.0
 var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
 var announced_flowers: Dictionary = {}
+var axes_overlay: Control
+var show_axes := false:
+	set(enabled):
+		show_axes = enabled
+		_sync_axes()
 var show_guides := true
 var growth_before: Array = []
 var labyrinth := false
@@ -283,6 +289,19 @@ func update_geometry() -> void:
 			sprite.material.set_shader_parameter("occupancy_mask", occupied_platform.mask_texture)
 			sprite.material.set_shader_parameter("grid_size", occupied_platform.grid_size)
 			sprite.material.set_shader_parameter("screen_pixel", 256.0 / pitch)
+
+	_sync_axes()
+
+func _sync_axes() -> void:
+	var enabled: bool = show_axes and show_guides and not complete_background and not board.is_empty()
+	if axes_overlay == null:
+		if not enabled: return
+		axes_overlay = Axes.new()
+		axes_overlay.name = "SymmetryAxes"
+		add_child(axes_overlay)
+	axes_overlay.visible = enabled
+	if enabled:
+		axes_overlay.configure(Rect2(_point(Vector2.ZERO), Vector2.ONE * board.size() * pitch), pitch)
 
 func surface_depth() -> float:
 	return 4.0 if clockwork else Platform.depth(pitch)

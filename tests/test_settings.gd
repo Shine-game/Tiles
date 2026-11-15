@@ -63,6 +63,14 @@ func _run() -> void:
 	click(scene.palette_button)
 	await process_frame
 	check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens floating menu")
+	check(scene.palette_menu.size.is_equal_approx(Vector2(540, 495)), "Settings box is 1.5 times its previous 360 by 330 size")
+	check(scene.menu_title.get_theme_font_size("font_size") == 40 and scene.settings_options[0].get_theme_font_size("font_size") == 36, "Settings title and entries use double text size")
+	check(scene.menu_frame.is_present() and scene.menu_frame.texture == scene.board_view.board_frame.texture, "Settings reuses the playing-field decorative frame")
+	check(scene.menu_frame.get_global_rect().is_equal_approx(scene.palette_menu.get_global_rect()), "decorative perimeter fits the full menu box")
+	click(scene.menu_close)
+	check(not scene.palette_menu.visible, "enlarged menu has a reachable close button")
+	click(scene.palette_button)
+	await process_frame
 	check(scene.settings_options.map(func(button): return button.text) == ["Themes", "Difficulty", "Gallery", "Sound Settings"], "Settings has exactly the requested entries")
 	click(scene.settings_options[0])
 	await process_frame
@@ -119,7 +127,7 @@ func _run() -> void:
 				check(bounds.encloses(scene.board_view.get_rect()), "board fits every theme/size/orientation")
 				check(scene.erase_button.get_rect().end.y <= scene.board_view.position.y, "jokers stay above the board")
 				check(scene.undo_button.position.y > scene.indicators[0].panel.position.y and scene.undo_button.position.x == scene.indicators[0].panel.position.x, "jokers sit below the symmetry controls")
-				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "only the playing field uses a frame")
+				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "individual buttons remain unframed")
 				for button: Button in [scene.blue_button, scene.coral_button, scene.flip_button, scene.place_button]:
 					check(button.size.is_equal_approx(scene.place_button.size) and is_equal_approx(button.size.x, button.size.y), "bottom buttons are equal squares")
 					check(bounds.encloses(button.get_rect()), "bottom buttons stay on screen")
