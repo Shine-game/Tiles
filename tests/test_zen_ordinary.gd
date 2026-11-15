@@ -20,6 +20,34 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var started := Time.get_ticks_msec()
+	# Edge profiles alone did not catch the original bend's interior hairpins.
+	# Check the actual routes: no reversals, no self-crossings, and four separate
+	# grooves all the way from the north port to the east port.
+	var bends: Array[PackedVector2Array] = []
+	for raw: PackedVector2Array in Geometry.paths(3):
+		var line := PackedVector2Array()
+		for p: Vector2 in raw:
+			if line.is_empty() or line[-1].distance_to(p) > 0.001: line.append(p)
+		bends.append(line)
+	for i in range(bends.size()):
+		var line := bends[i]
+		var largest_turn := 0.0
+		var self_crossing := false
+		for j in range(1, line.size() - 1):
+			largest_turn = maxf(largest_turn, absf((line[j] - line[j - 1]).angle_to(line[j + 1] - line[j])))
+		for a in range(line.size() - 1):
+			for b in range(a + 2, line.size() - 1):
+				if Geometry2D.segment_intersects_segment(line[a], line[a + 1], line[b], line[b + 1]) != null: self_crossing = true
+		check(largest_turn < deg_to_rad(15), "Bend groove %d has smooth internal joins without hairpins" % i)
+		check(not self_crossing, "Bend groove %d never crosses itself" % i)
+		check(line[0] == Vector2(Geometry.PORTS[3 - i], 0) and line[-1] == Vector2(256, Geometry.PORTS[i]), "Bend pairs opposite port orders to preserve groove ordering")
+		for j in range(i + 1, bends.size()):
+			var crossing := false
+			var other := bends[j]
+			for a in range(line.size() - 1):
+				for b in range(other.size() - 1):
+					if Geometry2D.segment_intersects_segment(line[a], line[a + 1], other[b], other[b + 1]) != null: crossing = true
+			check(not crossing, "Bend grooves %d and %d stay separate" % [i, j])
 	for mask in range(16):
 		var spec: Dictionary = Geometry.canonical(mask)
 		check(Geometry.rotate_mask(spec.mask, spec.turns) == mask, "Canonical rotation reproduces mask %d" % mask)

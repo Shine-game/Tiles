@@ -63,7 +63,8 @@ godot --headless --path . --script res://tests/test_zen_ordinary.gd
 godot --path . --script res://tests/render_zen_ordinary.gd
 ```
 
-The first checks all topology masks and rotations, full 32-pixel port profiles,
+The first checks bend tangent continuity, self-intersections and crossings
+between grooves as well as all topology masks and rotations, full 32-pixel port profiles,
 flat inactive boundaries, matching visible RGB and alpha on opposing stone
 halves, color separation, diagonal exclusion and fixed-depth material behavior.
 The second requires a graphics display: it exercises review controls and writes

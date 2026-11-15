@@ -63,12 +63,16 @@ static func paths(mask: int) -> Array[PackedVector2Array]:
 		# A long bend travels around the empty center, following the supplied motif.
 		for i in range(4):
 			var radius := 40.0 + i * (44.0 / 3.0)
-			var port: float = PORTS[3 - i]
-			var line := PackedVector2Array([Vector2(port, 0), Vector2(port, 32)])
-			bezier(line, line[-1], Vector2(port, 64), Vector2(128 - radius, 64), Vector2(128 - radius, 128))
-			arc(line, Vector2(128, 128), radius, PI, 0)
-			bezier(line, line[-1], Vector2(128 + radius, port), Vector2(208, port), Vector2(224, port))
-			line.append(Vector2(256, port))
+			var entry: float = PORTS[3 - i]
+			var exit: float = PORTS[i]
+			var line := PackedVector2Array([Vector2(entry, 0), Vector2(entry, 32)])
+			bezier(line, line[-1], Vector2(entry, 64), Vector2(128 - radius, 64), Vector2(128 - radius, 128))
+			# Follow the lower-left quadrant and leave it horizontally. A half
+			# circle ended heading UP, reversing two exit curves into hairpins.
+			# Reverse the port order at E so the four continuous rails cannot cross.
+			arc(line, Vector2(128, 128), radius, PI, PI / 2)
+			bezier(line, line[-1], Vector2(160, 128 + radius), Vector2(192, exit), Vector2(224, exit))
+			line.append(Vector2(256, exit))
 			result.append(line)
 	else:
 		# Review geometry: nested arches for T, nested circulation for cross.
