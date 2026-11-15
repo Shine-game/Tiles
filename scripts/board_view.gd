@@ -42,6 +42,10 @@ var board_frame: BoardFrame
 var clockwork := false
 var clockwork_visuals: ClockworkVisuals
 var paper_background := false
+# Capture-only completion changes the surface mask, never the growth board.
+var complete_background := false
+var blank_ground: Node2D
+var blank_signature: Array = []
 
 func _ready() -> void:
 	z_index = 1
@@ -94,8 +98,64 @@ func _build_pattern(before: Array, after: Array) -> void:
 	if occupied_platform == null:
 		occupied_platform = Platform.new()
 		add_child(occupied_platform)
-	occupied_platform.sync(after)
+	occupied_platform.sync(_surface_board(after))
+	_sync_blank_ground()
 	update_geometry()
+
+func _surface_board(grid: Array) -> Array:
+	if not complete_background:
+		return grid
+	var filled: Array = grid.duplicate(true)
+	for row: Array in filled:
+		for x in range(row.size()):
+			if row[x] == 0: row[x] = 1
+	return filled
+
+func _sync_blank_ground() -> void:
+	var signature: Array = [board, Palette.theme_id(), complete_background]
+	if signature == blank_signature:
+		return
+	blank_signature = [board.duplicate(true), Palette.theme_id(), complete_background]
+	if blank_ground == null:
+		if not complete_background: return
+		blank_ground = Node2D.new()
+		blank_ground.name = "BlankBackgroundTiles"
+		add_child(blank_ground)
+	for child: Node in blank_ground.get_children():
+		blank_ground.remove_child(child)
+		child.queue_free()
+	blank_ground.visible = complete_background
+	if not complete_background or not (coral_reef or clockwork):
+		return
+	for y in range(board.size()):
+		for x in range(board.size()):
+			if board[y][x] != 0: continue
+			var cell := Vector2i(x, y)
+			var sprite := Sprite2D.new()
+			var turn := 0
+			if clockwork:
+				var choice: Dictionary = Clock.ground_choice(cell)
+				sprite.texture = Workshop.texture("artwork/ground/plate_%02d.png" % choice.variant)
+				turn = choice.rotation
+			else:
+				var choice: Dictionary = Coral.ground_choice(cell)
+				var meta: Dictionary = Coral.specification().components[choice.id]
+				sprite.texture = CoralLayer.texture(meta.artwork.salmon)
+				turn = choice.rotation
+			sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
+			sprite.rotation = turn * PI / 2
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			var ink := ShaderMaterial.new()
+			ink.shader = preload("res://shaders/ground_surface.gdshader")
+			ink.set_shader_parameter("cell_center", Vector2(cell) + Vector2.ONE * 0.5)
+			ink.set_shader_parameter("quarter_turn", float(turn))
+			ink.set_shader_parameter("cell_pixels", 256.0)
+			ink.set_shader_parameter("submerged", coral_reef)
+			ink.set_shader_parameter("metal_surface", clockwork)
+			if clockwork:
+				ink.set_shader_parameter("metal_lip", Workshop.texture("artwork/ground/edge_lip_2ui.png"))
+			sprite.material = ink
+			blank_ground.add_child(sprite)
 
 func _restyle() -> void:
 	if not growing:
@@ -215,6 +275,14 @@ func update_geometry() -> void:
 		coral_visuals.position = _point(Vector2.ZERO)
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0
 		coral_visuals.configure_surface(occupied_platform)
+
+	if blank_ground != null and complete_background:
+		blank_ground.position = _point(Vector2.ZERO)
+		blank_ground.scale = Vector2.ONE * pitch / 256.0
+		for sprite: Sprite2D in blank_ground.get_children():
+			sprite.material.set_shader_parameter("occupancy_mask", occupied_platform.mask_texture)
+			sprite.material.set_shader_parameter("grid_size", occupied_platform.grid_size)
+			sprite.material.set_shader_parameter("screen_pixel", 256.0 / pitch)
 
 func surface_depth() -> float:
 	return 4.0 if clockwork else Platform.depth(pitch)

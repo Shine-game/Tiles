@@ -36,4 +36,4 @@ The original `coral_reef_frame.png` from the user-supplied `Coral_Reef_Frame.zip
 
 ## Controls
 
-Only the playing field uses the shared theme frame. Game, settings, gallery, and confirmation buttons use flat backgrounds. The header reserves two playing-cell rows, with symmetry controls and jokers at the left and a full-size piece preview at the right. Tall shapes display sideways in the tray; dragging adopts that orientation. On portrait screens the board and four equal square bottom buttons span almost the full width.
+Only the playing field uses the shared theme frame. Game, settings, gallery, and confirmation buttons use flat backgrounds. The header reserves two playing-cell rows, with symmetry controls and jokers at the left and a full-size piece preview centered on the screen. Symmetry buttons are enlarged by 30% and their horizontal gap is doubled; jokers fill the resulting group width. All buttons use the symmetry style with a neutral theme background and tinted/outlined active states. Tall shapes display sideways in the tray; dragging adopts that orientation. On portrait screens the board and four equal square bottom buttons span almost the full width.

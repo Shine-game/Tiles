@@ -23,7 +23,5 @@ func cell_at(point: Vector2) -> Vector2i:
 
 func _draw() -> void:
 	Surface.begin(self)
-	for cell: Vector2i in cells:
-		var face := Rect2(origin + Vector2(cell) * pitch - Vector2(0, lift()), Vector2.ONE * (pitch - 4))
-		var ink: Color = Palette.tile(color) if valid else Palette.INVALID
-		Surface.draw(self, face, ink, Surface.depth(pitch))
+	var ink: Color = Palette.tile(color) if valid else Palette.INVALID
+	Surface.draw_piece(self, cells, origin - Vector2(0, lift()), pitch, ink)

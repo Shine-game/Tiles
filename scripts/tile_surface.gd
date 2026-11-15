@@ -38,3 +38,30 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 	slab.material.set_shader_parameter("margin_pixels", margin)
 	slab.material.set_shader_parameter("rect_pixels", slab.size)
 	slab.show()
+
+# A piece is one occupied union, just like placed ground: no gaps, repeated
+# internal walls, or stacked shadows along the joins between its squares.
+static func draw_piece(canvas: CanvasItem, cells: Array, origin: Vector2, pitch: float, color: Color) -> void:
+	if cells.is_empty():
+		return
+	var extent := 1
+	for cell: Vector2i in cells:
+		extent = maxi(extent, maxi(cell.x, cell.y) + 1)
+	var grid: Array = []
+	for y in range(extent):
+		var row: Array = []
+		row.resize(extent)
+		row.fill(0)
+		grid.append(row)
+	for cell: Vector2i in cells:
+		grid[cell.y][cell.x] = 1
+	var slab = canvas.get_node_or_null("PieceSlab")
+	if slab == null:
+		slab = Platform.new()
+		slab.name = "PieceSlab"
+		slab.set_meta("tile_slab", true)
+		slab.z_index = 0
+		canvas.add_child(slab)
+	slab.sync(grid)
+	slab.configure(origin, pitch, color, Palette.coral_reef, 4.0 if Palette.clockwork else -1.0)
+	slab.show()

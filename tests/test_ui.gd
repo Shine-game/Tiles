@@ -43,7 +43,7 @@ func _run() -> void:
 	check(scene.palette_options.size() == 5, "palette button offers exactly five pairs")
 	check(scene.palette_button.get_global_rect().get_center().x > scene.get_viewport_rect().size.x * 0.8, "palette button is at top right")
 	check(scene.palette_button.position.y < 30, "palette button sits at the top edge")
-	check(scene.piece_view.get_global_rect().get_center().x > scene.get_viewport_rect().size.x / 2, "active piece is on the right at top")
+	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 0.1, "active piece is centered at top")
 	var unchanged_board: Array = scene.game.board.duplicate(true)
 	for i in range(5):
 		touch(scene, scene.palette_button.get_global_rect().get_center(), true)
@@ -293,7 +293,7 @@ func _run() -> void:
 		root.size = dimensions
 		for i in range(4):
 			await process_frame
-		check(scene.piece_view.get_global_rect().get_center().x > scene.get_viewport_rect().size.x / 2, "piece remains on the right at " + str(dimensions))
+		check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 0.1, "piece remains centered at " + str(dimensions))
 		scene._show_menu("Themes")
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
@@ -354,7 +354,7 @@ func _run() -> void:
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
 	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "source cells match board pitch")
-	check(is_equal_approx(scene.piece_view.geometry().unit - 4 * scene.piece_view.geometry().scale, scene.board_view.pitch - 4), "source faces match hovering faces")
+	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "source faces match hovering faces")
 	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 	scene._refresh()
 	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical I keeps exact cell size")

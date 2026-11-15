@@ -131,7 +131,7 @@ func _run() -> void:
 				scene._refresh()
 				check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical active piece retains playing-cell scale")
 				check(scene.piece_view.display_cells().all(func(cell): return cell.y < 2), "tall pieces fit a two-row preview")
-				check(is_equal_approx(scene.piece_view.size.y, maxf(52, 2 * scene.board_view.pitch + 8)), "header reserves only two tile rows plus control minimum")
+				check(scene.piece_view.size.y >= 2 * scene.board_view.pitch and scene.piece_view.size.y <= 2 * scene.board_view.pitch + 48, "header stays compact around two tile rows and enlarged controls")
 				for page: String in ["Settings", "Themes", "Vine colors", "Difficulty", "Sound Settings"]:
 					scene._show_menu(page)
 					check(bounds.encloses(scene.palette_menu.get_rect()), "every floating menu fits on screen")

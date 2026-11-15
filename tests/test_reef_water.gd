@@ -177,7 +177,7 @@ func _run() -> void:
 		if records.size() == 1:
 			var picture: Image = scene.gallery.picture(records[0]).get_image()
 			var saved_water: Color = picture.get_pixel(790, 790)
-			check(saved_water.g > saved_water.r + 0.025 and saved_water.b > saved_water.r + 0.015, "saved artwork includes the lagoon in empty areas")
+			check(saved_water.a > 0.99, "saved artwork fills former empty areas with opaque reef ground")
 		for file: String in DirAccess.open(scene.gallery.directory).get_files():
 			DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
 		DirAccess.remove_absolute(scene.gallery.directory)

@@ -31,7 +31,7 @@ func geometry() -> Dictionary:
 		return {"origin": size / 2, "unit": maxf(1, cell_pitch), "scale": 1.0}
 	var unit: float = cell_pitch if cell_pitch > 0 else minf(51, minf(size.x / extent.x, size.y / extent.y))
 	var scale: float = 1.0
-	var drawn_size: Vector2 = Vector2(extent) * unit - Vector2.ONE * 4 * scale
+	var drawn_size: Vector2 = Vector2(extent) * unit
 	var origin := (size - drawn_size) / 2
 	return {"origin": origin, "unit": unit, "scale": scale}
 
@@ -49,6 +49,4 @@ func _draw() -> void:
 	if cells.is_empty():
 		return
 	var layout: Dictionary = geometry()
-	for cell: Vector2i in display_cells():
-		var face := Rect2(layout.origin + Vector2(cell) * layout.unit, Vector2.ONE * (layout.unit - 4 * layout.scale))
-		Surface.draw(self, face, Palette.tile(color), Surface.depth(layout.unit))
+	Surface.draw_piece(self, display_cells(), layout.origin, layout.unit, Palette.tile(color))
