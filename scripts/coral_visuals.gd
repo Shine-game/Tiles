@@ -62,17 +62,18 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 	surface_signature.clear()
 	for identity: String in model.components:
 		var event: Dictionary = model.components[identity]
+		var meta: Dictionary = Model.specification().components[event.id]
 		var sprite: Sprite2D
 		if registry.has(identity):
 			sprite = registry[identity]
 		else:
-			var meta: Dictionary = Model.specification().components[event.id]
 			var variant: String = "salmon" if event.color == 1 else "turquoise"
 			sprite = Sprite2D.new()
 			sprite.texture = texture(meta.artwork[variant])
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			sprite.position = event.center * 256
-			sprite.rotation = event.rotation * PI / 2
+			# Directional artwork is stored once and rotated around its pivot.
+			sprite.rotation = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
 			# Child insertion order keeps each complete colony together.
 			_group(event, settled).add_child(sprite)
 			registry[identity] = sprite
@@ -90,7 +91,9 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			var material := ShaderMaterial.new()
 			material.shader = REVEAL
 			material.set_shader_parameter("artwork", sprite.texture)
-			material.set_shader_parameter("growth_mask", texture(Model.specification().components[event.id].reveal_mask))
+			material.set_shader_parameter("growth_mask", texture(meta.reveal_mask))
+			# Junctions retain their original directional geodesic fields.
+			material.set_shader_parameter("growth_mask_rotation_radians", deg_to_rad(float(meta.get("growth_mask_rotation_clockwise", 0))))
 			material.set_shader_parameter("start_at_zero", event.start)
 			material.set_shader_parameter("start_at_one", event.reverse)
 			material.set_shader_parameter("stroke_seconds", event.stroke)

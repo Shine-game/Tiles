@@ -350,7 +350,8 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/arm_n.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 0
     },
     {
       "id": "fingers_n_0",
@@ -773,8 +774,8 @@
     {
       "id": "arm_e",
       "artwork": {
-        "salmon": "artwork/salmon/arm_e.png",
-        "turquoise": "artwork/turquoise/arm_e.png"
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
       },
       "canvas_px": [
         256,
@@ -785,10 +786,10 @@
         128
       ],
       "painted_bounds_px": [
-        127,
         89,
-        256,
-        167
+        0,
+        167,
+        129
       ],
       "footprint_cells": [
         [
@@ -826,13 +827,13 @@
               128
             ],
             [
-              256,
-              128
+              128,
+              0
             ]
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_e.png",
+        "mask": "masks/arm_n.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -840,8 +841,8 @@
           128
         ],
         "end_px": [
-          256,
-          128
+          128,
+          0
         ],
         "allowed_growth_directions": [
           "forward",
@@ -849,8 +850,9 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_e.png",
-      "motif_position": "ordinary supporting cell"
+      "growth_mask": "masks/arm_n.png",
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 90
     },
     {
       "id": "fingers_e_0",
@@ -1273,8 +1275,8 @@
     {
       "id": "arm_s",
       "artwork": {
-        "salmon": "artwork/salmon/arm_s.png",
-        "turquoise": "artwork/turquoise/arm_s.png"
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
       },
       "canvas_px": [
         256,
@@ -1286,9 +1288,9 @@
       ],
       "painted_bounds_px": [
         89,
-        127,
+        0,
         167,
-        256
+        129
       ],
       "footprint_cells": [
         [
@@ -1327,12 +1329,12 @@
             ],
             [
               128,
-              256
+              0
             ]
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_s.png",
+        "mask": "masks/arm_n.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1341,7 +1343,7 @@
         ],
         "end_px": [
           128,
-          256
+          0
         ],
         "allowed_growth_directions": [
           "forward",
@@ -1349,8 +1351,9 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_s.png",
-      "motif_position": "ordinary supporting cell"
+      "growth_mask": "masks/arm_n.png",
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 180
     },
     {
       "id": "fingers_s_0",
@@ -1773,8 +1776,8 @@
     {
       "id": "arm_w",
       "artwork": {
-        "salmon": "artwork/salmon/arm_w.png",
-        "turquoise": "artwork/turquoise/arm_w.png"
+        "salmon": "artwork/salmon/arm_n.png",
+        "turquoise": "artwork/turquoise/arm_n.png"
       },
       "canvas_px": [
         256,
@@ -1785,10 +1788,10 @@
         128
       ],
       "painted_bounds_px": [
-        0,
         89,
-        129,
-        167
+        0,
+        167,
+        129
       ],
       "footprint_cells": [
         [
@@ -1826,13 +1829,13 @@
               128
             ],
             [
-              0,
-              128
+              128,
+              0
             ]
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_w.png",
+        "mask": "masks/arm_n.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1840,8 +1843,8 @@
           128
         ],
         "end_px": [
-          0,
-          128
+          128,
+          0
         ],
         "allowed_growth_directions": [
           "forward",
@@ -1849,8 +1852,9 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_w.png",
-      "motif_position": "ordinary supporting cell"
+      "growth_mask": "masks/arm_n.png",
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 270
     },
     {
       "id": "fingers_w_0",
@@ -2412,13 +2416,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/junction_ne.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 0,
+      "growth_mask_rotation_clockwise": 0
     },
     {
       "id": "junction_es",
       "artwork": {
-        "salmon": "artwork/salmon/junction_es.png",
-        "turquoise": "artwork/turquoise/junction_es.png"
+        "salmon": "artwork/salmon/junction_ne.png",
+        "turquoise": "artwork/turquoise/junction_ne.png"
       },
       "canvas_px": [
         256,
@@ -2430,9 +2436,9 @@
       ],
       "painted_bounds_px": [
         166,
-        166,
+        75,
         181,
-        181
+        90
       ],
       "footprint_cells": [
         [
@@ -2556,13 +2562,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/junction_es.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 90,
+      "growth_mask_rotation_clockwise": 90
     },
     {
       "id": "junction_sw",
       "artwork": {
-        "salmon": "artwork/salmon/junction_sw.png",
-        "turquoise": "artwork/turquoise/junction_sw.png"
+        "salmon": "artwork/salmon/junction_ne.png",
+        "turquoise": "artwork/turquoise/junction_ne.png"
       },
       "canvas_px": [
         256,
@@ -2573,10 +2581,10 @@
         128
       ],
       "painted_bounds_px": [
-        75,
         166,
-        90,
-        181
+        75,
+        181,
+        90
       ],
       "footprint_cells": [
         [
@@ -2700,13 +2708,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/junction_sw.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 180,
+      "growth_mask_rotation_clockwise": 180
     },
     {
       "id": "junction_wn",
       "artwork": {
-        "salmon": "artwork/salmon/junction_wn.png",
-        "turquoise": "artwork/turquoise/junction_wn.png"
+        "salmon": "artwork/salmon/junction_ne.png",
+        "turquoise": "artwork/turquoise/junction_ne.png"
       },
       "canvas_px": [
         256,
@@ -2717,9 +2727,9 @@
         128
       ],
       "painted_bounds_px": [
+        166,
         75,
-        75,
-        90,
+        181,
         90
       ],
       "footprint_cells": [
@@ -2840,7 +2850,9 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/junction_wn.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "artwork_rotation_clockwise": 270,
+      "growth_mask_rotation_clockwise": 270
     },
     {
       "id": "colony_body",

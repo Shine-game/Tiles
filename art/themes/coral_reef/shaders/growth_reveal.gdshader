@@ -3,6 +3,7 @@ render_mode unshaded, blend_mix;
 
 uniform sampler2D artwork : source_color, filter_linear, repeat_disable;
 uniform sampler2D growth_mask : filter_linear, repeat_disable;
+uniform float growth_mask_rotation_radians = 0.0;
 uniform float clock_seconds = 0.0;
 uniform float stroke_seconds = 0.1;
 uniform float start_at_zero = 0.0;
@@ -25,7 +26,14 @@ void fragment() {
         if (force_complete) {
             visible = 1.0;
         } else {
-            float u = texture(growth_mask, UV).r;
+            vec2 mask_uv = UV;
+            if (abs(growth_mask_rotation_radians) > 0.00001) {
+                vec2 p = UV - vec2(0.5);
+                float c = cos(growth_mask_rotation_radians);
+                float s = sin(growth_mask_rotation_radians);
+                mask_uv = vec2(c * p.x - s * p.y, s * p.x + c * p.y) + vec2(0.5);
+            }
+            float u = texture(growth_mask, mask_uv).r;
             float duration = max(stroke_seconds, 0.00001);
             float t0 = 1000000000.0;
             float t1 = 1000000000.0;
