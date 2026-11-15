@@ -29,7 +29,7 @@ func board_point(scene, cell: Vector2i) -> Vector2:
 
 func source_point(scene, cell: Vector2i) -> Vector2:
 	var layout: Dictionary = scene.piece_view.geometry()
-	return scene.piece_view.get_global_transform_with_canvas() * (layout.origin + (Vector2(cell) + Vector2(0.5, 0.5)) * layout.unit)
+	return scene.piece_view.get_global_transform_with_canvas() * (layout.origin + (Vector2(scene.piece_view.display_cell(cell)) + Vector2(0.5, 0.5)) * layout.unit)
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -43,7 +43,7 @@ func _run() -> void:
 	check(scene.palette_options.size() == 5, "palette button offers exactly five pairs")
 	check(scene.palette_button.get_global_rect().get_center().x > scene.get_viewport_rect().size.x * 0.8, "palette button is at top right")
 	check(scene.palette_button.position.y < 30, "palette button sits at the top edge")
-	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 1, "active piece is centered at top")
+	check(scene.piece_view.get_global_rect().get_center().x > scene.get_viewport_rect().size.x / 2, "active piece is on the right at top")
 	var unchanged_board: Array = scene.game.board.duplicate(true)
 	for i in range(5):
 		touch(scene, scene.palette_button.get_global_rect().get_center(), true)
@@ -293,7 +293,7 @@ func _run() -> void:
 		root.size = dimensions
 		for i in range(4):
 			await process_frame
-		check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 1, "piece remains centered at " + str(dimensions))
+		check(scene.piece_view.get_global_rect().get_center().x > scene.get_viewport_rect().size.x / 2, "piece remains on the right at " + str(dimensions))
 		scene._show_menu("Themes")
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
@@ -358,6 +358,23 @@ func _run() -> void:
 	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 	scene._refresh()
 	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical I keeps exact cell size")
+	scene._clear_selection()
+	scene._preview()
+	var tall_cells: Array = scene.cells.duplicate()
+	var tray_cells: Array = scene.piece_view.display_cells()
+	for index in range(tall_cells.size()):
+		var point := source_point(scene, tall_cells[index])
+		check(scene.piece_view.cell_at(scene.piece_view.get_global_transform_with_canvas().affine_inverse() * point) == tall_cells[index], "sideways preview maps each square to the original piece")
+	var tray_grab: Vector2i = tall_cells.back()
+	var displayed_grab: Vector2i = tray_cells.back()
+	check(scene._start_drag(source_point(scene, tray_grab), -1), "tall tray piece can be picked up")
+	scene._move_gesture(board_point(scene, Vector2i(2, 2) + displayed_grab))
+	check(scene.cells == tray_cells and scene.grabbed_cell == displayed_grab, "drag adopts the sideways tray orientation and keeps the grabbed square")
+	check(scene.selected == Vector2i(2, 2), "sideways tray piece lands at the requested anchor")
+	scene.dragging = false
+	scene._rotate()
+	check(scene.cells.any(func(cell): return cell.y > 1), "hovering piece still rotates beyond two rows")
+	scene._clear_selection()
 	root.size = original_window_size
 	scene.cells = scene.game.piece().cells
 	scene._refresh()

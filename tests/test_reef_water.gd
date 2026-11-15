@@ -157,7 +157,8 @@ func _run() -> void:
 				var a: Color = first.get_pixel(x, y)
 				var b: Color = second.get_pixel(x, y)
 				var change: float = maxf(absf(a.r - b.r), maxf(absf(a.g - b.g), absf(a.b - b.b)))
-				var p := Vector2(x, y)
+				# Compare pixel centers with fractional canvas bounds.
+				var p := Vector2(x + 0.5, y + 0.5)
 				if not board_rect.has_point(p):
 					if change > 1.5 / 255:
 						outside_changes += 1
@@ -168,7 +169,7 @@ func _run() -> void:
 					else:
 						empty_changes += 1
 		check(empty_changes > 100 and occupied_changes > 100, "caustics visibly oscillate over empty water and occupied sand/coral within 1.5 seconds")
-		check(outside_changes == 0, "board lighting never spills onto the surrounding lagoon")
+		check(outside_changes == 0, "board lighting never spills onto the surrounding lagoon (%d changed samples)" % outside_changes)
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()

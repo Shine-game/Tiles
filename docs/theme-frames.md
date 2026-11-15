@@ -34,6 +34,6 @@ The original `coral_reef_frame.png` from the user-supplied `Coral_Reef_Frame.zip
 
 `tests/test_board_frame.gd` uses a clearly marked technical color-patch fixture to check nine-slice geometry, transparency, corner/sidewall preservation, responsive fitting, edge-cell input and lighting coordinates. The fixture is never installed as game artwork. The original PNG is additionally checked for exact dimensions and transparent opening, and exercised by the normal game/theme/gallery tests.
 
-## Control frames
+## Controls
 
-Game, settings, gallery, and confirmation buttons reuse `BoardFrame` with the selected theme profile. The control frame scales the shared source geometry to 50% (7-unit rim and 5-unit lower sidewall) while fitting inside the button. Its center stays transparent to show the control background or color swatch. Input passes through to the native button. Profiles without artwork retain the flat button style. Board frame geometry and gallery captures are unchanged.
+Only the playing field uses the shared theme frame. Game, settings, gallery, and confirmation buttons use flat backgrounds. The header reserves two playing-cell rows, with symmetry controls and jokers at the left and a full-size piece preview at the right. Tall shapes display sideways in the tray; dragging adopts that orientation. On portrait screens the board and four equal square bottom buttons span almost the full width.

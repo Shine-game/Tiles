@@ -117,14 +117,21 @@ func _run() -> void:
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO, dimensions).grow(0.1)
 				check(bounds.encloses(scene.board_view.get_rect()), "board fits every theme/size/orientation")
-				check(scene.board_view.get_rect().end.y <= scene.undo_button.position.y, "board stays above helpers")
+				check(scene.erase_button.get_rect().end.y <= scene.board_view.position.y, "jokers stay above the board")
+				check(scene.undo_button.position.y > scene.indicators[0].panel.position.y and scene.undo_button.position.x == scene.indicators[0].panel.position.x, "jokers sit below the symmetry controls")
+				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "only the playing field uses a frame")
 				for button: Button in [scene.blue_button, scene.coral_button, scene.flip_button, scene.place_button]:
 					check(button.size.is_equal_approx(scene.place_button.size) and is_equal_approx(button.size.x, button.size.y), "bottom buttons are equal squares")
 					check(bounds.encloses(button.get_rect()), "bottom buttons stay on screen")
-				check(scene.erase_button.get_rect().end.y < scene.blue_button.position.y, "helpers sit above the large controls")
+				check(scene.board_view.get_rect().end.y <= scene.blue_button.position.y + 0.1, "field stays above the large controls")
+				if dimensions.y >= dimensions.x * 1.5:
+					check(scene.board_view.size.x >= dimensions.x * 0.96, "portrait board nearly touches both sides")
+					check(scene.blue_button.position.x <= dimensions.x * 0.02 and scene.place_button.get_rect().end.x >= dimensions.x * 0.98, "large buttons span almost the full portrait width")
 				scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 				scene._refresh()
 				check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical active piece retains playing-cell scale")
+				check(scene.piece_view.display_cells().all(func(cell): return cell.y < 2), "tall pieces fit a two-row preview")
+				check(is_equal_approx(scene.piece_view.size.y, maxf(52, 2 * scene.board_view.pitch + 8)), "header reserves only two tile rows plus control minimum")
 				for page: String in ["Settings", "Themes", "Vine colors", "Difficulty", "Sound Settings"]:
 					scene._show_menu(page)
 					check(bounds.encloses(scene.palette_menu.get_rect()), "every floating menu fits on screen")

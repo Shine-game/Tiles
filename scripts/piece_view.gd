@@ -1,6 +1,7 @@
 extends Control
 
 const Surface = preload("res://scripts/tile_surface.gd")
+const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var color := 1
@@ -10,9 +11,21 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
 
+# Keep the source tray at two rows; normalize only its display orientation.
+# Picking it up adopts this orientation. Floating pieces rotate independently.
+func display_cells() -> Array:
+	var height := 0
+	for cell: Vector2i in cells:
+		height = maxi(height, cell.y + 1)
+	return Rules.rotate(cells) if height > 2 else cells
+
+func display_cell(cell: Vector2i) -> Vector2i:
+	var index: int = cells.find(cell)
+	return display_cells()[index] if index >= 0 else Vector2i(-1, -1)
+
 func geometry() -> Dictionary:
 	var extent := Vector2i.ZERO
-	for cell: Vector2i in cells:
+	for cell: Vector2i in display_cells():
 		extent = extent.max(cell + Vector2i.ONE)
 	if extent == Vector2i.ZERO:
 		return {"origin": size / 2, "unit": maxf(1, cell_pitch), "scale": 1.0}
@@ -28,13 +41,14 @@ func cell_at(point: Vector2) -> Vector2i:
 	var layout: Dictionary = geometry()
 	var local: Vector2 = (point - layout.origin) / layout.unit
 	var cell := Vector2i(floori(local.x), floori(local.y))
-	return cell if cells.has(cell) else Vector2i(-1, -1)
+	var index: int = display_cells().find(cell)
+	return cells[index] if index >= 0 else Vector2i(-1, -1)
 
 func _draw() -> void:
 	Surface.begin(self)
 	if cells.is_empty():
 		return
 	var layout: Dictionary = geometry()
-	for cell: Vector2i in cells:
+	for cell: Vector2i in display_cells():
 		var face := Rect2(layout.origin + Vector2(cell) * layout.unit, Vector2.ONE * (layout.unit - 4 * layout.scale))
 		Surface.draw(self, face, Palette.tile(color), Surface.depth(layout.unit))
