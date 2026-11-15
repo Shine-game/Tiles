@@ -134,6 +134,8 @@ func _run() -> void:
 	DirAccess.remove_absolute(scene.gallery.directory)
 	# Construction shaders run through every phase on an 11x11 occupied board.
 	scene._ask_reset(11)
+	scene.confirmation.confirmed.emit()
+	scene.confirmation.hide()
 	var dense: Array = Rules.empty_board(11)
 	for row: Array in dense: row.fill(2)
 	scene.game.board = dense

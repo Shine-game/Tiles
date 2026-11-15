@@ -67,6 +67,8 @@ func _run() -> void:
 	for size_choice in [9, 11]:
 		var fixture: Dictionary = fixtures.filter(func(value: Dictionary): return value.id == "phone_%dx%d" % [size_choice, size_choice])[0]
 		scene._ask_reset(size_choice)
+		scene.confirmation.confirmed.emit()
+		scene.confirmation.hide()
 		var review_board: Array = Rules.empty_board(size_choice)
 		for cell: Array in fixture.after_cells:
 			review_board[int(cell[1])][int(cell[0])] = 1 if cell[2] == "salmon" else 2

@@ -2,6 +2,8 @@ class_name TileGame
 extends RefCounted
 
 const Rules = preload("res://scripts/rules.gd")
+enum Difficulty { EASY, MODERATE, DIFFICULT }
+var difficulty: Difficulty = Difficulty.DIFFICULT
 var board: Array
 var queue: Array = []
 var index := 0
@@ -18,7 +20,8 @@ var skip_left := 3
 var erase_left := 3
 var rng := RandomNumberGenerator.new()
 
-func _init(n: int = 9, seed_value: int = -1) -> void:
+func _init(n: int = 9, seed_value: int = -1, level: Difficulty = Difficulty.DIFFICULT) -> void:
+	difficulty = level
 	if seed_value >= 0:
 		rng.seed = seed_value
 	else:
@@ -33,7 +36,9 @@ func eligible_groups() -> Array:
 	var groups: Array = [[], [], [], []]
 	for name: String in Rules.PIECES:
 		var definition: Dictionary = Rules.PIECES[name]
-		if not Rules.first_physical_move(board, definition).is_empty():
+		if difficulty != Difficulty.DIFFICULT and definition.cells.size() == 4:
+			continue
+		if not Rules.first_physical_move(board, definition, requires_contact()).is_empty():
 			groups[definition.cells.size() - 1].append(name)
 	return groups.filter(func(group: Array): return not group.is_empty())
 
@@ -61,10 +66,10 @@ func piece() -> Dictionary:
 func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	if over:
 		return {"ok": false, "reason": "No safe placements remain. Go back or start a new garden."}
-	var physical: Dictionary = Rules.physical_placement(board, cells, anchor)
+	var physical: Dictionary = physical_placement(cells, anchor)
 	if not physical.ok:
 		return physical
-	var result: Dictionary = Rules.placement(board, cells, piece().color, anchor)
+	var result: Dictionary = placement(cells, anchor)
 	history.append({"name": queue[index], "color": current_color, "cells": cells.duplicate(), "anchor": anchor})
 	if history.size() > 3:
 		history.pop_front()
@@ -76,7 +81,7 @@ func place(cells: Array, anchor: Vector2i) -> Dictionary:
 	lost = not result.ok
 	index += 1
 	# An offer set aside by Undo stays next if it still physically fits.
-	if index >= queue.size() or queue[index] == "" or Rules.first_physical_move(board, Rules.PIECES[queue[index]]).is_empty():
+	if index >= queue.size() or queue[index] == "" or Rules.first_physical_move(board, Rules.PIECES[queue[index]], requires_contact()).is_empty():
 		queue.resize(index)
 		queue.append(_draw_piece())
 	_refresh_over()
@@ -127,5 +132,14 @@ func erase(cell: Vector2i) -> bool:
 
 func _refresh_over() -> void:
 	no_space = queue[index] == "" or not board.any(func(row: Array): return row.has(0))
-	symmetry_blocked = not no_space and Rules.first_legal_move(board, piece()).is_empty()
+	symmetry_blocked = not no_space and Rules.first_legal_move(board, piece(), true, true, requires_contact()).is_empty()
 	over = lost or no_space
+
+func requires_contact() -> bool:
+	return difficulty != Difficulty.EASY
+
+func physical_placement(cells: Array, anchor: Vector2i) -> Dictionary:
+	return Rules.physical_placement(board, cells, anchor, requires_contact())
+
+func placement(cells: Array, anchor: Vector2i) -> Dictionary:
+	return Rules.placement(board, cells, current_color, anchor, requires_contact())

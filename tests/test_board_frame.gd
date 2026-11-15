@@ -57,11 +57,13 @@ func _run() -> void:
 	view.board_frame.apply_theme("coral_reef", artwork)
 	for board_size in [9, 11]:
 		scene._ask_reset(board_size)
+		scene.confirmation.confirmed.emit()
+		scene.confirmation.hide()
 		for dimensions: Vector2 in [Vector2(240, 320), Vector2(390, 844), Vector2(720, 1100), Vector2(844, 390)]:
 			scene.size = dimensions
 			scene._layout()
 			check(Rect2(Vector2.ZERO, view.size).grow(0.001).encloses(view.board_frame.get_rect()), "frame fits without overlapping controls at " + str(dimensions))
-			check(view.reef_water.floor_plane.get_rect() == view.field and view.reef_water.light_plane.get_rect() == view.board_frame.get_rect(), "one caustic field covers board and frame while lagoon fills only the opening")
+			check(view.reef_water.floor_plane.get_rect().is_equal_approx(view.field) and view.reef_water.light_plane.get_rect().is_equal_approx(view.board_frame.get_rect()), "one caustic field covers board and frame while lagoon fills only the opening")
 			check(view.reef_water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - view.board_frame.position), "frame and board share the exact lighting coordinate origin")
 			scene.grabbed_cell = Vector2i.ZERO
 			for cell: Vector2i in [Vector2i.ZERO, Vector2i(board_size - 1, board_size - 1)]:
@@ -99,6 +101,8 @@ func _run() -> void:
 		scene.size = Vector2(720, 1100)
 		scene._layout()
 		scene._ask_reset(9)
+		scene.confirmation.confirmed.emit()
+		scene.confirmation.hide()
 		scene.gallery.directory = "user://frame-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()

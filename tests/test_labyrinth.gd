@@ -61,22 +61,14 @@ func _run() -> void:
 	root.add_child(scene)
 	for frame in range(4):
 		await process_frame
-	var original: Array = scene.game.board.duplicate(true)
-	var original_piece: Array = scene.cells.duplicate()
-	var original_offer: String = scene.game.queue[scene.game.index]
-	scene._toggle_palette_menu()
-	await process_frame
-	var theme_touch := InputEventScreenTouch.new()
-	theme_touch.position = scene.theme_button.get_global_rect().get_center()
-	theme_touch.pressed = true
-	root.push_input(theme_touch, true)
-	theme_touch = theme_touch.duplicate()
-	theme_touch.pressed = false
-	root.push_input(theme_touch, true)
-	check(Palette.labyrinth and scene.board_view.pattern is Maze, "settings switches to labyrinth renderer and schedule")
-	check(scene.game.board == original and scene.cells == original_piece and scene.game.queue[scene.game.index] == original_offer, "theme switch preserves board, offer, and orientation")
+	scene._request_theme("labyrinth")
+	check(scene.confirmation.visible and not Palette.labyrinth, "theme selection waits for confirmation")
+	scene.confirmation.confirmed.emit()
+	scene.confirmation.hide()
+	check(Palette.labyrinth and scene.board_view.pattern is Maze, "confirmed theme switches to labyrinth renderer and schedule")
+	check(scene.game.board == Rules.create_board() and scene.game.moves == 0, "theme switch starts a new game")
 	check(Palette.tile(1) == Palette.HEDGE_GREEN and Palette.tile(2) == Palette.HEDGE_ROSE, "piece swatches match green and rose hedge identities")
-	check(Palette.floor_color() == Palette.SAND and Palette.background() == Color.WHITE, "sand covers paths and surrounding screen stays white")
+	check(Palette.floor_color() == Palette.SAND and Palette.background() == Palette.SAND, "sand covers paths and surrounding screen")
 	check(scene.palette_options.all(func(option): return not option.visible), "fixed green and rose theme hides unrelated vine palettes")
 	for dimensions: Vector2i in [Vector2i(240, 320), Vector2i(390, 844), Vector2i(844, 390)]:
 		root.size = dimensions
@@ -86,26 +78,26 @@ func _run() -> void:
 		await process_frame
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		check(bounds.encloses(scene.palette_menu.get_global_rect()), "labyrinth settings fit without scrolling at " + str(dimensions))
-		for option: Control in [scene.theme_button, scene.size_picker, scene.new_button, scene.gallery_button]:
+		for option: Control in scene.settings_options:
 			check(bounds.encloses(option.get_global_rect()), "every labyrinth settings choice is visible")
 		scene.palette_menu.hide()
-	# Existing growth remains gated when changing visual themes mid-animation.
+	# A confirmed theme change cancels growth from the old game.
 	scene.game.board = block
 	scene.board_view.animate_growth(before, block)
 	scene.board_view.set_process(false)
 	scene.board_view.advance_growth(0.05)
-	var growth_clock: float = scene.board_view.clock
 	scene._select_theme("vines")
-	check(not Palette.labyrinth and scene.board_view.growing and is_equal_approx(scene.board_view.clock, growth_clock), "switching to vines preserves current growth clock")
+	check(not Palette.labyrinth and not scene.board_view.growing and scene.game.moves == 0, "switching to vines starts a fresh game and cancels old growth")
 	scene.board_view.set_process(false)
-	scene._toggle_theme()
-	check(Palette.labyrinth and scene.board_view.growing and scene.board_view.pattern is Maze, "switching back retains scheduled tree and bench transitions")
+	scene._select_theme("labyrinth")
+	check(Palette.labyrinth and scene.board_view.pattern is Maze and scene.game.moves == 0, "switching back rebuilds the selected theme for a fresh game")
 	scene.board_view.set_process(false)
 	scene.board_view.advance_growth(scene.board_view.pattern.duration + 1)
 	check(not scene.board_view.growing, "labyrinth finishes only after benches resolve")
 	scene.board_view.show_settled(before)
 	check(scene.board_view.pattern.flowers.size() == 3, "removing a square removes its tree and restores appropriate hedge walls")
 	scene._select_theme("vines")
+	scene._show_menu("Vine colors")
 	check(not Palette.labyrinth and scene.palette_options.all(func(option): return option.visible), "vine theme and all five palettes remain available")
 	scene.queue_free()
 	# Wait for real mixer frames, even after a long artwork-loading frame.

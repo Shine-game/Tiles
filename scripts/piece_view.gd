@@ -4,8 +4,7 @@ const Surface = preload("res://scripts/tile_surface.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var color := 1
-var reference_size := Vector2(160, 104)
-const ENLARGEMENT := 1.5
+var cell_pitch := 0.0
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -15,9 +14,10 @@ func geometry() -> Dictionary:
 	var extent := Vector2i.ZERO
 	for cell: Vector2i in cells:
 		extent = extent.max(cell + Vector2i.ONE)
-	var original_unit: float = minf(34, minf(reference_size.x / extent.x, reference_size.y / extent.y))
-	var unit: float = minf(original_unit * ENLARGEMENT, minf(size.x / extent.x, size.y / extent.y))
-	var scale: float = unit / original_unit
+	if extent == Vector2i.ZERO:
+		return {"origin": size / 2, "unit": maxf(1, cell_pitch), "scale": 1.0}
+	var unit: float = cell_pitch if cell_pitch > 0 else minf(51, minf(size.x / extent.x, size.y / extent.y))
+	var scale: float = 1.0
 	var drawn_size: Vector2 = Vector2(extent) * unit - Vector2.ONE * 4 * scale
 	var origin := (size - drawn_size) / 2
 	return {"origin": origin, "unit": unit, "scale": scale}

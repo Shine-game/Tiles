@@ -100,9 +100,8 @@ func _run() -> void:
 	root.add_child(scene)
 	for frame in range(4):
 		await process_frame
-	scene._toggle_theme()
-	scene._toggle_theme()
-	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.0", "third theme is redesigned Coral Reef")
+	scene._select_theme("coral_reef")
+	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.0", "theme selection opens redesigned Coral Reef")
 	check((scene.board_view.coral_visuals.position + Vector2(0, scene.board_view.surface_depth())).is_equal_approx(scene.board_view._floor_point(Vector2.ZERO)), "reef ground and coral share the elevated surface above the placement grid")
 	check(scene.game.moves == 0 and scene.game.undo_left == 3, "theme does not change gameplay or helper budgets")
 	scene.game.board = block

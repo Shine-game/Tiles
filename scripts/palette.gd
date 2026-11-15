@@ -27,7 +27,10 @@ static func theme_version() -> String:
 	return "1.0" if clockwork else ("2.0" if coral_reef else "")
 
 static func theme_name() -> String:
-	return {"clockwork": "Clockwork Workshop", "vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}[theme_id()]
+	return theme_label(theme_id())
+
+static func theme_label(id: String) -> String:
+	return {"clockwork": "Clockwork Workshop", "vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}.get(id, id)
 
 static func select_theme(id: String) -> bool:
 	if id not in THEMES:
@@ -72,7 +75,7 @@ static func dark() -> bool:
 	return floor_color().get_luminance() < 0.4
 
 static func background() -> Color:
-	return Color("e5d4ae") if clockwork else Color.WHITE
+	return Color("e5d4ae") if clockwork else (Color("d6ece6") if coral_reef else (SAND if labyrinth else floor_color()))
 
 static func controls() -> Color:
 	return Color("e4d6bb") if clockwork else Color("eeedf3")

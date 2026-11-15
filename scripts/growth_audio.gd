@@ -42,6 +42,7 @@ func _ready() -> void:
 	add_child(workshop)
 	reef = Reef.new()
 	add_child(reef)
+	_setup_sound_buses()
 	set_process(false)
 
 func attach_board(board) -> void:
@@ -135,3 +136,40 @@ func _cancel_legacy() -> void:
 
 func _exit_tree() -> void:
 	_cancel_legacy()
+	for bus: String in [background_bus, effects_bus]:
+		var index := AudioServer.get_bus_index(bus)
+		if index > 0:
+			AudioServer.remove_bus(index)
+
+# Separate buses keep mute independent of theme fades and scheduled effects.
+var background_enabled := true
+var effects_enabled := true
+var background_bus := ""
+var effects_bus := ""
+
+func _setup_sound_buses() -> void:
+	background_bus = "TilesBackground_%d" % get_instance_id()
+	effects_bus = "TilesEffects_%d" % get_instance_id()
+	for bus: String in [background_bus, effects_bus]:
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(AudioServer.bus_count - 1, bus)
+	whisper.bus = background_bus
+	workshop.ticking.bus = background_bus
+	reef.ambience.bus = background_bus
+	for player: AudioStreamPlayer in bells + workshop.voices:
+		player.bus = effects_bus
+	AudioServer.set_bus_send(AudioServer.get_bus_index(reef.bus_name), effects_bus)
+	set_background_enabled(background_enabled)
+	set_effects_enabled(effects_enabled)
+
+func set_background_enabled(enabled: bool) -> void:
+	background_enabled = enabled
+	var index := AudioServer.get_bus_index(background_bus)
+	if index > 0:
+		AudioServer.set_bus_mute(index, not enabled)
+
+func set_effects_enabled(enabled: bool) -> void:
+	effects_enabled = enabled
+	var index := AudioServer.get_bus_index(effects_bus)
+	if index > 0:
+		AudioServer.set_bus_mute(index, not enabled)

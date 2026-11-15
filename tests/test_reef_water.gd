@@ -106,14 +106,18 @@ func _run() -> void:
 	check(water.light_plane.z_index > view.coral_visuals.z_index, "continuous light draws over the complete coral network")
 	check(view.get_children().find(water) < view.get_children().find(view.occupied_platform), "lagoon base lies below the occupied surface")
 	check(view.occupied_platform.material.get_shader_parameter("submerged"), "reef platform uses submerged shading")
-	check(Palette.background() == Color.WHITE, "surrounding interface remains white")
+	check(Palette.background() == Color("d6ece6") and scene.reef_background.visible, "reef lagoon background fills the surrounding interface")
 	check(Platform.surface_revision("coral_reef") != Platform.SURFACE_REVISION and Platform.surface_revision("vines") == Platform.SURFACE_REVISION, "gallery identifies the new reef environment separately")
 	for size_choice in [9, 11]:
 		scene._ask_reset(size_choice)
+		scene.confirmation.confirmed.emit()
+		scene.confirmation.hide()
 		check(water.light_plane.get_rect() == (view.board_frame.get_rect() if view.board_frame.is_present() else view.field) and water.floor_plane.get_rect() == view.field, "water covers the complete %dx%d board" % [size_choice, size_choice])
 		check(is_equal_approx(view.surface_depth(), view.pitch * 24 / 256), "water does not change tile thickness")
 		check(water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - water.light_plane.position), "caustics use the same board coordinates as sand and coral")
 	scene._ask_reset(9)
+	scene.confirmation.confirmed.emit()
+	scene.confirmation.hide()
 	var garden: Array = Rules.empty_board(9)
 	for y in range(2, 7):
 		for x in range(2, 7):
@@ -127,7 +131,7 @@ func _run() -> void:
 		var first: Image = await capture()
 		var outside: Color = first.get_pixel(5, 4)
 		var empty: Color = first.get_pixelv(Vector2i(view.global_position + view._floor_point(Vector2(7.5, 7.5))))
-		check(outside.is_equal_approx(Color.WHITE), "native renderer confines lagoon to the board")
+		check(outside.g > outside.r + 0.025 and outside.b > outside.r + 0.015, "native renderer paints lagoon across the full screen")
 		check(empty.g > empty.r + 0.025 and empty.b > empty.r + 0.015, "native empty squares read as pale lagoon water")
 		water.light_plane.hide()
 		var unlit: Image = await capture()
@@ -164,7 +168,7 @@ func _run() -> void:
 					else:
 						empty_changes += 1
 		check(empty_changes > 100 and occupied_changes > 100, "caustics visibly oscillate over empty water and occupied sand/coral within 1.5 seconds")
-		check(outside_changes == 0, "lighting never spills onto the white interface")
+		check(outside_changes == 0, "board lighting never spills onto the surrounding lagoon")
 		scene.gallery.directory = "user://reef-water-test-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()

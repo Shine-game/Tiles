@@ -48,7 +48,14 @@ func _run() -> void:
 	for i in range(5):
 		touch(scene, scene.palette_button.get_global_rect().get_center(), true)
 		touch(scene, scene.palette_button.get_global_rect().get_center(), false)
-		check(scene.palette_menu.visible, "touch opens palette choices")
+		check(scene.palette_menu.visible and scene.menu_page == "Settings", "touch opens Settings")
+		await process_frame
+		touch(scene, scene.settings_options[0].get_global_rect().get_center(), true)
+		touch(scene, scene.settings_options[0].get_global_rect().get_center(), false)
+		check(scene.menu_page == "Themes", "Themes opens inside the same menu")
+		await process_frame
+		touch(scene, scene.vine_colors_button.get_global_rect().get_center(), true)
+		touch(scene, scene.vine_colors_button.get_global_rect().get_center(), false)
 		await process_frame
 		touch(scene, scene.palette_options[i].get_global_rect().get_center(), true)
 		touch(scene, scene.palette_options[i].get_global_rect().get_center(), false)
@@ -106,13 +113,13 @@ func _run() -> void:
 	check(scene.cells == gesture_cells and scene.has_hover, "drag after a hold still moves without rotating")
 	scene._clear_selection()
 	scene._preview()
-	check(is_equal_approx(scene.place_button.size.y, scene.flip_button.size.y * 2), "Place is twice normal button height")
-	check(scene.board_view.position.y <= scene.piece_view.get_rect().end.y + 13, "field sits directly below header")
+	check(scene.place_button.size.is_equal_approx(scene.flip_button.size) and is_equal_approx(scene.place_button.size.x, scene.place_button.size.y), "Place and Flip are equal squares")
+	check(scene.board_view.position.y >= scene.piece_view.get_rect().end.y, "field sits below header without overlap")
 	for palette_index in range(5):
 		Palette.select(palette_index)
-		check(Palette.background() == Color.WHITE, "surrounding screen remains white in every palette")
+		check(Palette.background() == Palette.floor_color(), "Vines repaints the surrounding screen with its palette")
 	Palette.select(0)
-	check(absf(scene.board_view.field.size.x - scene.get_viewport_rect().size.x) < 1, "board spans full phone width")
+	check(scene.board_view.field.size.x <= scene.get_viewport_rect().size.x, "board fits the phone width")
 	check(scene.place_button.get_global_rect().position.x > scene.undo_button.get_global_rect().position.x, "Place is at bottom right")
 	check(scene.place_button.get_global_rect().end.y <= scene.get_viewport_rect().size.y, "Place dock stays within screen")
 	scene.game.queue[scene.game.index] = "J"
@@ -281,17 +288,17 @@ func _run() -> void:
 	scene._preview()
 	# All content must stay visible, including on short and landscape screens.
 	check(scene.find_children("*", "ScrollContainer", true, false).is_empty(), "screen contains no scrolling containers")
-	check(scene.find_children("*", "Label", true, false).is_empty(), "screen contains no titles, instructions, or commentary labels")
+	check(not scene.menu_title.is_visible_in_tree(), "menu title is hidden during play")
 	for dimensions: Vector2i in [Vector2i(320, 480), Vector2i(360, 640), Vector2i(390, 844), Vector2i(844, 390), Vector2i(640, 360), Vector2i(240, 320)]:
 		root.size = dimensions
 		for i in range(4):
 			await process_frame
 		check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 1, "piece remains centered at " + str(dimensions))
-		scene._toggle_palette_menu()
+		scene._show_menu("Themes")
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		check(menu_bounds.encloses(scene.palette_menu.get_global_rect()), "palette choices fit without scrolling at " + str(dimensions))
-		for option: Button in scene.palette_options + [scene.theme_button, scene.size_picker, scene.new_button, scene.gallery_button]:
+		for option: Button in scene.theme_options + [scene.back_button, scene.vine_colors_button]:
 			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
 		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
@@ -346,11 +353,11 @@ func _run() -> void:
 		await process_frame
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
-	check(absf(scene.piece_view.geometry().unit - 51) < 0.01, "normal source squares grow from 34 to 51 pixels, exactly 50 percent")
-	check(absf((scene.piece_view.geometry().unit - 4 * scene.piece_view.geometry().scale) - 45) < 0.01, "filled square and its gap scale together by 50 percent")
+	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "source cells match board pitch")
+	check(is_equal_approx(scene.piece_view.geometry().unit - 4 * scene.piece_view.geometry().scale, scene.board_view.pitch - 4), "source faces match hovering faces")
 	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 	scene._refresh()
-	check(absf(scene.piece_view.geometry().unit - 39) < 0.01, "vertical I grows from 26 to 39 pixels without clipping")
+	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical I keeps exact cell size")
 	root.size = original_window_size
 	scene.cells = scene.game.piece().cells
 	scene._refresh()
