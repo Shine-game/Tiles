@@ -1,0 +1,41 @@
+{
+  "source": "User-uploaded Zen Garden ground.rar, cores.rar and stone_paths.rar; originals copied without image edits",
+  "assets": [
+    {
+      "path": "artwork/cores/stepping_stone_core_256.png",
+      "source_asset": "ARTWORK/cores/stepping_stone_core_256.png",
+      "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8",
+      "bytes": 33946
+    },
+    {
+      "path": "artwork/ground/sand_ground_256.png",
+      "source_asset": "ARTWORK/ground/sand_ground_256.png",
+      "sha256": "e09ebd324fe150aaa28b676cd57afe9447306459794ce26df01d7c07de42a739",
+      "bytes": 106331
+    },
+    {
+      "path": "artwork/stone_paths/half_stone_E_256.png",
+      "source_asset": "ARTWORK/stone_paths/half_stone_E_256.png",
+      "sha256": "a2e509ae525ecbe2be0b6b57dcedde8d74f6f35b6b858e8e974c7fea5a71a012",
+      "bytes": 48830
+    },
+    {
+      "path": "artwork/stone_paths/half_stone_N_256.png",
+      "source_asset": "ARTWORK/stone_paths/half_stone_N_256.png",
+      "sha256": "359c461a64ae2d9dd6443442138fa3597d09de1489fd553c87a71dfef7fab685",
+      "bytes": 43723
+    },
+    {
+      "path": "artwork/stone_paths/half_stone_S_256.png",
+      "source_asset": "ARTWORK/stone_paths/half_stone_S_256.png",
+      "sha256": "96116c83b6346cc0f25fdd144331395fb224cc770b9e9b793c455b4d43744dc2",
+      "bytes": 49765
+    },
+    {
+      "path": "artwork/stone_paths/half_stone_W_256.png",
+      "source_asset": "ARTWORK/stone_paths/half_stone_W_256.png",
+      "sha256": "e53fed8eb85259f7fa2172243be6dbb012a14e012f4f729a2051e32f7f01a6bf",
+      "bytes": 50002
+    }
+  ]
+}

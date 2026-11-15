@@ -48,7 +48,7 @@ func sync(grid: Array) -> void:
 static func surface_revision(theme: String) -> String:
 	return "workshop4-v4" if theme == "clockwork" else ("lagoon-adaptive24-v6" if theme == "coral_reef" else SURFACE_REVISION)
 
-func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false, fixed_depth: float = -1.0) -> void:
+func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false, fixed_depth: float = -1.0, metal_surface: bool = true) -> void:
 	top_origin = origin
 	cell_pixels = pitch
 	depth_pixels = fixed_depth if fixed_depth >= 0 else depth(pitch)
@@ -62,8 +62,9 @@ func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = fal
 	shader_material.set_shader_parameter("rect_pixels", size)
 	shader_material.set_shader_parameter("ground_color", ink)
 	shader_material.set_shader_parameter("submerged", underwater)
-	shader_material.set_shader_parameter("metal_mode", fixed_depth >= 0)
-	if fixed_depth >= 0:
+	# A fixed display-pixel depth need not imply the Clockwork metal material.
+	shader_material.set_shader_parameter("metal_mode", fixed_depth >= 0 and metal_surface)
+	if fixed_depth >= 0 and metal_surface:
 		shader_material.set_shader_parameter("metal_wall", load("res://art/themes/clockwork_workshop/artwork/ground/sidewall_4ui.png"))
 		shader_material.set_shader_parameter("metal_lip", load("res://art/themes/clockwork_workshop/artwork/ground/edge_lip_2ui.png"))
 
