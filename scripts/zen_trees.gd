@@ -1,10 +1,10 @@
 class_name ZenTrees
 extends Node2D
+const Topology = preload("res://scripts/pattern/topology.gd")
 const Art = preload("res://scripts/zen_tree_art.gd")
 const Trunk = preload("res://scripts/zen_tree_trunk.gd")
 const BRANCH_SHADER = preload("res://shaders/zen_tree_branch.gdshader")
 const TRUNK_SHADER = preload("res://shaders/zen_tree_trunk.gdshader")
-const OFFSETS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 const GROW_SECONDS := 1.80
 const TRUNK_SECONDS := 0.40
 const BRANCH_SECONDS := 1.0
@@ -28,34 +28,15 @@ static func season_for_month(month: int) -> String:
 	return "winter"
 
 static func clusters(formations: Dictionary) -> Array:
-	var remaining: Dictionary = {}
-	for origin: Vector2i in formations:
-		if formations[origin].color == 1: remaining[origin] = true
 	var result: Array = []
-	while not remaining.is_empty():
-		var queue: Array = [remaining.keys()[0]]
-		remaining.erase(queue[0])
-		var origins: Array = []
-		var occupied: Dictionary = {}
+	for cluster: Dictionary in Topology.connected_formations(formations, 1, 2):
 		var ready := -100.0
 		var old := true
-		while not queue.is_empty():
-			var origin: Vector2i = queue.pop_front()
-			origins.append(origin)
+		for origin: Vector2i in cluster.origins:
 			ready = maxf(ready, formations[origin].ready)
 			old = old and formations[origin].old
-			for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]: occupied[origin + offset] = true
-			for offset: Vector2i in OFFSETS:
-				if remaining.has(origin + offset):
-					remaining.erase(origin + offset)
-					queue.append(origin + offset)
-		if origins.size() < 2: continue
-		var cells: Array = occupied.keys()
-		cells.sort_custom(func(a: Vector2i, b: Vector2i): return a.y < b.y or (a.y == b.y and a.x < b.x))
-		var center := Vector2.ZERO
-		for cell: Vector2i in cells: center += Vector2(cell) + Vector2.ONE * 0.5
-		center *= 256.0 / cells.size()
-		result.append({"cells": cells, "center": center, "start": ready, "old": old})
+		# Preserve the legacy arithmetic in source-pixel coordinates exactly.
+		result.append({"cells": cluster.cells, "center": Topology.centroid(cluster.cells, 256.0), "start": ready, "old": old})
 	return result
 
 func _init() -> void:

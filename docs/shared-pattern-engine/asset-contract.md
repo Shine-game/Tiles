@@ -40,7 +40,7 @@ color. Diagonal contacts and opposite colors do not create pattern connections.
 This does not change the game's more permissive placement-contact rules.
 
 Use one bit convention everywhere: N=1, E=2, S=4, W=8, with Y increasing downward.
-Positive quarter turns are clockwise. Each cell has exactly one classification:
+Positive quarter turns are clockwise. Each occupied cell has exactly one classification:
 
 | Shape | Masks | Target Tier 0/1 rule |
 | --- | --- | --- |

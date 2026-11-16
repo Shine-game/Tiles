@@ -5,7 +5,7 @@ const ROOT := "res://art/themes/clockwork_workshop/"
 const HALF_TRAVEL := 0.20
 const REVEAL_TAIL := 0.035
 const CORE_EMIT_DELAY := 0.15
-const DIRS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+const DIRS = Topology.DIRECTIONS
 const NAMES := ["N", "E", "S", "W"]
 static var manifest: Dictionary = {}
 var components: Dictionary = {}
@@ -24,17 +24,12 @@ static func key(id: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [id, color, cell.y, cell.x]
 
 static func connection_mask(grid: Array, cell: Vector2i) -> int:
-	var color := value(grid, cell)
-	if color == 0: return 0
-	var mask := 0
-	for direction in range(4):
-		if value(grid, cell + DIRS[direction]) == color: mask |= 1 << direction
-	return mask
+	return Topology.neighbor_mask(grid, cell)
 
 static func has_wheel(grid: Array, cell: Vector2i) -> bool:
 	# Isolated cells, endpoints, bends, Ts and crosses carry the full assembly.
 	# Only two opposite same-color connections make a tube-only straight cell.
-	return value(grid, cell) != 0 and connection_mask(grid, cell) not in [5, 10]
+	return value(grid, cell) != 0 and not Topology.is_straight(connection_mask(grid, cell))
 
 static func cap_for(directions: Array) -> String:
 	if directions.size() < 2:
@@ -150,24 +145,23 @@ func build(before: Array, after: Array) -> void:
 			if not powered.has(core):
 				powered[core] = []
 			powered[core].append(cell)
-	for cell: Vector2i in mechanisms:
+	for pair: Dictionary in Topology.adjacent_pairs(mechanisms):
+		var cell: Vector2i = pair.a
+		var other: Vector2i = pair.b
+		var direction := other - cell
 		var a: Dictionary = mechanisms[cell]
-		for direction: Vector2i in [Vector2i.RIGHT, Vector2i.DOWN]:
-			var other := cell + direction
-			if not mechanisms.has(other) or mechanisms[other].color != a.color:
-				continue
-			var b: Dictionary = mechanisms[other]
-			var old: bool = a.old and b.old
-			var begin: float = -100.0 if old else maxf(maxf(0, a.ready), maxf(0, b.ready))
-			var identity := key("chain_%d_%d" % [other.y, other.x], a.color, cell)
-			var chain := {"key": identity, "a": cell, "b": other, "color": a.color, "old": old, "start": begin, "end": -100.0 if old else begin + 0.45, "seconds": 0.45, "center": a.center, "rotation": 0.0 if direction == Vector2i.RIGHT else PI / 2, "id": "chain", "layer": 55}
-			chains[identity] = chain
-			a.directions.append(direction)
-			b.directions.append(-direction)
-			a.chain_end = maxf(a.chain_end, chain.end)
-			b.chain_end = maxf(b.chain_end, chain.end)
-			if not old:
-				duration = maxf(duration, chain.end)
+		var b: Dictionary = mechanisms[other]
+		var old: bool = a.old and b.old
+		var begin: float = -100.0 if old else maxf(maxf(0, a.ready), maxf(0, b.ready))
+		var identity := key("chain_%d_%d" % [other.y, other.x], a.color, cell)
+		var chain := {"key": identity, "a": cell, "b": other, "color": a.color, "old": old, "start": begin, "end": -100.0 if old else begin + 0.45, "seconds": 0.45, "center": a.center, "rotation": 0.0 if direction == Vector2i.RIGHT else PI / 2, "id": "chain", "layer": 55}
+		chains[identity] = chain
+		a.directions.append(direction)
+		b.directions.append(-direction)
+		a.chain_end = maxf(a.chain_end, chain.end)
+		b.chain_end = maxf(b.chain_end, chain.end)
+		if not old:
+			duration = maxf(duration, chain.end)
 	for cell: Vector2i in mechanisms:
 		var mechanism: Dictionary = mechanisms[cell]
 		if mechanism.directions.is_empty():

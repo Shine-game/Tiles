@@ -139,8 +139,8 @@ Install a debug APK on an attached Android device with `adb install -r build/til
 
 The [shared-engine design and approval checkpoints](docs/shared-pattern-engine/README.md)
 map existing themes onto reusable tier sets, topology, component state and growth.
-Step 1 adds the specification and inventory only; later migration steps require
-separate approval. Shading work remains deferred.
+Steps 1–2 provide the specification, inventory and shared topology adapters; later
+migration steps require separate approval. Shading work remains deferred.
 
 ## Tests
 

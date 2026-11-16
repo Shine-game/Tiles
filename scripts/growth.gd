@@ -1,6 +1,8 @@
 class_name TileGrowth
 extends RefCounted
 
+const Topology = preload("res://scripts/pattern/topology.gd")
+
 # A deterministic event schedule in board coordinates. Rendering never changes it.
 const STEP := 0.14
 const CENTER_POP := 0.30
@@ -21,14 +23,10 @@ var duration := 0.0
 var boundary_crossings: Dictionary = {}
 
 static func value(grid: Array, cell: Vector2i) -> int:
-	if cell.y < 0 or cell.x < 0 or cell.y >= grid.size() or cell.x >= grid.size():
-		return 0
-	return grid[cell.y][cell.x]
+	return Topology.value(grid, cell)
 
 static func edge_key(a: Vector2i, b: Vector2i) -> Vector4i:
-	if a.y > b.y or (a.y == b.y and a.x > b.x):
-		return Vector4i(b.x, b.y, a.x, a.y)
-	return Vector4i(a.x, a.y, b.x, b.y)
+	return Topology.edge_key(a, b)
 
 static func leaf_sprouts(edge: Dictionary) -> Array:
 	var result: Array = []
@@ -52,10 +50,8 @@ func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	return 1.0 - smoothstep(crossing, crossing + GRID_FADE, time)
 
 static func is_flower(grid: Array, corner: Vector2i, color: int) -> bool:
-	for offset: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i.ZERO]:
-		if value(grid, corner + offset) != color:
-			return false
-	return color != 0
+	# Compatibility adapter: legacy callers supply the shared inner corner.
+	return Topology.is_formation(grid, corner - Vector2i.ONE, color)
 
 func build(before: Array, after: Array) -> void:
 	board = after.duplicate(true)
@@ -138,27 +134,22 @@ func build(before: Array, after: Array) -> void:
 				duration = maxf(duration, crossing + GRID_FADE)
 				for sprout: Dictionary in leaf_sprouts(edge):
 					duration = maxf(duration, sprout.start + LEAF_POP)
-	for y in range(1, board.size()):
-		for x in range(1, board.size()):
-			var corner := Vector2i(x, y)
-			var color: int = value(board, corner)
-			if not is_flower(board, corner, color):
-				continue
-			var old: bool = is_flower(before, corner, color)
-			var around: Array = [corner + Vector2i(-1, -1), corner + Vector2i(0, -1), corner, corner + Vector2i(-1, 0)]
-			var start := -100.0 if old else 0.0
-			if not old:
-				for i in range(4):
-					start = maxf(start, lookup[edge_key(around[i], around[(i + 1) % 4])].finish)
-				duration = maxf(duration, start + FLOWER_POP)
-			flowers[corner] = {"color": color, "start": start, "old": old}
-	for corner: Vector2i in flowers:
-		for direction: Vector2i in [Vector2i.RIGHT, Vector2i.DOWN]:
-			var other := corner + direction
-			if not flowers.has(other) or flowers[corner].color != flowers[other].color:
-				continue
-			var old: bool = flowers[corner].old and flowers[other].old
-			var start: float = -100 if old else maxf(flowers[corner].start, flowers[other].start) + FLOWER_POP * 0.45
-			links.append({"a": corner, "b": other, "color": flowers[corner].color, "start": start, "old": old})
-			if not old:
-				duration = maxf(duration, start + LINK_GROW + STAR_POP)
+	for origin: Vector2i in Topology.formations(board):
+		var corner := origin + Vector2i.ONE
+		var color := value(board, corner)
+		var old: bool = is_flower(before, corner, color)
+		var around: Array = [corner + Vector2i(-1, -1), corner + Vector2i(0, -1), corner, corner + Vector2i(-1, 0)]
+		var start := -100.0 if old else 0.0
+		if not old:
+			for i in range(4):
+				start = maxf(start, lookup[edge_key(around[i], around[(i + 1) % 4])].finish)
+			duration = maxf(duration, start + FLOWER_POP)
+		flowers[corner] = {"color": color, "start": start, "old": old}
+	for pair: Dictionary in Topology.adjacent_pairs(flowers):
+		var corner: Vector2i = pair.a
+		var other: Vector2i = pair.b
+		var old: bool = flowers[corner].old and flowers[other].old
+		var start: float = -100 if old else maxf(flowers[corner].start, flowers[other].start) + FLOWER_POP * 0.45
+		links.append({"a": corner, "b": other, "color": flowers[corner].color, "start": start, "old": old})
+		if not old:
+			duration = maxf(duration, start + LINK_GROW + STAR_POP)

@@ -2,35 +2,21 @@ class_name ZenGeometry
 extends RefCounted
 
 # Ordinary-cell geometry only. Bits and clockwise orientation match Coral.
-const OFFSETS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+const Topology = preload("res://scripts/pattern/topology.gd")
+const OFFSETS = Topology.DIRECTIONS
 const PORTS := [92.0, 116.0, 140.0, 164.0]
 const SIZE := 256
 const SIGMA := 3.2
 static var height_cache: Dictionary = {}
 
 static func neighbor_mask(board: Array, cell: Vector2i) -> int:
-	if cell.y < 0 or cell.y >= board.size() or cell.x < 0 or cell.x >= board[cell.y].size():
-		return 0
-	var color: int = board[cell.y][cell.x]
-	if color == 0:
-		return 0
-	var mask := 0
-	for d in range(4):
-		var other: Vector2i = cell + OFFSETS[d]
-		if other.y >= 0 and other.y < board.size() and other.x >= 0 and other.x < board[other.y].size() and board[other.y][other.x] == color:
-			mask |= 1 << d
-	return mask
+	return Topology.neighbor_mask(board, cell)
 
 static func rotate_mask(mask: int, turns: int) -> int:
-	var t := posmod(turns, 4)
-	return ((mask << t) | (mask >> (4 - t))) & 15
+	return Topology.rotate_mask(mask, turns)
 
 static func canonical(mask: int) -> Dictionary:
-	for source in [0, 1, 5, 3, 11, 15]:
-		for turns in range(4):
-			if rotate_mask(source, turns) == mask:
-				return {"mask": source, "turns": turns}
-	return {}
+	return Topology.canonical(mask)
 
 static func bezier(points: PackedVector2Array, a: Vector2, b: Vector2, c: Vector2, d: Vector2) -> void:
 	for i in range(1, 49):

@@ -30,9 +30,9 @@ func build(before: Array, after: Array) -> void:
 	for origin: Vector2i in colonies:
 		var formation: Dictionary = colonies[origin]
 		if formation.color != 2: continue
-		for direction in range(4):
-			var neighbor: Vector2i = origin + OFFSETS[direction]
-			if not colonies.has(neighbor) or colonies[neighbor].color != 2: continue
+		for neighbor_info: Dictionary in Topology.formation_neighbors(colonies, origin):
+			var direction: int = neighbor_info.direction
+			var neighbor: Vector2i = neighbor_info.origin
 			var old: bool = formation.old and colonies[neighbor].old
 			var start := maxf(formation.ready, colonies[neighbor].ready)
 			ponds["%d/%d/%d" % [origin.y, origin.x, direction]] = {"origin": origin, "direction": direction, "old": old, "start": -100.0 if old else start}

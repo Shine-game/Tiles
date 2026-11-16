@@ -6,7 +6,7 @@ const SOFT := 0.035
 const CELL_SECONDS := 0.20
 const HALF_SECONDS := 0.10
 const DIR_NAMES := ["n", "e", "s", "w"]
-const OFFSETS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+const OFFSETS = Topology.DIRECTIONS
 static var manifest: Dictionary = {}
 var components: Dictionary = {}
 var colonies: Dictionary = {}
@@ -65,7 +65,7 @@ func _add(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, st
 
 static func union_layout(delta: Vector2i) -> Dictionary:
 	# Immediate same-color orthogonal neighbors only. No diagonal or skipped join.
-	if absi(delta.x) + absi(delta.y) != 1:
+	if not Topology.is_cardinal_offset(delta):
 		return {}
 	return {"rotation": 0 if delta.y == 0 else 1}
 
@@ -167,33 +167,27 @@ func build(before: Array, after: Array) -> void:
 			colonies[origin] = {"origin": origin, "color": color, "old": old, "start": perimeter, "ready": complete, "end": complete}
 			flowers[corner].start = perimeter
 			flowers[corner].old = old
-	var origins: Array = colonies.keys()
-	for i in range(origins.size()):
-		var a: Vector2i = origins[i]
-		for j in range(i + 1, origins.size()):
-			var b: Vector2i = origins[j]
-			if colonies[a].color != colonies[b].color:
-				continue
-			var layout := union_layout(b - a)
-			if layout.is_empty():
-				continue
-			var identity := "anemone/%d/%d/%d/%d/%d" % [colonies[a].color, a.y, a.x, b.y, b.x]
-			var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
-			var old: bool = colonies[a].old and colonies[b].old
-			var ready: float = maxf(colonies[a].ready, colonies[b].ready)
-			var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
-			foot.feature = identity
-			var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})
-			var disc_end: float = -100 if old else end_time(disc_start, 0, component_duration("anemone_oral_disc"), false)
-			var finish: float = foot.end
-			for region in range(8):
-				var id := "anemone_region_%d" % region
-				var event := _add(id, colonies[a].color, a, center, old, disc_end, component_duration(id), 0, false, layout.rotation, identity + "/region_%d" % region)
-				event.feature = identity
-				finish = maxf(finish, event.end)
-			var disc := _add("anemone_oral_disc", colonies[a].color, a, center, old, disc_start, component_duration("anemone_oral_disc"), 0, false, layout.rotation, identity + "/disc")
-			disc.feature = identity
-			unions[identity] = {"a": a, "b": b, "color": colonies[a].color, "start": ready, "end": maxf(finish, disc.end), "rotation": layout.rotation, "feature": identity}
+	for pair: Dictionary in Topology.adjacent_pairs(colonies):
+		var a: Vector2i = pair.a
+		var b: Vector2i = pair.b
+		var layout := union_layout(b - a)
+		var identity := "anemone/%d/%d/%d/%d/%d" % [colonies[a].color, a.y, a.x, b.y, b.x]
+		var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
+		var old: bool = colonies[a].old and colonies[b].old
+		var ready: float = maxf(colonies[a].ready, colonies[b].ready)
+		var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
+		foot.feature = identity
+		var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})
+		var disc_end: float = -100 if old else end_time(disc_start, 0, component_duration("anemone_oral_disc"), false)
+		var finish: float = foot.end
+		for region in range(8):
+			var id := "anemone_region_%d" % region
+			var event := _add(id, colonies[a].color, a, center, old, disc_end, component_duration(id), 0, false, layout.rotation, identity + "/region_%d" % region)
+			event.feature = identity
+			finish = maxf(finish, event.end)
+		var disc := _add("anemone_oral_disc", colonies[a].color, a, center, old, disc_start, component_duration("anemone_oral_disc"), 0, false, layout.rotation, identity + "/disc")
+		disc.feature = identity
+		unions[identity] = {"a": a, "b": b, "color": colonies[a].color, "start": ready, "end": maxf(finish, disc.end), "rotation": layout.rotation, "feature": identity}
 
 func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	if value(board, a) != 0 and value(board, b) == value(board, a):
