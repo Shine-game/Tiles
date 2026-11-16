@@ -135,6 +135,13 @@ The standard APK export uses the precompiled engine templates, so compiling the 
 
 Install a debug APK on an attached Android device with `adb install -r build/tiles-debug.apk`. Device testing remains necessary for touch feel, safe areas, lifecycle behavior, and performance.
 
+## Shared pattern engine roadmap
+
+The [shared-engine design and approval checkpoints](docs/shared-pattern-engine/README.md)
+map existing themes onto reusable tier sets, topology, component state and growth.
+Step 1 adds the specification and inventory only; later migration steps require
+separate approval. Shading work remains deferred.
+
 ## Tests
 
 Use the **4.7.2** binary, not a different `godot` installation:
