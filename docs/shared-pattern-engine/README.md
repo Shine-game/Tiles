@@ -14,6 +14,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   sprite/atlas/procedural rendering and compatibility adapters.
 - [Step 5 implementation](clockwork-ordinary-sets.md): live Clockwork sets,
   shared shape selection and persistent ordinary components.
+- [Step 6 mapping review](remaining-ordinary-mappings.md): proposed remaining
+  role assignments, visible changes and per-theme review order.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -47,7 +49,7 @@ as authorization to implement the remaining steps.
 | 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Complete |
 | 4 | Common asset loading and component rendering | Sprites, multipart assemblies and registered procedural providers use explicit pivots, masks, layers and reveal rules | Complete |
 | 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Complete |
-| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Awaiting approval |
+| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Mapping review prepared; assignments pending |
 | 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Awaiting approval |
 | 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones, vines or benches; historical state preserved | Awaiting approval |
 | 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Awaiting approval |
