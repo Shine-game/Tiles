@@ -1,6 +1,8 @@
 class_name ClockworkGrowth
 extends "res://scripts/growth.gd"
 
+const Ordinary = preload("res://scripts/clockwork_sets.gd")
+const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const ROOT := "res://art/themes/clockwork_workshop/"
 const HALF_TRAVEL := 0.20
 const REVEAL_TAIL := 0.035
@@ -29,7 +31,7 @@ static func connection_mask(grid: Array, cell: Vector2i) -> int:
 static func has_wheel(grid: Array, cell: Vector2i) -> bool:
 	# Isolated cells, endpoints, bends, Ts and crosses carry the full assembly.
 	# Only two opposite same-color connections make a tube-only straight cell.
-	return value(grid, cell) != 0 and not Topology.is_straight(connection_mask(grid, cell))
+	return value(grid, cell) != 0 and not Ordinary.centers(connection_mask(grid, cell)).is_empty()
 
 static func cap_for(directions: Array) -> String:
 	if directions.size() < 2:
@@ -43,7 +45,7 @@ static func ground_choice(cell: Vector2i) -> Dictionary:
 	return {"variant": h % 2 + 1, "rotation": (h >> 8) % 4}
 
 func add_part(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, start: float, seconds: float, rotation: float = 0, identity: String = "") -> Dictionary:
-	var meta: Dictionary = specification().components[id]
+	var meta: Dictionary = Ordinary.part(id) if Ordinary.owns(id) else specification().components[id]
 	var event := {"id": id, "color": color, "cell": cell, "center": center, "old": old, "start": -100.0 if old else start, "seconds": seconds, "end": -100.0 if old else start + seconds, "rotation": rotation, "key": key(id, color, cell) if identity.is_empty() else identity, "layer": meta.layer}
 	components[event.key] = event
 	if not old:
@@ -53,6 +55,9 @@ func add_part(id: String, color: int, cell: Vector2i, center: Vector2, old: bool
 # Arrival means the incoming edge-to-center front is fully visible, not just
 # that its first half has reached the shared cell boundary.
 func _schedule_centers(before: Array) -> void:
+	var travel: float = Ordinary.vine().animation.duration_seconds
+	var tail: float = Ordinary.vine().animation.tail_seconds
+	var emit_delay: float = Ordinary.vine().animation.center_emit_delay_seconds
 	var frontier: Array[Vector2i] = []
 	for cell: Vector2i in arrivals:
 		if arrivals[cell] < 0 or is_zero_approx(arrivals[cell]):
@@ -62,7 +67,7 @@ func _schedule_centers(before: Array) -> void:
 		arrivals[cell] = INF
 		for direction: Vector2i in DIRS:
 			if value(before, cell + direction) == value(board, cell):
-				arrivals[cell] = 2.0 * HALF_TRAVEL + REVEAL_TAIL
+				arrivals[cell] = 2.0 * travel + tail
 				frontier.append(cell)
 				break
 	var cursor := 0
@@ -72,13 +77,13 @@ func _schedule_centers(before: Array) -> void:
 		for direction: Vector2i in DIRS:
 			var other := cell + direction
 			if value(board, other) != value(board, cell): continue
-			var reached: float = arrivals[cell] + CORE_EMIT_DELAY + 2.0 * HALF_TRAVEL + REVEAL_TAIL
+			var reached: float = arrivals[cell] + emit_delay + 2.0 * travel + tail
 			if float(arrivals[other]) > reached:
 				arrivals[other] = reached
 				frontier.append(other)
 
 func _emission(cell: Vector2i) -> float:
-	return 0.0 if arrivals[cell] < 0 else float(arrivals[cell]) + CORE_EMIT_DELAY
+	return 0.0 if arrivals[cell] < 0 else float(arrivals[cell]) + float(Ordinary.vine().animation.center_emit_delay_seconds)
 
 static func arm_arrival(arm: Dictionary, u: float) -> float:
 	return Timing.front_arrival(arm.start, arm.edge_start, arm.seconds, true, u)
@@ -92,30 +97,35 @@ func build(before: Array, after: Array) -> void:
 	pins.clear()
 	duration = 0
 	_schedule_centers(before)
+	var vine: Dictionary = Ordinary.vine()
+	var join: Dictionary = Ordinary.join()
+	var travel: float = vine.animation.duration_seconds
+	var tail: float = vine.animation.tail_seconds
 	for cell: Vector2i in arrivals:
 		var color: int = value(after, cell)
 		var old: bool = value(before, cell) == color
 		var at: float = -100 if old else float(arrivals[cell])
-		var straight := not has_wheel(after, cell)
-		if not straight:
+		var centers := Ordinary.centers(connection_mask(after, cell))
+		if not centers.is_empty():
 			var old_wheel := old and has_wheel(before, cell)
-			for id: String in ["C01", "C02", "C03"]:
-				add_part(id, color, cell, Vector2(cell) + Vector2.ONE * 0.5, old_wheel, maxf(0, at) + (0.05 if id != "C01" else 0), 0.35)
+			for id: String in centers:
+				var part: Dictionary = centers[id]
+				add_part(id, color, cell, Cells.anchor(cell, part.anchor), old_wheel, maxf(0, at) + float(part.animation.delay_seconds), part.animation.duration_seconds)
 		for direction in range(4):
 			var other: Vector2i = cell + DIRS[direction]
 			if value(after, other) != color:
 				continue
 			var old_arm: bool = old and value(before, other) == color
-			var arm := add_part("T01", color, cell, Vector2(cell) + Vector2.ONE * 0.5, old_arm, _emission(cell), HALF_TRAVEL + REVEAL_TAIL, (direction - 1) * PI / 2, key("T01_" + NAMES[direction], color, cell))
+			var arm := add_part("T01", color, cell, Cells.anchor(cell, vine.anchor), old_arm, _emission(cell), travel + tail, (direction - int(vine.orientation_base_port)) * PI / 2, key("T01_" + NAMES[direction], color, cell))
 			arm.direction = direction
 			# Always use the canonical core field; shader supplies its reverse front.
-			arm.edge_start = -100.0 if old_arm else _emission(other) + HALF_TRAVEL
-			arm.seconds = HALF_TRAVEL
-			arm.end = -100.0 if old_arm else Timing.front_end(arm.start, arm.edge_start, arm.seconds, true, REVEAL_TAIL)
+			arm.edge_start = -100.0 if old_arm else _emission(other) + travel
+			arm.seconds = travel
+			arm.end = -100.0 if old_arm else Timing.front_end(arm.start, arm.edge_start, arm.seconds, true, tail)
 			if not old_arm:
 				duration = maxf(duration, arm.end)
-			if direction in [1, 2]:
-				var coupling := add_part("T03", color, cell, Vector2(cell) + Vector2.ONE * 0.5 + Vector2(DIRS[direction]) * 0.5, old_arm, arm_arrival(arm, 1.0) + REVEAL_TAIL, 0.14, arm.rotation)
+			if Cells.forward_port(direction):
+				var coupling := add_part("T03", color, cell, Cells.anchor(cell, join.anchor, direction), old_arm, arm_arrival(arm, 1.0) + tail, join.animation.duration_seconds, arm.rotation)
 				coupling.key = key("T03_" + NAMES[direction], color, cell)
 				components.erase(key("T03", color, cell))
 				components[coupling.key] = coupling

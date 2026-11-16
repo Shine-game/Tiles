@@ -139,9 +139,10 @@ Install a debug APK on an attached Android device with `adb install -r build/til
 
 The [shared-engine design and approval checkpoints](docs/shared-pattern-engine/README.md)
 map existing themes onto reusable tier sets, topology, component state and growth.
-Steps 1–4 provide the specification, inventory, shared topology, component state,
-construction scheduling and common asset/rendering foundation. Per-theme set
-migrations still require their separate approvals.
+Steps 1–5 provide the specification, inventory, shared topology, component state,
+construction scheduling, common asset/rendering foundation, and
+[Clockwork Tier 0/1 sets](docs/shared-pattern-engine/clockwork-ordinary-sets.md).
+Remaining migrations require their separate approvals.
 Shading work remains deferred.
 
 ## Tests

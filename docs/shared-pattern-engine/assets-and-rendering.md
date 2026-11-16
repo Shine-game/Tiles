@@ -2,8 +2,8 @@
 
 The common asset/rendering foundation is implemented and used by compatibility
 adapters. Existing artwork, mask/shader semantics, timing, shape selection, UI and
-appearance versions remain unchanged. Declarative Clockwork Tier 0/1 selection
-is the next approval checkpoint, not silently enabled here.
+appearance versions remain unchanged. Declarative Clockwork Tier 0/1 selection was subsequently implemented in
+[Step 5](clockwork-ordinary-sets.md).
 
 ## Asset library
 
@@ -14,6 +14,7 @@ texture path, an existing `Texture2D`, or a descriptor:
 | --- | --- |
 | `texture` | `path`, relative to the set root or explicit `res://` |
 | `atlas` | Source `path`, `region_px: [x,y,width,height]`, optional `filter_clip` |
+| `variants` (Step 5) | Named `variants` descriptors, selected explicitly by treatment |
 | Registered procedural texture | Project-owned provider ID and `params` object |
 
 Texture and atlas resources are shared through the library cache. Generated
@@ -167,3 +168,22 @@ comparison driver/captures stay in the execution workspace, not the game UI.
 All 580 recorded model states also remain byte-identical. Existing theme/UI and
 native Clockwork, tree and pond suites pass. Original image files and appearance
 versions are unchanged.
+
+## Step 5 extensions
+
+Sets may declare `roles`, mapping shape/behavior names to composition names or
+explicit `null` for unused slots. Unknown composition references fail validation.
+`PatternCellSets.center_parts()` uses shared topology to select the isolated role
+from Tier 0 or the connected role from Tier 1. Its anchor helpers cover cell centers
+and once-per-edge ownership of shared boundary midpoints.
+
+Asset descriptors with `provider: variants` contain named treatment descriptors.
+All alternatives are validated; `bind_part()` selects artwork and mask variants
+without mutating the source set. `compose()` accepts an optional final `treatment`
+argument. Unknown treatments fail before replacing existing nodes, with no silent
+color fallback. A descriptor can alternatively declare its explicit `variant`.
+
+`release(id)` relinquishes common registry ownership without freeing or reparenting
+the node, allowing an existing theme retirement hook to finish its animation.
+The caller then owns disposal. Clockwork uses this for its existing retiring tubes
+and wheels; surviving ordinary nodes keep their identities and motion phases.

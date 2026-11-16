@@ -30,6 +30,14 @@ static func validate(asset: Variant, root: String = "res://") -> Array:
 	if status not in ["available", "missing", "unused"]: return ["Unknown asset status: " + status]
 	if status != "available": return ["Required asset is " + status] if asset.get("required", false) else []
 	var provider: String = str(asset.get("provider", "texture"))
+	if provider == "variants":
+		var choices: Variant = asset.get("variants")
+		if not choices is Dictionary or choices.is_empty(): return ["Variant asset needs named treatments"]
+		var errors: Array = []
+		for name: String in choices:
+			for issue: String in validate(choices[name], root): errors.append(name + ": " + issue)
+		if asset.has("variant") and not choices.has(str(asset.variant)): errors.append("Unknown artwork treatment: " + str(asset.variant))
+		return errors
 	if provider not in ["texture", "atlas"]:
 		if not providers.has(provider): return ["Unknown registered texture provider: " + provider]
 		if not asset.get("params", {}) is Dictionary: return ["Provider parameters must be an object: " + provider]
@@ -45,6 +53,23 @@ static func validate(asset: Variant, root: String = "res://") -> Array:
 		if rect.end.x > master.get_width() or rect.end.y > master.get_height(): return ["Atlas region exceeds source texture: " + path]
 	return []
 
+static func select_variant(asset: Variant, treatment: String, errors: Array = []) -> Variant:
+	if not asset is Dictionary or asset.get("provider", "texture") != "variants": return asset
+	var choices: Dictionary = asset.get("variants", {})
+	if not choices.has(treatment):
+		errors.append("No artwork treatment selected: " + treatment)
+		return null
+	return select_variant(choices[treatment], treatment, errors)
+
+static func bind_part(part: Dictionary, treatment: String) -> Dictionary:
+	var result: Dictionary = part.duplicate(true)
+	var errors: Array = []
+	if part.has("asset"): result.asset = select_variant(part.asset, treatment, errors)
+	if part.get("masks") is Dictionary:
+		for id: String in part.masks:
+			result.masks[id].asset = select_variant(part.masks[id].asset, treatment, errors)
+	return {"ok": errors.is_empty(), "part": result, "errors": errors}
+
 static func texture(path: String, root: String = "res://") -> Texture2D:
 	return resolve({"provider": "texture", "path": path}, root)
 
@@ -57,6 +82,9 @@ static func resolve(asset: Variant, root: String = "res://", errors: Array = [])
 		return null
 	if asset.get("status", "available") != "available": return null
 	var provider: String = str(asset.get("provider", "texture"))
+	if provider == "variants":
+		var chosen: Variant = select_variant(asset, str(asset.get("variant", "")), errors)
+		return resolve(chosen, root, errors) if chosen != null else null
 	if provider not in ["texture", "atlas"]:
 		var params: Dictionary = asset.get("params", {})
 		var key := provider + "/" + var_to_bytes(params).hex_encode()
@@ -141,4 +169,10 @@ static func load_set(source: Variant, root: String = "res://") -> Dictionary:
 				errors.append(name + "/" + id + ": Unknown material provider")
 			if kind == "sprite":
 				for issue: String in validate(part.get("asset"), root): errors.append(name + "/" + id + ": " + issue)
+	if definition.has("roles"):
+		if not definition.roles is Dictionary: errors.append("Roles must be named composition references")
+		else:
+			for role: String in definition.roles:
+				var target: Variant = definition.roles[role]
+				if target != null and (not target is String or not definition.compositions.has(target)): errors.append("Unknown composition for role " + role)
 	return {"ok": errors.is_empty(), "errors": errors, "definition": definition.duplicate(true), "root": root}

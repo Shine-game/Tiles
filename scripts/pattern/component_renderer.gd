@@ -169,7 +169,7 @@ func sync(parts: Dictionary, parent: Node, state = null) -> bool:
 	if state != null: advance(state.schedule.clock, state)
 	return true
 
-func compose(loaded: Dictionary, composition: String, parent: Node, state = null, owner_prefix: String = "") -> bool:
+func compose(loaded: Dictionary, composition: String, parent: Node, state = null, owner_prefix: String = "", treatment: String = "") -> bool:
 	if not loaded.get("ok", false):
 		diagnostics.append_array(loaded.get("errors", ["Invalid set"]))
 		return false
@@ -179,22 +179,32 @@ func compose(loaded: Dictionary, composition: String, parent: Node, state = null
 	var prefix: String = loaded.definition.id + "/" + composition if owner_prefix.is_empty() else owner_prefix
 	var parts: Dictionary = {}
 	for id: String in loaded.definition.compositions[composition].parts:
-		var spec: Dictionary = loaded.definition.compositions[composition].parts[id].duplicate(true)
+		var bound := Assets.bind_part(loaded.definition.compositions[composition].parts[id], treatment)
+		if not bound.ok:
+			diagnostics.append_array(bound.errors)
+			return false
+		var spec: Dictionary = bound.part
 		spec.asset_root = loaded.root
 		parts[prefix + "/" + id] = spec
 	return sync(parts, parent, state)
 
-func remove(id: String) -> void:
-	if nodes.has(id):
-		var node: Node = nodes[id]
-		if node.get_parent() != null: node.get_parent().remove_child(node)
-		node.queue_free()
-		nodes.erase(id)
-		kinds.erase(id)
+func release(id: String) -> CanvasItem:
+	# A theme retirement hook can keep drawing a removed node without the
+	# common owner mistaking it for a surviving construction component.
+	var node: CanvasItem = nodes.get(id)
+	nodes.erase(id)
+	kinds.erase(id)
 	active.erase(id)
 	reveal_bindings.erase(id)
 	state_bindings.erase(id)
 	external_lifecycle.erase(id)
+	return node
+
+func remove(id: String) -> void:
+	var node := release(id)
+	if node != null:
+		if node.get_parent() != null: node.get_parent().remove_child(node)
+		node.queue_free()
 
 func remove_missing(ids: Array) -> void:
 	for id: String in nodes.keys():

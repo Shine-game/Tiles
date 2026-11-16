@@ -4,6 +4,7 @@ extends Node2D
 signal cue(kind: String)
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
+const Ordinary = preload("res://scripts/clockwork_sets.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Model = preload("res://scripts/clockwork_growth.gd")
 const RISE = preload("res://shaders/clockwork_rise.gdshader")
@@ -17,6 +18,7 @@ const CHAIN_RUN_OFFSET := 28.0
 const CHAIN_HOUSING_SCALE := 1.2
 const OMEGA := TAU / 6.0
 static var textures: Dictionary = {}
+var ordinary_components := Components.new()
 var registry: Dictionary = {}
 var chain_nodes: Dictionary = {}
 var grounds: Array[Sprite2D] = []
@@ -73,8 +75,10 @@ func _init() -> void:
 	add_child(fx)
 
 func clear() -> void:
-	for entry: Dictionary in registry.values():
-		entry.node.queue_free()
+	var owned: Array = ordinary_components.nodes.keys()
+	ordinary_components.clear()
+	for id: String in registry:
+		if not id in owned: registry[id].node.queue_free()
 	for entry: Dictionary in chain_nodes.values():
 		entry.node.queue_free()
 	for entry: Dictionary in retiring:
@@ -99,10 +103,9 @@ func clear() -> void:
 	last_exhaust = -10
 
 static func layer(id: String) -> int:
+	if Ordinary.owns(id): return int(Ordinary.part(id).z_index)
 	if id.begins_with("plate_"): return 0
-	if id == "T01": return 1
-	if id in ["C01", "T03", "pin"]: return 2
-	if id in ["C02", "C03"]: return 3
+	if id == "pin": return 2
 	if id == "L01": return 4
 	if id == "L02": return 5
 	if id == "L03": return 6
@@ -110,6 +113,7 @@ static func layer(id: String) -> int:
 	return 9
 
 func _remove(entry: Dictionary, animate: bool) -> void:
+	ordinary_components.release(entry.event.key)
 	if not animate or entry.event.id.begins_with("plate_") or entry.event.id == "pin":
 		entry.node.queue_free()
 		return
@@ -117,8 +121,8 @@ func _remove(entry: Dictionary, animate: bool) -> void:
 	if entry.event.id == "chain": delay = 0.06
 	if entry.event.id == "T01":
 		var ink := Components.material(REVEAL)
-		ink.set_shader_parameter("growth_field", texture("masks/T01_from_core_E.png"))
-		ink.set_shader_parameter("travel_seconds", 0.20)
+		ink.set_shader_parameter("growth_field", Assets.resolve(Ordinary.vine().masks.reveal.asset, Ordinary.ROOT))
+		ink.set_shader_parameter("travel_seconds", float(Ordinary.vine().animation.duration_seconds))
 		entry.node.material = ink
 	entry.retire_at = delay
 	entry.retire_end = delay + 0.20
@@ -193,24 +197,29 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 	for identity: String in events:
 		var event: Dictionary = events[identity]
 		var entry: Dictionary
+		var created: bool = not registry.has(identity)
 		if registry.has(identity):
 			entry = registry[identity]
 			if preserve and (not settled or reverse) and event.old and not entry.event.old and previous_clock < entry.event.end:
 				event = Timing.shifted(entry.event, previous_clock, ["start", "end", "edge_start"])
 				next.duration = maxf(next.duration, event.end)
 		else:
-			var sprite := Components.sprite({})
-			var variant: String = art_variant(event.id, event.color)
-			if event.id.begins_with("plate_"):
-				sprite.texture = texture("artwork/ground/" + event.id + ".png")
-			elif event.id == "pin":
-				sprite.texture = texture("artwork/pins/plate_pin_" + variant + ".png")
+			var sprite: Sprite2D
+			if Ordinary.owns(event.id):
+				sprite = ordinary_components.ensure(identity, Ordinary.render_spec(event, settled, not Model.has_wheel(next.board, event.cell)), self)
 			else:
-				sprite.texture = texture(Model.specification().components[event.id].assets[variant])
-			Components.configure_sprite(sprite, {"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR, "position_cells": event.center})
-			if event.id == "J00_chain_junction": sprite.scale = Vector2.ONE * CHAIN_HOUSING_SCALE
-			sprite.z_index = layer(event.id)
-			add_child(sprite)
+				sprite = Components.sprite({})
+				var variant: String = art_variant(event.id, event.color)
+				if event.id.begins_with("plate_"):
+					sprite.texture = texture("artwork/ground/" + event.id + ".png")
+				elif event.id == "pin":
+					sprite.texture = texture("artwork/pins/plate_pin_" + variant + ".png")
+				else:
+					sprite.texture = texture(Model.specification().components[event.id].assets[variant])
+				Components.configure_sprite(sprite, {"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR, "position_cells": event.center})
+				if event.id == "J00_chain_junction": sprite.scale = Vector2.ONE * CHAIN_HOUSING_SCALE
+				sprite.z_index = layer(event.id)
+				add_child(sprite)
 			if reverse and event.get("terminal", false):
 				event = event.duplicate()
 				event.old = false
@@ -223,10 +232,11 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 		if next.components.has(identity): next.components[identity] = event
 		if event.id == "H02_rotating": wheel_caps.append(entry)
 		if event.id in ["H03_shutters_left", "H03_shutters_right"]: vent_shutters.append(entry)
+		if Ordinary.owns(event.id):
+			if not created: ordinary_components.ensure(identity, Ordinary.render_spec(event, settled, not Model.has_wheel(next.board, event.cell)), self)
+			entry.node.modulate = Color.WHITE
+			continue
 		entry.node.rotation = event.rotation
-		# Opposite straight-tube halves share the same highlight orientation at
-		# their exposed center join. Growth still travels along the local X axis.
-		entry.node.flip_v = event.id == "T01" and not Model.has_wheel(next.board, event.cell) and int(event.direction) in [2, 3]
 		entry.node.modulate = Color.WHITE
 		if event.id.begins_with("plate_"):
 			var ink := Components.material(GROUND)
@@ -234,17 +244,9 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			ink.set_shader_parameter("quarter_turn", event.rotation / (PI / 2))
 			entry.node.material = ink
 			grounds.append(entry.node)
-		elif event.id in ["C01", "C02", "L01", "L02", "L03"]:
+		elif event.id in ["L01", "L02", "L03"]:
 			var ink := Components.material(RISE)
 			ink.set_shader_parameter("height_source", 18.0 if event.id == "L02" else (6.0 if event.id == "C01" else 12.0))
-			entry.node.material = ink
-		elif event.id == "T01" and not (settled or event.old):
-			var ink := Components.material(REVEAL)
-			ink.set_shader_parameter("growth_field", texture("masks/T01_from_core_E.png"))
-			ink.set_shader_parameter("start_core", event.start)
-			ink.set_shader_parameter("start_edge", event.edge_start)
-			ink.set_shader_parameter("edge_enabled", true)
-			ink.set_shader_parameter("travel_seconds", event.seconds)
 			entry.node.material = ink
 		else:
 			entry.node.material = null

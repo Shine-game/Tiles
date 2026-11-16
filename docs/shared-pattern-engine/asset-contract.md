@@ -2,7 +2,8 @@
 
 Semantic contract defined in Step 1. The common loading/rendering subset is now
 implemented in Step 4; see [the runtime format and example](assets-and-rendering.md).
-The full theme/role model below remains the migration target; supplied legacy
+Clockwork ordinary role/treatment mappings are now live in
+[Step 5](clockwork-ordinary-sets.md). The remaining theme/role model below is the migration target; supplied legacy
 manifests are unchanged and consumed through explicit adapters. See
 [the inventory](theme-inventory.md) for what is available today and what still
 needs a migration decision.

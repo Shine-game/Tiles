@@ -1,7 +1,8 @@
 # Shared pattern engine — migration plan
 
-Steps 1–4 delivered the specification/inventory, shared topology and construction
-state, and the common asset/component rendering foundation through adapters.
+Steps 1–5 delivered the specification/inventory, shared topology and construction
+state, the common asset/component rendering foundation through adapters, and live
+Clockwork Tier 0/1 sets.
 Artwork, timing, masks, shading, game rules and the player interface remain unchanged.
 Inventory baseline: commit `951568f` (all five themes inspected).
 
@@ -11,6 +12,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   dependencies, capture and restoration.
 - [Step 4 implementation](assets-and-rendering.md): versioned set loading, shared
   sprite/atlas/procedural rendering and compatibility adapters.
+- [Step 5 implementation](clockwork-ordinary-sets.md): live Clockwork sets,
+  shared shape selection and persistent ordinary components.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -43,7 +46,7 @@ as authorization to implement the remaining steps.
 | 2 | Shared topology classification and formation graph | All 16 masks, colors, rotations, overlapping 2×2s, and 2×3 joins covered; adapters preserve current consumers | Complete |
 | 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Complete |
 | 4 | Common asset loading and component rendering | Sprites, multipart assemblies and registered procedural providers use explicit pivots, masks, layers and reveal rules | Complete |
-| 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Awaiting approval |
+| 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Complete |
 | 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Awaiting approval |
 | 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Awaiting approval |
 | 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones, vines or benches; historical state preserved | Awaiting approval |
@@ -71,7 +74,7 @@ format are not runtime interfaces until implemented in their approved step.
 
 [The existing handoff guide](../theme-handoff/README.md) and its example remain
 source-package documentation, not an already working shared-engine format.
-Clockwork and Coral currently consume different manifests; Zen, Vines and
+Clockwork higher tiers and Coral still consume different legacy manifests; Zen, Vines and
 Labyrinth have no equivalent runtime set manifest. This proposal does not rename
-or reinterpret any of those files. Step 4 will introduce explicit adapters before
+or reinterpret any of those files. Steps 4–5 introduced explicit adapters and the Clockwork ordinary sets before
 Step 9 retires obsolete formats or consolidates the artist handoff.
