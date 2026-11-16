@@ -1,6 +1,7 @@
 class_name TileGrowth
 extends RefCounted
 
+const Connections = preload("res://scripts/pattern/connection_assembly.gd")
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
@@ -148,11 +149,11 @@ func build(before: Array, after: Array) -> void:
 				start = maxf(start, lookup[edge_key(around[i], around[(i + 1) % 4])].finish)
 			duration = maxf(duration, start + flower_seconds())
 		flowers[corner] = {"color": color, "start": start, "old": old}
-	for pair: Dictionary in Topology.adjacent_pairs(flowers):
+	for pair: Dictionary in Connections.pairs(flowers, Vector2i.ONE):
 		var corner: Vector2i = pair.a
 		var other: Vector2i = pair.b
-		var old: bool = flowers[corner].old and flowers[other].old
-		var start: float = -100 if old else maxf(flowers[corner].start, flowers[other].start) + flower_seconds() * flower_link_fraction()
+		var old: bool = pair.old
+		var start: float = Connections.start(pair, flowers, "start", flower_seconds() * flower_link_fraction())
 		links.append({"a": corner, "b": other, "color": flowers[corner].color, "start": start, "old": old})
 		if not old:
 			duration = maxf(duration, start + LINK_GROW + STAR_POP)

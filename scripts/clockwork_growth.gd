@@ -145,14 +145,14 @@ func build(before: Array, after: Array) -> void:
 			if not powered.has(core):
 				powered[core] = []
 			powered[core].append(cell)
-	for pair: Dictionary in Topology.adjacent_pairs(mechanisms):
+	for pair: Dictionary in Connections.pairs(mechanisms):
 		var cell: Vector2i = pair.a
 		var other: Vector2i = pair.b
 		var direction := other - cell
 		var a: Dictionary = mechanisms[cell]
 		var b: Dictionary = mechanisms[other]
-		var old: bool = a.old and b.old
-		var begin: float = -100.0 if old else maxf(maxf(0, a.ready), maxf(0, b.ready))
+		var old: bool = pair.old
+		var begin: float = Connections.start(pair, mechanisms, "ready", 0.0, 0.0)
 		var identity := key("chain_%d_%d" % [other.y, other.x], a.color, cell)
 		var chain := {"key": identity, "a": cell, "b": other, "color": a.color, "old": old, "start": begin, "end": -100.0 if old else begin + 0.45, "seconds": 0.45, "center": a.center, "rotation": 0.0 if direction == Vector2i.RIGHT else PI / 2, "id": "chain", "layer": 55}
 		chains[identity] = chain

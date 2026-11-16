@@ -28,6 +28,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   shared role selection and persistent holding-motif construction records.
 - [Step 7 implementation](tier2-assembly.md): common 2×2 support/lifecycle records,
   live sets, multipart scheduling and unchanged theme-specific behavior.
+- [Step 8 implementation](tier3-connections.md): shared pair, directed-side and
+  territory prerequisites with preserved specialized growth/history.
 - [Approved Step 7 proposal](tier2-migration-plan.md): scope and migration boundaries.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
@@ -64,7 +66,7 @@ as authorization to implement the remaining steps.
 | 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Complete |
 | 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Complete for all four active themes; Labyrinth removed |
 | 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Complete |
-| 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones, vines or benches; historical state preserved | Awaiting approval |
+| 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones and vines; historical state preserved | Complete |
 | 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Awaiting approval |
 
 Step 2 may introduce a shared topology module and thin adapters in the existing

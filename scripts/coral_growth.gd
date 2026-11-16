@@ -161,14 +161,14 @@ func build(before: Array, after: Array) -> void:
 		colonies[origin] = {"origin": origin, "color": color, "old": formation.old, "start": perimeter, "ready": complete, "end": complete}
 		flowers[origin + Vector2i.ONE].start = perimeter
 		flowers[origin + Vector2i.ONE].old = formation.old
-	for pair: Dictionary in Topology.adjacent_pairs(colonies):
+	for pair: Dictionary in Connections.pairs(colonies):
 		var a: Vector2i = pair.a
 		var b: Vector2i = pair.b
 		var layout := union_layout(b - a)
 		var identity := "anemone/%d/%d/%d/%d/%d" % [colonies[a].color, a.y, a.x, b.y, b.x]
 		var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
-		var old: bool = colonies[a].old and colonies[b].old
-		var ready: float = maxf(colonies[a].ready, colonies[b].ready)
+		var old: bool = pair.old
+		var ready: float = Connections.ready(pair, colonies)
 		var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
 		foot.feature = identity
 		var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})

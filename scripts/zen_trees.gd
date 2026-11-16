@@ -2,6 +2,7 @@ class_name ZenTrees
 extends Node2D
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
+const Connections = preload("res://scripts/pattern/connection_assembly.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Art = preload("res://scripts/zen_tree_art.gd")
 const Trunk = preload("res://scripts/zen_tree_trunk.gd")
@@ -31,14 +32,9 @@ static func season_for_month(month: int) -> String:
 
 static func clusters(formations: Dictionary) -> Array:
 	var result: Array = []
-	for cluster: Dictionary in Topology.connected_formations(formations, 1, 2):
-		var ready := -100.0
-		var old := true
-		for origin: Vector2i in cluster.origins:
-			ready = maxf(ready, formations[origin].ready)
-			old = old and formations[origin].old
+	for cluster: Dictionary in Connections.territories(formations, 1):
 		# Preserve the legacy arithmetic in source-pixel coordinates exactly.
-		result.append({"cells": cluster.cells, "center": Topology.centroid(cluster.cells, 256.0), "start": ready, "old": old})
+		result.append({"cells": cluster.cells, "center": Topology.centroid(cluster.cells, 256.0), "start": Connections.ready(cluster, formations), "old": cluster.old})
 	return result
 
 func _init() -> void:

@@ -89,5 +89,5 @@ chains, anemones, ponds, trees and links. Existing native Clockwork, Coral rotat
 Zen landmarks/ponds/trees, Vines and gallery suites pass, alongside headless theme,
 shared-state and UI checks. Original artwork files remain untouched.
 
-Step 8 remains a separate approval: consolidate the Tier 3 connection interface
+Step 8 subsequently consolidated the [Tier 3 connection interface](tier3-connections.md)
 while retaining each theme's specialized behavior and historical state.
