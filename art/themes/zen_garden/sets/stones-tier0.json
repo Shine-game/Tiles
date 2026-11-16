@@ -1,0 +1,29 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "zen-stones-tier0",
+  "tier": 0,
+  "roles": {
+    "isolated": "isolated"
+  },
+  "compositions": {
+    "isolated": {
+      "parts": {
+        "core": {
+          "asset": {
+            "provider": "texture",
+            "path": "../artwork/cores/stepping_stone_core_256.png"
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "texture_filter": 4,
+          "scale": [
+            0.7,
+            0.7
+          ]
+        }
+      }
+    }
+  }
+}

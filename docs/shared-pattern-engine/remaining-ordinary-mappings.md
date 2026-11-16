@@ -1,9 +1,9 @@
 # Step 6 — remaining ordinary-set mapping review
 
-Status: mapping review prepared; the assignments below are proposals, not enabled
-runtime changes. Step 6 was approved for review followed by migration. This
-checkpoint resolves the artwork choices identified in the Step 1 inventory before
-changing the remaining themes' appearance.
+Status: Zen ordinary sets and the revised endpoint mapping are implemented;
+Coral, Vines and Labyrinth remain proposals. See
+[the Zen implementation](zen-ordinary-sets.md). The endpoint rows below reflect
+the user's instruction to copy Tier 0 artwork and overlap the path ending.
 
 ## Proposed role assignments
 
@@ -14,8 +14,8 @@ use their own treatment; no cross-theme artwork substitutions are proposed.
 
 | Family | Tier 0: isolated | Tier 1: endpoint | Bend | T | Cross |
 | --- | --- | --- | --- | --- | --- |
-| Zen raked sand | Existing concentric rake pattern | Flat stone over the endpoint rake | Flat stone | Three-stone cairn | Cairn with bamboo |
-| Zen stepping stones | Existing stepping-stone core | Same core over path modules | Same core | Same core | Same core |
+| Zen raked sand | Existing concentric rake pattern | Copied Tier 0 rings plus rake ending | Flat stone | Three-stone cairn | Cairn with bamboo |
+| Zen stepping stones | Existing stepping-stone core | Copied Tier 0 core plus path ending | Unassigned | Unassigned | Unassigned |
 | Coral Reef | Existing color-specific core | Same core | Core plus its applicable junction piece | Core plus its two applicable junction pieces | Core plus its four junction pieces |
 | Vines | Existing holding/frond motif | Same procedural motif | Same motif | Same motif | Same motif |
 | Labyrinth | Existing pyramid | Same pyramid | Same pyramid | Same pyramid | Same pyramid |
@@ -28,14 +28,12 @@ it to a role does not freeze its geometry into a single image.
 
 ## Expected visible changes
 
-- **Zen rakes:** endpoints gain the existing flat stone, at the current bend-stone
-  scale and pivot. Isolated rakes remain concentric grooves without a stone;
-  bends/Ts/crosses keep their current staged artwork. Ordinary centers remain
-  suppressed under supported 2×2 formations, as today.
-- **Zen stepping stones:** connected endpoints/bends/Ts/crosses gain the existing
-  isolated core at the current 70% size. The path modules remain in place below
-  it. Straight cells retain just their path modules. Suppress these ordinary
-  centers in supported 2×2 formations to preserve the rock artwork above them.
+- **Zen rakes (implemented):** endpoints now show a separately saved copy of the
+  Tier 0 concentric relief overlapped by the existing rake ending. Isolated rakes,
+  bends/Ts/crosses and ordinary-center suppression under 2×2 formations are unchanged.
+- **Zen stepping stones (implemented):** endpoints now show a separately named
+  copy of the Tier 0 core underneath the directional ending. Bend/T/cross center
+  assignments remain unused; the existing directional modules still draw there.
 - **Coral:** straight cells lose the decorative core; arms remain. Isolated,
   endpoint and branching cells retain the existing core/junction assemblies.
   Preserve canonical image reuse and direction-specific mask handling. Check
@@ -48,10 +46,10 @@ it to a role does not freeze its geometry into a single image.
 - **Labyrinth:** straight cells lose the center pyramid. Their hedge connections
   remain. Isolated/endpoint/bend/T/cross pyramids keep the existing provider.
 
-The two Zen assignments introduce art where no corresponding role is implemented
-now; they need confirmation. The three other themes reuse existing motifs, but
-the straight suppression is still an intentional appearance change, not a
-pixel-preserving refactor. Update affected runtime appearance versions when each
+The user revised and approved the Zen endpoint assignments; these are now live.
+Stepping-stone bend/T/cross center artwork remains a later assignment. The three
+other themes reuse existing motifs, but their straight suppression is an
+intentional appearance change. Update their runtime appearance versions when each
 change is enabled; existing saved artwork PNGs remain readable.
 
 ## Vines, masks and providers
@@ -90,4 +88,5 @@ the next. Each migration should:
 5. Update export inclusion, documentation and appearance version as applicable;
    run focused shared/theme checks and push the completed theme for review.
 
-The active game remains unchanged until these mapping decisions are settled.
+Zen is ready for review. The other three themes retain their existing rendering
+until their respective migrations are approved.

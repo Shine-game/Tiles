@@ -15,6 +15,11 @@ Ordinary stepping stones are drawn at 70% scale. Each directional half scales
 around its shared edge midpoint, preserving exact contact and matching profiles
 with its neighboring half. Isolated stepping stones scale around their center.
 
+Endpoints now reuse a separately named copy of the Tier 0 drawing under the
+rake/stone-path ending. Rakes retain their concentric core relief; stepping stones
+retain the core PNG, with the directional half drawn above it. See the
+[shared-set implementation and exact file names](shared-pattern-engine/zen-ordinary-sets.md).
+
 Bends carry one centered stone, T-junctions carry the three-stone cairn, and
 crosses carry that cairn with bamboo behind it. All rotations share the same
 screen-facing artwork. Source PNGs stay unchanged; a compositing shader blends

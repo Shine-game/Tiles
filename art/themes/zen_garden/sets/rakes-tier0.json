@@ -1,0 +1,25 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "zen-rakes-tier0",
+  "tier": 0,
+  "roles": {
+    "isolated": "isolated"
+  },
+  "compositions": {
+    "isolated": {
+      "parts": {
+        "rake": {
+          "asset": {
+            "provider": "texture",
+            "path": "../artwork/cores/raked_sand_core_relief_256.res"
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "texture_filter": 0
+        }
+      }
+    }
+  }
+}

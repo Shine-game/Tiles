@@ -12,7 +12,7 @@ texture path, an existing `Texture2D`, or a descriptor:
 
 | Provider | Data |
 | --- | --- |
-| `texture` | `path`, relative to the set root or explicit `res://` |
+| `texture` | `path`, relative to the set root or explicit `res://`; image imports or a typed binary `Texture2D` resource |
 | `atlas` | Source `path`, `region_px: [x,y,width,height]`, optional `filter_clip` |
 | `variants` (Step 5) | Named `variants` descriptors, selected explicitly by treatment |
 | Registered procedural texture | Project-owned provider ID and `params` object |
@@ -187,3 +187,7 @@ color fallback. A descriptor can alternatively declare its explicit `variant`.
 the node, allowing an existing theme retirement hook to finish its animation.
 The caller then owns disposal. Clockwork uses this for its existing retiring tubes
 and wheels; surviving ordinary nodes keep their identities and motion phases.
+
+Step 6 adds typed binary `.res` texture loading for the exact floating-point Zen
+rake core. Non-texture resources are rejected. See
+[Zen ordinary sets](zen-ordinary-sets.md) for the endpoint overlap and staged node provider.

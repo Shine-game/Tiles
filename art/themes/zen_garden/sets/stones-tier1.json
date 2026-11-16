@@ -1,0 +1,78 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "zen-stones-tier1",
+  "tier": 1,
+  "roles": {
+    "endpoint": "endpoint",
+    "straight": null,
+    "bend": null,
+    "t": null,
+    "cross": null,
+    "vine": "vine",
+    "straight_run_decoration": null
+  },
+  "compositions": {
+    "endpoint": {
+      "parts": {
+        "core": {
+          "asset": {
+            "provider": "texture",
+            "path": "../artwork/centers/stepping_stone_endpoint_core_256.png"
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "texture_filter": 4,
+          "scale": [
+            0.7,
+            0.7
+          ]
+        }
+      }
+    },
+    "vine": {
+      "parts": {
+        "half": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "N": {
+                "provider": "texture",
+                "path": "../artwork/stone_paths/half_stone_N_256.png"
+              },
+              "E": {
+                "provider": "texture",
+                "path": "../artwork/stone_paths/half_stone_E_256.png"
+              },
+              "S": {
+                "provider": "texture",
+                "path": "../artwork/stone_paths/half_stone_S_256.png"
+              },
+              "W": {
+                "provider": "texture",
+                "path": "../artwork/stone_paths/half_stone_W_256.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "texture_filter": 4,
+          "scale": [
+            0.7,
+            0.7
+          ],
+          "anchor": "shared_edge_midpoint"
+        }
+      }
+    }
+  },
+  "unused_slots": {
+    "bend": "No additional center artwork assignment; preserve existing directional stone paths.",
+    "t": "No additional center artwork assignment.",
+    "cross": "No additional center artwork assignment.",
+    "straight_run_decoration": "No extra run artwork or spacing is assigned."
+  }
+}

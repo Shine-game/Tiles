@@ -13,6 +13,7 @@ const ADDITION = preload("res://shaders/zen_center_addition.gdshader")
 # 33.6 logical pixels, inside the innermost groove's 40-pixel radius.
 const CANVAS_PIXELS := 256.0 * 0.60
 const GROW_SECONDS := 0.30
+var grow_seconds := GROW_SECONDS
 var stage := 0
 var artwork: Sprite2D
 var progress: Array[float] = [0.0, 0.0, 0.0]
@@ -37,6 +38,13 @@ func _init() -> void:
 	artwork.material = ink
 	add_child(artwork)
 
+func configure_artwork(textures: Array[Texture2D], canvas_scale: float, seconds: float) -> void:
+	artwork.texture = textures[0]
+	artwork.material.set_shader_parameter("stack_artwork", textures[1])
+	artwork.material.set_shader_parameter("bamboo_artwork", textures[2])
+	artwork.scale = Vector2.ONE * canvas_scale
+	grow_seconds = seconds
+
 func configure(next_stage: int, settled: bool, start: float = 0.0) -> void:
 	var previous := stage
 	stage = next_stage
@@ -51,7 +59,7 @@ func configure(next_stage: int, settled: bool, start: float = 0.0) -> void:
 
 func advance(clock: float) -> void:
 	for i: int in growing.keys():
-		progress[i] = Timing.smooth(float(growing[i]), GROW_SECONDS, clock)
+		progress[i] = Timing.smooth(float(growing[i]), grow_seconds, clock)
 		if progress[i] >= 1: growing.erase(i)
 	_update_material()
 

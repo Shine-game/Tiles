@@ -43,8 +43,9 @@ static func validate(asset: Variant, root: String = "res://") -> Array:
 		if not asset.get("params", {}) is Dictionary: return ["Provider parameters must be an object: " + provider]
 		return provider_validators[provider].call(asset.get("params", {})) if provider_validators.has(provider) else []
 	var path := path_for(str(asset.get("path", "")), root)
-	if not path.begins_with("res://") or path.get_extension().to_lower() not in ["png", "webp", "jpg", "jpeg", "svg", "ctex"]: return ["Expected a project texture path: " + path]
+	if not path.begins_with("res://") or path.get_extension().to_lower() not in ["png", "webp", "jpg", "jpeg", "svg", "ctex", "res"]: return ["Expected a project texture path: " + path]
 	if not ResourceLoader.exists(path, "Texture2D"): return ["Texture does not exist: " + path]
+	if path.get_extension().to_lower() == "res" and not load(path) is Texture2D: return ["Expected a Texture2D resource: " + path]
 	if provider == "atlas":
 		var rect := region(asset.get("region_px"))
 		if rect.position.x < 0 or rect.position.y < 0 or rect.size.x <= 0 or rect.size.y <= 0: return ["Invalid atlas region for " + path]

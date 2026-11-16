@@ -3,7 +3,7 @@ extends Node2D
 
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
-const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
+const Sets = preload("res://scripts/zen_sets.gd")
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const Trees = preload("res://scripts/zen_trees.gd")
@@ -18,7 +18,7 @@ const STONES = [
 	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_S_256.png"),
 	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_W_256.png")]
 const STONE_SCALE := 0.70
-static var relief_textures: Dictionary = {}
+var ordinary_components := Components.new()
 var materials: Array[ShaderMaterial] = []
 var registry: Dictionary = {}
 var pending: Dictionary = {}
@@ -38,15 +38,12 @@ static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
 	return ink
 
 static func stone_sprite(cell: Vector2i, direction: int = -1) -> Sprite2D:
-	var anchor := Vector2.ZERO if direction < 0 else Vector2(Geometry.OFFSETS[direction]) * 128.0
-	# Shrink around the shared boundary midpoint, preserving both half profiles.
-	var sprite := Components.sprite({"asset": CORE if direction < 0 else STONES[direction],
-		"position_px": (Vector2(cell) + Vector2.ONE * 0.5) * 256.0 + anchor,
-		"offset_px": -anchor, "scale": Vector2.ONE * STONE_SCALE,
-		"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS})
-	return sprite
+	# Compatibility entry point; placement now comes from the live set too.
+	var specs := Sets.stone_specs(cell, 0 if direction < 0 else 1 << direction)
+	return Components.sprite(specs[-1])
 
 func clear(keep_features: bool = false) -> void:
+	if not keep_features: ordinary_components.clear()
 	for child: Node in get_children():
 		if keep_features and (child.has_meta("zen_centerpiece") or child == landmark_layer or child == pond or child == trees): continue
 		remove_child(child)
@@ -65,7 +62,7 @@ func clear(keep_features: bool = false) -> void:
 		next_landmark_order = 0
 
 func reconcile(model, settled: bool, complete: bool = false) -> void:
-	Catalog.install()
+	Sets.install()
 	clear(true)
 	var board: Array = model.board
 	var retained_centers: Dictionary = {}
@@ -91,10 +88,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			if color == 0: continue
 			var mask := Geometry.neighbor_mask(board, cell)
 			if color == 1:
-				var spec := Geometry.canonical(mask)
-				if not relief_textures.has(spec.mask):
-					relief_textures[spec.mask] = Assets.resolve({"provider": "zen.rake_relief", "params": {"mask": spec.mask}})
-				var sprite := Components.sprite({"asset": relief_textures[spec.mask], "position_cells": Vector2(cell) + Vector2.ONE * 0.5, "quarter_turns": spec.turns})
+				var sprite := Components.sprite(Sets.rake_spec(cell, mask))
 				var ink := sand_material(Vector2(cell))
 				ink.set_shader_parameter("has_relief", true)
 				ink.set_shader_parameter("relief_map", sprite.texture)
@@ -102,22 +96,17 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 				sprite.material = ink
 				materials.append(ink)
 				group.add_child(sprite)
-				var stage := 0 if formation_cells.has(cell) else Centerpiece.stage_for(mask)
+				var center_spec := {} if formation_cells.has(cell) else Sets.center_spec(cell, mask)
+				var stage: int = int(center_spec.get("stage", 0))
 				if stage > 0:
-					if not centerpieces.has(cell):
-						var center := Centerpiece.new()
-						center.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
-						add_child(center)
-						centerpieces[cell] = center
+					var identity := "center/%d/%d" % [cell.y, cell.x]
+					centerpieces[cell] = ordinary_components.ensure(identity, center_spec, self)
 					var start := maxf(0, float(model.arrivals.get(cell, 0)))
 					centerpieces[cell].configure(stage, settled, start)
 					retained_centers[cell] = true
 			else:
-				for d in range(4):
-					if mask != 0 and not mask & (1 << d): continue
-					var sprite := stone_sprite(cell, -1 if mask == 0 else d)
-					group.add_child(sprite)
-					if mask == 0: break
+				for spec: Dictionary in Sets.stone_specs(cell, mask):
+					group.add_child(Components.sprite(spec))
 			if not settled and float(model.arrivals.get(cell, -100.0)) >= 0:
 				# Only decoration fades in; the new sand slab is immediately solid.
 				for i in range(1, group.get_child_count()):
@@ -125,9 +114,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 					pending[sprite] = float(model.arrivals[cell])
 	for cell: Vector2i in centerpieces.keys():
 		if retained_centers.has(cell): continue
-		var center: Node = centerpieces[cell]
-		remove_child(center)
-		center.queue_free()
+		ordinary_components.remove("center/%d/%d" % [cell.y, cell.x])
 		centerpieces.erase(cell)
 	_sync_landmarks(model, settled)
 	if pond == null:
