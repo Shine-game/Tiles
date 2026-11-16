@@ -1,5 +1,5 @@
 {
-  "source": "User-uploaded ground, cores, stone_paths, architecture, rock_formations and Downloads RAR archives; originals copied without image edits",
+  "source": "User-uploaded ground, cores, stone_paths, architecture, rock_formations and Downloads RAR archives; originals copied without image edits; supplied watershed masks and shoreline plants copied unchanged",
   "assets": [
     {
       "path": "artwork/cores/stepping_stone_core_256.png",
@@ -92,6 +92,162 @@
       "sha256": "0503294a7426385674e89b950aead11990a2b8525077c1665a4a05ed3117ca15",
       "bytes": 1952325,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
+    },
+    {
+      "path": "artwork/watersheds/01/water_n.png",
+      "source_asset": "ARTWORK/watersheds/01/water_n.png",
+      "sha256": "32061ec7d9d2cb450a081cf916fb82428c9f59a90963144537a0c72033ad39c3",
+      "bytes": 4618
+    },
+    {
+      "path": "artwork/watersheds/01/water_e.png",
+      "source_asset": "ARTWORK/watersheds/01/water_e.png",
+      "sha256": "a087d5f1b8399a22d51983eb4a19f017e138e92fead6f9f5e9f7468b8f6be260",
+      "bytes": 5149
+    },
+    {
+      "path": "artwork/watersheds/01/water_s.png",
+      "source_asset": "ARTWORK/watersheds/01/water_s.png",
+      "sha256": "09d08ba31050e61e499f3a1e3574df555ba96a020cbca076a486a9b9793a81be",
+      "bytes": 5181
+    },
+    {
+      "path": "artwork/watersheds/01/water_w.png",
+      "source_asset": "ARTWORK/watersheds/01/water_w.png",
+      "sha256": "b3dab5fa6aa5ac61178567b2ff6a209181169738240984e2b1972cec9ac81c66",
+      "bytes": 6144
+    },
+    {
+      "path": "artwork/watersheds/01/rock_occlusion.png",
+      "source_asset": "ARTWORK/watersheds/01/rock_occlusion.png",
+      "sha256": "e0fa22b9929aa24c60f5e5da1201d23e81898fef01f93c5a6d2fa454be0bcbe4",
+      "bytes": 16216
+    },
+    {
+      "path": "artwork/watersheds/02/water_n.png",
+      "source_asset": "ARTWORK/watersheds/02/water_n.png",
+      "sha256": "9744fd9670f24fd5d8775ebabb0d8f51b4d291df315300ea00931ebf2a4660ac",
+      "bytes": 12488
+    },
+    {
+      "path": "artwork/watersheds/02/water_e.png",
+      "source_asset": "ARTWORK/watersheds/02/water_e.png",
+      "sha256": "ac04defc28fdada32eddb21a702d34db2cda65b5d1ff3a94890e18d5a3bf5dc3",
+      "bytes": 4724
+    },
+    {
+      "path": "artwork/watersheds/02/water_s.png",
+      "source_asset": "ARTWORK/watersheds/02/water_s.png",
+      "sha256": "cd6adf95b2be7579dc60a6506998d85c81702a40ae5573ae83112a7a2d76081e",
+      "bytes": 3981
+    },
+    {
+      "path": "artwork/watersheds/02/water_w.png",
+      "source_asset": "ARTWORK/watersheds/02/water_w.png",
+      "sha256": "0c43274917f19e2c374eded6d55bdc57ef8b91bd460cf1375fb175dbde22b3c8",
+      "bytes": 5075
+    },
+    {
+      "path": "artwork/watersheds/02/rock_occlusion.png",
+      "source_asset": "ARTWORK/watersheds/02/rock_occlusion.png",
+      "sha256": "fe402f751a344bf060ef9e294cfb5eca92f0c700c662f12fb0cc9fd599186038",
+      "bytes": 12854
+    },
+    {
+      "path": "artwork/watersheds/03/water_n.png",
+      "source_asset": "ARTWORK/watersheds/03/water_n.png",
+      "sha256": "10e712a7f3dc90bb3e48a9fec75980384be238713480d5d92b38cbeff1509171",
+      "bytes": 4383
+    },
+    {
+      "path": "artwork/watersheds/03/water_e.png",
+      "source_asset": "ARTWORK/watersheds/03/water_e.png",
+      "sha256": "21246e16bc9532666e44c61f3b4303b7d61a12c5c9d1e7fe685d691d2aef42e3",
+      "bytes": 4090
+    },
+    {
+      "path": "artwork/watersheds/03/water_s.png",
+      "source_asset": "ARTWORK/watersheds/03/water_s.png",
+      "sha256": "b1ee1994c4307a0aab76fd83879e37bf572d88b073f0b834bbca5d54a355a136",
+      "bytes": 3352
+    },
+    {
+      "path": "artwork/watersheds/03/water_w.png",
+      "source_asset": "ARTWORK/watersheds/03/water_w.png",
+      "sha256": "66adf3a9a1dab8e84def161a2f7e4e0f388a978bacbacef99560b9833f783725",
+      "bytes": 4958
+    },
+    {
+      "path": "artwork/watersheds/03/rock_occlusion.png",
+      "source_asset": "ARTWORK/watersheds/03/rock_occlusion.png",
+      "sha256": "993e9bb4787f02f1dac0f05e43a6054e2346631513832820e60bd5748110f273",
+      "bytes": 6682
+    },
+    {
+      "path": "artwork/watersheds/04/water_n.png",
+      "source_asset": "ARTWORK/watersheds/04/water_n.png",
+      "sha256": "de1c39fd9cdea71b6ed95dd27d797cfba124a00abffab19a5b1075c0677b7f5c",
+      "bytes": 4059
+    },
+    {
+      "path": "artwork/watersheds/04/water_e.png",
+      "source_asset": "ARTWORK/watersheds/04/water_e.png",
+      "sha256": "553c5193fcc66e0671da7dbf0c70882c7a3a5ed4bf39789fb7a9ae1b42b0e4e8",
+      "bytes": 3531
+    },
+    {
+      "path": "artwork/watersheds/04/water_s.png",
+      "source_asset": "ARTWORK/watersheds/04/water_s.png",
+      "sha256": "bdf1f03381d2c47d6faa6ca5bcb4237ab3631513045a80ff18a5267ff72ec628",
+      "bytes": 3350
+    },
+    {
+      "path": "artwork/watersheds/04/water_w.png",
+      "source_asset": "ARTWORK/watersheds/04/water_w.png",
+      "sha256": "820248495f8d2d3f11fb5d64ac00ce7528593cb19da064d8e4db4f4df4c99c77",
+      "bytes": 4876
+    },
+    {
+      "path": "artwork/watersheds/04/rock_occlusion.png",
+      "source_asset": "ARTWORK/watersheds/04/rock_occlusion.png",
+      "sha256": "00b3e69312cc15dc9a7b165aaf1bec9a3e7f0506a863010e75851aba8825199a",
+      "bytes": 5821
+    },
+    {
+      "path": "artwork/shoreline_plants/01_shore_sedge.png",
+      "source_asset": "ARTWORK/shoreline_plants/01_shore_sedge.png",
+      "sha256": "6fe568f7b2b4f344ddc2f1456c9f86d247e7936e5b387dfbf86978faaa454ca3",
+      "bytes": 110400
+    },
+    {
+      "path": "artwork/shoreline_plants/02_shore_fern.png",
+      "source_asset": "ARTWORK/shoreline_plants/02_shore_fern.png",
+      "sha256": "e0b09bc0929b74507304a79d26293a8b5a657b3aead400fbb66774d342926da3",
+      "bytes": 111739
+    },
+    {
+      "path": "artwork/shoreline_plants/03_shore_herbs.png",
+      "source_asset": "ARTWORK/shoreline_plants/03_shore_herbs.png",
+      "sha256": "4012cf1492cfb15a5579e1bdd3009748fd9d6873dcaed61a6c35828dafb249e2",
+      "bytes": 106093
+    },
+    {
+      "path": "artwork/shoreline_plants/04_shore_rush.png",
+      "source_asset": "ARTWORK/shoreline_plants/04_shore_rush.png",
+      "sha256": "dfe32f7c383aeb144deed89658e94b18b86b770cb937cf518fee7086d1df7b24",
+      "bytes": 105254
+    },
+    {
+      "path": "artwork/shoreline_plants/05_shore_clover.png",
+      "source_asset": "ARTWORK/shoreline_plants/05_shore_clover.png",
+      "sha256": "2ef7c676d7a0e442bb096523d315d8c23bb2fe6e37ad0971fe3596bced4a55f7",
+      "bytes": 105799
+    },
+    {
+      "path": "artwork/shoreline_plants/06_shore_reeds.png",
+      "source_asset": "ARTWORK/shoreline_plants/06_shore_reeds.png",
+      "sha256": "39579219aca72cfe42249fbde6895861da14e31cae847619344d1c1b9fb70678",
+      "bytes": 95536
     }
   ]
 }

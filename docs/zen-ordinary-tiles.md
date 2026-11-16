@@ -36,8 +36,29 @@ follow the same sequence: the ordinary stepping-stone pattern finishes first,
 then the 2×2 rock artwork appears above it. Both underlying patterns remain in
 place through the overlay animation and in saved artwork. Both types retain
 their aspect ratio and screen-facing lighting.
-Missing pagoda/day-night variants, ponds, trees and the
-decorative Zen frame are still pending. No Clockwork or Coral art is substituted.
+Third-tier stone paths now flood when neighboring same-color 2×2 origins are
+one cell apart, using the existing Coral formation-adjacency rule. Each connection
+activates the facing watershed on both rock formations. New rocks finish appearing
+before the water fills inward from the connecting side; two sparse shoreline plant
+groups per activated side grow afterward. Further connections add sectors while
+existing water and plants remain visible and existing rocks retain their nodes,
+positions and stacking order. Undo/Erase removes unsupported sectors and plants.
+
+All four supplied `water_n/e/s/w` sets and `rock_occlusion` masks are used unchanged,
+at their supplied registration, per the user's confirmation. Water deliberately
+covers low bedrock and portions of rock faces; the occlusion masks protect the
+middle and selected exposed rocks. A shared offscreen mask combines active sectors
+and protects all rock middles, so overlapping 2×2s share one board-space blue-grey
+water surface rather than painting water over each other's peaks. Only the mask is
+downsampled at runtime to 128 pixels per cell; source PNGs are untouched. Static
+reflections preserve exact appearance in gallery captures. Mask rendering updates
+on changes/growth, then stops. Empty ponds use a minimal 2×2 render target.
+Supplied shoreline strips follow the authored water/rock boundary, with stable
+placement and deterministic variation. Plants use a fixed painter order so gallery
+reconstruction matches the live board. Theme version 0.7 gives these saves a new
+appearance identity without replacing older pictures.
+
+Missing pagoda/day-night variants, trees and the decorative Zen frame remain pending. No Clockwork or Coral art is substituted.
 
 ## Geometry and rendering
 
@@ -65,14 +86,17 @@ hashes are in `art/themes/zen_garden/source-assets.json`.
 godot --headless --path . --script res://tests/test_zen_ordinary.gd
 godot --headless --path . --script res://tests/test_zen_centerpieces.gd
 godot --path . --script res://tests/test_zen_landmarks.gd
+godot --path . --script res://tests/test_zen_ponds.gd
 godot --path . --script res://tests/render_zen_game.gd
 ```
 
 Checks cover mask rotations, exact edge profiles, bend and T continuity,
 centerpiece progression, both types of overlapping 2×2 landmarks, helper
-restoration and exact saved landmark stacking. Main-scene checks also cover
-theme order, theme switching and artwork saving. Captures go to `build/zen-game/`
-and `build/zen-landmarks/`. They create no extra player interface.
+restoration and exact saved landmark stacking. Pond checks cover connection
+eligibility, cumulative growth, protected dry-rock masks, actual Place/Undo/Erase
+and water in saved artwork. Main-scene checks also cover
+theme order, theme switching and artwork saving. Captures go to `build/zen-game/`,
+`build/zen-landmarks/` and `build/zen-ponds/`. They create no extra player interface.
 
 Godot 4.7.2 / GL Compatibility is the reference runtime. Android export and
 device performance have not been validated.

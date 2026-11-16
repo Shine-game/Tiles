@@ -21,9 +21,18 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - Settings opens a floating menu with Themes, Difficulty, Gallery, and Sound Settings. Its box is 1.5× wider and taller, with double-size text and the playing field’s decorative perimeter. It scales down only as needed to fit smaller screens and includes a close button. Themes shows each name with its core tile; selecting a different theme asks for confirmation before starting a fresh game. Vines retains its five palettes under Themes → Vine colors; palette changes preserve play. Difficulty contains Easy, Moderate, Difficult, Show axes on field, Restart, and the 9×9/11×11 size switch. Show axes on field toggles the vertical, horizontal, and two diagonal reflection axes above all tile artwork. The input-transparent overlay is off by default, remains selected across games/themes during the session, and never appears in saved artwork. Difficulty, board-size changes, and Restart also ask before replacing the game. Sound Settings independently toggles background noises and special effects, preserving the choices across new games and theme changes during the session. Menus and gallery pages fit without scrolling.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
 
-## Clockwork Workshop — default theme
+## Zen Garden — startup theme
 
-The game opens in **Clockwork Workshop**, first in the theme selector ahead of Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms alternate primary-metal cores, tubes, solid lower gears, chains and tops with opposite-metal ornate upper gears. Tube-to-wheel collars are omitted; tube-to-tube couplings remain. Chain links are rendered at twice their original size with half the density. They assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
+Zen Garden opens first and uses the existing game controls. Raked sand grows
+stone centerpieces and 2×2 lanterns; stepping-stone paths grow 2×2 rock formations.
+Adjacent rock formations then fill their connected watershed regions with blue-grey
+water and sparse shoreline plants, retaining the supplied protected rock middles.
+Additional connections expand the ponds. Undo/Erase removes unsupported water,
+and gallery saves include it. See [the Zen implementation](docs/zen-ordinary-tiles.md).
+
+## Clockwork Workshop
+
+**Clockwork Workshop** remains available in the theme selector alongside Zen Garden, Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms alternate primary-metal cores, tubes, solid lower gears, chains and tops with opposite-metal ornate upper gears. Tube-to-wheel collars are omitted; tube-to-tube couplings remain. Chain links are rendered at twice their original size with half the density. They assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
 
 ## Shared theme frames
 

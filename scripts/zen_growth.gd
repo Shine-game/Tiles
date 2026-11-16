@@ -1,7 +1,8 @@
 extends "res://scripts/coral_growth.gd"
 
 # Reuse Coral's same-color waves and formation detection. Zen supplies its own
-# landmark timing and artwork; no Coral bloom/third-tier events are rendered.
+# landmark timing and artwork; no Coral bloom artwork is rendered.
+var ponds: Dictionary = {}
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
 	components.clear()
@@ -21,3 +22,18 @@ func build(before: Array, after: Array) -> void:
 		formation.end = formation.start + preload("res://scripts/zen_landmark.gd").GROW_SECONDS
 		formation.ready = formation.end
 		if not formation.old: duration = maxf(duration, formation.end)
+
+	# Use the same adjacent-formation rule as Coral. Each new connection
+	# activates the facing watershed on both formations, never diagonal ones.
+	ponds.clear()
+	for origin: Vector2i in colonies:
+		var formation: Dictionary = colonies[origin]
+		if formation.color != 2: continue
+		for direction in range(4):
+			var neighbor: Vector2i = origin + OFFSETS[direction]
+			if not colonies.has(neighbor) or colonies[neighbor].color != 2: continue
+			var old: bool = formation.old and colonies[neighbor].old
+			var start := maxf(formation.ready, colonies[neighbor].ready)
+			ponds["%d/%d/%d" % [origin.y, origin.x, direction]] = {"origin": origin, "direction": direction, "old": old, "start": -100.0 if old else start}
+			if not old:
+				duration = maxf(duration, start + preload("res://scripts/zen_pond.gd").FILL_SECONDS + preload("res://scripts/zen_pond.gd").PLANT_SECONDS)
