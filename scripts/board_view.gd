@@ -21,6 +21,11 @@ const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
 const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
+const Zen = preload("res://scripts/zen_growth.gd")
+const ZenLayer = preload("res://scripts/zen_visuals.gd")
+var zen_garden := false
+var zen_visuals: ZenVisuals
+var zen_floor: ColorRect
 var board: Array = []
 var pattern = Growth.new()
 var clock := 0.0
@@ -68,6 +73,7 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	_adopt_directions(preserve_direction)
 	_sync_coral(true, preserve_direction)
 	_sync_workshop(true, preserve_direction, reverse)
+	_sync_zen(true)
 	clock = 0
 	growing = clockwork and pattern.duration > 0
 	set_process(growing)
@@ -81,14 +87,15 @@ func sync_board(grid: Array) -> void:
 		show_settled(grid)
 	elif Palette.clockwork and not clockwork:
 		show_settled(grid, true)
-	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef or clockwork != Palette.clockwork:
+	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef or clockwork != Palette.clockwork or zen_garden != Palette.zen_garden:
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
 	labyrinth = Palette.labyrinth
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
-	pattern = Clock.new() if clockwork else (Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new()))
+	zen_garden = Palette.zen_garden
+	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())))
 	pattern.build(before, after)
 	if board_frame == null:
 		board_frame = Frame.new()
@@ -171,9 +178,11 @@ func _restyle() -> void:
 	_adopt_directions(true)
 	_sync_coral(false, true)
 	_sync_workshop(false, true)
+	_sync_zen(false)
 	clock = minf(clock, pattern.duration)
 	if coral_reef:
 		coral_visuals.advance(clock)
+	if zen_garden: zen_visuals.advance(clock)
 	growing = clock < pattern.duration
 	set_process(growing)
 	visual_state_changed.emit(pattern, growing, true, clock, placement_revision)
@@ -195,6 +204,27 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 		update_geometry()
 	elif coral_visuals != null:
 		coral_visuals.hide()
+
+func _sync_zen(settled: bool) -> void:
+	if zen_garden:
+		if zen_visuals == null:
+			zen_visuals = ZenLayer.new()
+			zen_visuals.z_index = 1
+			add_child(zen_visuals)
+		zen_visuals.show()
+		zen_visuals.reconcile(pattern, settled, complete_background)
+		if zen_floor == null:
+			zen_floor = ColorRect.new()
+			zen_floor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			zen_floor.z_index = -1
+			zen_floor.material = ZenLayer.sand_material()
+			add_child(zen_floor)
+			move_child(zen_floor, 0)
+		zen_floor.show()
+		update_geometry()
+	else:
+		if zen_visuals != null: zen_visuals.hide()
+		if zen_floor != null: zen_floor.hide()
 
 func _sync_workshop(settled: bool, preserve: bool, reverse: bool = false) -> void:
 	if clockwork_visuals != null and not preserve:
@@ -223,6 +253,7 @@ func animate_growth(before: Array, after: Array) -> void:
 	clock = 0
 	_sync_coral(false, true)
 	_sync_workshop(false, true)
+	_sync_zen(false)
 	announced_flowers.clear()
 	growing = pattern.duration > 0
 	set_process(growing)
@@ -237,6 +268,7 @@ func advance_growth(delta: float) -> void:
 	clock = minf(pattern.duration, clock + maxf(0, delta))
 	if coral_reef:
 		coral_visuals.advance(clock)
+	if zen_garden: zen_visuals.advance(clock)
 	if clockwork and clockwork_visuals != null:
 		clockwork_visuals.advance(clock)
 	visual_clock_advanced.emit(clock)
@@ -269,7 +301,16 @@ func update_geometry() -> void:
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
 	if occupied_platform != null:
-		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork else -1.0)
+		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork or zen_garden else -1.0, not zen_garden)
+	if zen_garden and zen_visuals != null:
+		zen_visuals.position = _point(Vector2.ZERO)
+		zen_visuals.scale = Vector2.ONE * pitch / 256.0
+		zen_visuals.configure_surface(occupied_platform)
+	if zen_garden and zen_floor != null:
+		zen_floor.position = Vector2.ZERO
+		zen_floor.size = size
+		zen_floor.material.set_shader_parameter("cell_origin", -_point(Vector2.ZERO) / pitch)
+		zen_floor.material.set_shader_parameter("area_cells", size / pitch)
 	if clockwork_visuals != null:
 		clockwork_visuals.position = _point(Vector2.ZERO)
 		clockwork_visuals.scale = Vector2.ONE * pitch / 256.0
@@ -304,7 +345,7 @@ func _sync_axes() -> void:
 		axes_overlay.configure(Rect2(_point(Vector2.ZERO), Vector2.ONE * board.size() * pitch), pitch)
 
 func surface_depth() -> float:
-	return 4.0 if clockwork else Platform.depth(pitch)
+	return 4.0 if clockwork or zen_garden else Platform.depth(pitch)
 
 func _floor_point(position_in_grid: Vector2) -> Vector2:
 	return field.position + Vector2.ONE * grid_inset + position_in_grid * pitch
@@ -336,7 +377,7 @@ func _draw() -> void:
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 	if show_guides:
 		_draw_guides()
-	if coral_reef or clockwork:
+	if coral_reef or clockwork or zen_garden:
 		return
 	if labyrinth:
 		MazeRenderer.draw(self)

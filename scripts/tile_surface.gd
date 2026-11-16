@@ -3,9 +3,33 @@ extends RefCounted
 
 const Palette = preload("res://scripts/palette.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
+const Zen = preload("res://scripts/zen_visuals.gd")
 
 static func depth(unit: float) -> float:
-	return 4.0 if Palette.clockwork else Platform.depth(unit)
+	return 4.0 if Palette.clockwork or Palette.zen_garden else Platform.depth(unit)
+
+static func _zen_top(slab, n: int, pitch: float, invalid: bool) -> void:
+	var face = slab.get_node_or_null("ZenSand")
+	if not Palette.zen_garden:
+		if face != null: face.hide()
+		return
+	if face == null:
+		face = ColorRect.new()
+		face.name = "ZenSand"
+		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		face.material = Zen.sand_material()
+		slab.add_child(face)
+	var margin: float = slab.depth_pixels * 2 + 1
+	face.position = Vector2.ONE * margin
+	face.size = Vector2.ONE * n * pitch
+	face.color = Color(0.70, 0.70, 0.70) if invalid else Color.WHITE
+	face.material.set_shader_parameter("area_cells", Vector2.ONE * n)
+	face.material.set_shader_parameter("clip_to_surface", true)
+	face.material.set_shader_parameter("occupancy_mask", slab.mask_texture)
+	face.material.set_shader_parameter("grid_size", n)
+	face.material.set_shader_parameter("cell_pixels", pitch)
+	face.material.set_shader_parameter("screen_pixel", 1.0)
+	face.show()
 
 # Reuse the exact occupied-ground renderer for each separate incoming square.
 # Children are reused on redraw; hiding unused slabs handles shape changes.
@@ -27,7 +51,7 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 		canvas.add_child(slab)
 		slab.sync([[1]])
 		slab.z_index = 0
-	slab.configure(face.position, face.size.x, color, Palette.coral_reef, 4.0 if Palette.clockwork else -1.0)
+	slab.configure(face.position, face.size.x, Palette.platform_color() if Palette.zen_garden and color != Palette.INVALID else color, Palette.coral_reef, 4.0 if Palette.clockwork or Palette.zen_garden else -1.0, not Palette.zen_garden)
 	# The four-pixel inter-square gap is not part of the logical cell pitch.
 	# Keep the same depth as a committed cell despite this smaller face.
 	slab.depth_pixels = thickness
@@ -37,6 +61,7 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 	slab.material.set_shader_parameter("depth_pixels", thickness)
 	slab.material.set_shader_parameter("margin_pixels", margin)
 	slab.material.set_shader_parameter("rect_pixels", slab.size)
+	_zen_top(slab, 1, face.size.x, color == Palette.INVALID)
 	slab.show()
 
 # A piece is one occupied union, just like placed ground: no gaps, repeated
@@ -63,5 +88,6 @@ static func draw_piece(canvas: CanvasItem, cells: Array, origin: Vector2, pitch:
 		slab.z_index = 0
 		canvas.add_child(slab)
 	slab.sync(grid)
-	slab.configure(origin, pitch, color, Palette.coral_reef, 4.0 if Palette.clockwork else -1.0)
+	slab.configure(origin, pitch, Palette.platform_color() if Palette.zen_garden and color != Palette.INVALID else color, Palette.coral_reef, 4.0 if Palette.clockwork or Palette.zen_garden else -1.0, not Palette.zen_garden)
+	_zen_top(slab, extent, pitch, color == Palette.INVALID)
 	slab.show()

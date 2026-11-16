@@ -79,6 +79,7 @@ var confirmation: ConfirmationDialog
 var pending_change: Callable
 var themed_buttons: Array = []
 var reef_background: ColorRect
+var zen_background: ColorRect
 var difficulty: Game.Difficulty = Game.Difficulty.DIFFICULT
 
 func _ready() -> void:
@@ -170,6 +171,11 @@ func _build_interface() -> void:
 	water.shader = preload("res://shaders/reef_lagoon.gdshader")
 	reef_background.material = water
 	add_child(reef_background)
+	zen_background = ColorRect.new()
+	zen_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	zen_background.material = ZenVisuals.sand_material()
+	add_child(zen_background)
+	move_child(zen_background, 0)
 	confirmation = ConfirmationDialog.new()
 	confirmation.title = "Start a new game?"
 	confirmation.ok_button_text = "New game"
@@ -244,6 +250,8 @@ func _layout() -> void:
 	_set_rect(piece_view, Rect2((view.x - preview_width) / 2, pad, preview_width, header_height))
 	piece_view.cell_pitch = board_view.pitch
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
+	_set_rect(zen_background, Rect2(Vector2.ZERO, view))
+	_sync_zen_background()
 	_layout_palette_menu(pad)
 	_layout_gallery(pad)
 	board_view.queue_redraw()
@@ -670,6 +678,8 @@ func _apply_button_style(button: Button, active: bool = false, color: int = 1) -
 
 func _refresh_theme() -> void:
 	reef_background.visible = Palette.coral_reef
+	zen_background.visible = Palette.zen_garden
+	_sync_zen_background()
 	for button: Button in themed_buttons:
 		var active := false
 		var color := 1
@@ -694,6 +704,12 @@ func _refresh_theme() -> void:
 	_refresh_menu_style()
 	menu_title.add_theme_color_override("font_color", Palette.text())
 	queue_redraw()
+
+func _sync_zen_background() -> void:
+	if zen_background == null or not Palette.zen_garden: return
+	var pitch: float = maxf(1.0, board_view.pitch)
+	zen_background.material.set_shader_parameter("cell_origin", -(board_view.position + board_view._point(Vector2.ZERO)) / pitch)
+	zen_background.material.set_shader_parameter("area_cells", size / pitch)
 
 func _toggle_palette_menu() -> void:
 	dragging = false

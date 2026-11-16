@@ -74,9 +74,9 @@ func _run() -> void:
 	check(scene.settings_options.map(func(button): return button.text) == ["Themes", "Difficulty", "Gallery", "Sound Settings"], "Settings has exactly the requested entries")
 	click(scene.settings_options[0])
 	await process_frame
-	check(scene.menu_page == "Themes" and scene.theme_options.size() == 4, "Themes lists all names and core tiles")
+	check(scene.menu_page == "Themes" and scene.theme_options.size() == Palette.THEMES.size(), "Themes lists all names and core tiles")
 	var previous = scene.game
-	click(scene.theme_options[3])
+	click(scene.theme_options[Palette.THEMES.find("coral_reef")])
 	await process_frame
 	check(scene.confirmation.visible and scene.game == previous and Palette.clockwork, "theme waits for confirmation")
 	scene.confirmation.canceled.emit()

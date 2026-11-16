@@ -22,7 +22,10 @@ func _draw() -> void:
 	pitch = minf(size.x, size.y)
 	var rect := Rect2((size - Vector2.ONE * pitch) / 2, Vector2.ONE * pitch)
 	draw_style_box(_ground(), rect)
-	if core != null:
+	if theme_id == "zen_garden":
+		draw_texture_rect(ZenVisuals.SAND, rect, false)
+		# The centered decoration is unfinished: show the theme's sand tile.
+	elif core != null:
 		draw_texture_rect_region(core, rect.grow(-pitch * 0.12), core_region)
 	elif theme_id == "labyrinth":
 		Maze._pyramid(self, size / 2 + Vector2(0, pitch * 0.1), 1, 1.7)
@@ -35,6 +38,6 @@ func _draw() -> void:
 
 func _ground() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = {"clockwork": Color("a3a29a"), "coral_reef": Color("edd7ad"), "labyrinth": Color("efe1c3")}.get(theme_id, Color("fff5fb"))
+	style.bg_color = {"zen_garden": Color("f0ece3"), "clockwork": Color("a3a29a"), "coral_reef": Color("edd7ad"), "labyrinth": Color("efe1c3")}.get(theme_id, Color("fff5fb"))
 	style.set_corner_radius_all(4)
 	return style

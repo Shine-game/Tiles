@@ -43,6 +43,43 @@ static func arc(points: PackedVector2Array, center: Vector2, radius: float, star
 		var angle := lerpf(start, end, i / 96.0)
 		points.append(center + Vector2(cos(angle), sin(angle)) * radius)
 
+static func cubic_point(a: Vector2, b: Vector2, c: Vector2, d: Vector2, t: float) -> Vector2:
+	var u := 1.0 - t
+	return a * u * u * u + 3.0 * b * u * u * t + 3.0 * c * u * t * t + d * t * t * t
+
+static func cubic_tangent(a: Vector2, b: Vector2, c: Vector2, d: Vector2, t: float) -> Vector2:
+	var u := 1.0 - t
+	return (3.0 * u * u * (b - a) + 6.0 * u * t * (c - b) + 3.0 * t * t * (d - c)).normalized()
+
+static func t_paths() -> Array[PackedVector2Array]:
+	var result: Array[PackedVector2Array] = []
+	for i in range(4):
+		var port: float = PORTS[i]
+		var crest := 44.0 + i * (44.0 / 3.0)
+		# Every arch travels monotonically left to right. Both its edge port and
+		# crest keep the same groove ordering, so no connector can fold back.
+		var line := PackedVector2Array([Vector2(0, port), Vector2(32, port)])
+		bezier(line, line[-1], Vector2(64, port), Vector2(64, crest), Vector2(128, crest))
+		bezier(line, line[-1], Vector2(192, crest), Vector2(192, port), Vector2(224, port))
+		line.append(Vector2(256, port))
+		result.append(line)
+	for i in range(4):
+		# Split the stem left/right and merge along the arch tangent. The old
+		# vertical stubs stopped against the arch at nearly right angles.
+		var right := i >= 2
+		var t := 0.5 if i == 0 or i == 3 else 39.0 / 48.0
+		var end := cubic_point(Vector2(32, 92), Vector2(64, 92), Vector2(64, 44), Vector2(128, 44), t)
+		var tangent := -cubic_tangent(Vector2(32, 92), Vector2(64, 92), Vector2(64, 44), Vector2(128, 44), t)
+		if right:
+			end.x = 256 - end.x
+			tangent.x = -tangent.x
+		var port: float = PORTS[i]
+		var handle := 12.0 if i == 0 or i == 3 else 8.0
+		var feeder := PackedVector2Array([Vector2(port, 0), Vector2(port, 32)])
+		bezier(feeder, feeder[-1], Vector2(port, 44), end - tangent * handle, end)
+		result.append(feeder)
+	return result
+
 static func paths(mask: int) -> Array[PackedVector2Array]:
 	var result: Array[PackedVector2Array] = []
 	if mask == 0:
@@ -74,22 +111,15 @@ static func paths(mask: int) -> Array[PackedVector2Array]:
 			bezier(line, line[-1], Vector2(160, 128 + radius), Vector2(192, exit), Vector2(224, exit))
 			line.append(Vector2(256, exit))
 			result.append(line)
+	elif mask == 11:
+		return t_paths()
 	else:
-		# Review geometry: nested arches for T, nested circulation for cross.
+		# Nested circulation for cross.
 		# Centers are intentionally empty for the next stage's stone overlays.
 		for i in range(4):
 			var radius := 40.0 + i * (44.0 / 3.0)
 			var line := PackedVector2Array()
-			if mask == 11:
-				var port: float = PORTS[i]
-				line.append(Vector2(0, port))
-				line.append(Vector2(32, port))
-				bezier(line, line[-1], Vector2(64, port), Vector2(128 - radius, 156), Vector2(128 - radius, 128))
-				arc(line, Vector2(128, 128), radius, PI, TAU)
-				bezier(line, line[-1], Vector2(128 + radius, 156), Vector2(192, port), Vector2(224, port))
-				line.append(Vector2(256, port))
-			else:
-				arc(line, Vector2(128, 128), radius, 0, TAU)
+			arc(line, Vector2(128, 128), radius, 0, TAU)
 			result.append(line)
 		for direction in range(4):
 			if not mask & (1 << direction):
@@ -101,9 +131,6 @@ static func paths(mask: int) -> Array[PackedVector2Array]:
 				var radius := 84.0
 				var end_y := 128.0 - sqrt(radius * radius - (port - 128.0) * (port - 128.0))
 				var feeder := PackedVector2Array([Vector2(port, 0), Vector2(port, 32), Vector2(port, end_y)])
-				# T already has its exact E/W ports in its arches.
-				if mask == 11 and direction != 0:
-					continue
 				for j in range(feeder.size()):
 					feeder[j] = Vector2(128, 128) + (feeder[j] - Vector2(128, 128)).rotated(direction * PI / 2)
 				result.append(feeder)

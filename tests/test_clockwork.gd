@@ -22,7 +22,7 @@ func block(width: int, height: int, color: int = 1, size: int = 9) -> Array:
 			result[y + 2][x + 2] = color
 	return result
 func _run() -> void:
-	check(Palette.clockwork and Palette.theme_id() == "clockwork" and Palette.THEMES[0] == "clockwork", "Clockwork is the initial and first theme")
+	check(Palette.select_theme("clockwork") and Palette.clockwork and Palette.theme_id() == "clockwork", "Clockwork remains available through theme selection")
 	var model = Clock.new()
 	var empty: Array = Rules.empty_board(9)
 	for color in [1, 2]:
@@ -84,7 +84,7 @@ func _run() -> void:
 	await wait_frames(0.10)
 	var view = scene.board_view
 	var visuals = view.clockwork_visuals
-	check(view.clockwork and view.board_frame.is_present(), "default game loads workshop assets and walnut frame")
+	check(view.clockwork and view.board_frame.is_present(), "selected Clockwork game loads workshop assets and walnut frame")
 	check(view.surface_depth() == 4 and view.occupied_platform.depth_pixels == 4, "metal plates use four UI units of thickness")
 	check(scene.sounds.workshop.active and scene.sounds.workshop.ticking.playing, "quiet clock ambience starts while idle")
 	check(not scene.sounds.whisper.playing and not scene.sounds.reef.theme_active, "workshop does not play foliage or reef audio")

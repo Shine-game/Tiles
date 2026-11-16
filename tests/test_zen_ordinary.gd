@@ -2,7 +2,7 @@ extends SceneTree
 
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
-const Prototype = preload("res://prototypes/zen_garden/ordinary_tiles.gd")
+const Visuals = preload("res://scripts/zen_visuals.gd")
 var checks := 0
 var failures := 0
 
@@ -20,6 +20,41 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var started := Time.get_ticks_msec()
+	# A T has four ordered arches and four stem branches. Branches must meet
+	# the outer arch along its tangent, rather than stopping perpendicular to it.
+	var junction: Array[PackedVector2Array] = Geometry.paths(11)
+	check(junction.size() == 8, "T contains four arches and four stem routes")
+	for turn in range(4):
+		var rotated: Array[PackedVector2Array] = []
+		for source: PackedVector2Array in junction:
+			var line := PackedVector2Array()
+			for p: Vector2 in source: line.append(Vector2(128, 128) + (p - Vector2(128, 128)).rotated(turn * PI / 2))
+			rotated.append(line)
+		for i in range(8):
+			var line := rotated[i]
+			var largest_turn := 0.0
+			for j in range(1, line.size() - 1):
+				largest_turn = maxf(largest_turn, absf((line[j] - line[j - 1]).angle_to(line[j + 1] - line[j])))
+			check(largest_turn < deg_to_rad(15), "T route %d has no sharp internal turns at rotation %d" % [i, turn])
+			if i >= 4:
+				var targets := [25, 40, 58, 73]
+				var target: int = targets[i - 4]
+				var outer := rotated[0]
+				check(line[-1].distance_to(outer[target]) < 0.001, "T stem reaches an exact point on its arch")
+				var along_arch: Vector2 = outer[target + (-1 if i < 6 else 1)] - outer[target]
+				check(absf((line[-1] - line[-2]).angle_to(along_arch)) < deg_to_rad(5), "T stem merges along the arch tangent in every rotation")
+	for i in range(4):
+		var line := junction[i]
+		var monotone := true
+		for j in range(1, line.size()):
+			if line[j].x < line[j - 1].x: monotone = false
+		check(monotone, "T arch cannot double back")
+		for j in range(i + 1, 4):
+			var crossing := false
+			for a in range(line.size() - 1):
+				for b in range(junction[j].size() - 1):
+					if Geometry2D.segment_intersects_segment(line[a], line[a + 1], junction[j][b], junction[j][b + 1]) != null: crossing = true
+			check(not crossing, "T arches preserve groove order without crossing")
 	# Edge profiles alone did not catch the original bend's interior hairpins.
 	# Check the actual routes: no reversals, no self-crossings, and four separate
 	# grooves all the way from the north port to the east port.
@@ -74,8 +109,8 @@ func _run() -> void:
 			if is_nan(value) or is_inf(value) or value < 0 or value > 1:
 				check(false, "Height fields stay finite and normalized")
 	for pair in [[0, 2], [1, 3]]:
-		var a: Image = Prototype.STONES[pair[0]].get_image()
-		var b: Image = Prototype.STONES[pair[1]].get_image()
+		var a: Image = Visuals.STONES[pair[0]].get_image()
+		var b: Image = Visuals.STONES[pair[1]].get_image()
 		var error := 0.0
 		var rgb_error := 0.0
 		for along in range(256):

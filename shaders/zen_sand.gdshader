@@ -1,5 +1,6 @@
 shader_type canvas_item;
 render_mode unshaded;
+#include "res://shaders/tile_surface.gdshaderinc"
 
 uniform sampler2D sand : source_color, repeat_disable, filter_linear_mipmap;
 uniform sampler2D relief_map : repeat_disable, filter_linear;
@@ -10,6 +11,11 @@ uniform bool lighting_enabled = true;
 uniform vec3 light_dir = vec3(-0.45, -0.55, 0.70);
 uniform float relief_height_px = 8.0;
 uniform float tile_angle = 0.0;
+uniform bool clip_to_surface = false;
+uniform float screen_pixel = 1.0;
+
+varying vec4 vertex_tint;
+void vertex() { vertex_tint = COLOR; }
 
 void fragment() {
     // One board-space sand surface: mirror sampling gives matching edge values
@@ -41,5 +47,11 @@ void fragment() {
         float height = texture(relief_map, UV).r;
         illumination *= 1.0 - 0.12 * (1.0 - height);
     }
-    COLOR = vec4(base.rgb * illumination, base.a);
+    vec3 ink = base.rgb * illumination;
+    if (clip_to_surface) {
+        float distance_to_surface = surface_distance(world_uv * cell_pixels, 0.0);
+        base.a *= surface_coverage(distance_to_surface, screen_pixel);
+        ink = surface_lip(ink, distance_to_surface, screen_pixel);
+    }
+    COLOR = vec4(ink, base.a) * vertex_tint;
 }
