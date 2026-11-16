@@ -3,6 +3,7 @@ extends Node2D
 
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
+const Ordinary = preload("res://scripts/coral_sets.gd")
 const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
 const Model = preload("res://scripts/coral_growth.gd")
 const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
@@ -45,7 +46,7 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 		identity = "bucket/%d" % event.bucket
 	if not groups.has(identity):
 		var node := Node2D.new()
-		node.z_index = 4 if event.id.begins_with("colony_") else (7 if event.id.begins_with("anemone_") else (2 if event.id.begins_with("junction_") else (3 if event.id == "core" else int(event.bucket / 10))))
+		node.z_index = int(Ordinary.part(event.id).group_z_index) if Ordinary.owns(event.id) else (4 if event.id.begins_with("colony_") else (7 if event.id.begins_with("anemone_") else int(event.bucket / 10)))
 		add_child(node)
 		groups[identity] = node
 		if not ordinals.has(identity) or (not restored and not event.old):
@@ -63,16 +64,22 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 	surface_signature.clear()
 	for identity: String in model.components:
 		var event: Dictionary = model.components[identity]
-		var meta: Dictionary = Model.specification().components[event.id]
-		var variant: String = "salmon" if event.color == 1 else "turquoise"
-		var part := Catalog.component(meta, variant, Model.ROOT)
-		var placement: Dictionary = part.placement.duplicate()
-		placement.asset = part.asset
-		placement.position_cells = event.center
-		placement.rotation_radians = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
-		placement.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		var ordinary: bool = Ordinary.owns(event.id)
+		var placement: Dictionary
+		var meta: Dictionary = {} if ordinary else Model.specification().components[event.id]
+		if ordinary: placement = Ordinary.render_spec(event, settled)
+		else:
+			var variant: String = "salmon" if event.color == 1 else "turquoise"
+			var part := Catalog.component(meta, variant, Model.ROOT)
+			placement = part.placement.duplicate()
+			placement.asset = part.asset
+			placement.position_cells = event.center
+			placement.rotation_radians = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
+			placement.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))
-		if event.id.begins_with("ground_"):
+		if ordinary:
+			if not (settled or event.old): components.reveal(identity, event, "clock_seconds")
+		elif event.id.begins_with("ground_"):
 			ground_sprites.append(sprite)
 			if sprite.material == null:
 				var surface := Components.material(GROUND_SURFACE)

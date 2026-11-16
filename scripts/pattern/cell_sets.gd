@@ -11,7 +11,14 @@ static func parts_for_role(loaded: Dictionary, role: String) -> Dictionary:
 
 static func center_parts(mask: int, tier0: Dictionary, tier1: Dictionary) -> Dictionary:
 	var shape := Topology.shape(mask)
-	return parts_for_role(tier0 if shape == "isolated" else tier1, shape)
+	return connected_parts(parts_for_role(tier0 if shape == "isolated" else tier1, shape), mask)
+
+static func connected_parts(parts: Dictionary, mask: int) -> Dictionary:
+	var selected: Dictionary = {}
+	for id: String in parts:
+		var required: int = int(parts[id].get("requires_mask", 0))
+		if mask & required == required: selected[id] = parts[id]
+	return selected
 
 static func anchor(cell: Vector2i, role: String = "cell_center", direction: int = 1) -> Vector2:
 	var position := Vector2(cell) + Vector2.ONE * 0.5

@@ -163,6 +163,9 @@ static func load_set(source: Variant, root: String = "res://") -> Dictionary:
 			if not part is Dictionary:
 				errors.append("Part must be an object: " + name + "/" + id)
 				continue
+			if part.has("requires_mask"):
+				var required: Variant = part.requires_mask
+				if not (required is int or required is float) or float(required) != floorf(float(required)) or int(required) < 0 or int(required) > 15: errors.append(name + "/" + id + ": requires_mask must be an integer from 0 to 15")
 			for issue: String in validate_placement(part) + validate_masks(part, root): errors.append(name + "/" + id + ": " + issue)
 			var kind: String = str(part.get("provider", "sprite"))
 			if not node_kinds.has(kind): errors.append(name + "/" + id + ": Unknown node provider: " + kind)

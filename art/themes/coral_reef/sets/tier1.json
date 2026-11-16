@@ -1,0 +1,642 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "coral-tier1",
+  "tier": 1,
+  "treatments": {
+    "1": "salmon",
+    "2": "turquoise"
+  },
+  "roles": {
+    "endpoint": "endpoint",
+    "straight": null,
+    "bend": "branching_center",
+    "t": "branching_center",
+    "cross": "branching_center",
+    "vine": "vine",
+    "straight_run_decoration": null
+  },
+  "compositions": {
+    "endpoint": {
+      "parts": {
+        "core": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/core.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/core.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 20,
+          "z_index": 0,
+          "group_z_index": 3,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 0,
+          "animation": {
+            "trigger": "cell_center_reached",
+            "duration_seconds": 0.18,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/core.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          }
+        }
+      }
+    },
+    "branching_center": {
+      "parts": {
+        "core": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/core.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/core.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 20,
+          "z_index": 0,
+          "group_z_index": 3,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 0,
+          "animation": {
+            "trigger": "cell_center_reached",
+            "duration_seconds": 0.18,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/core.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          }
+        },
+        "junction_ne": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/junction_ne.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/junction_ne.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 11,
+          "z_index": 0,
+          "group_z_index": 2,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 0,
+          "animation": {
+            "trigger": "both_adjacent_arms_reach_elbow",
+            "duration_seconds": 0.12,
+            "dependencies": [
+              {
+                "component": "arm_n",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              },
+              {
+                "component": "arm_e",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/junction_ne.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "requires_mask": 3
+        },
+        "junction_es": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/junction_ne.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/junction_ne.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 11,
+          "z_index": 0,
+          "group_z_index": 2,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 1,
+          "animation": {
+            "trigger": "both_adjacent_arms_reach_elbow",
+            "duration_seconds": 0.12,
+            "dependencies": [
+              {
+                "component": "arm_e",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              },
+              {
+                "component": "arm_s",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/junction_es.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 90
+            }
+          },
+          "requires_mask": 6
+        },
+        "junction_sw": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/junction_ne.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/junction_ne.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 11,
+          "z_index": 0,
+          "group_z_index": 2,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 2,
+          "animation": {
+            "trigger": "both_adjacent_arms_reach_elbow",
+            "duration_seconds": 0.12,
+            "dependencies": [
+              {
+                "component": "arm_s",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              },
+              {
+                "component": "arm_w",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/junction_sw.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 180
+            }
+          },
+          "requires_mask": 12
+        },
+        "junction_wn": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/junction_ne.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/junction_ne.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 11,
+          "z_index": 0,
+          "group_z_index": 2,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 3,
+          "animation": {
+            "trigger": "both_adjacent_arms_reach_elbow",
+            "duration_seconds": 0.12,
+            "dependencies": [
+              {
+                "component": "arm_w",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              },
+              {
+                "component": "arm_n",
+                "at_mask_u": 0.31,
+                "delay_seconds": 0
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/junction_wn.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 270
+            }
+          },
+          "requires_mask": 9
+        }
+      }
+    },
+    "vine": {
+      "parts": {
+        "arm_n": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/arm_n.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/arm_n.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 10,
+          "z_index": 0,
+          "group_z_index": 1,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 0,
+          "animation": {
+            "trigger": "front_reaches_center_or_edge",
+            "duration_seconds": 0.1,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/arm_n.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "requires_mask": 1
+        },
+        "arm_e": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/arm_n.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/arm_n.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 10,
+          "z_index": 0,
+          "group_z_index": 1,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 1,
+          "animation": {
+            "trigger": "front_reaches_center_or_edge",
+            "duration_seconds": 0.1,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/arm_n.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "requires_mask": 2
+        },
+        "arm_s": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/arm_n.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/arm_n.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 10,
+          "z_index": 0,
+          "group_z_index": 1,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 2,
+          "animation": {
+            "trigger": "front_reaches_center_or_edge",
+            "duration_seconds": 0.1,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/arm_n.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "requires_mask": 4
+        },
+        "arm_w": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/arm_n.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/arm_n.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 10,
+          "z_index": 0,
+          "group_z_index": 1,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 3,
+          "animation": {
+            "trigger": "front_reaches_center_or_edge",
+            "duration_seconds": 0.1,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/arm_n.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "requires_mask": 8
+        }
+      }
+    }
+  },
+  "propagation": {
+    "cell_seconds": 0.2,
+    "independent_start_seconds": 0.1,
+    "independent_reverse_seconds": 0.2
+  },
+  "unused_slots": {
+    "straight_run_decoration": "Ordinary fingers stay omitted for phone readability. No extra run artwork or spacing is approved."
+  }
+}

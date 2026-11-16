@@ -1,6 +1,8 @@
 class_name CoralGrowth
 extends "res://scripts/growth.gd"
 
+const Ordinary = preload("res://scripts/coral_sets.gd")
+const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const ROOT := "res://art/themes/coral_reef/"
 const SOFT := 0.035
 const CELL_SECONDS := 0.20
@@ -34,11 +36,14 @@ static func ground_choice(cell: Vector2i) -> Dictionary:
 	var hashed: int = ((cell.x * 73856093) ^ (cell.y * 19349663) ^ 1409) & 0xffffffff
 	return {"id": "ground_%02d" % [hashed % 6 + 1], "rotation": (hashed >> 8) % 4}
 
+static func metadata(id: String) -> Dictionary:
+	return Ordinary.part(id) if Ordinary.owns(id) else specification().components[id]
+
 static func component_duration(id: String) -> float:
-	return float(specification().components[id].animation.duration_seconds)
+	return float(metadata(id).animation.duration_seconds)
 
 static func dependent_start(id: String, parents: Dictionary) -> float:
-	return Timing.dependent_start(specification().components[id].animation.dependencies, parents)
+	return Timing.dependent_start(metadata(id).animation.dependencies, parents)
 
 static func key(kind: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [kind, color, cell.y, cell.x]
@@ -50,8 +55,9 @@ static func end_time(start: float, reverse: float, stroke: float, two_fronts: bo
 	return Timing.front_end(start, reverse, stroke, two_fronts, SOFT)
 
 func _add(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, start: float, stroke: float, reverse: float = 0, two_fronts: bool = false, rotation: int = 0, identity: String = "") -> Dictionary:
-	var meta: Dictionary = specification().components[id]
-	var event := {"key": key(id, color, cell) if identity.is_empty() else identity, "id": id, "color": color, "center": center, "size": Vector2(meta.size_px[0], meta.size_px[1]), "old": old, "start": -100.0 if old else start, "stroke": stroke, "reverse": -100.0 if old else reverse, "two_fronts": two_fronts, "rotation": rotation, "end": -100.0 if old else end_time(start, reverse, stroke, two_fronts), "bucket": int(meta.layer)}
+	var meta := metadata(id)
+	var tail: float = meta.animation.soft_front_seconds if Ordinary.owns(id) else SOFT
+	var event := {"key": key(id, color, cell) if identity.is_empty() else identity, "id": id, "color": color, "center": center, "size": Vector2(meta.size_px[0], meta.size_px[1]), "old": old, "start": -100.0 if old else start, "stroke": stroke, "reverse": -100.0 if old else reverse, "two_fronts": two_fronts, "rotation": rotation, "end": -100.0 if old else Timing.front_end(start, reverse, stroke, two_fronts, tail), "bucket": int(meta.layer)}
 	components[event.key] = event
 	if not old:
 		duration = maxf(duration, event.end)
@@ -69,6 +75,8 @@ func build(before: Array, after: Array) -> void:
 	colonies.clear()
 	unions.clear()
 	duration = 0
+	var propagation := Ordinary.propagation()
+	var cell_seconds: float = propagation.cell_seconds
 	# Independent new components awaken every bud together. Components touching
 	# old coral route simultaneous fronts from every matching outside source.
 	var pending: Dictionary = {}
@@ -94,7 +102,7 @@ func build(before: Array, after: Array) -> void:
 			arrivals[cell] = INF
 			for offset: Vector2i in OFFSETS:
 				if value(before, cell + offset) == value(after, cell):
-					arrivals[cell] = CELL_SECONDS
+					arrivals[cell] = cell_seconds
 					wave.append(cell)
 					break
 		if wave.is_empty():
@@ -108,32 +116,37 @@ func build(before: Array, after: Array) -> void:
 				cursor += 1
 				for offset: Vector2i in OFFSETS:
 					var other := cell + offset
-					if group.has(other) and float(arrivals[other]) > float(arrivals[cell]) + CELL_SECONDS:
-						arrivals[other] = float(arrivals[cell]) + CELL_SECONDS
+					if group.has(other) and float(arrivals[other]) > float(arrivals[cell]) + cell_seconds:
+						arrivals[other] = float(arrivals[cell]) + cell_seconds
 						wave.append(other)
 	for cell: Vector2i in arrivals:
 		var color: int = value(after, cell)
 		var old: bool = value(before, cell) == color
-		var center := Vector2(cell) + Vector2(0.5, 0.5)
+		var center := Cells.anchor(cell)
 		var ground := ground_choice(cell)
 		var floor_event := _add(ground.id, color, cell, center, true, -100, 0.01, 0, false, ground.rotation)
 		floor_event.instant = true
-		_add("core", color, cell, center, old, arrivals[cell], component_duration("core"))
+		var mask := Topology.neighbor_mask(after, cell)
+		var centers := Ordinary.centers(mask)
+		var vines := Ordinary.vines(mask)
+		if centers.has("core"):
+			var old_core: bool = old and Ordinary.centers(Topology.neighbor_mask(before, cell)).has("core")
+			_add("core", color, cell, center, old_core, maxf(0, arrivals[cell]), component_duration("core"))
 		var arms: Dictionary = {}
 		for direction in range(4):
 			var other: Vector2i = cell + OFFSETS[direction]
-			if value(after, other) != color:
-				continue
+			var arm_id: String = "arm_" + DIR_NAMES[direction]
+			if not vines.has(arm_id): continue
+			var travel := component_duration(arm_id)
 			var old_arm: bool = old and value(before, other) == color
-			var start: float = 0.10 if independent.has(cell) else maxf(0, arrivals[cell])
-			var reverse: float = 0.20 if independent.has(cell) else maxf(0, arrivals[other]) + HALF_SECONDS
-			var name: String = DIR_NAMES[direction]
-			var arm_id := "arm_" + name
-			var arm := _add(arm_id, color, cell, center, old_arm, start, HALF_SECONDS, reverse, true)
+			var start: float = propagation.independent_start_seconds if independent.has(cell) else maxf(0, arrivals[cell])
+			var reverse: float = propagation.independent_reverse_seconds if independent.has(cell) else maxf(0, arrivals[other]) + travel
+			var arm := _add(arm_id, color, cell, center, old_arm, start, travel, reverse, true)
 			arms[arm_id] = arm
 			# Tiny path fingers are omitted for phone-scale readability.
-		for junction: String in ["junction_ne", "junction_es", "junction_sw", "junction_wn"]:
-			var dependencies: Array = specification().components[junction].animation.dependencies
+		for junction: String in centers:
+			if junction == "core": continue
+			var dependencies: Array = centers[junction].animation.dependencies
 			if arms.has(dependencies[0].component) and arms.has(dependencies[1].component):
 				var old_junction: bool = arms[dependencies[0].component].old and arms[dependencies[1].component].old
 				_add(junction, color, cell, center, old_junction, dependent_start(junction, arms), component_duration(junction))

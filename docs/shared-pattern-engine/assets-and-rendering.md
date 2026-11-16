@@ -191,3 +191,8 @@ and wheels; surviving ordinary nodes keep their identities and motion phases.
 Step 6 adds typed binary `.res` texture loading for the exact floating-point Zen
 rake core. Non-texture resources are rejected. See
 [Zen ordinary sets](zen-ordinary-sets.md) for the endpoint overlap and staged node provider.
+
+Coral's Step 6 migration adds optional part-level `requires_mask` (integer 0–15).
+The common cell selector filters parts whose required ports are not all present,
+after selecting the shape role. Omitted requirements select unconditionally.
+See [Coral ordinary sets](coral-ordinary-sets.md) for multipart examples.

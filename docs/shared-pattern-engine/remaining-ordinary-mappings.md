@@ -1,8 +1,8 @@
 # Step 6 — remaining ordinary-set mapping review
 
-Status: Zen ordinary sets and the revised endpoint mapping are implemented;
-Coral, Vines and Labyrinth remain proposals. See
-[the Zen implementation](zen-ordinary-sets.md). The endpoint rows below reflect
+Status: Zen and Coral ordinary sets are implemented; Vines and Labyrinth remain
+proposals. See [Zen](zen-ordinary-sets.md) and
+[Coral](coral-ordinary-sets.md). The endpoint rows below reflect
 the user's instruction to copy Tier 0 artwork and overlap the path ending.
 
 ## Proposed role assignments
@@ -34,11 +34,11 @@ it to a role does not freeze its geometry into a single image.
 - **Zen stepping stones (implemented):** endpoints now show a separately named
   copy of the Tier 0 core underneath the directional ending. Bend/T/cross center
   assignments remain unused; the existing directional modules still draw there.
-- **Coral:** straight cells lose the decorative core; arms remain. Isolated,
+- **Coral (implemented):** straight cells lose the decorative core; arms remain. Isolated,
   endpoint and branching cells retain the existing core/junction assemblies.
-  Preserve canonical image reuse and direction-specific mask handling. Check
-  center joins at phone scale before accepting suppression; structural vine
-  continuity is part of the migration's acceptance criteria.
+  Canonical image reuse and direction-specific mask handling are preserved.
+  Native checks confirm both straight orientations remain continuous without a
+  replacement core.
 - **Vines:** straight cells lose their holding/frond motif. Their connection
   curves and existing edge leaves remain. Endpoints/bends/Ts/crosses retain the
   current direction-aware motif. Preserve the existing diffuse pigment wash,
@@ -47,8 +47,8 @@ it to a role does not freeze its geometry into a single image.
   remain. Isolated/endpoint/bend/T/cross pyramids keep the existing provider.
 
 The user revised and approved the Zen endpoint assignments; these are now live.
-Stepping-stone bend/T/cross center artwork remains a later assignment. The three
-other themes reuse existing motifs, but their straight suppression is an
+Stepping-stone bend/T/cross center artwork remains a later assignment. Coral and
+the two remaining themes reuse existing motifs, but their straight suppression is an
 intentional appearance change. Update their runtime appearance versions when each
 change is enabled; existing saved artwork PNGs remain readable.
 
@@ -88,5 +88,5 @@ the next. Each migration should:
 5. Update export inclusion, documentation and appearance version as applicable;
    run focused shared/theme checks and push the completed theme for review.
 
-Zen is ready for review. The other three themes retain their existing rendering
+Coral is ready for review. Vines and Labyrinth retain their existing rendering
 until their respective migrations are approved.

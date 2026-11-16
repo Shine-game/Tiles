@@ -2,8 +2,9 @@
 
 Steps 1–5 delivered the specification/inventory, shared topology and construction
 state, the common asset/component rendering foundation through adapters, and live
-Clockwork Tier 0/1 sets.
-Artwork, timing, masks, shading, game rules and the player interface remain unchanged.
+Clockwork Tier 0/1 sets. Step 6 has migrated Zen and Coral ordinary sets, including
+the reviewed Zen endpoint composition and removal of Coral cores on straights.
+Shading, game rules and the player interface remain unchanged.
 Inventory baseline: commit `951568f` (all five themes inspected).
 
 - [Asset-set contract](asset-contract.md): proposed shared data and behavior rules.
@@ -18,6 +19,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   role assignments, visible changes and per-theme review order.
 - [Zen Tier 0/1 implementation](zen-ordinary-sets.md): live sets and copied
   endpoint artwork, following the revised endpoint assignment.
+- [Coral Tier 0/1 implementation](coral-ordinary-sets.md): live multipart port
+  selection, core suppression on straights and preserved directional fields.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -51,7 +54,7 @@ as authorization to implement the remaining steps.
 | 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Complete |
 | 4 | Common asset loading and component rendering | Sprites, multipart assemblies and registered procedural providers use explicit pivots, masks, layers and reveal rules | Complete |
 | 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Complete |
-| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Zen migrated; review before Coral |
+| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Zen and Coral migrated; review before Vines |
 | 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Awaiting approval |
 | 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones, vines or benches; historical state preserved | Awaiting approval |
 | 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Awaiting approval |
