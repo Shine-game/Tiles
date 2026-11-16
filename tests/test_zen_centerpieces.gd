@@ -71,7 +71,7 @@ func _run() -> void:
 	board[5][5] = 1
 	model.build(board, board)
 	visuals.reconcile(model, true)
-	check(not visuals.centerpieces.has(Vector2i(4, 4)), "Unfinished 2x2 landmarks keep their plain sand placeholder")
+	check(not visuals.centerpieces.has(Vector2i(4, 4)) and visuals.landmarks.size() == 1, "A 2x2 landmark replaces the ordinary centerpiece")
 	for row: Array in board:
 		for i in range(row.size()):
 			if row[i] != 0: row[i] = 2
@@ -123,7 +123,7 @@ func check_game_progression() -> void:
 		scene.gallery.directory = "user://zen-centers-%d" % Time.get_ticks_usec()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
-		check(records.size() == 1 and records[0].theme_version == "0.2", "Gallery records the new decorated Zen appearance")
+		check(records.size() == 1 and records[0].theme_version == preload("res://scripts/palette.gd").theme_version(), "Gallery records the current decorated Zen appearance")
 		if not records.is_empty(): scene.gallery.picture(records[0]).get_image().save_png("res://build/zen-centers/saved-cross.png")
 		for file: String in DirAccess.open(scene.gallery.directory).get_files():
 			DirAccess.remove_absolute(scene.gallery.directory.path_join(file))

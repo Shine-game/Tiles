@@ -866,6 +866,8 @@ func _save_design() -> void:
 		artwork.coral_visuals.copy_order(board_view.coral_visuals)
 	if board_view.clockwork_visuals != null and artwork.clockwork_visuals != null:
 		artwork.clockwork_visuals.copy_motion(board_view.clockwork_visuals)
+	if board_view.zen_visuals != null and artwork.zen_visuals != null:
+		artwork.zen_visuals.copy_landmark_order(board_view.zen_visuals)
 	await RenderingServer.frame_post_draw
 	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, surface_revision)
 	viewport.queue_free()

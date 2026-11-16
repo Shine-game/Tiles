@@ -1,5 +1,5 @@
 {
-  "source": "User-uploaded ground.rar, cores.rar, stone_paths.rar and Downloads.rar; originals copied without image edits",
+  "source": "User-uploaded ground, cores, stone_paths, architecture, rock_formations and Downloads RAR archives; originals copied without image edits",
   "assets": [
     {
       "path": "artwork/cores/stepping_stone_core_256.png",
@@ -57,6 +57,41 @@
       "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646",
       "bytes": 52611,
       "note": "User-supplied aligned 256x256 center artwork; source pixels unchanged"
+    },
+    {
+      "path": "artwork/architecture/stone_lantern_2x2_visual.png",
+      "source_asset": "ARTWORK/architecture/stone_lantern_2x2_visual.png",
+      "sha256": "fd98f89858b63c827009202f5c6f03b6136829b49f0402e6f58a3eed58e8f3c4",
+      "bytes": 1259251,
+      "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
+    },
+    {
+      "path": "artwork/rock_formations/rock_01_peak_and_low_bedrock_visual.png",
+      "source_asset": "ARTWORK/rock_formations/rock_01_peak_and_low_bedrock_visual.png",
+      "sha256": "e7f6018dd35b15063776b631c0de6aa86f5afbf34361fa9bea4a295c7f67d7e3",
+      "bytes": 1961485,
+      "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
+    },
+    {
+      "path": "artwork/rock_formations/rock_02_peak_and_low_bedrock_visual.png",
+      "source_asset": "ARTWORK/rock_formations/rock_02_peak_and_low_bedrock_visual.png",
+      "sha256": "328c332e83d4dbe1159274658416443bf892e1be35f97759735df2d019a09d14",
+      "bytes": 2191301,
+      "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
+    },
+    {
+      "path": "artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png",
+      "source_asset": "ARTWORK/rock_formations/rock_03_peak_and_low_bedrock_visual.png",
+      "sha256": "d97bc2f1f0362b454d4483f79cc14a76d5ad5c454d593825618b96b0029544e4",
+      "bytes": 2097129,
+      "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
+    },
+    {
+      "path": "artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png",
+      "source_asset": "ARTWORK/rock_formations/rock_04_peak_and_low_bedrock_visual.png",
+      "sha256": "0503294a7426385674e89b950aead11990a2b8525077c1665a4a05ed3117ca15",
+      "bytes": 1952325,
+      "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     }
   ]
 }

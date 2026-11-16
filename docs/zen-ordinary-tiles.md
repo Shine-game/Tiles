@@ -19,10 +19,15 @@ The center node persists when topology changes; only newly added stages fade in.
 Undo/Erase restores the appropriate lower stage. The normalized canvas is 60%
 of a cell, fitting the stone within the inner groove clearance.
 
-Cells in unfinished 2×2 landmarks,
-including overlapping formations, show plain sand without replacement artwork.
-Ponds, trees and the decorative Zen frame have not been implemented. No Clockwork
-or Coral art is substituted. The logical board still records both colors.
+Every same-color 2×2 creates a landmark, including overlapping formations:
+raked sand receives the supplied stone lantern, and stepping stones receive one
+of four rock formations. Rock choice is deterministic per origin. Surviving
+landmarks retain their nodes, positions and stacking order as the board grows.
+Undo/Erase removes only unsupported landmarks and restores ordinary motifs.
+Gallery captures preserve the live stacking order. The masters are uniformly
+scaled into a two-cell square without rotating their baked lighting or changing
+their aspect ratio. Missing pagoda/day-night variants, ponds, trees and the
+decorative Zen frame are still pending. No Clockwork or Coral art is substituted.
 
 ## Geometry and rendering
 
@@ -33,7 +38,7 @@ Bends preserve groove ordering and smooth joins. T arches use monotonic cubic
 curves, with stem branches merging along the outer arch tangent.
 
 `zen_growth.gd` reuses Coral's wave timing and formation detection. `zen_visuals.gd`
-renders only the available Zen ordinary artwork and plain placeholders. New
+renders the supplied Zen ordinary artwork and landmarks. New
 decoration fades in on the existing growth clock; the final rake reconstruction
 animation is pending. Relief geometry is generated and cached, rather than
 extracted from shaded reference paintings.
@@ -49,14 +54,15 @@ hashes are in `art/themes/zen_garden/source-assets.json`.
 ```sh
 godot --headless --path . --script res://tests/test_zen_ordinary.gd
 godot --headless --path . --script res://tests/test_zen_centerpieces.gd
+godot --path . --script res://tests/test_zen_landmarks.gd
 godot --path . --script res://tests/render_zen_game.gd
 ```
 
-The first verifies mask rotations, exact edge profiles, bend continuity,
-T arch ordering/tangent joins and stone RGB/alpha joins. The second runs the
-actual main game, including theme order, ordinary tiles, unfinished formations,
-removal, theme switching and artwork saving. Captures go to `build/zen-game/`.
-It creates no extra player interface.
+Checks cover mask rotations, exact edge profiles, bend and T continuity,
+centerpiece progression, both types of overlapping 2×2 landmarks, helper
+restoration and exact saved landmark stacking. Main-scene checks also cover
+theme order, theme switching and artwork saving. Captures go to `build/zen-game/`
+and `build/zen-landmarks/`. They create no extra player interface.
 
 Godot 4.7.2 / GL Compatibility is the reference runtime. Android export and
 device performance have not been validated.

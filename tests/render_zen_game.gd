@@ -55,7 +55,7 @@ func _run() -> void:
 	scene.board_view.show_settled(tees)
 	scene._refresh()
 	await capture("t-junctions")
-	# Reserve the union of overlapping 2x2 formations for unfinished landmarks.
+	# Overlapping 2x2 landmarks share one sand surface and replace ordinary art.
 	var unfinished := Rules.empty_board(9)
 	for y in range(3, 5):
 		for x in range(3, 6): unfinished[y][x] = 1
@@ -63,15 +63,15 @@ func _run() -> void:
 	scene.board_view.show_settled(unfinished)
 	scene._layout()
 	scene._refresh()
-	check(scene.board_view.zen_visuals.blank_cells.size() == 6, "Overlapping unfinished landmarks leave the union blank")
+	check(scene.board_view.zen_visuals.formation_cells.size() == 6 and scene.board_view.zen_visuals.landmarks.size() == 2, "Every eligible overlapping 2x2 has its landmark")
 	for group: Node in scene.board_view.zen_visuals.registry.values():
-		check(group.get_child_count() == 1, "Unfinished artwork has just a sand face")
-	check(scene.game.board == unfinished, "Placeholders do not change the logical board")
-	await capture("unfinished-tiles")
+		check(group.get_child_count() == 1, "Landmarks replace ordinary motifs above the shared sand")
+	check(scene.game.board == unfinished, "Landmarks do not change the logical board")
+	await capture("overlapping-landmarks")
 	unfinished[3][3] = 0
 	unfinished[3][5] = 0
 	scene.board_view.show_settled(unfinished, true)
-	check(scene.board_view.zen_visuals.blank_cells.is_empty(), "Removing formation support restores ordinary cells")
+	check(scene.board_view.zen_visuals.formation_cells.is_empty() and scene.board_view.zen_visuals.landmarks.is_empty(), "Removing formation support restores ordinary cells")
 	scene._select_theme("coral_reef")
 	check(not scene.board_view.zen_visuals.visible and not scene.zen_background.visible, "Changing theme hides Zen layers")
 	scene._select_theme("zen_garden")

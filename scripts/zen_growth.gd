@@ -1,7 +1,7 @@
 extends "res://scripts/coral_growth.gd"
 
-# Reuse Coral's same-color waves and formation detection. Unfinished landmarks
-# have no borrowed artwork, bloom events or extra animation delay.
+# Reuse Coral's same-color waves and formation detection. Zen supplies its own
+# landmark timing and artwork; no Coral bloom/third-tier events are rendered.
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
 	components.clear()
@@ -11,3 +11,12 @@ func build(before: Array, after: Array) -> void:
 	for cell: Vector2i in arrivals:
 		if float(arrivals[cell]) >= 0:
 			duration = maxf(duration, float(arrivals[cell]) + 0.30)
+	for origin: Vector2i in colonies:
+		var formation: Dictionary = colonies[origin]
+		var latest := -100.0
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+			latest = maxf(latest, float(arrivals[origin + offset]))
+		formation.start = -100.0 if formation.old else latest + 0.30
+		formation.end = formation.start + preload("res://scripts/zen_landmark.gd").GROW_SECONDS
+		formation.ready = formation.end
+		if not formation.old: duration = maxf(duration, formation.end)

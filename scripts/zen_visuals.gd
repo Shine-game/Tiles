@@ -3,6 +3,7 @@ extends Node2D
 
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
+const Landmark = preload("res://scripts/zen_landmark.gd")
 const SAND_SHADER = preload("res://shaders/zen_sand.gdshader")
 const SAND = preload("res://art/themes/zen_garden/artwork/ground/sand_ground_256.png")
 const CORE = preload("res://art/themes/zen_garden/artwork/cores/stepping_stone_core_256.png")
@@ -15,8 +16,12 @@ static var relief_textures: Dictionary = {}
 var materials: Array[ShaderMaterial] = []
 var registry: Dictionary = {}
 var pending: Dictionary = {}
-var blank_cells: Dictionary = {}
+var formation_cells: Dictionary = {}
 var centerpieces: Dictionary = {}
+var landmarks: Dictionary = {}
+var landmark_order: Dictionary = {}
+var landmark_layer: Node2D
+var next_landmark_order := 0
 
 static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
 	var ink := ShaderMaterial.new()
@@ -25,33 +30,29 @@ static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
 	ink.set_shader_parameter("cell_origin", origin)
 	return ink
 
-static func unfinished_cells(board: Array) -> Dictionary:
-	var result: Dictionary = {}
-	for y in range(board.size() - 1):
-		for x in range(board.size() - 1):
-			var color: int = board[y][x]
-			if color == 0: continue
-			if board[y][x + 1] == color and board[y + 1][x] == color and board[y + 1][x + 1] == color:
-				for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
-					result[Vector2i(x, y) + offset] = true
-	return result
-
-func clear(keep_centers: bool = false) -> void:
+func clear(keep_features: bool = false) -> void:
 	for child: Node in get_children():
-		if keep_centers and child.has_meta("zen_centerpiece"): continue
+		if keep_features and (child.has_meta("zen_centerpiece") or child == landmark_layer): continue
 		remove_child(child)
 		child.queue_free()
 	materials.clear()
 	registry.clear()
 	pending.clear()
-	blank_cells.clear()
-	if not keep_centers: centerpieces.clear()
+	formation_cells.clear()
+	if not keep_features:
+		centerpieces.clear()
+		landmarks.clear()
+		landmark_order.clear()
+		landmark_layer = null
+		next_landmark_order = 0
 
 func reconcile(model, settled: bool, complete: bool = false) -> void:
 	clear(true)
 	var board: Array = model.board
 	var retained_centers: Dictionary = {}
-	blank_cells = unfinished_cells(board)
+	for origin: Vector2i in model.colonies:
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+			formation_cells[origin + offset] = true
 	for y in range(board.size()):
 		for x in range(board.size()):
 			var cell := Vector2i(x, y)
@@ -67,7 +68,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			face.material = sand_material(Vector2(cell))
 			materials.append(face.material)
 			group.add_child(face)
-			if color == 0 or blank_cells.has(cell): continue
+			if color == 0 or formation_cells.has(cell): continue
 			var mask := Geometry.neighbor_mask(board, cell)
 			if color == 1:
 				var spec := Geometry.canonical(mask)
@@ -114,9 +115,48 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 		remove_child(center)
 		center.queue_free()
 		centerpieces.erase(cell)
+	_sync_landmarks(model, settled)
 	advance(100.0 if settled else 0.0)
 
+func _sync_landmarks(model, settled: bool) -> void:
+	if landmark_layer == null:
+		landmark_layer = Node2D.new()
+		landmark_layer.name = "ZenLandmarks"
+		landmark_layer.z_index = 3
+		add_child(landmark_layer)
+	var retained: Dictionary = {}
+	for origin: Vector2i in model.colonies:
+		var event: Dictionary = model.colonies[origin]
+		var key := Landmark.identity(origin, event.color)
+		retained[key] = true
+		if not landmarks.has(key):
+			var sprite := Landmark.new()
+			landmark_layer.add_child(sprite)
+			landmarks[key] = sprite
+			landmark_order[key] = next_landmark_order
+			next_landmark_order += 1
+		landmarks[key].configure(event, settled)
+	for key: String in landmarks.keys():
+		if retained.has(key): continue
+		var sprite: Node = landmarks[key]
+		landmark_layer.remove_child(sprite)
+		sprite.queue_free()
+		landmarks.erase(key)
+		landmark_order.erase(key)
+	_sort_landmarks()
+
+func _sort_landmarks() -> void:
+	var keys: Array = landmarks.keys()
+	keys.sort_custom(func(a: String, b: String): return int(landmark_order[a]) < int(landmark_order[b]))
+	for i in range(keys.size()): landmark_layer.move_child(landmarks[keys[i]], i)
+
+func copy_landmark_order(source: ZenVisuals) -> void:
+	landmark_order = source.landmark_order.duplicate()
+	next_landmark_order = source.next_landmark_order
+	_sort_landmarks()
+
 func advance(clock: float) -> void:
+	for landmark: Node in landmarks.values(): landmark.advance(clock)
 	for center: Node in centerpieces.values(): center.advance(clock)
 	for sprite: CanvasItem in pending.keys():
 		var progress := clampf((clock - float(pending[sprite])) / 0.30, 0, 1)
@@ -124,6 +164,7 @@ func advance(clock: float) -> void:
 		if progress >= 1: pending.erase(sprite)
 
 func configure_surface(platform) -> void:
+	for landmark: Node in landmarks.values(): landmark.configure_surface(platform)
 	for ink: ShaderMaterial in materials:
 		ink.set_shader_parameter("clip_to_surface", true)
 		ink.set_shader_parameter("occupancy_mask", platform.mask_texture)
