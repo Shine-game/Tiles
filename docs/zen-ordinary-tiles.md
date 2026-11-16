@@ -38,14 +38,21 @@ place through the overlay animation and in saved artwork. Both types retain
 their aspect ratio and screen-facing lighting.
 Third-tier stone paths now flood when neighboring same-color 2×2 origins are
 one cell apart, using the existing Coral formation-adjacency rule. Each connection
-activates the facing watershed on both rock formations. New rocks finish appearing
+activates the facing watershed on both rock formations: a 3-row × 2-column
+structure fills the upper south and lower north triangles; a 2-row × 3-column
+structure fills the left east and right west triangles. Because these 2×2s overlap,
+the masks are fitted at half depth on the connection axis, anchored at each
+formation center. Their bases meet exactly halfway between centers, in the middle
+of the shared row/column. They do not flood the exterior sides of the join. New rocks finish appearing
 before the water fills inward from the connecting side; two sparse shoreline plant
 groups per activated side grow afterward. Further connections add sectors while
 existing water and plants remain visible and existing rocks retain their nodes,
 positions and stacking order. Undo/Erase removes unsupported sectors and plants.
 
 All four supplied `water_n/e/s/w` sets and `rock_occlusion` masks are used unchanged,
-at their supplied registration, per the user's confirmation. Water deliberately
+without source image edits, per the user's confirmation. The water masks receive
+the shared-base runtime placement described above; exposed-rock protection stays
+registered to the existing rock artwork. Water deliberately
 covers low bedrock and portions of rock faces; the occlusion masks protect the
 middle and selected exposed rocks. A shared offscreen mask combines active sectors
 and protects all rock middles, so overlapping 2×2s share one board-space blue-grey
@@ -53,10 +60,17 @@ water surface rather than painting water over each other's peaks. Only the mask 
 downsampled at runtime to 128 pixels per cell; source PNGs are untouched. Static
 reflections preserve exact appearance in gallery captures. Mask rendering updates
 on changes/growth, then stops. Empty ponds use a minimal 2×2 render target.
-Supplied shoreline strips follow the authored water/rock boundary, with stable
-placement and deterministic variation. Plants use a fixed painter order so gallery
-reconstruction matches the live board. Theme version 0.7 gives these saves a new
-appearance identity without replacing older pictures.
+Each flooded triangle has one supplied shrub strip along each sloping lateral;
+the shared base remains clear, including the full shrub sprite bounds. The supplied
+unoccluded watershed outlines (02–04), or the original water boundary (01), locate
+these laterals without confusing them with the central exposed-rock shoreline.
+Shrub designs are randomly chosen from all six supplied plants on first creation.
+Choices persist through growth and Undo/Erase reconstruction, reroll on a new game,
+and are copied from the live board into the gallery capture. Plants use a fixed painter order so gallery
+reconstruction matches the live board. Theme version 0.8 gives these saves a new
+appearance identity without replacing older pictures. The active shrub choices
+also contribute to the save identity; repeated saves of the same appearance still
+deduplicate, while different random arrangements can be saved separately.
 
 Missing pagoda/day-night variants, trees and the decorative Zen frame remain pending. No Clockwork or Coral art is substituted.
 

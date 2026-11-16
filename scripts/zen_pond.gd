@@ -19,6 +19,8 @@ var water: ColorRect
 var regions: Dictionary = {}
 var peaks: Array = []
 var plants: Dictionary = {}
+var plant_choices: Dictionary = {}
+var plant_random := RandomNumberGenerator.new()
 
 static func source(path: String) -> Texture2D:
 	if not textures.has(path): textures[path] = load(ROOT + path)
@@ -27,23 +29,63 @@ static func source(path: String) -> Texture2D:
 static func mask_path(variant: int, kind: String) -> String:
 	return "watersheds/%02d/%s.png" % [variant + 1, kind]
 
+# Overlapping 2x2 centers are one cell apart. Each connecting triangle runs
+# from its center to their shared midpoint, not to the far edge of its 2x2.
+static func sector_scale(direction: int) -> Vector2:
+	return Vector2(1.0, 0.5) if direction % 2 == 0 else Vector2(0.5, 1.0)
+
+static func sector_point(origin: Vector2i, direction: int, point: Vector2) -> Vector2:
+	return (Vector2(origin) + Vector2.ONE) * 256.0 + (point - Vector2.ONE * 256.0) * sector_scale(direction)
+
+static func lateral_pixel(image: Image, direction: int, depth: float, side: int) -> Vector2:
+	# Traverse parallel to the shared base. The outermost flood texels locate
+	# the two sloping watershed boundaries, not the central rock shoreline.
+	var point := Vector2.ZERO
+	for step in range(512):
+		var tangent := float(step if side == 0 else 511 - step) / 511.0
+		point = [Vector2(tangent, depth), Vector2(1.0 - depth, tangent), Vector2(tangent, 1.0 - depth), Vector2(depth, tangent)][direction]
+		var pixel := Vector2i(point * 511.0)
+		if image.get_pixelv(pixel).r > 0.5: return point * 512.0
+	return point * 512.0
+
 static func shore_points(variant: int, direction: int) -> Array:
 	var key := "%d/%d" % [variant, direction]
 	if shores.has(key): return shores[key]
-	var image := source(mask_path(variant, "water_" + DIRECTIONS[direction])).get_image()
+	# Later sets include an unoccluded sector outline. Use that for the
+	# laterals so an interior exposed boulder cannot become a shrub boundary.
+	var kind: String = ("water_" if variant == 0 else "watershed_") + DIRECTIONS[direction]
+	var image := source(mask_path(variant, kind)).get_image()
 	var points: Array = []
-	# Follow the authored water/rock boundary, rather than inventing a coast.
-	for tangent in [0.34, 0.66]:
-		var uv := Vector2.ZERO
-		for step in range(256):
-			var inward := float(step) / 512.0
-			uv = [Vector2(tangent, inward), Vector2(1.0 - inward, tangent), Vector2(tangent, 1.0 - inward), Vector2(inward, tangent)][direction]
-			if image.get_pixel(mini(int(uv.x * image.get_width()), image.get_width() - 1), mini(int(uv.y * image.get_height()), image.get_height() - 1)).r < 0.5: break
-		points.append(uv * 512.0)
+	for side in range(2):
+		var point := lateral_pixel(image, direction, 0.24, side)
+		var tangent := (lateral_pixel(image, direction, 0.26, side) - lateral_pixel(image, direction, 0.22, side)) * sector_scale(direction)
+		points.append({"position": point, "angle": tangent.angle()})
 	shores[key] = points
 	return points
 
+func reset_choices() -> void:
+	plant_random.randomize()
+	plant_choices.clear()
+
+func plant_texture(key: String) -> Texture2D:
+	if not plant_choices.has(key): plant_choices[key] = plant_random.randi_range(0, PLANTS.size() - 1)
+	return source("shoreline_plants/" + PLANTS[plant_choices[key]])
+
+func appearance_signature() -> String:
+	# Include only currently visible groups; erased/undone cached choices do
+	# not change the identity of an otherwise identical saved picture.
+	var keys: Array = plants.keys()
+	keys.sort()
+	var choices: Array = []
+	for key: String in keys: choices.append([key, plant_choices[key]])
+	return JSON.stringify(choices).sha256_text()
+
+func copy_choices(other: ZenPond) -> void:
+	plant_choices = other.plant_choices.duplicate()
+	for key: String in plants: plants[key].sprite.texture = plant_texture(key)
+
 func _init() -> void:
+	reset_choices()
 	z_index = 4
 	mask_view = SubViewport.new()
 	mask_view.size = Vector2i(2, 2)
@@ -96,6 +138,10 @@ func reconcile(model, settled: bool) -> void:
 		var event: Dictionary = model.ponds[key]
 		var variant := Landmark.rock_variant(event.origin)
 		var region := mask_sprite(mask_path(variant, "water_" + DIRECTIONS[event.direction]), event.origin, false)
+		# Source masks are unchanged; compress only the connection axis so
+		# opposing bases meet halfway between these overlapping formations.
+		region.scale *= sector_scale(event.direction)
+		region.position = sector_point(event.origin, event.direction, Vector2.ZERO) * MASK_CELL / 256.0
 		region.material.set_shader_parameter("direction", event.direction)
 		var start: float = -100.0 if settled or event.old else event.start
 		regions[key] = {"sprite": region, "start": start}
@@ -105,13 +151,17 @@ func reconcile(model, settled: bool) -> void:
 			retained[plant_key] = true
 			if not plants.has(plant_key):
 				var plant := Sprite2D.new()
-				plant.texture = source("shoreline_plants/" + PLANTS[(variant * 2 + event.direction + i) % PLANTS.size()])
+				plant.texture = plant_texture(plant_key)
 				plant.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-				plant.position = Vector2(event.origin) * 256.0 + points[i]
+				plant.position = sector_point(event.origin, event.direction, points[i].position)
+				# Follow each sloping side while keeping the supplied foliage upright.
+				plant.rotation = points[i].angle
+				if cos(plant.rotation) < 0: plant.rotation += PI
 				plant.scale = Vector2.ONE * 92.0 / plant.texture.get_width()
 				plant.offset.y = -plant.texture.get_height() * 0.18
 				add_child(plant)
 				plants[plant_key] = {"sprite": plant, "start": start}
+			plants[plant_key].sprite.texture = plant_texture(plant_key)
 			plants[plant_key].start = start
 	for key: String in plants.keys():
 		if retained.has(key): continue

@@ -172,6 +172,7 @@ func copy_landmark_order(source: ZenVisuals) -> void:
 	landmark_order = source.landmark_order.duplicate()
 	next_landmark_order = source.next_landmark_order
 	_sort_landmarks()
+	if pond != null and source.pond != null: pond.copy_choices(source.pond)
 
 func advance(clock: float) -> void:
 	if pond != null: pond.advance(clock)

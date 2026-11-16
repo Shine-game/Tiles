@@ -361,6 +361,9 @@ func _surface_revision(theme: String) -> String:
 	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1"
 	if board_view.board_frame != null and board_view.board_frame.is_present():
 		revision += "/frame-" + board_view.board_frame.appearance
+	if theme == "zen_garden" and board_view.zen_visuals != null and board_view.zen_visuals.pond != null:
+		var pond = board_view.zen_visuals.pond
+		if not pond.plants.is_empty(): revision += "/shrubs-" + pond.appearance_signature()
 	return revision
 
 func _design_fingerprint() -> String:
@@ -568,6 +571,8 @@ func _reset() -> void:
 	palette_menu.hide()
 	erase_mode = false
 	game = Game.new(requested_size, -1, difficulty)
+	if board_view.zen_visuals != null and board_view.zen_visuals.pond != null:
+		board_view.zen_visuals.pond.reset_choices()
 	board_view.show_settled(game.board)
 	cells = game.piece().cells
 	size_picker.text = "%d × %d" % [requested_size, requested_size]

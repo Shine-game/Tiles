@@ -248,6 +248,78 @@
       "source_asset": "ARTWORK/shoreline_plants/06_shore_reeds.png",
       "sha256": "39579219aca72cfe42249fbde6895861da14e31cae847619344d1c1b9fb70678",
       "bytes": 95536
+    },
+    {
+      "path": "artwork/watersheds/02/watershed_n.png",
+      "source_asset": "ARTWORK/watersheds/02/watershed_n.png",
+      "sha256": "060f0ebbf41c8bfe5258df4938b626506d92143674c49672e1dbb4d12c33456d",
+      "bytes": 6463
+    },
+    {
+      "path": "artwork/watersheds/02/watershed_e.png",
+      "source_asset": "ARTWORK/watersheds/02/watershed_e.png",
+      "sha256": "173a5722530666fa8858890ba049950f8d57c3861758b2994905a97eb552dc9b",
+      "bytes": 3934
+    },
+    {
+      "path": "artwork/watersheds/02/watershed_s.png",
+      "source_asset": "ARTWORK/watersheds/02/watershed_s.png",
+      "sha256": "1fdd29e640ffb4135e0cd2aef264380a2dba03e27629e2daae3ee6f646510052",
+      "bytes": 3293
+    },
+    {
+      "path": "artwork/watersheds/02/watershed_w.png",
+      "source_asset": "ARTWORK/watersheds/02/watershed_w.png",
+      "sha256": "8eba617231c2a466d7bf316263c491a207295b18e6dc15e10168ade902d77ce6",
+      "bytes": 4447
+    },
+    {
+      "path": "artwork/watersheds/03/watershed_n.png",
+      "source_asset": "ARTWORK/watersheds/03/watershed_n.png",
+      "sha256": "fc3f477385fee36710a1607b905409f9f0a607937a72bfe70c82c0ec58e29c03",
+      "bytes": 3882
+    },
+    {
+      "path": "artwork/watersheds/03/watershed_e.png",
+      "source_asset": "ARTWORK/watersheds/03/watershed_e.png",
+      "sha256": "e496edbbcd095c67cc77bc1f6994f987cc78efd14550beb066c7b521bd06c258",
+      "bytes": 4310
+    },
+    {
+      "path": "artwork/watersheds/03/watershed_s.png",
+      "source_asset": "ARTWORK/watersheds/03/watershed_s.png",
+      "sha256": "43e3756a0d480b64f32ec097fea63e0447fe47e4c29222edb10fe5f3d023e80b",
+      "bytes": 3198
+    },
+    {
+      "path": "artwork/watersheds/03/watershed_w.png",
+      "source_asset": "ARTWORK/watersheds/03/watershed_w.png",
+      "sha256": "9e45d967233a35e3bb5efe1d7ce2edac48d683ac3a7208ae94e724f86ac79eeb",
+      "bytes": 4963
+    },
+    {
+      "path": "artwork/watersheds/04/watershed_n.png",
+      "source_asset": "ARTWORK/watersheds/04/watershed_n.png",
+      "sha256": "b2c01593dd18ee957149b621431a268e0b90fe901e8928ced920fcf6515075ae",
+      "bytes": 3987
+    },
+    {
+      "path": "artwork/watersheds/04/watershed_e.png",
+      "source_asset": "ARTWORK/watersheds/04/watershed_e.png",
+      "sha256": "1815c3cd2d0cded2bc3ee90c43139426579adc4a06c605cc3f77a4f27c9c07f7",
+      "bytes": 4029
+    },
+    {
+      "path": "artwork/watersheds/04/watershed_s.png",
+      "source_asset": "ARTWORK/watersheds/04/watershed_s.png",
+      "sha256": "745f0adab4b5e65127be7b83490b165e0bcf2b1aafe3382d1545deb06ce20c62",
+      "bytes": 3694
+    },
+    {
+      "path": "artwork/watersheds/04/watershed_w.png",
+      "source_asset": "ARTWORK/watersheds/04/watershed_w.png",
+      "sha256": "e69435126836013a7fe1016421bea834362da5ec127655ee979b6a30103f6be6",
+      "bytes": 5180
     }
   ]
 }

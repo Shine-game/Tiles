@@ -32,6 +32,43 @@ func _run() -> void:
 			var expected: int = 0 if color == 1 else 2 * ((size.x - 2) * (size.y - 1) + (size.y - 2) * (size.x - 1))
 			check(model.ponds.size() == expected, "Only adjacent rock formations activate the facing water sectors")
 			check(visuals.pond.regions.size() == expected and visuals.pond.plants.size() == expected * 2, "Every active watershed has two shoreline groups")
+	# Exact expectations for both orientations: the meeting bases are halfway
+	# between the two formation centers, not at their far outside edges.
+	for horizontal in [true, false]:
+		var grid := block(3, 2) if horizontal else block(2, 3)
+		model.build(grid, grid)
+		visuals.reconcile(model, true)
+		var keys: Array = model.ponds.keys()
+		keys.sort()
+		check(keys == (["2/2/1", "2/3/3"] if horizontal else ["2/2/2", "3/2/0"]), "A 2x3 join floods only E/W or S/N facing triangles")
+		for key: String in keys:
+			var event: Dictionary = model.ponds[key]
+			var region: Sprite2D = visuals.pond.regions[key].sprite
+			var base_uv: Vector2 = [Vector2(256, 0), Vector2(512, 256), Vector2(256, 512), Vector2(0, 256)][event.direction]
+			var base: Vector2 = region.position * 2.0 + base_uv * region.scale * 2.0
+			check(is_equal_approx(base.x if horizontal else base.y, 896.0), "Opposing water bases meet exactly in the shared row/column")
+			var anchor := (Vector2(event.origin) + Vector2.ONE) * 256.0
+			var axis := Vector2.RIGHT if horizontal else Vector2.DOWN
+			for i in range(2):
+				var plant: Sprite2D = visuals.pond.plants[key + "/%d" % i].sprite
+				check(absf((plant.position - Vector2.ONE * 896.0).dot(axis)) > 40.0, "Shrubs sit clear of the shared water base")
+				var corners := plant.get_rect()
+				for corner: Vector2 in [corners.position, corners.end, Vector2(corners.position.x, corners.end.y), Vector2(corners.end.x, corners.position.y)]:
+					var world: Vector2 = plant.transform * corner
+					var side := (world - Vector2.ONE * 896.0).dot(axis)
+					check(side < -1.0 if event.direction in [1, 2] else side > 1.0, "Entire shrub artwork remains off the shared base")
+				var side_distance := (plant.position - anchor).dot(Vector2.DOWN if horizontal else Vector2.RIGHT)
+				check(side_distance < 0.0 if i == 0 else side_distance > 0.0, "Shrubs follow the two lateral slopes, not the middle rock shoreline")
+	# Fresh draws use the actual random pool; cached choices survive reconstruction.
+	visuals.pond.plant_random.seed = 12345
+	visuals.pond.plant_choices.clear()
+	var draws: Dictionary = {}
+	for i in range(60):
+		var key := "random/%d" % i
+		var texture := visuals.pond.plant_texture(key)
+		draws[texture.resource_path] = true
+		check(texture == visuals.pond.plant_texture(key), "An existing shrub does not reroll")
+	check(draws.size() == 6, "Random shrub draws use all six supplied designs")
 	# A single-tile-wide path between separate 2x2s is not a third-tier join.
 	var separate := block(2, 2)
 	for y in range(2, 4):
@@ -54,18 +91,30 @@ func _run() -> void:
 	visuals.advance(model.duration)
 	check(pond.plants.values().all(func(p): return p.sprite.modulate.a == 1), "Place waits until shoreline growth completes")
 	var old_nodes: Dictionary = {}
-	for key: String in pond.plants: old_nodes[key] = {"id": pond.plants[key].sprite.get_instance_id(), "position": pond.plants[key].sprite.position}
+	for key: String in pond.plants: old_nodes[key] = {"id": pond.plants[key].sprite.get_instance_id(), "position": pond.plants[key].sprite.position, "texture": pond.plants[key].sprite.texture}
 	var expanded := block(3, 3)
 	model.build(after, expanded)
 	visuals.reconcile(model, false)
 	check(visuals.pond.get_instance_id() == pond_id, "Expansion retains the pond layer")
 	for key: String in old_nodes:
-		check(pond.plants[key].sprite.get_instance_id() == old_nodes[key].id and pond.plants[key].sprite.position == old_nodes[key].position and pond.plants[key].sprite.modulate.a == 1, "Existing shore plants remain in place and visible")
+		check(pond.plants[key].sprite.get_instance_id() == old_nodes[key].id and pond.plants[key].sprite.position == old_nodes[key].position and pond.plants[key].sprite.modulate.a == 1 and pond.plants[key].sprite.texture == old_nodes[key].texture, "Existing shore plants remain in place and visible")
 	for key: String in ["2/2/1", "2/3/3"]:
 		check(pond.regions[key].sprite.material.get_shader_parameter("amount") == 1, "Existing water never restarts when territory expands")
+	var clone := Visuals.new()
+	root.add_child(clone)
+	clone.reconcile(model, true)
+	clone.copy_landmark_order(visuals)
+	check(clone.pond.plant_choices == pond.plant_choices, "Gallery reconstruction copies the live random shrub choices")
+	for key: String in pond.plants:
+		check(clone.pond.plants[key].sprite.texture == pond.plants[key].sprite.texture, "Gallery uses the exact live shrub designs")
+	clone.queue_free()
 	model.build(before, before)
 	visuals.reconcile(model, true)
 	check(pond.regions.is_empty() and pond.plants.is_empty() and not pond.visible, "Undo/Erase remove unsupported water and vegetation")
+	model.build(after, after)
+	visuals.reconcile(model, true)
+	for key: String in old_nodes:
+		check(pond.plants[key].sprite.texture == old_nodes[key].texture, "Restoring a supported sector restores its chosen shrub design")
 	for n in [9, 11]:
 		var dense := Rules.empty_board(n)
 		for row: Array in dense: row.fill(2)
@@ -119,6 +168,11 @@ func check_game() -> void:
 			for e: Dictionary in scene.board_view.pattern.ponds.values():
 				var uv := (Vector2(x, y) + Vector2.ONE * 0.5 - Vector2(e.origin) * 128.0) * 2.0
 				if uv.x < 0 or uv.y < 0 or uv.x >= 512 or uv.y >= 512: continue
+				# Independently map the fixed half-depth triangle rectangle.
+				var center := (Vector2(e.origin) + Vector2.ONE) * 128.0
+				var extent := Vector2(256, 128) if e.direction % 2 == 0 else Vector2(128, 256)
+				uv = (Vector2(x, y) + Vector2.ONE * 0.5 - center + extent * 0.5) / extent * 512.0
+				if uv.x < 1 or uv.y < 1 or uv.x >= 511 or uv.y >= 511: continue
 				var mask := Pond.source(Pond.mask_path(Landmark.rock_variant(e.origin), "water_" + Pond.DIRECTIONS[e.direction])).get_image()
 				expected = 1.0 - (1.0 - expected) * (1.0 - sample_mask(mask, uv))
 			for origin: Vector2i in scene.board_view.pattern.colonies:
@@ -136,6 +190,14 @@ func check_game() -> void:
 	DirAccess.make_dir_recursive_absolute("res://build/zen-ponds")
 	root.get_texture().get_image().save_png("res://build/zen-ponds/game.png")
 	actual.save_png("res://build/zen-ponds/flood-mask.png")
+	# Exercise the other orientation in the actual main scene as well.
+	var vertical := block(2, 3)
+	scene.game.board = vertical
+	scene.board_view.show_settled(vertical)
+	scene._refresh()
+	await frames()
+	check(scene.board_view.pattern.ponds.has("2/2/2") and scene.board_view.pattern.ponds.has("3/2/0"), "Actual vertical 2x3 uses the top south and bottom north masks")
+	root.get_texture().get_image().save_png("res://build/zen-ponds/vertical.png")
 	# Center the connected block so it satisfies the existing save symmetry rule.
 	var symmetric := Rules.empty_board(9)
 	for y in range(3, 6):
@@ -148,7 +210,7 @@ func check_game() -> void:
 	scene.gallery.directory = "user://zen-ponds-%d" % Time.get_ticks_usec()
 	await scene._save_design()
 	var records: Array = scene.gallery.entries()
-	check(records.size() == 1 and records[0].theme_version == "0.7", "Actual save captures the pond theme version")
+	check(records.size() == 1 and records[0].theme_version == "0.8", "Actual save captures the pond theme version")
 	if not records.is_empty():
 		var picture: Image = scene.gallery.picture(records[0]).get_image()
 		picture.save_png("res://build/zen-ponds/saved.png")
@@ -158,6 +220,16 @@ func check_game() -> void:
 				var ink := picture.get_pixel(x, y)
 				if ink.b > ink.r + 0.05 and ink.g > ink.r + 0.05: blue += 1
 		check(blue > 100, "Saved artwork includes the rendered blue-grey pond")
+	await scene._save_design()
+	check(scene.gallery.entries().size() == records.size(), "Repeated saves with unchanged shrub choices still deduplicate")
+	var live_pond = scene.board_view.zen_visuals.pond
+	var first_key: String = live_pond.plants.keys()[0]
+	var old_signature: String = live_pond.appearance_signature()
+	live_pond.plant_choices[first_key] = (live_pond.plant_choices[first_key] + 1) % Pond.PLANTS.size()
+	live_pond.copy_choices(live_pond)
+	check(old_signature != live_pond.appearance_signature(), "Visible shrub variation changes the artwork identity")
+	await scene._save_design()
+	check(scene.gallery.entries().size() == records.size() + 1, "A different random shrub arrangement can be saved separately")
 	if DirAccess.dir_exists_absolute(scene.gallery.directory):
 		for file: String in DirAccess.open(scene.gallery.directory).get_files(): DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
 	DirAccess.remove_absolute(scene.gallery.directory)
@@ -174,6 +246,7 @@ func check_game() -> void:
 	await process_frame
 
 func sample_mask(image: Image, uv: Vector2) -> float:
-	# Each 128px/cell target pixel covers four source-mask texels.
-	var p := Vector2i(uv) - Vector2i.ONE
-	return (image.get_pixelv(p).r + image.get_pixelv(p + Vector2i.RIGHT).r + image.get_pixelv(p + Vector2i.DOWN).r + image.get_pixelv(p + Vector2i.ONE).r) * 0.25
+	var pixel := uv - Vector2.ONE * 0.5
+	var p := Vector2i(pixel.floor())
+	var fraction := pixel - Vector2(p)
+	return lerpf(lerpf(image.get_pixelv(p).r, image.get_pixelv(p + Vector2i.RIGHT).r, fraction.x), lerpf(image.get_pixelv(p + Vector2i.DOWN).r, image.get_pixelv(p + Vector2i.ONE).r, fraction.x), fraction.y)
