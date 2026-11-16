@@ -121,6 +121,26 @@ func _run() -> void:
 				rgb_error = maxf(rgb_error, maxf(absf(left.r - right.r), maxf(absf(left.g - right.g), absf(left.b - right.b))))
 		check(error == 0, "Supplied opposing stone halves join with identical alpha")
 		check(rgb_error == 0, "Supplied opposing stone halves join with identical visible RGB")
+	for d in range(4):
+		var cell := Vector2i(2, 2)
+		var first := Visuals.stone_sprite(cell, d)
+		var other := Visuals.stone_sprite(cell + Geometry.OFFSETS[d], (d + 2) % 4)
+		check(first.scale == Vector2.ONE * 0.70 and other.scale == first.scale, "Stepping-stone halves are thirty percent smaller")
+		var max_gap := 0.0
+		for along in range(257):
+			var a: Vector2 = [Vector2(along, 0), Vector2(256, along), Vector2(along, 256), Vector2(0, along)][d]
+			var b: Vector2 = [Vector2(along, 0), Vector2(256, along), Vector2(along, 256), Vector2(0, along)][(d + 2) % 4]
+			var actual_a: Vector2 = first.transform * (a - Vector2.ONE * 128 + first.offset)
+			var actual_b: Vector2 = other.transform * (b - Vector2.ONE * 128 + other.offset)
+			max_gap = maxf(max_gap, actual_a.distance_to(actual_b))
+		check(max_gap < 0.0001, "All points along both shrunken halves coincide on their shared border")
+		var port: Vector2 = (Vector2(cell) + Vector2.ONE * 0.5 + Vector2(Geometry.OFFSETS[d]) * 0.5) * 256
+		check(first.position.is_equal_approx(port) and other.position.is_equal_approx(port), "The seam midpoint stays anchored to the logical cell boundary")
+		first.free()
+		other.free()
+	var isolated := Visuals.stone_sprite(Vector2i(2, 2))
+	check(isolated.scale == Vector2.ONE * 0.70 and isolated.offset == Vector2.ZERO and isolated.position == Vector2(640, 640), "An isolated stone shrinks around its original center")
+	isolated.free()
 	check(Geometry.neighbor_mask([[1, 2], [1, 0]], Vector2i.ZERO) == 4, "Different colors touch without a decorative connection")
 	check(Geometry.neighbor_mask([[0, 1], [1, 0]], Vector2i.ZERO) == 0, "An empty cell cannot connect")
 	check(Geometry.neighbor_mask([[1, 0], [0, 1]], Vector2i.ZERO) == 0, "Diagonal contact cannot connect")

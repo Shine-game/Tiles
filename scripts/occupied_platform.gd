@@ -46,7 +46,7 @@ func sync(grid: Array) -> void:
 	(material as ShaderMaterial).set_shader_parameter("grid_size", n)
 
 static func surface_revision(theme: String) -> String:
-	if theme == "zen_garden": return "zen-sand4-pattern-landmarks-v5"
+	if theme == "zen_garden": return "zen-sand4-small-stones-v6"
 	return "workshop4-v4" if theme == "clockwork" else ("lagoon-adaptive24-v6" if theme == "coral_reef" else SURFACE_REVISION)
 
 func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = false, fixed_depth: float = -1.0, metal_surface: bool = true) -> void:

@@ -11,6 +11,10 @@ Undo/Erase reconciliation, the axes overlay and completed gallery saves.
 The two button pigments distinguish the logical construction colors; both share
 one sand material on the board. Existing themes remain available.
 
+Ordinary stepping stones are drawn at 70% scale. Each directional half scales
+around its shared edge midpoint, preserving exact contact and matching profiles
+with its neighboring half. Isolated stepping stones scale around their center.
+
 Bends carry one centered stone, T-junctions carry the three-stone cairn, and
 crosses carry that cairn with bamboo behind it. All rotations share the same
 screen-facing artwork. Source PNGs stay unchanged; a compositing shader blends

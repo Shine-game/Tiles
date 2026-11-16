@@ -12,6 +12,7 @@ const STONES = [
 	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_E_256.png"),
 	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_S_256.png"),
 	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_W_256.png")]
+const STONE_SCALE := 0.70
 static var relief_textures: Dictionary = {}
 var materials: Array[ShaderMaterial] = []
 var registry: Dictionary = {}
@@ -29,6 +30,18 @@ static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
 	ink.set_shader_parameter("sand", SAND)
 	ink.set_shader_parameter("cell_origin", origin)
 	return ink
+
+static func stone_sprite(cell: Vector2i, direction: int = -1) -> Sprite2D:
+	var sprite := Sprite2D.new()
+	sprite.texture = CORE if direction < 0 else STONES[direction]
+	var anchor := Vector2.ZERO if direction < 0 else Vector2(Geometry.OFFSETS[direction]) * 128.0
+	# Shrink each half around its boundary midpoint, never the cell center.
+	# Opposite halves therefore keep the same edge and tangential profile.
+	sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256.0 + anchor
+	sprite.offset = -anchor
+	sprite.scale = Vector2.ONE * STONE_SCALE
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	return sprite
 
 func clear(keep_features: bool = false) -> void:
 	for child: Node in get_children():
@@ -99,10 +112,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			else:
 				for d in range(4):
 					if mask != 0 and not mask & (1 << d): continue
-					var sprite := Sprite2D.new()
-					sprite.texture = CORE if mask == 0 else STONES[d]
-					sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
-					sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+					var sprite := stone_sprite(cell, -1 if mask == 0 else d)
 					group.add_child(sprite)
 					if mask == 0: break
 			if not settled and float(model.arrivals.get(cell, -100.0)) >= 0:
