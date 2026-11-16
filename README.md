@@ -142,7 +142,8 @@ map existing themes onto reusable tier sets, topology, component state and growt
 Steps 1–5 provide the specification, inventory, shared topology, component state,
 construction scheduling, common asset/rendering foundation, and
 [Clockwork Tier 0/1 sets](docs/shared-pattern-engine/clockwork-ordinary-sets.md).
-Remaining migrations require their separate approvals.
+Zen, Coral and [Vines ordinary sets](docs/shared-pattern-engine/vines-ordinary-sets.md)
+have since migrated in Step 6. Remaining migrations require their separate approvals.
 Shading work remains deferred.
 
 ## Tests

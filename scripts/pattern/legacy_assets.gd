@@ -10,7 +10,6 @@ static func install() -> void:
 	if installed: return
 	installed = true
 	Assets.register_provider("zen.rake_relief", _rake, _rake_parameters)
-	Renderer.register_draw_provider("legacy.vines", _vines)
 	Renderer.register_draw_provider("legacy.labyrinth", _maze)
 
 static func _rake_parameters(params: Dictionary) -> Array:
@@ -20,9 +19,6 @@ static func _rake_parameters(params: Dictionary) -> Array:
 
 static func _rake(params: Dictionary) -> Texture2D:
 	return ImageTexture.create_from_image(Geometry.height_image(int(params.mask)))
-
-static func _vines(view) -> void:
-	view._draw_vines_pattern()
 
 static func _maze(view) -> void:
 	Maze.draw(view)

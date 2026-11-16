@@ -8,6 +8,7 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const Vines = preload("res://scripts/vines_sets.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const AssetProviders = preload("res://scripts/pattern/legacy_assets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
@@ -273,6 +274,7 @@ func animate_growth(before: Array, after: Array) -> void:
 
 func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart: bool = true) -> void:
 	var events: Dictionary = LegacyEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
+	if Palette.theme_id() == "vines": events.merge(Vines.center_events(pattern, growth_before, settled))
 	construction_state.reconcile(events, 0.0 if settled else pattern.duration, at, settled, preserve, restart)
 	clock = construction_state.schedule.clock
 	growing = construction_state.schedule.running()
@@ -397,24 +399,7 @@ func _draw() -> void:
 	if labyrinth:
 		Components.draw("legacy.labyrinth", self)
 		return
-	Components.draw("legacy.vines", self)
-
-func _draw_vines_pattern() -> void:
-	for cell: Vector2i in pattern.arrivals:
-		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
-		if scale > 0:
-			var center := _point(Vector2(cell) + Vector2(0.5, 0.5))
-			var pigment: Color = Palette.pigment(board[cell.y][cell.x])
-			for layer in range(3):
-				draw_circle(center, pitch * (0.34 + layer * 0.08), Color(pigment, 0.012 * scale), true, -1, true)
-	for edge: Dictionary in pattern.edges:
-		_draw_edge(edge)
-	for link: Dictionary in pattern.links:
-		_draw_link(link)
-	for cell: Vector2i in pattern.arrivals:
-		_draw_holding_motif(cell)
-	for corner: Vector2i in pattern.flowers:
-		_draw_flower(corner, pattern.flowers[corner])
+	Vines.draw(self)
 
 func _draw_guides() -> void:
 	var n: int = board.size()
@@ -474,59 +459,6 @@ func _paint_leaf(root: Vector2, direction: Vector2, length: float, width: float,
 	draw_set_transform(root, direction.angle(), Vector2.ONE)
 	draw_texture_rect(leaf_texture, Rect2(0, -width * scale / 2, length * scale, width * scale), false, ink)
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-
-func _draw_edge(edge: Dictionary) -> void:
-	var a := _point(Vector2(edge.a) + Vector2(0.5, 0.5))
-	var b := _point(Vector2(edge.b) + Vector2(0.5, 0.5))
-	var curve: Dictionary = _curve(a, b, _port_tangent(edge.a, edge.b), _port_tangent(edge.b, edge.a))
-	var ink: Color = Palette.pigment(edge.color)
-	var left: float = 1 if edge.old else clampf((clock - edge.start_a) / Growth.STEP, 0, 1)
-	var right: float = 1 if edge.old else clampf((clock - edge.start_b) / Growth.STEP, 0, 1)
-	var wave: float = 0 if edge.old else 1 - smoothstep(edge.finish, edge.finish + Growth.RIPPLE, clock)
-	if left + right >= 1:
-		_vine(curve, 0, 1, ink, wave)
-	else:
-		_vine(curve, 0, left, ink, wave)
-		_vine(curve, 1 - right, 1, ink, wave)
-	for sprout: Dictionary in Growth.leaf_sprouts(edge):
-		var scale: float = pop((clock - sprout.start) / Growth.LEAF_POP)
-		if scale <= 0:
-			continue
-		var tangent: Vector2 = _curve_tangent(curve, sprout.fraction) * sprout.direction
-		var normal: Vector2 = Vector2(-tangent.y, tangent.x) * float(sprout.side)
-		var direction: Vector2 = (tangent * 0.75 + normal * 0.93).normalized()
-		_paint_leaf(_curve_point(curve, sprout.fraction), direction, pitch * 0.44, pitch * 0.21, Color(ink.lightened(0.08), 0.92), scale)
-	if not edge.old:
-		var t: float = (clock - edge.finish) / Growth.STAR_POP
-		if t > 0 and t < 1:
-			_star(_curve_point(curve, 0.5) + Vector2(0, -pitch * 0.09 * t), pitch * 0.065 * sin(PI * t), Color(Palette.blossom(edge.color), 1 - t))
-
-func _draw_holding_motif(cell: Vector2i) -> void:
-	var scale: float = minf(1, pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP))
-	if scale <= 0:
-		return
-	var center := _point(Vector2(cell) + Vector2(0.5, 0.5))
-	var ink: Color = Palette.pigment(board[cell.y][cell.x])
-	var accent: Color = Palette.blossom(board[cell.y][cell.x])
-	# Disconnected directions grow full, nonconnecting fronds toward the cell's
-	# boundary. Opposite colors nearly meet in foliage, never in logical stems.
-	for vector: Vector2i in Growth.DIRECTIONS:
-		var direction := Vector2(vector)
-		var normal := Vector2(-direction.y, direction.x)
-		var open: bool = Growth.value(board, cell + vector) != board[cell.y][cell.x]
-		var reach: float = 0.415 if open else 0.205
-		var tip: Vector2 = center + direction * pitch * reach * scale
-		var curve: Dictionary = _curve(center, tip, direction + normal * 0.3, -direction)
-		_vine(curve, 0, 1, Color(ink, 0.76 if open else 0.60), 0)
-		for side: float in [-1.0, 1.0]:
-			if open:
-				_paint_leaf(center + direction * pitch * 0.10 * scale, (direction + normal * side * 0.70).normalized(), pitch * 0.30, pitch * 0.16, Color(ink, 0.90), scale)
-				_paint_leaf(center + direction * pitch * 0.23 * scale, (direction + normal * side * 0.70).normalized(), pitch * 0.26, pitch * 0.14, Color(ink.lightened(0.10), 0.84), scale)
-			else:
-				var root: Vector2 = center + direction * pitch * 0.09 * scale
-				_paint_leaf(root, (direction + normal * side * 0.75).normalized(), pitch * 0.14, pitch * 0.075, Color(ink, 0.78), scale)
-		_star(tip, pitch * (0.037 if open else 0.031) * scale, Color(accent, 0.9))
-	draw_circle(center, maxf(0.5, pitch * 0.014 * scale), Color(ink, 0.75), true, -1, true)
 
 func _draw_link(link: Dictionary) -> void:
 	var a := _point(Vector2(link.a))

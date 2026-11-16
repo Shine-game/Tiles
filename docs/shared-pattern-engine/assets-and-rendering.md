@@ -201,3 +201,10 @@ See [Coral ordinary sets](coral-ordinary-sets.md) for multipart examples.
 Shared [canonical assembly](canonical-assembly.md) now supplies quarter-turn
 rotation and shared-edge instancing for Clockwork, Coral and Zen. Procedural
 Vines/Labyrinth retain their direction-driven geometry.
+
+The Vines migration adds registered immediate part providers through
+`register_draw_part_provider(id, callback)` and `draw_parts(parts, view, context)`.
+They validate as named set parts and execute inside the host's drawing context;
+`ensure()`/node composition cannot instantiate them. See
+[Vines ordinary sets](vines-ordinary-sets.md) for the live configuration and
+construction-state integration.

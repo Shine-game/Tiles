@@ -1,8 +1,8 @@
 # Step 6 — remaining ordinary-set mapping review
 
-Status: Zen and Coral ordinary sets are implemented; Vines and Labyrinth remain
-proposals. See [Zen](zen-ordinary-sets.md) and
-[Coral](coral-ordinary-sets.md). The endpoint rows below reflect
+Status: Zen, Coral and Vines ordinary sets are implemented; Labyrinth remains a
+proposal. See [Zen](zen-ordinary-sets.md), [Coral](coral-ordinary-sets.md) and
+[Vines](vines-ordinary-sets.md). The endpoint rows below reflect
 the user's instruction to copy Tier 0 artwork and overlap the path ending.
 
 ## Proposed role assignments
@@ -40,7 +40,7 @@ it to a role does not freeze its geometry into a single image.
   are generated. See [canonical assembly](canonical-assembly.md).
   Native checks confirm both straight orientations remain continuous without a
   replacement core.
-- **Vines:** straight cells lose their holding/frond motif. Their connection
+- **Vines (implemented):** straight cells lose their holding/frond motif. Their connection
   curves and existing edge leaves remain. Endpoints/bends/Ts/crosses retain the
   current direction-aware motif. Preserve the existing diffuse pigment wash,
   growth phases, leaf direction choices and transient edge stars.
@@ -89,5 +89,5 @@ the next. Each migration should:
 5. Update export inclusion, documentation and appearance version as applicable;
    run focused shared/theme checks and push the completed theme for review.
 
-Coral is ready for review. Vines and Labyrinth retain their existing rendering
-until their respective migrations are approved.
+Vines is ready for review. Labyrinth retains its existing rendering until its
+migration is approved.

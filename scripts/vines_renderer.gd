@@ -1,0 +1,75 @@
+extends RefCounted
+# Procedural art providers. The board supplies its existing curves, brush, clock
+# and palette; configuration supplies ordinary motif and foliage proportions.
+const Growth = preload("res://scripts/growth.gd")
+const Palette = preload("res://scripts/palette.gd")
+const Assembly = preload("res://scripts/pattern/assembly.gd")
+
+static func wash(view, spec: Dictionary, context: Dictionary) -> void:
+	var cell: Vector2i = context.cell
+	var scale: float = view.pop((view.clock - float(view.pattern.arrivals[cell])) / float(spec.animation.duration_seconds))
+	if scale <= 0: return
+	var p: Dictionary = spec.params
+	var center: Vector2 = view._point(Vector2(cell) + Vector2.ONE * 0.5)
+	var pigment := Palette.pigment(view.board[cell.y][cell.x])
+	for layer in range(int(p.layers)):
+		view.draw_circle(center, view.pitch * (float(p.radius) + layer * float(p.radius_step)), Color(pigment, float(p.alpha) * scale), true, -1, true)
+
+static func holding(view, spec: Dictionary, context: Dictionary) -> void:
+	var scale: float = context.scale
+	if scale <= 0: return
+	var cell: Vector2i = context.cell
+	var p: Dictionary = spec.params
+	var center: Vector2 = view._point(Vector2(cell) + Vector2.ONE * 0.5)
+	var ink := Palette.pigment(view.board[cell.y][cell.x])
+	var accent := Palette.blossom(view.board[cell.y][cell.x])
+	# One canonical frond uses the shared assembly orientation for every port.
+	# Preserve the existing L/R/N/S painter order to retain alpha blending.
+	for port: float in p.port_order:
+		var direction := Assembly.point(Vector2.UP, int(port))
+		var normal := Vector2(-direction.y, direction.x)
+		var open: bool = Growth.value(view.board, cell + Vector2i(direction)) != view.board[cell.y][cell.x]
+		var frond: Dictionary = p.open if open else p.connected
+		var tip: Vector2 = center + direction * view.pitch * float(frond.reach) * scale
+		var curve: Dictionary = view._curve(center, tip, direction + normal * float(p.curve_normal), -direction)
+		view._vine(curve, 0, 1, Color(ink, float(frond.curve_alpha)), 0)
+		for side: float in [-1.0, 1.0]:
+			if open:
+				for i in range(frond.leaf_roots.size()):
+					view._paint_leaf(center + direction * view.pitch * float(frond.leaf_roots[i]) * scale,
+						(direction + normal * side * float(p.side_normal)).normalized(),
+						view.pitch * float(frond.leaf_lengths[i]), view.pitch * float(frond.leaf_widths[i]),
+						Color(ink.lightened(float(frond.leaf_lightening[i])), float(frond.leaf_alphas[i])), scale)
+			else:
+				var root: Vector2 = center + direction * view.pitch * float(frond.leaf_root) * scale
+				view._paint_leaf(root, (direction + normal * side * float(frond.side_normal)).normalized(),
+					view.pitch * float(frond.leaf_length), view.pitch * float(frond.leaf_width), Color(ink, float(frond.leaf_alpha)), scale)
+		view._star(tip, view.pitch * float(frond.star_radius) * scale, Color(accent, float(p.star_alpha)))
+	view.draw_circle(center, maxf(0.5, view.pitch * float(p.center_radius) * scale), Color(ink, float(p.center_alpha)), true, -1, true)
+
+static func connection(view, spec: Dictionary, context: Dictionary) -> void:
+	var edge: Dictionary = context.edge
+	var p: Dictionary = spec.params
+	var a: Vector2 = view._point(Vector2(edge.a) + Vector2.ONE * 0.5)
+	var b: Vector2 = view._point(Vector2(edge.b) + Vector2.ONE * 0.5)
+	var curve: Dictionary = view._curve(a, b, view._port_tangent(edge.a, edge.b), view._port_tangent(edge.b, edge.a))
+	var ink := Palette.pigment(edge.color)
+	var left: float = 1.0 if edge.old else clampf((view.clock - edge.start_a) / Growth.STEP, 0, 1)
+	var right: float = 1.0 if edge.old else clampf((view.clock - edge.start_b) / Growth.STEP, 0, 1)
+	var wave: float = 0.0 if edge.old else 1 - smoothstep(edge.finish, edge.finish + Growth.RIPPLE, view.clock)
+	if left + right >= 1:
+		view._vine(curve, 0, 1, ink, wave)
+	else:
+		view._vine(curve, 0, left, ink, wave)
+		view._vine(curve, 1 - right, 1, ink, wave)
+	for sprout: Dictionary in Growth.leaf_sprouts(edge):
+		var scale: float = view.pop((view.clock - sprout.start) / Growth.LEAF_POP)
+		if scale <= 0: continue
+		var tangent: Vector2 = view._curve_tangent(curve, sprout.fraction) * sprout.direction
+		var normal: Vector2 = Vector2(-tangent.y, tangent.x) * float(sprout.side)
+		var direction: Vector2 = (tangent * float(p.leaf_tangent) + normal * float(p.leaf_normal)).normalized()
+		view._paint_leaf(view._curve_point(curve, sprout.fraction), direction, view.pitch * float(p.leaf_length), view.pitch * float(p.leaf_width), Color(ink.lightened(float(p.leaf_lightening)), float(p.leaf_alpha)), scale)
+	if not edge.old:
+		var t: float = (view.clock - edge.finish) / Growth.STAR_POP
+		if t > 0 and t < 1:
+			view._star(view._curve_point(curve, 0.5) + Vector2(0, -view.pitch * float(p.star_lift) * t), view.pitch * float(p.star_radius) * sin(PI * t), Color(Palette.blossom(edge.color), 1 - t))

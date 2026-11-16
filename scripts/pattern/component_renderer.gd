@@ -5,6 +5,7 @@ const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 static var node_providers: Dictionary = {}
 static var draw_providers: Dictionary = {}
+static var draw_part_providers: Dictionary = {}
 static var material_providers: Dictionary = {}
 var nodes: Dictionary = {}
 var active: Dictionary = {}
@@ -20,6 +21,10 @@ static func register_node_provider(id: String, factory: Callable) -> void:
 
 static func register_draw_provider(id: String, draw: Callable) -> void:
 	draw_providers[id] = draw
+
+static func register_draw_part_provider(id: String, callback: Callable) -> void:
+	draw_part_providers[id] = callback
+	Assets.node_kinds[id] = true
 
 static func register_material_provider(id: String, factory: Callable) -> void:
 	material_providers[id] = factory
@@ -75,12 +80,26 @@ static func validate_spec(spec: Dictionary) -> Array:
 		if not spec.material is Dictionary or not material_providers.has(spec.material.get("provider", "")): errors.append("Unknown material provider")
 	return errors
 
+func draw_parts(parts: Dictionary, view, context: Dictionary = {}) -> bool:
+	# Called synchronously from the host's _draw; no competing sprite tree.
+	for id: String in parts:
+		var errors := validate_spec(parts[id])
+		if not draw_part_providers.has(parts[id].get("provider", "")): errors.append("No immediate drawing provider: " + id)
+		if not errors.is_empty():
+			diagnostics.append_array(errors)
+			return false
+	for spec: Dictionary in parts.values(): draw_part_providers[spec.provider].call(view, spec, context)
+	return true
+
 func ensure(id: String, spec: Dictionary, parent: Node) -> CanvasItem:
 	var errors := validate_spec(spec)
 	if not errors.is_empty():
 		diagnostics.append_array(errors)
 		return null
 	var provider: String = str(spec.get("provider", "sprite"))
+	if draw_part_providers.has(provider):
+		diagnostics.append("Immediate draw parts must be dispatched from _draw")
+		return null
 	if provider == "sprite" and spec.asset is Dictionary and spec.asset.get("status", "available") != "available":
 		remove(id)
 		return null
