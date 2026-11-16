@@ -130,26 +130,16 @@ func build(before: Array, after: Array) -> void:
 				coupling.key = key("T03_" + NAMES[direction], color, cell)
 				components.erase(key("T03", color, cell))
 				components[coupling.key] = coupling
-	for corner: Vector2i in flowers:
-		var cell := corner - Vector2i.ONE
+	var formations := Formations.collect(before, after)
+	for cell: Vector2i in formations:
+		var formation: Dictionary = formations[cell]
+		var corner := cell + Vector2i.ONE
 		var flower: Dictionary = flowers[corner]
-		var start := 0.0
-		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
-			start = maxf(start, float(components[key("C02", flower.color, cell + offset)].end))
-			for direction in range(4):
-				var neighbor: Vector2i = offset + DIRS[direction]
-				if neighbor.x < 0 or neighbor.y < 0 or neighbor.x > 1 or neighbor.y > 1: continue
-				var arm_key := key("T01_" + NAMES[direction], flower.color, cell + offset)
-				if components.has(arm_key):
-					start = maxf(start, float(components[arm_key].end))
-		var mechanism := {"origin": cell, "center": Vector2(corner), "color": flower.color, "old": flower.old, "start": -100.0 if flower.old else start, "ready": -100.0 if flower.old else start + 1.95, "directions": [], "chain_end": -100.0}
+		var start := Formations.prerequisite_ready(formation, components, key, Ordinary.tier2)
+		var events := Formations.assemble(formation, Ordinary.formation_parts(), start, _emit_formation)
+		var mechanism := {"origin": cell, "center": Vector2(corner), "color": flower.color, "old": flower.old, "start": -100.0 if flower.old else start, "ready": -100.0 if flower.old else Formations.completion(Ordinary.tier2, start, events), "directions": [], "chain_end": -100.0}
 		mechanisms[cell] = mechanism
 		flower.start = mechanism.start
-		for id: String in ["L01", "L02", "L03", "H00_plain_hatch"]:
-			var begin: float = {"L01": 0.0, "L02": 0.85, "L03": 1.20, "H00_plain_hatch": 1.70}[id]
-			var seconds: float = {"L01": 0.40, "L02": 0.35, "L03": 0.50, "H00_plain_hatch": 0.25}[id]
-			var part := add_part(id, flower.color, cell, Vector2(corner), flower.old, start + begin, seconds, 0, key("hatch" if id == "H00_plain_hatch" else id, flower.color, cell))
-			part.mechanism = cell
 		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
 			var core: Vector2i = cell + offset
 			if not powered.has(core):
@@ -219,3 +209,17 @@ func build(before: Array, after: Array) -> void:
 		if not event.old: duration = maxf(duration, event.end)
 	for chain: Dictionary in chains.values():
 		if not chain.old: duration = maxf(duration, chain.end)
+
+func _emit_formation(id: String, spec: Dictionary, formation: Dictionary, at: float, seconds: float) -> Dictionary:
+	var event := add_part(id, formation.color, formation.origin, formation.center, formation.old, at, seconds, 0, key(spec.get("identity_kind", id), formation.color, formation.origin))
+	event.mechanism = formation.origin
+	return event
+
+func tier2_records() -> Dictionary:
+	var records := Formations.bind_records(board, mechanisms, "ready")
+	for origin: Vector2i in records:
+		var record: Dictionary = records[origin]
+		record.children = []
+		for id: String in Ordinary.formation_parts():
+			record.children.append("clockwork/part/" + key(Ordinary.part(id).get("identity_kind", id), record.color, origin))
+	return records

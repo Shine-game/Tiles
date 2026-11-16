@@ -143,7 +143,8 @@ construction scheduling, common asset/rendering foundation, and
 [Clockwork Tier 0/1 sets](docs/shared-pattern-engine/clockwork-ordinary-sets.md).
 Zen, Coral and [Vines ordinary sets](docs/shared-pattern-engine/vines-ordinary-sets.md)
 have since migrated in Step 6. Labyrinth was removed, completing Step 6 for the four active themes.
-[Step 7: shared Tier 2 formation assembly](docs/shared-pattern-engine/tier2-migration-plan.md)
+[Step 7: shared Tier 2 formation assembly](docs/shared-pattern-engine/tier2-assembly.md)
+is implemented for all four themes. Step 8, the shared Tier 3 connection interface,
 is the next approval checkpoint.
 Shading work remains deferred.
 

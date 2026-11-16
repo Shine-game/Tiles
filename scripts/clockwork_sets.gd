@@ -1,9 +1,10 @@
 extends RefCounted
-# Clockwork's ordinary sets use the shared loader/selector/renderer. Existing
+# Clockwork Tier 0/1/2 use the shared loader/selector/renderer. Existing
 # pressure, operation and retirement hooks keep their legacy component IDs.
 const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const RISE = preload("res://shaders/clockwork_rise.gdshader")
 const REVEAL = preload("res://shaders/clockwork_reveal.gdshader")
@@ -11,6 +12,7 @@ const ROOT := "res://art/themes/clockwork_workshop/sets/"
 const NAMES := ["N", "E", "S", "W"]
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
+static var tier2: Dictionary = {}
 static var catalog: Dictionary = {}
 
 static func install() -> void:
@@ -19,8 +21,10 @@ static func install() -> void:
 	Renderer.register_material_provider("clockwork.tube", _tube)
 	tier0 = Assets.load_set(ROOT + "tier0.json")
 	tier1 = Assets.load_set(ROOT + "tier1.json")
-	assert(tier0.ok and tier1.ok, "Invalid Clockwork ordinary sets: " + str(tier0.errors + tier1.errors))
-	for loaded: Dictionary in [tier0, tier1]:
+	tier2 = Assets.load_set(ROOT + "tier2.json")
+	assert(tier0.ok and tier1.ok and tier2.ok, "Invalid Clockwork ordinary sets: " + str(tier0.errors + tier1.errors + tier2.errors))
+	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid Tier 2 part schedule")
+	for loaded: Dictionary in [tier0, tier1, tier2]:
 		for composition: Dictionary in loaded.definition.compositions.values():
 			for id: String in composition.parts:
 				var spec: Dictionary = composition.parts[id].duplicate(true)
@@ -51,7 +55,7 @@ static func join() -> Dictionary:
 
 static func render_spec(event: Dictionary, settled: bool, straight: bool) -> Dictionary:
 	var spec: Dictionary = part(event.id).duplicate(true)
-	var treatment: String = tier0.definition.treatments[str(event.color)]
+	var treatment: String = tier0.definition.treatments[str(3 - event.color if spec.get("swap_treatment", false) else event.color)]
 	var bound := Assets.bind_part(spec, treatment)
 	assert(bound.ok, str(bound.errors))
 	spec = bound.part
@@ -76,3 +80,7 @@ static func _rise(params: Dictionary) -> ShaderMaterial:
 
 static func _tube(params: Dictionary) -> ShaderMaterial:
 	return Renderer.material(REVEAL, {"growth_field": Assets.resolve(params.growth_field, params.asset_root), "start_core": params.start_core, "start_edge": params.start_edge, "edge_enabled": params.edge_enabled, "travel_seconds": params.travel_seconds, "reveal_tail_seconds": params.reveal_tail_seconds})
+
+static func formation_parts() -> Dictionary:
+	install()
+	return Formations.parts(tier2)

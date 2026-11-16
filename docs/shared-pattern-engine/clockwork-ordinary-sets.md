@@ -1,5 +1,8 @@
 # Step 5 — Clockwork ordinary sets
 
+This document records the ordinary-tier migration checkpoint. Tier 2 has since
+migrated through the [shared formation assembly](tier2-assembly.md).
+
 Clockwork Tier 0/1 now use production shared sets in the actual game. The migration
 preserves artwork, shape rules, tube fronts, boundary joins, motion, retirement,
 audio, gallery phases and appearance version. No preview interface was added.

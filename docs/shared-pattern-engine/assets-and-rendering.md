@@ -117,6 +117,7 @@ Placement fields:
 | `pivot_px` | Attachment point in the texture/atlas-region's source pixels |
 | `centered`, `offset_px` | Existing Sprite2D conventions, preserved when specified |
 | `size_cells` | Sprite display size, or Control size, in cell units |
+| `max_extent_cells` | Sprite maximum side in cell units, preserving aspect ratio; overrides `size_cells` when both are supplied |
 | `scale` | Explicit scale; sprites with `size_cells` derive scale from their texture size |
 | `rotation_radians` / `quarter_turns` | Explicit orientation; quarter turns are clockwise |
 | `texture_filter`, `z_index`, `flip_h/v` | Explicit existing rendering settings |
@@ -208,3 +209,8 @@ They validate as named set parts and execute inside the host's drawing context;
 `ensure()`/node composition cannot instantiate them. See
 [Vines ordinary sets](vines-ordinary-sets.md) for the live configuration and
 construction-state integration.
+
+[Step 7](tier2-assembly.md) adds common formation records, configured multipart
+scheduling, aspect-preserving sprite extents and live Tier 2 providers for every
+active theme. Canonical formation lifecycle entries now use the shared
+`theme/tier2/color/y/x` identity.

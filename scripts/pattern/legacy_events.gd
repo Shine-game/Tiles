@@ -2,6 +2,7 @@ extends RefCounted
 
 # Geometry and existing timing are adapted, not recomputed. No nodes/textures
 # are stored in the common state. Render-node migration belongs to Step 4.
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Landmark = preload("res://scripts/zen_landmark.gd")
 const Pond = preload("res://scripts/zen_pond.gd")
@@ -40,12 +41,10 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 			_put(events, prefix + "cell/%d/%d/%d" % [model.board[cell.y][cell.x], cell.y, cell.x], at, at + Growth.CENTER_POP, at < 0, cell)
 		for edge: Dictionary in model.edges:
 			_put(events, prefix + "edge/%d/%s" % [edge.color, str(Growth.edge_key(edge.a, edge.b))], minf(edge.start_a, edge.start_b), edge.finish + maxf(maxf(Growth.RIPPLE, Growth.STAR_POP), Growth.LEAF_POP), edge.old, [edge.a, edge.b])
-		for corner: Vector2i in model.flowers:
-			var flower: Dictionary = model.flowers[corner]
-			_put(events, prefix + "formation/%d/%d/%d" % [flower.color, corner.y - 1, corner.x - 1], flower.start, flower.start + Growth.FLOWER_POP, flower.old, corner - Vector2i.ONE)
 		for link: Dictionary in model.links:
 			var seconds := Growth.LINK_GROW + Growth.STAR_POP
 			_put(events, prefix + "connection/%d/%s" % [link.color, str(Growth.edge_key(link.a, link.b))], link.start, link.start + seconds, link.old, [link.a, link.b])
+	events.merge(Formations.state_events(model.tier2_records(), theme, events))
 	return events
 
 static func _zen(events: Dictionary, prefix: String, model, zen) -> void:
@@ -58,9 +57,6 @@ static func _zen(events: Dictionary, prefix: String, model, zen) -> void:
 			var old: bool = not center.growing.has(stage)
 			var start: float = center.growing.get(stage, Schedule.SETTLED_AT)
 			_put(events, prefix + "center/%d/%d/%d" % [cell.y, cell.x, stage], start, start + Centerpiece.GROW_SECONDS, old, cell)
-	for key: String in zen.landmarks:
-		var landmark = zen.landmarks[key]
-		_put(events, prefix + "landmark/" + key, landmark.start, landmark.start + Landmark.GROW_SECONDS, not landmark.growing, landmark.origin)
 	if zen.pond != null:
 		for key: String in zen.pond.regions:
 			var start: float = zen.pond.regions[key].start

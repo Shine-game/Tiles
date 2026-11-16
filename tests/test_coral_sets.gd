@@ -17,7 +17,7 @@ func check(ok: bool, message: String) -> void:
 func _initialize() -> void: _run.call_deferred()
 func _run() -> void:
 	Sets.install()
-	check(Sets.tier0.ok and Sets.tier1.ok and Sets.catalog.size() == 9, "Both production sets own just the core, four arms and four junctions")
+	check(Sets.tier0.ok and Sets.tier1.ok and Sets.catalog.size() == 14, "Production sets own ordinary parts and the five colony parts")
 	check(Cells.parts_for_role(Sets.tier1, "straight_run_decoration").is_empty(), "Unapproved tiny fingers remain omitted")
 	check(Sets.propagation().cell_seconds == Model.CELL_SECONDS and Sets.part("arm_n").animation.duration_seconds == Model.HALF_SECONDS, "Public compatibility timings match live set values")
 	var bad: Dictionary = Sets.tier1.definition.duplicate(true)
@@ -43,6 +43,7 @@ func _run() -> void:
 			check(Sets.centers(mask).has("core") == (mask not in [5, 10]), "Only opposite two-port straights suppress their core")
 			check(model.components.has(Model.key("core", color, center)) == (mask not in [5, 10]), "The model applies the shared shape role")
 			for id: String in Sets.catalog:
+				if id.begins_with("colony_"): continue
 				var required: int = int(Sets.part(id).get("requires_mask", 0))
 				var expected: bool = mask not in [5, 10] if id == "core" else (mask & required == required)
 				var key := Model.key(id, color, center)
@@ -98,7 +99,8 @@ func _run() -> void:
 	check(renderer.nodes["probe/core"].material == null, "Static composition displays the original artwork without an unbound event shader")
 	renderer.clear()
 	parent.queue_free()
-	for id: String in ["colony_body", "colony_fold_ne", "anemone_foot", "anemone_region_0", "ground_01"]: check(not Sets.owns(id), "Higher tiers and ground stay outside the ordinary migration")
+	for id: String in ["colony_body", "colony_fold_ne"]: check(Sets.owns(id), "Tier 2 colony parts use live sets")
+	for id: String in ["anemone_foot", "anemone_region_0", "ground_01"]: check(not Sets.owns(id), "Tier 3 and ground stay outside this migration")
 	Palette.select_theme("coral_reef")
 	check(Palette.theme_version() == "2.2", "New core suppression has a distinct saved appearance version")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/coral_reef/sets/*.json"), "Production sets are included in Android exports")

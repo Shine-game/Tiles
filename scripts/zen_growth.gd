@@ -2,6 +2,7 @@ extends "res://scripts/coral_growth.gd"
 
 # Reuse Coral's same-color waves and formation detection. Zen supplies its own
 # landmark timing and artwork; no Coral bloom artwork is rendered.
+const Sets = preload("res://scripts/zen_sets.gd")
 var ponds: Dictionary = {}
 var groves: Array = []
 func build(before: Array, after: Array) -> void:
@@ -13,14 +14,16 @@ func build(before: Array, after: Array) -> void:
 	for cell: Vector2i in arrivals:
 		if float(arrivals[cell]) >= 0:
 			duration = maxf(duration, float(arrivals[cell]) + 0.30)
+	var formations := Formations.collect(before, after)
 	for origin: Vector2i in colonies:
 		var formation: Dictionary = colonies[origin]
+		var animation: Dictionary = Sets.formation_part(formation.color).animation
 		var latest := -100.0
-		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
-			latest = maxf(latest, float(arrivals[origin + offset]))
-		formation.pattern_end = latest + preload("res://scripts/zen_landmark.gd").PATTERN_SECONDS
-		formation.start = -100.0 if formation.old else formation.pattern_end + preload("res://scripts/zen_landmark.gd").PATTERN_HOLD_SECONDS
-		formation.end = formation.start + preload("res://scripts/zen_landmark.gd").GROW_SECONDS
+		for cell: Vector2i in formations[origin].cells:
+			latest = maxf(latest, float(arrivals[cell]))
+		formation.pattern_end = latest + float(animation.pattern_seconds)
+		formation.start = -100.0 if formation.old else formation.pattern_end + float(animation.hold_seconds)
+		formation.end = formation.start + float(animation.duration_seconds)
 		formation.ready = formation.end
 		if not formation.old: duration = maxf(duration, formation.end)
 

@@ -1,4 +1,5 @@
 extends RefCounted
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
@@ -7,6 +8,7 @@ const Art = preload("res://scripts/vines_renderer.gd")
 const ROOT := "res://art/themes/vines/sets/"
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
+static var tier2: Dictionary = {}
 static var renderer := Components.new()
 
 static func install() -> void:
@@ -14,9 +16,12 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.holding", Art.holding)
 	Components.register_draw_part_provider("vines.connection", Art.connection)
 	Components.register_draw_part_provider("vines.wash", Art.wash)
+	Components.register_draw_part_provider("vines.flower", Art.flower)
 	tier0 = Assets.load_set(ROOT + "tier0.json")
 	tier1 = Assets.load_set(ROOT + "tier1.json")
-	assert(tier0.ok and tier1.ok, str(tier0.errors + tier1.errors))
+	tier2 = Assets.load_set(ROOT + "tier2.json")
+	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
+	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
 
 static func centers(mask: int) -> Dictionary:
 	install()
@@ -56,4 +61,9 @@ static func draw(view) -> void:
 		var selected := centers(Topology.neighbor_mask(view.board, cell))
 		for id: String in selected:
 			renderer.draw_parts({id: selected[id]}, view, {"cell": cell, "scale": center_scale(view, cell, selected[id])})
-	for corner: Vector2i in view.pattern.flowers: view._draw_flower(corner, view.pattern.flowers[corner])
+	for corner: Vector2i in view.pattern.flowers:
+		renderer.draw_parts(Formations.parts(tier2), view, {"corner": corner, "event": view.pattern.flowers[corner]})
+
+static func flower() -> Dictionary:
+	install()
+	return Formations.parts(tier2).flower

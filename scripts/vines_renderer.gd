@@ -73,3 +73,32 @@ static func connection(view, spec: Dictionary, context: Dictionary) -> void:
 		var t: float = (view.clock - edge.finish) / Growth.STAR_POP
 		if t > 0 and t < 1:
 			view._star(view._curve_point(curve, 0.5) + Vector2(0, -view.pitch * float(p.star_lift) * t), view.pitch * float(p.star_radius) * sin(PI * t), Color(Palette.blossom(edge.color), 1 - t))
+
+static func flower(view, spec: Dictionary, context: Dictionary) -> void:
+	var event: Dictionary = context.event
+	var p: Dictionary = spec.params
+	var progress: float = clampf((view.clock - event.start) / float(spec.animation.duration_seconds), 0, 1)
+	if progress <= 0: return
+	var center: Vector2 = view._point(Vector2(context.corner))
+	var stem := Palette.pigment(event.color)
+	var ink := Palette.blossom(event.color)
+	var support_scale: float = minf(1, view.pop(progress / float(p.support_finish)))
+	var base: Vector2 = center + Vector2(0, view.pitch * float(p.stem_base_y))
+	var curve: Dictionary = view._curve(base, center, Vector2(float(p.stem_tangent_x), -1).normalized(), Vector2(0, 1))
+	view._vine(curve, 0, support_scale, stem, 0)
+	for side: float in [-1.0, 1.0]:
+		for i in range(p.support_leaf_y.size()):
+			view._paint_leaf(base + Vector2(0, -view.pitch * float(p.support_leaf_y[i])), Vector2(side * float(p.support_leaf_x[i]), float(p.support_leaf_direction_y[i])).normalized(), view.pitch * float(p.support_leaf_length[i]), view.pitch * float(p.support_leaf_width[i]), Color(stem.lightened(float(p.support_leaf_lightening[i])), float(p.support_leaf_alpha[i])), support_scale)
+	var scale: float = minf(1, view.pop((progress - float(p.petal_delay)) / float(p.petal_span)))
+	var radius: float = view.pitch * float(p.radius) * scale
+	if radius < 0.6: return
+	for layer in range(int(p.halo_layers)):
+		view.draw_circle(center, radius * (float(p.halo_radius) + layer * float(p.halo_step)), Color(ink, float(p.halo_alpha)), true, -1, true)
+	for petal in range(int(p.petals)):
+		var direction := Vector2.from_angle(petal * TAU / int(p.petals))
+		for i in range(p.petal_root.size()):
+			view._paint_leaf(center + direction * radius * float(p.petal_root[i]), direction, radius * float(p.petal_length[i]), radius * float(p.petal_width[i]), Color(ink.lightened(float(p.petal_lightening[i])), float(p.petal_alpha[i])))
+	view.draw_circle(center, radius * float(p.center_radius), Palette.tile(event.color), true, -1, true)
+	for i in range(int(p.stamens)):
+		var offset := Vector2.from_angle(i * TAU / int(p.stamens)) * radius * float(p.stamen_distance)
+		view.draw_circle(center + offset, maxf(0.35, radius * float(p.stamen_radius)), Color(stem, float(p.stamen_alpha)), true, -1, true)

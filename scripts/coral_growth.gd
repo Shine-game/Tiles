@@ -150,30 +150,17 @@ func build(before: Array, after: Array) -> void:
 			if arms.has(dependencies[0].component) and arms.has(dependencies[1].component):
 				var old_junction: bool = arms[dependencies[0].component].old and arms[dependencies[1].component].old
 				_add(junction, color, cell, center, old_junction, dependent_start(junction, arms), component_duration(junction))
-	# Keep each colony's body/folds/fingers as one stable feature group.
-	for y in range(board.size() - 1):
-		for x in range(board.size() - 1):
-			var origin := Vector2i(x, y)
-			var corner := origin + Vector2i.ONE
-			if not flowers.has(corner):
-				continue
-			var color: int = flowers[corner].color
-			var old: bool = is_flower(before, corner, color)
-			var perimeter := -100.0
-			for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
-				for direction in range(4):
-					var neighbor: Vector2i = offset + OFFSETS[direction]
-					if neighbor.x in [0, 1] and neighbor.y in [0, 1]:
-						perimeter = maxf(perimeter, components[key("arm_" + DIR_NAMES[direction], color, origin + offset)].end)
-			var center := Vector2(origin) + Vector2.ONE
-			var body := _add("colony_body", color, origin, center, old, perimeter, component_duration("colony_body"))
-			var complete: float = body.end
-			for id: String in ["colony_fold_ne", "colony_fold_sw", "colony_fingers_nw", "colony_fingers_se"]:
-				var event := _add(id, color, origin, center, old, dependent_start(id, {"colony_body": body}), component_duration(id))
-				complete = maxf(complete, event.end)
-			colonies[origin] = {"origin": origin, "color": color, "old": old, "start": perimeter, "ready": complete, "end": complete}
-			flowers[corner].start = perimeter
-			flowers[corner].old = old
+	# Shared formation support and multipart scheduling retain Coral event IDs.
+	var formations := Formations.collect(before, after)
+	for origin: Vector2i in formations:
+		var formation: Dictionary = formations[origin]
+		var color: int = formation.color
+		var perimeter := Formations.prerequisite_ready(formation, components, key, Ordinary.tier2)
+		var events := Formations.assemble(formation, Ordinary.formation_parts(), perimeter, _emit_formation)
+		var complete := Formations.completion(Ordinary.tier2, perimeter, events)
+		colonies[origin] = {"origin": origin, "color": color, "old": formation.old, "start": perimeter, "ready": complete, "end": complete}
+		flowers[origin + Vector2i.ONE].start = perimeter
+		flowers[origin + Vector2i.ONE].old = formation.old
 	for pair: Dictionary in Topology.adjacent_pairs(colonies):
 		var a: Vector2i = pair.a
 		var b: Vector2i = pair.b
@@ -204,3 +191,9 @@ func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 			var crossing: float = arrival(arm, 1)
 			return 1.0 - smoothstep(crossing, crossing + GRID_FADE, time)
 	return super.grid_visibility(a, b, time)
+
+func _emit_formation(id: String, _spec: Dictionary, formation: Dictionary, at: float, seconds: float) -> Dictionary:
+	return _add(id, formation.color, formation.origin, formation.center, formation.old, at, seconds)
+
+func tier2_records() -> Dictionary:
+	return Formations.bind_records(board, colonies, "ready")

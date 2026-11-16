@@ -1,6 +1,8 @@
 class_name ZenLandmark
 extends Sprite2D
 
+const Sets = preload("res://scripts/zen_sets.gd")
+const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const SURFACE = preload("res://shaders/zen_landmark.gdshader")
 const LANTERN = preload("res://art/themes/zen_garden/artwork/architecture/stone_lantern_2x2_visual.png")
@@ -19,32 +21,26 @@ var color := 1
 var variant := 0
 var start := -100.0
 var growing := false
+var grow_seconds := GROW_SECONDS
 
 static func identity(cell: Vector2i, pigment: int) -> String:
 	return "%d/%d/%d" % [pigment, cell.y, cell.x]
 
 static func rock_variant(cell: Vector2i) -> int:
 	# Stable through growth, Undo, Erase and rebuilding a gallery capture.
-	return int(((cell.x * 73856093) ^ (cell.y * 19349663) ^ 1409) & 0xffffffff) % ROCKS.size()
+	return Sets.rock_variant(cell)
 
 func _init() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	var ink := ShaderMaterial.new()
-	ink.shader = SURFACE
-	material = ink
 
 func configure(event: Dictionary, settled: bool) -> void:
 	origin = event.origin
 	color = event.color
 	variant = rock_variant(origin) if color == 2 else 0
-	texture = ROCKS[variant] if color == 2 else LANTERN
-	position = (Vector2(origin) + Vector2.ONE) * 256.0
-	rotation = 0.0
-	# Rocks keep their two-cell size. The lantern is half its former size and
-	# its pedestal, rather than the whole image, sits on the formation center.
-	var canvas_pixels := 256.0 if color == 1 else 512.0
-	scale = Vector2.ONE * canvas_pixels / maxf(texture.get_width(), texture.get_height())
-	offset = texture.get_size() * 0.5 - LANTERN_BASE_PIVOT if color == 1 else Vector2.ZERO
+	var spec := Sets.landmark_spec(origin, color)
+	Components.configure_sprite(self, spec)
+	grow_seconds = float(spec.animation.duration_seconds)
+	if material == null: material = Components.material_providers[spec.material.provider].call(spec.material.params)
 	var extent: Vector2 = texture.get_size() * scale
 	material.set_shader_parameter("artwork_origin", position + (offset - texture.get_size() * 0.5) * scale)
 	material.set_shader_parameter("artwork_pixels", extent)
@@ -54,7 +50,7 @@ func configure(event: Dictionary, settled: bool) -> void:
 
 func advance(clock: float) -> void:
 	if not growing: return
-	modulate.a = Timing.smooth(start, GROW_SECONDS, clock)
+	modulate.a = Timing.smooth(start, grow_seconds, clock)
 	if modulate.a >= 1.0: growing = false
 
 func configure_surface(platform) -> void:

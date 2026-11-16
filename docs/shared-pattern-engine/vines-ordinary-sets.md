@@ -1,5 +1,8 @@
 # Step 6 — Vines ordinary sets
 
+This document records the ordinary-tier migration checkpoint. Tier 2 has since
+migrated through the [shared formation assembly](tier2-assembly.md).
+
 Vines Tier 0/1 now use live shared sets and registered procedural part providers.
 The approved appearance change removes holding/frond motifs from straights.
 Isolated tiles, endpoints, bends, Ts and crosses retain the existing motif. The

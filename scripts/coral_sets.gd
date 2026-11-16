@@ -1,13 +1,15 @@
 extends RefCounted
-# Ordinary Coral metadata is live set data; higher tiers retain their adapter.
+# Coral Tier 0/1/2 metadata is live set data; Tier 3 retains its adapter.
 const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const REVEAL = preload("res://art/themes/coral_reef/shaders/growth_reveal.gdshader")
 const ROOT := "res://art/themes/coral_reef/sets/"
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
+static var tier2: Dictionary = {}
 static var catalog: Dictionary = {}
 
 static func install() -> void:
@@ -15,8 +17,10 @@ static func install() -> void:
 	Renderer.register_material_provider("coral.reveal", _reveal)
 	tier0 = Assets.load_set(ROOT + "tier0.json")
 	tier1 = Assets.load_set(ROOT + "tier1.json")
-	assert(tier0.ok and tier1.ok, str(tier0.errors + tier1.errors))
-	for loaded: Dictionary in [tier0, tier1]:
+	tier2 = Assets.load_set(ROOT + "tier2.json")
+	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
+	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid Tier 2 part schedule")
+	for loaded: Dictionary in [tier0, tier1, tier2]:
 		for composition: Dictionary in loaded.definition.compositions.values():
 			for id: String in composition.parts:
 				var spec: Dictionary = composition.parts[id].duplicate(true)
@@ -71,3 +75,7 @@ static func _reveal(params: Dictionary) -> ShaderMaterial:
 	uniforms.growth_mask = Assets.resolve(params.growth_mask, params.asset_root)
 	uniforms.erase("asset_root")
 	return Renderer.material(REVEAL, uniforms)
+
+static func formation_parts() -> Dictionary:
+	install()
+	return Formations.parts(tier2)

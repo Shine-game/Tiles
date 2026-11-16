@@ -1,0 +1,160 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "clockwork-tier2",
+  "tier": 2,
+  "roles": {
+    "formation": "mechanism"
+  },
+  "compositions": {
+    "mechanism": {
+      "parts": {
+        "L01": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/L01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/L01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "layer": 35,
+          "z_index": 4,
+          "texture_filter": 2,
+          "animation": {
+            "offset_seconds": 0,
+            "duration_seconds": 0.4
+          },
+          "identity_kind": "L01",
+          "material": {
+            "provider": "clockwork.rise",
+            "params": {
+              "height_source": 12.0
+            }
+          }
+        },
+        "L02": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/L02.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/L02.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "layer": 40,
+          "z_index": 5,
+          "texture_filter": 2,
+          "animation": {
+            "offset_seconds": 0.85,
+            "duration_seconds": 0.35
+          },
+          "identity_kind": "L02",
+          "material": {
+            "provider": "clockwork.rise",
+            "params": {
+              "height_source": 18.0
+            }
+          }
+        },
+        "L03": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/L03.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/L03.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "layer": 45,
+          "z_index": 6,
+          "texture_filter": 2,
+          "animation": {
+            "offset_seconds": 1.2,
+            "duration_seconds": 0.5
+          },
+          "identity_kind": "L03",
+          "swap_treatment": true,
+          "material": {
+            "provider": "clockwork.rise",
+            "params": {
+              "height_source": 12.0
+            }
+          }
+        },
+        "H00_plain_hatch": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H00_plain_hatch.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H00_plain_hatch.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2,
+          "animation": {
+            "offset_seconds": 1.7,
+            "duration_seconds": 0.25
+          },
+          "identity_kind": "hatch"
+        }
+      }
+    }
+  },
+  "schedule": {
+    "completion_offset_seconds": 1.95,
+    "prerequisite": "supporting_wheels_and_internal_tubes",
+    "support_parts": [
+      "C02"
+    ],
+    "port_prefix": "T01_",
+    "port_names": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "floor_time": 0.0
+  },
+  "lower_layers": {
+    "retain_pattern": true,
+    "power_supporting_wheels": true
+  }
+}

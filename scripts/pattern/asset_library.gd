@@ -129,8 +129,9 @@ static func validate_placement(spec: Dictionary) -> Array:
 		if not spec.has(field): continue
 		var v: Variant = spec[field]
 		if not v is Vector2 and not (v is Array and v.size() == 2 and v.all(func(n): return n is int or n is float)): errors.append("Expected a vector for " + field)
-	for field: String in ["pixels_per_cell", "rotation_radians", "quarter_turns", "z_index", "texture_filter"]:
+	for field: String in ["pixels_per_cell", "max_extent_cells", "rotation_radians", "quarter_turns", "z_index", "texture_filter"]:
 		if spec.has(field) and not (spec[field] is int or spec[field] is float): errors.append("Expected a number for " + field)
+	if spec.has("max_extent_cells") and (spec.max_extent_cells is float or spec.max_extent_cells is int) and spec.max_extent_cells <= 0: errors.append("max_extent_cells must be positive")
 	if spec.has("pixels_per_cell") and (spec.pixels_per_cell is float or spec.pixels_per_cell is int) and spec.pixels_per_cell <= 0: errors.append("pixels_per_cell must be positive")
 	return errors
 

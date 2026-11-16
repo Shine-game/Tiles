@@ -1,6 +1,7 @@
 class_name TileGrowth
 extends RefCounted
 
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 
@@ -135,22 +136,32 @@ func build(before: Array, after: Array) -> void:
 				duration = maxf(duration, crossing + GRID_FADE)
 				for sprout: Dictionary in leaf_sprouts(edge):
 					duration = maxf(duration, sprout.start + LEAF_POP)
-	for origin: Vector2i in Topology.formations(board):
+	var formations := Formations.collect(before, board)
+	for origin: Vector2i in formations:
 		var corner := origin + Vector2i.ONE
-		var color := value(board, corner)
-		var old: bool = is_flower(before, corner, color)
-		var around: Array = [corner + Vector2i(-1, -1), corner + Vector2i(0, -1), corner, corner + Vector2i(-1, 0)]
+		var color: int = formations[origin].color
+		var old: bool = formations[origin].old
+		var around := Formations.perimeter(formations[origin])
 		var start := -100.0 if old else 0.0
 		if not old:
 			for i in range(4):
 				start = maxf(start, lookup[edge_key(around[i], around[(i + 1) % 4])].finish)
-			duration = maxf(duration, start + FLOWER_POP)
+			duration = maxf(duration, start + flower_seconds())
 		flowers[corner] = {"color": color, "start": start, "old": old}
 	for pair: Dictionary in Topology.adjacent_pairs(flowers):
 		var corner: Vector2i = pair.a
 		var other: Vector2i = pair.b
 		var old: bool = flowers[corner].old and flowers[other].old
-		var start: float = -100 if old else maxf(flowers[corner].start, flowers[other].start) + FLOWER_POP * 0.45
+		var start: float = -100 if old else maxf(flowers[corner].start, flowers[other].start) + flower_seconds() * flower_link_fraction()
 		links.append({"a": corner, "b": other, "color": flowers[corner].color, "start": start, "old": old})
 		if not old:
 			duration = maxf(duration, start + LINK_GROW + STAR_POP)
+
+func flower_seconds() -> float:
+	return FLOWER_POP
+
+func flower_link_fraction() -> float:
+	return 0.45
+
+func tier2_records() -> Dictionary:
+	return Formations.bind_records(board, flowers, "", flower_seconds(), Vector2i.ONE)

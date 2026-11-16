@@ -62,6 +62,8 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 	var board: Array = model.board
 	var retained_centers: Dictionary = {}
 	for origin: Vector2i in model.colonies:
+		var family: String = "rakes" if model.colonies[origin].color == 1 else "stones"
+		if not Sets.families[family][2].definition.lower_layers.suppress_centers: continue
 		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
 			formation_cells[origin + offset] = true
 	for y in range(board.size()):

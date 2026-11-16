@@ -1,5 +1,8 @@
 # Step 6 — Zen Garden ordinary sets and endpoint copies
 
+This document records the ordinary-tier migration checkpoint. Tier 2 has since
+migrated through the [shared formation assembly](tier2-assembly.md).
+
 Zen now loads separate Tier 0/1 sets for rakes and stepping stones through the
 common asset library and shape selector. The endpoint mapping follows the user's
 revision: reuse the Tier 0 core underneath an overlapping rake/path ending, with

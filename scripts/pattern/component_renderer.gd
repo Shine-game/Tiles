@@ -58,6 +58,7 @@ static func configure_sprite(sprite: Sprite2D, spec: Dictionary) -> void:
 	if spec.has("offset_px"): sprite.offset = vector(spec.offset_px)
 	if spec.has("scale"): sprite.scale = vector(spec.scale, Vector2.ONE)
 	if spec.has("size_cells") and sprite.texture != null: sprite.scale = vector(spec.size_cells) * pixels / sprite.texture.get_size()
+	if spec.has("max_extent_cells") and sprite.texture != null: sprite.scale = Vector2.ONE * float(spec.max_extent_cells) * pixels / maxf(sprite.texture.get_width(), sprite.texture.get_height())
 	if spec.has("rotation_radians") or spec.has("quarter_turns"): sprite.rotation = Assembly.rotation(spec)
 	if spec.has("texture_filter"): sprite.texture_filter = spec.texture_filter
 	if spec.has("z_index"): sprite.z_index = spec.z_index

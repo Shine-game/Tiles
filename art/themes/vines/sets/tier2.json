@@ -1,0 +1,93 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "vines-tier2",
+  "tier": 2,
+  "roles": {
+    "formation": "flower"
+  },
+  "compositions": {
+    "flower": {
+      "parts": {
+        "flower": {
+          "provider": "vines.flower",
+          "animation": {
+            "duration_seconds": 0.36
+          },
+          "params": {
+            "support_finish": 0.6,
+            "stem_base_y": 0.455,
+            "stem_tangent_x": -0.18,
+            "support_leaf_y": [
+              0.025,
+              0.1
+            ],
+            "support_leaf_x": [
+              0.72,
+              0.55
+            ],
+            "support_leaf_direction_y": [
+              -0.88,
+              -1.0
+            ],
+            "support_leaf_length": [
+              0.31,
+              0.19
+            ],
+            "support_leaf_width": [
+              0.12,
+              0.08
+            ],
+            "support_leaf_lightening": [
+              0,
+              0.15
+            ],
+            "support_leaf_alpha": [
+              0.88,
+              0.76
+            ],
+            "petal_delay": 0.12,
+            "petal_span": 0.88,
+            "radius": 0.3333333333333333,
+            "halo_layers": 3,
+            "halo_radius": 0.72,
+            "halo_step": 0.12,
+            "halo_alpha": 0.025,
+            "petals": 8,
+            "petal_root": [
+              0.04,
+              0.03
+            ],
+            "petal_length": [
+              0.96,
+              0.72
+            ],
+            "petal_width": [
+              0.55,
+              0.25
+            ],
+            "petal_lightening": [
+              0,
+              0.25
+            ],
+            "petal_alpha": [
+              0.96,
+              0.62
+            ],
+            "center_radius": 0.11,
+            "stamens": 8,
+            "stamen_distance": 0.14,
+            "stamen_radius": 0.022,
+            "stamen_alpha": 0.62
+          }
+        }
+      }
+    }
+  },
+  "lower_layers": {
+    "retain_pattern": true
+  },
+  "schedule": {
+    "prerequisite": "perimeter_edges_meet",
+    "link_overlap_fraction": 0.45
+  }
+}

@@ -1,5 +1,8 @@
 # Step 6 — Coral ordinary sets
 
+This document records the ordinary-tier migration checkpoint. Tier 2 has since
+migrated through the [shared formation assembly](tier2-assembly.md).
+
 Coral Tier 0/1 now use live shared sets. The approved appearance change removes
 cores from straight cells, retaining their two arms. Isolated tiles and endpoints
 keep the core. Bends, Ts and crosses keep the core plus respectively one, two or

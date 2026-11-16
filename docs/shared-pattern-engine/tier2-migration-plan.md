@@ -1,7 +1,6 @@
 # Step 7 — shared Tier 2 formation migration proposal
 
-Status: scope reviewed against the four active themes; awaiting approval before
-implementation. Labyrinth was removed at the owner's request, completing Step 6
+Status: approved and implemented. See the [implementation and verification](tier2-assembly.md). Labyrinth was removed at the owner's request, completing Step 6
 for Zen Garden, Clockwork, Vines and Coral Reef.
 
 The next change should consolidate how same-color 2×2 formations are assembled.

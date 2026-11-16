@@ -244,10 +244,6 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			ink.set_shader_parameter("quarter_turn", event.rotation / (PI / 2))
 			entry.node.material = ink
 			grounds.append(entry.node)
-		elif event.id in ["L01", "L02", "L03"]:
-			var ink := Components.material(RISE)
-			ink.set_shader_parameter("height_source", 18.0 if event.id == "L02" else (6.0 if event.id == "C01" else 12.0))
-			entry.node.material = ink
 		else:
 			entry.node.material = null
 	for identity: String in next.chains:

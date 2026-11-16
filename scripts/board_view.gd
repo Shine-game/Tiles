@@ -8,6 +8,7 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const VineModel = preload("res://scripts/vines_growth.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
 const AssetProviders = preload("res://scripts/pattern/legacy_assets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
@@ -98,7 +99,7 @@ func _build_pattern(before: Array, after: Array) -> void:
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	zen_garden = Palette.zen_garden
-	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else Growth.new()))
+	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else VineModel.new()))
 	pattern.build(before, after)
 	if board_frame == null:
 		board_frame = Frame.new()
@@ -286,7 +287,7 @@ func advance_growth(delta: float) -> void:
 	visual_clock_advanced.emit(clock)
 	for corner: Vector2i in pattern.flowers:
 		var flower: Dictionary = pattern.flowers[corner]
-		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + Growth.FLOWER_POP * 0.12:
+		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + pattern.flower_seconds() * 0.12:
 			announced_flowers[corner] = true
 			flower_opened.emit(corner, flower.color)
 	if not construction_state.schedule.running():
@@ -471,33 +472,3 @@ func _star(center: Vector2, radius: float, ink: Color) -> void:
 		points.append(center + Vector2.from_angle(i * TAU / 8) * radius * (1.0 if i % 2 == 0 else 0.23))
 	draw_colored_polygon(points, ink)
 	draw_polyline(PackedVector2Array([points[0], points[2], points[4], points[6], points[0]]), Color(ink, 0.18), 0.6, true)
-
-func _draw_flower(corner: Vector2i, flower: Dictionary) -> void:
-	var progress: float = clampf((clock - flower.start) / Growth.FLOWER_POP, 0, 1)
-	if progress <= 0:
-		return
-	var center := _point(Vector2(corner))
-	var stem: Color = Palette.pigment(flower.color)
-	var ink: Color = Palette.blossom(flower.color)
-	var support_scale: float = minf(1, pop(progress / 0.60))
-	var base: Vector2 = center + Vector2(0, pitch * 0.455)
-	var curve: Dictionary = _curve(base, center, Vector2(-0.18, -1).normalized(), Vector2(0, 1))
-	_vine(curve, 0, support_scale, stem, 0)
-	# Red-marked reference: leaf stems rise from underneath and cradle the bloom.
-	for side: float in [-1.0, 1.0]:
-		_paint_leaf(base + Vector2(0, -pitch * 0.025), Vector2(side * 0.72, -0.88).normalized(), pitch * 0.31, pitch * 0.12, Color(stem, 0.88), support_scale)
-		_paint_leaf(base + Vector2(0, -pitch * 0.10), Vector2(side * 0.55, -1).normalized(), pitch * 0.19, pitch * 0.08, Color(stem.lightened(0.15), 0.76), support_scale)
-	var scale: float = minf(1, pop((progress - 0.12) / 0.88))
-	var radius: float = pitch * Growth.FLOWER_RADIUS * scale
-	if radius < 0.6:
-		return
-	for layer in range(3):
-		draw_circle(center, radius * (0.72 + layer * 0.12), Color(ink, 0.025), true, -1, true)
-	for petal in range(8):
-		var direction := Vector2.from_angle(petal * TAU / 8)
-		_paint_leaf(center + direction * radius * 0.04, direction, radius * 0.96, radius * 0.55, Color(ink, 0.96))
-		_paint_leaf(center + direction * radius * 0.03, direction, radius * 0.72, radius * 0.25, Color(ink.lightened(0.25), 0.62))
-	draw_circle(center, radius * 0.11, Palette.tile(flower.color), true, -1, true)
-	for i in range(8):
-		var offset := Vector2.from_angle(i * TAU / 8) * radius * 0.14
-		draw_circle(center + offset, maxf(0.35, radius * 0.022), Color(stem, 0.62), true, -1, true)

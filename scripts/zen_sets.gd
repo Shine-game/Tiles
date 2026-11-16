@@ -1,5 +1,7 @@
 extends RefCounted
 # Zen's ordinary sets. Ponds, historical trees and landmarks stay project-owned.
+const Formations = preload("res://scripts/pattern/formation_assembly.gd")
+const SURFACE = preload("res://shaders/zen_landmark.gdshader")
 const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
@@ -15,15 +17,17 @@ static func install() -> void:
 	Catalog.install()
 	Assets.register_provider("zen.rake_overlap", _overlap, _overlap_parameters)
 	Renderer.register_node_provider("zen.rake_centerpiece", _center)
+	Renderer.register_material_provider("zen.landmark", _landmark_surface)
 	for family: String in ["rakes", "stones"]:
 		var tiers: Array = []
-		for tier in [0, 1]:
+		for tier in [0, 1, 2]:
 			var loaded := Assets.load_set(ROOT + family + "-tier%d.json" % tier)
 			assert(loaded.ok, str(loaded.errors))
 			for composition: Dictionary in loaded.definition.compositions.values():
 				for part: Dictionary in composition.parts.values():
 					for asset: Dictionary in part.get("stage_artwork", []):
 						assert(Assets.validate(asset, loaded.root).is_empty(), "Invalid Zen stage artwork")
+			if tier == 2: assert(Formations.validate_schedule(Formations.parts(loaded)).is_empty(), "Invalid landmark schedule")
 			tiers.append(loaded)
 		families[family] = tiers
 
@@ -93,3 +97,24 @@ static func _overlap(params: Dictionary) -> Texture2D:
 		# a second opaque sand sprite concealing the core underneath it.
 		heights[i] = path[i] if i < int(params.port_guard_pixels) * Geometry.SIZE else minf(heights[i], path[i])
 	return ImageTexture.create_from_image(Image.create_from_data(256, 256, false, Image.FORMAT_RF, heights.to_byte_array()))
+
+static func formation_part(color: int) -> Dictionary:
+	install()
+	return Formations.parts(families["rakes" if color == 1 else "stones"][2]).artwork
+
+static func rock_variant(origin: Vector2i) -> int:
+	install()
+	var policy: Dictionary = families.stones[2].definition.variant_policy
+	return int(((origin.x * int(policy.x_multiplier)) ^ (origin.y * int(policy.y_multiplier)) ^ int(policy.seed)) & 0xffffffff) % int(policy.count)
+
+static func landmark_spec(origin: Vector2i, color: int) -> Dictionary:
+	var part := formation_part(color)
+	var bound := Assets.bind_part(part, str(rock_variant(origin)) if color == 2 else "")
+	assert(bound.ok, str(bound.errors))
+	var spec: Dictionary = bound.part
+	spec.asset_root = ROOT
+	spec.position_cells = Vector2(origin) + Vector2.ONE
+	return spec
+
+static func _landmark_surface(_params: Dictionary) -> ShaderMaterial:
+	return Renderer.material(SURFACE)
