@@ -3,6 +3,7 @@ extends Node2D
 
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
+const Trees = preload("res://scripts/zen_trees.gd")
 const Pond = preload("res://scripts/zen_pond.gd")
 const Landmark = preload("res://scripts/zen_landmark.gd")
 const SAND_SHADER = preload("res://shaders/zen_sand.gdshader")
@@ -22,6 +23,7 @@ var formation_cells: Dictionary = {}
 var centerpieces: Dictionary = {}
 var landmarks: Dictionary = {}
 var landmark_order: Dictionary = {}
+var trees: ZenTrees
 var pond: ZenPond
 var landmark_layer: Node2D
 var next_landmark_order := 0
@@ -47,7 +49,7 @@ static func stone_sprite(cell: Vector2i, direction: int = -1) -> Sprite2D:
 
 func clear(keep_features: bool = false) -> void:
 	for child: Node in get_children():
-		if keep_features and (child.has_meta("zen_centerpiece") or child == landmark_layer or child == pond): continue
+		if keep_features and (child.has_meta("zen_centerpiece") or child == landmark_layer or child == pond or child == trees): continue
 		remove_child(child)
 		child.queue_free()
 	materials.clear()
@@ -60,6 +62,7 @@ func clear(keep_features: bool = false) -> void:
 		landmark_order.clear()
 		landmark_layer = null
 		pond = null
+		trees = null
 		next_landmark_order = 0
 
 func reconcile(model, settled: bool, complete: bool = false) -> void:
@@ -134,6 +137,10 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 		pond = Pond.new()
 		add_child(pond)
 	pond.reconcile(model, settled)
+	if trees == null:
+		trees = Trees.new()
+		add_child(trees)
+	trees.reconcile(model, settled)
 	advance(100.0 if settled else 0.0)
 
 func _sync_landmarks(model, settled: bool) -> void:
@@ -173,8 +180,10 @@ func copy_landmark_order(source: ZenVisuals) -> void:
 	next_landmark_order = source.next_landmark_order
 	_sort_landmarks()
 	if pond != null and source.pond != null: pond.copy_choices(source.pond)
+	if trees != null and source.trees != null: trees.copy_from(source.trees)
 
 func advance(clock: float) -> void:
+	if trees != null: trees.advance(clock)
 	if pond != null: pond.advance(clock)
 	for landmark: Node in landmarks.values(): landmark.advance(clock)
 	for center: Node in centerpieces.values(): center.advance(clock)
@@ -184,6 +193,7 @@ func advance(clock: float) -> void:
 		if progress >= 1: pending.erase(sprite)
 
 func configure_surface(platform) -> void:
+	if trees != null: trees.configure_surface(platform)
 	if pond != null: pond.configure_surface(platform)
 	for landmark: Node in landmarks.values(): landmark.configure_surface(platform)
 	for ink: ShaderMaterial in materials:

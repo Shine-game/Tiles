@@ -3,6 +3,7 @@ extends "res://scripts/coral_growth.gd"
 # Reuse Coral's same-color waves and formation detection. Zen supplies its own
 # landmark timing and artwork; no Coral bloom artwork is rendered.
 var ponds: Dictionary = {}
+var groves: Array = []
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
 	components.clear()
@@ -37,3 +38,7 @@ func build(before: Array, after: Array) -> void:
 			ponds["%d/%d/%d" % [origin.y, origin.x, direction]] = {"origin": origin, "direction": direction, "old": old, "start": -100.0 if old else start}
 			if not old:
 				duration = maxf(duration, start + preload("res://scripts/zen_pond.gd").FILL_SECONDS + preload("res://scripts/zen_pond.gd").PLANT_SECONDS)
+
+	groves = preload("res://scripts/zen_trees.gd").clusters(colonies)
+	for grove: Dictionary in groves:
+		if not grove.old: duration = maxf(duration, grove.start + preload("res://scripts/zen_trees.gd").GROW_SECONDS)

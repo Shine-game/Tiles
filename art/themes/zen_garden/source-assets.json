@@ -320,6 +320,54 @@
       "source_asset": "ARTWORK/watersheds/04/watershed_w.png",
       "sha256": "e69435126836013a7fe1016421bea834362da5ec127655ee979b6a30103f6be6",
       "bytes": 5180
+    },
+    {
+      "path": "artwork/trees/individual_first_set/spring_sakura_long_03.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/spring_sakura_long_03.png",
+      "sha256": "58f82edbca3b63866c3743aeeb79d8d333c56086b93e0ec8ee2d81635e89bf08",
+      "bytes": 702145
+    },
+    {
+      "path": "artwork/trees/individual_first_set/autumn_red_short_01.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_short_01.png",
+      "sha256": "5a0a5efde1a894632a8a2620210d5aa13bf74ac054243b1b69dca63474b042f6",
+      "bytes": 321130
+    },
+    {
+      "path": "artwork/trees/individual_first_set/spring_sakura_medium_02.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/spring_sakura_medium_02.png",
+      "sha256": "1bc2a7f7e36afc2b422aff979ec980de02fcdaa5dcf5f93687bca979b3444314",
+      "bytes": 492333
+    },
+    {
+      "path": "artwork/trees/individual_first_set/autumn_red_medium_02.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_medium_02.png",
+      "sha256": "16ece47af718fb59065c3bb10b0a3f9b31d2297f821e18e06af30da329c86ee1",
+      "bytes": 573022
+    },
+    {
+      "path": "artwork/trees/individual_first_set/summer_green_short_01.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/summer_green_short_01.png",
+      "sha256": "6086036ad5c67d6c7c59338d1ac293132bdf747bf6646c3c6b5c322fba97d807",
+      "bytes": 198697
+    },
+    {
+      "path": "artwork/trees/individual_first_set/summer_green_long_02.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/summer_green_long_02.png",
+      "sha256": "0ed1b9fabed74efd6941711773b8b622697c2f6e6de443f016b46a641952ab66",
+      "bytes": 634808
+    },
+    {
+      "path": "artwork/trees/individual_first_set/autumn_red_long_03.png",
+      "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_long_03.png",
+      "sha256": "8ceb57b64ebb5e2c345d3e57c72032d84583984029a5081ee4ea6495fb4ac52d",
+      "bytes": 807370
+    },
+    {
+      "path": "artwork/trees/winter/winter_bare_branches_light_snow_3x3_sheet.png",
+      "source_asset": "ARTWORK/trees/winter/winter_bare_branches_light_snow_3x3_sheet.png",
+      "sha256": "a8d3c49e8d18d5e524c37d64c6dd8b3ecd1957d173031bb4fcd7be411c2b576b",
+      "bytes": 1872369
     }
   ]
 }

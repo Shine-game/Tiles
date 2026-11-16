@@ -210,7 +210,7 @@ func check_game() -> void:
 	scene.gallery.directory = "user://zen-ponds-%d" % Time.get_ticks_usec()
 	await scene._save_design()
 	var records: Array = scene.gallery.entries()
-	check(records.size() == 1 and records[0].theme_version == "0.8", "Actual save captures the pond theme version")
+	check(records.size() == 1 and records[0].theme_version == Palette.theme_version(), "Actual save captures the pond theme version")
 	if not records.is_empty():
 		var picture: Image = scene.gallery.picture(records[0]).get_image()
 		picture.save_png("res://build/zen-ponds/saved.png")

@@ -25,7 +25,9 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 
 Zen Garden opens first and uses the existing game controls. Raked sand grows
 stone centerpieces and 2×2 lanterns; stepping-stone paths grow 2×2 rock formations.
-Adjacent rock formations then fill their connected watershed regions with blue-grey
+Connected rake formations add sparse seasonal trees; expansion replaces the trunk
+at the new centroid, keeps established branches fixed, and grows larger transition
+limbs toward the previous trunk. Adjacent rock formations fill their connected watershed regions with blue-grey
 water and sparse shoreline plants, retaining the supplied protected rock middles.
 Additional connections expand the ponds. Undo/Erase removes unsupported water,
 and gallery saves include it. See [the Zen implementation](docs/zen-ordinary-tiles.md).

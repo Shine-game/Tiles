@@ -67,12 +67,39 @@ these laterals without confusing them with the central exposed-rock shoreline.
 Shrub designs are randomly chosen from all six supplied plants on first creation.
 Choices persist through growth and Undo/Erase reconstruction, reroll on a new game,
 and are copied from the live board into the gallery capture. Plants use a fixed painter order so gallery
-reconstruction matches the live board. Theme version 0.8 gives these saves a new
+reconstruction matches the live board. Theme version 0.9 gives these saves a new
 appearance identity without replacing older pictures. The active shrub choices
 also contribute to the save identity; repeated saves of the same appearance still
 deduplicate, while different random arrangements can be saved separately.
 
-Missing pagoda/day-night variants, trees and the decorative Zen frame remain pending. No Clockwork or Coral art is substituted.
+Raked third-tier clusters use the same 2×3 eligibility rule. Their centroid is the
+mean of their unique supporting cell centers, not a count weighted by overlapping
+2×2 formations. A small top-down woody trunk hub grows there, followed by sparse
+supplied branch artwork revealing outward from its attachment point. The underlying
+rake patterns and lanterns remain in place.
+
+On expansion, the existing trunk is deleted. A thicker trunk grows at the
+recalculated centroid while every established branch retains its node, artwork,
+position, rotation and scale. Two or three larger branches grow from the new hub
+toward the previous trunk position, with a slight angular spread; they do not try
+to join the old geometry exactly. Further branches grow toward newly eligible
+territory. Independent groves keep independent trees. Merging groves preserve both
+sets of branches, replace both hubs with one new trunk, and grow transition limbs
+toward the former centers. A topology-history cache restores the original canopy
+and trunk through Undo; Erase removes unsupported branches/trees.
+
+Each new game snapshots the local month once: March–May sakura, June–August green
+maple, September–November red maple, December–February bare branches with patchy
+snow. Existing supplied source PNGs stay unchanged. Runtime atlas regions and
+attachment pivots select usable individual branches and winter sheet regions;
+a shader rejects semi-transparent sheet haze/fringes. The problematic short sakura
+master is not used. Branches are clipped to rake territory, remain sparse, and use
+lengths of roughly 0.35–1.5 cells. The trunk is a small procedural woody hub; no
+upright tree or replacement interface is introduced. Historical branch geometry
+and the frozen season are copied into gallery captures and included in the save
+appearance identity (Zen version 0.9).
+
+Missing pagoda/day-night variants and the decorative Zen frame remain pending. No Clockwork or Coral art is substituted.
 
 ## Geometry and rendering
 
@@ -101,6 +128,7 @@ godot --headless --path . --script res://tests/test_zen_ordinary.gd
 godot --headless --path . --script res://tests/test_zen_centerpieces.gd
 godot --path . --script res://tests/test_zen_landmarks.gd
 godot --path . --script res://tests/test_zen_ponds.gd
+godot --path . --script res://tests/test_zen_trees.gd
 godot --path . --script res://tests/render_zen_game.gd
 ```
 
@@ -108,9 +136,12 @@ Checks cover mask rotations, exact edge profiles, bend and T continuity,
 centerpiece progression, both types of overlapping 2×2 landmarks, helper
 restoration and exact saved landmark stacking. Pond checks cover connection
 eligibility, cumulative growth, protected dry-rock masks, actual Place/Undo/Erase
-and water in saved artwork. Main-scene checks also cover
+and water in saved artwork. Tree checks cover unique-cell centroids, fixed branch
+transforms, trunk replacement/thickening, transition limbs, independent and merged
+groves, Undo/Erase, seasonal snapshots and exact saved pixels in all four seasons.
+Main-scene checks also cover
 theme order, theme switching and artwork saving. Captures go to `build/zen-game/`,
-`build/zen-landmarks/` and `build/zen-ponds/`. They create no extra player interface.
+`build/zen-landmarks/`, `build/zen-ponds/` and `build/zen-trees/`. They create no extra player interface.
 
 Godot 4.7.2 / GL Compatibility is the reference runtime. Android export and
 device performance have not been validated.
