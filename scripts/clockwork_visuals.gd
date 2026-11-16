@@ -2,6 +2,8 @@ class_name ClockworkVisuals
 extends Node2D
 
 signal cue(kind: String)
+const Assets = preload("res://scripts/pattern/asset_library.gd")
+const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Model = preload("res://scripts/clockwork_growth.gd")
 const RISE = preload("res://shaders/clockwork_rise.gdshader")
@@ -59,7 +61,7 @@ static func art_variant(id: String, logical_color: int) -> String:
 
 static func texture(path: String) -> Texture2D:
 	if not textures.has(path):
-		textures[path] = load(Model.ROOT + path)
+		textures[path] = Assets.texture(path, Model.ROOT)
 	return textures[path]
 
 func _init() -> void:
@@ -114,8 +116,7 @@ func _remove(entry: Dictionary, animate: bool) -> void:
 	var delay: float = float(9 - mini(9, layer(entry.event.id))) * 0.025
 	if entry.event.id == "chain": delay = 0.06
 	if entry.event.id == "T01":
-		var ink := ShaderMaterial.new()
-		ink.shader = REVEAL
+		var ink := Components.material(REVEAL)
 		ink.set_shader_parameter("growth_field", texture("masks/T01_from_core_E.png"))
 		ink.set_shader_parameter("travel_seconds", 0.20)
 		entry.node.material = ink
@@ -198,7 +199,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				event = Timing.shifted(entry.event, previous_clock, ["start", "end", "edge_start"])
 				next.duration = maxf(next.duration, event.end)
 		else:
-			var sprite := Sprite2D.new()
+			var sprite := Components.sprite({})
 			var variant: String = art_variant(event.id, event.color)
 			if event.id.begins_with("plate_"):
 				sprite.texture = texture("artwork/ground/" + event.id + ".png")
@@ -206,8 +207,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				sprite.texture = texture("artwork/pins/plate_pin_" + variant + ".png")
 			else:
 				sprite.texture = texture(Model.specification().components[event.id].assets[variant])
-			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-			sprite.position = event.center * 256
+			Components.configure_sprite(sprite, {"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR, "position_cells": event.center})
 			if event.id == "J00_chain_junction": sprite.scale = Vector2.ONE * CHAIN_HOUSING_SCALE
 			sprite.z_index = layer(event.id)
 			add_child(sprite)
@@ -229,20 +229,17 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 		entry.node.flip_v = event.id == "T01" and not Model.has_wheel(next.board, event.cell) and int(event.direction) in [2, 3]
 		entry.node.modulate = Color.WHITE
 		if event.id.begins_with("plate_"):
-			var ink := ShaderMaterial.new()
-			ink.shader = GROUND
+			var ink := Components.material(GROUND)
 			ink.set_shader_parameter("cell_center", event.center)
 			ink.set_shader_parameter("quarter_turn", event.rotation / (PI / 2))
 			entry.node.material = ink
 			grounds.append(entry.node)
 		elif event.id in ["C01", "C02", "L01", "L02", "L03"]:
-			var ink := ShaderMaterial.new()
-			ink.shader = RISE
+			var ink := Components.material(RISE)
 			ink.set_shader_parameter("height_source", 18.0 if event.id == "L02" else (6.0 if event.id == "C01" else 12.0))
 			entry.node.material = ink
 		elif event.id == "T01" and not (settled or event.old):
-			var ink := ShaderMaterial.new()
-			ink.shader = REVEAL
+			var ink := Components.material(REVEAL)
 			ink.set_shader_parameter("growth_field", texture("masks/T01_from_core_E.png"))
 			ink.set_shader_parameter("start_core", event.start)
 			ink.set_shader_parameter("start_edge", event.edge_start)
@@ -265,8 +262,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				strip.position = Vector2(0, (-CHAIN_RUN_OFFSET if run == 0 else CHAIN_RUN_OFFSET) - CHAIN_CANVAS * 0.5)
 				strip.size = Vector2(256, CHAIN_CANVAS)
-				var ink := ShaderMaterial.new()
-				ink.shader = CHAIN
+				var ink := Components.material(CHAIN)
 				ink.set_shader_parameter("link_art", texture(Model.specification().components.CH01_link.assets[art_variant("CH01_link", event.color)]))
 				ink.set_shader_parameter("reverse_run", run == 1)
 				ink.set_shader_parameter("link_scale", CHAIN_LINK_SCALE)

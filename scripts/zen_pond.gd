@@ -1,6 +1,8 @@
 class_name ZenPond
 extends Node2D
 
+const Assets = preload("res://scripts/pattern/asset_library.gd")
+const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Landmark = preload("res://scripts/zen_landmark.gd")
 const MASK_SHADER = preload("res://shaders/zen_pond_mask.gdshader")
 const WATER_SHADER = preload("res://shaders/zen_pond.gdshader")
@@ -23,7 +25,7 @@ var plant_choices: Dictionary = {}
 var plant_random := RandomNumberGenerator.new()
 
 static func source(path: String) -> Texture2D:
-	if not textures.has(path): textures[path] = load(ROOT + path)
+	if not textures.has(path): textures[path] = Assets.texture(path, ROOT)
 	return textures[path]
 
 static func mask_path(variant: int, kind: String) -> String:
@@ -106,7 +108,7 @@ func _init() -> void:
 	add_child(water)
 
 func mask_sprite(path: String, origin: Vector2i, protect: bool) -> Sprite2D:
-	var sprite := Sprite2D.new()
+	var sprite := Components.sprite({})
 	sprite.texture = source(path)
 	sprite.centered = false
 	sprite.position = Vector2(origin) * MASK_CELL
@@ -150,7 +152,7 @@ func reconcile(model, settled: bool) -> void:
 			var plant_key := key + "/%d" % i
 			retained[plant_key] = true
 			if not plants.has(plant_key):
-				var plant := Sprite2D.new()
+				var plant := Components.sprite({})
 				plant.texture = plant_texture(plant_key)
 				plant.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 				plant.position = sector_point(event.origin, event.direction, points[i].position)

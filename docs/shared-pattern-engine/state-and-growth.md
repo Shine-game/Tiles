@@ -113,6 +113,7 @@ ordering and numeric timing. Existing growth, Labyrinth, Clockwork, Coral, Zen a
 UI suites pass. Native Clockwork/pond/tree tests also pass, including exact seasonal
 gallery pixels and preservation of tree layers across unrelated placements.
 
-Next approval: Step 4, common asset loading and component rendering. The proposed
-asset contract is still a design contract; no new runtime theme manifests are
-silently enabled by this state/scheduling change.
+Step 3 did not replace asset loading or node creation. Those common facilities
+are now documented in [the Step 4 implementation](assets-and-rendering.md).
+Declarative per-theme Tier 0/1 selection remains the next approved migration
+checkpoint, starting with Clockwork in Step 5.

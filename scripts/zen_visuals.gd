@@ -1,6 +1,9 @@
 class_name ZenVisuals
 extends Node2D
 
+const Assets = preload("res://scripts/pattern/asset_library.gd")
+const Components = preload("res://scripts/pattern/component_renderer.gd")
+const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const Trees = preload("res://scripts/zen_trees.gd")
@@ -29,22 +32,18 @@ var landmark_layer: Node2D
 var next_landmark_order := 0
 
 static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
-	var ink := ShaderMaterial.new()
-	ink.shader = SAND_SHADER
+	var ink := Components.material(SAND_SHADER)
 	ink.set_shader_parameter("sand", SAND)
 	ink.set_shader_parameter("cell_origin", origin)
 	return ink
 
 static func stone_sprite(cell: Vector2i, direction: int = -1) -> Sprite2D:
-	var sprite := Sprite2D.new()
-	sprite.texture = CORE if direction < 0 else STONES[direction]
 	var anchor := Vector2.ZERO if direction < 0 else Vector2(Geometry.OFFSETS[direction]) * 128.0
-	# Shrink each half around its boundary midpoint, never the cell center.
-	# Opposite halves therefore keep the same edge and tangential profile.
-	sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256.0 + anchor
-	sprite.offset = -anchor
-	sprite.scale = Vector2.ONE * STONE_SCALE
-	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	# Shrink around the shared boundary midpoint, preserving both half profiles.
+	var sprite := Components.sprite({"asset": CORE if direction < 0 else STONES[direction],
+		"position_px": (Vector2(cell) + Vector2.ONE * 0.5) * 256.0 + anchor,
+		"offset_px": -anchor, "scale": Vector2.ONE * STONE_SCALE,
+		"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS})
 	return sprite
 
 func clear(keep_features: bool = false) -> void:
@@ -66,6 +65,7 @@ func clear(keep_features: bool = false) -> void:
 		next_landmark_order = 0
 
 func reconcile(model, settled: bool, complete: bool = false) -> void:
+	Catalog.install()
 	clear(true)
 	var board: Array = model.board
 	var retained_centers: Dictionary = {}
@@ -93,11 +93,8 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			if color == 1:
 				var spec := Geometry.canonical(mask)
 				if not relief_textures.has(spec.mask):
-					relief_textures[spec.mask] = ImageTexture.create_from_image(Geometry.height_image(spec.mask))
-				var sprite := Sprite2D.new()
-				sprite.texture = relief_textures[spec.mask]
-				sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
-				sprite.rotation = spec.turns * PI / 2
+					relief_textures[spec.mask] = Assets.resolve({"provider": "zen.rake_relief", "params": {"mask": spec.mask}})
+				var sprite := Components.sprite({"asset": relief_textures[spec.mask], "position_cells": Vector2(cell) + Vector2.ONE * 0.5, "quarter_turns": spec.turns})
 				var ink := sand_material(Vector2(cell))
 				ink.set_shader_parameter("has_relief", true)
 				ink.set_shader_parameter("relief_map", sprite.texture)

@@ -1,5 +1,6 @@
 class_name ZenTrees
 extends Node2D
+const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Art = preload("res://scripts/zen_tree_art.gd")
@@ -160,8 +161,7 @@ func reconcile(model, settled: bool) -> void:
 	_install(settled, starts)
 
 func _ink(shader: Shader) -> ShaderMaterial:
-	var ink := ShaderMaterial.new()
-	ink.shader = shader
+	var ink := Components.material(shader)
 	ink.set_shader_parameter("occupancy_mask", rake_mask)
 	ink.set_shader_parameter("grid_size", grid_size)
 	ink.set_shader_parameter("cell_pixels", 256.0)
@@ -189,7 +189,7 @@ func _install(settled: bool, starts: Dictionary) -> void:
 				branches[spec.id].start = -100.0
 				continue
 			var art := Art.asset(season, spec.choice)
-			var node := Sprite2D.new()
+			var node := Components.sprite({})
 			node.texture = art.texture
 			node.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 			node.centered = false

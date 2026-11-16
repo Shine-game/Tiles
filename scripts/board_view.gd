@@ -8,6 +8,8 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const Components = preload("res://scripts/pattern/component_renderer.gd")
+const AssetProviders = preload("res://scripts/pattern/legacy_assets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
 const LegacyEvents = preload("res://scripts/pattern/legacy_events.gd")
 const Palette = preload("res://scripts/palette.gd")
@@ -62,6 +64,7 @@ var blank_ground: Node2D
 var blank_signature: Array = []
 
 func _ready() -> void:
+	AssetProviders.install()
 	z_index = 1
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
@@ -392,8 +395,11 @@ func _draw() -> void:
 	if coral_reef or clockwork or zen_garden:
 		return
 	if labyrinth:
-		MazeRenderer.draw(self)
+		Components.draw("legacy.labyrinth", self)
 		return
+	Components.draw("legacy.vines", self)
+
+func _draw_vines_pattern() -> void:
 	for cell: Vector2i in pattern.arrivals:
 		var scale: float = pop((clock - float(pattern.arrivals[cell])) / Growth.CENTER_POP)
 		if scale > 0:

@@ -1,4 +1,5 @@
 extends RefCounted
+const Assets = preload("res://scripts/pattern/asset_library.gd")
 const ROOT := "res://art/themes/zen_garden/artwork/trees/"
 # Source region and woody attachment point in the unchanged supplied masters.
 const BRANCHES := {
@@ -19,12 +20,9 @@ const BRANCHES := {
 static var textures: Dictionary = {}
 static func asset(season: String, choice: int) -> Dictionary:
 	var entry: Array = BRANCHES[season][choice % BRANCHES[season].size()]
-	if not textures.has(entry[0]): textures[entry[0]] = load(ROOT + entry[0])
+	if not textures.has(entry[0]): textures[entry[0]] = Assets.texture(entry[0], ROOT)
 	var master: Texture2D = textures[entry[0]]
-	var atlas := AtlasTexture.new()
-	atlas.atlas = master
-	atlas.region = entry[1]
-	atlas.filter_clip = true
+	var atlas := Assets.resolve({"provider": "atlas", "path": ROOT + entry[0], "region_px": entry[1], "filter_clip": true})
 	var rect: Rect2 = entry[1]
 	var pivot: Vector2 = entry[2] - rect.position
 	return {"texture": atlas, "size": rect.size, "pivot": pivot, "uv_rect": Vector4(rect.position.x / master.get_width(), rect.position.y / master.get_height(), rect.size.x / master.get_width(), rect.size.y / master.get_height())}

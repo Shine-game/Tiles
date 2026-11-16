@@ -1,24 +1,29 @@
 class_name CoralVisuals
 extends Node2D
 
+const Assets = preload("res://scripts/pattern/asset_library.gd")
+const Components = preload("res://scripts/pattern/component_renderer.gd")
+const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
 const Model = preload("res://scripts/coral_growth.gd")
 const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
 const REVEAL = preload("res://art/themes/coral_reef/shaders/growth_reveal.gdshader")
 static var textures: Dictionary = {}
-var registry: Dictionary = {}
+var components := Components.new()
+var registry: Dictionary = components.nodes
 var groups: Dictionary = {}
 var ordinals: Dictionary = {}
 var next_ordinal := 0
-var active: Dictionary = {}
+var active: Dictionary = components.active
 var ground_sprites: Array[Sprite2D] = []
 var surface_signature: Array = []
 
 static func texture(path: String) -> Texture2D:
 	if not textures.has(path):
-		textures[path] = load(Model.ROOT + path)
+		textures[path] = Assets.texture(path, Model.ROOT)
 	return textures[path]
 
 func clear() -> void:
+	components.clear()
 	for child: Node in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -51,45 +56,33 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 func reconcile(model, settled: bool, preserve: bool = true) -> void:
 	if not preserve:
 		clear()
-	for identity: String in registry.keys():
-		if not model.components.has(identity):
-			var sprite: Sprite2D = registry[identity]
-			sprite.get_parent().remove_child(sprite)
-			sprite.queue_free()
-			registry.erase(identity)
+	components.remove_missing(model.components.keys())
 	active.clear()
+	components.reveal_bindings.clear()
 	ground_sprites.clear()
 	surface_signature.clear()
 	for identity: String in model.components:
 		var event: Dictionary = model.components[identity]
 		var meta: Dictionary = Model.specification().components[event.id]
-		var sprite: Sprite2D
-		if registry.has(identity):
-			sprite = registry[identity]
-		else:
-			var variant: String = "salmon" if event.color == 1 else "turquoise"
-			sprite = Sprite2D.new()
-			sprite.texture = texture(meta.artwork[variant])
-			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-			sprite.position = event.center * 256
-			# Directional artwork is stored once and rotated around its pivot.
-			sprite.rotation = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
-			# Child insertion order keeps each complete colony together.
-			_group(event, settled).add_child(sprite)
-			registry[identity] = sprite
+		var variant: String = "salmon" if event.color == 1 else "turquoise"
+		var part := Catalog.component(meta, variant, Model.ROOT)
+		var placement: Dictionary = part.placement.duplicate()
+		placement.asset = part.asset
+		placement.position_cells = event.center
+		placement.rotation_radians = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
+		placement.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))
 		if event.id.begins_with("ground_"):
 			ground_sprites.append(sprite)
 			if sprite.material == null:
-				var surface := ShaderMaterial.new()
-				surface.shader = GROUND_SURFACE
+				var surface := Components.material(GROUND_SURFACE)
 				sprite.material = surface
 			sprite.material.set_shader_parameter("cell_center", event.center)
 			sprite.material.set_shader_parameter("quarter_turn", float(event.rotation))
 		elif settled or event.old:
 			sprite.material = null
 		else:
-			var material := ShaderMaterial.new()
-			material.shader = REVEAL
+			var material := Components.material(REVEAL)
 			material.set_shader_parameter("artwork", sprite.texture)
 			material.set_shader_parameter("growth_mask", texture(meta.reveal_mask))
 			# Junctions retain their original directional geodesic fields.
@@ -99,7 +92,7 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			material.set_shader_parameter("stroke_seconds", event.stroke)
 			material.set_shader_parameter("front_one_enabled", event.two_fronts)
 			sprite.material = material
-			active[identity] = event
+			components.reveal(identity, event, "clock_seconds")
 	for identity: String in groups.keys():
 		if groups[identity].get_child_count() == 0:
 			var group: Node2D = groups[identity]
@@ -120,15 +113,7 @@ func copy_order(source: CoralVisuals) -> void:
 	_sort_groups()
 
 func advance(clock: float) -> void:
-	for identity: String in active.keys():
-		var sprite: Sprite2D = registry[identity]
-		if clock >= float(active[identity].end):
-			# Completed artwork is ordinary batched sprite drawing; only growing
-			# components retain private mutable shader materials and CPU updates.
-			sprite.material = null
-			active.erase(identity)
-		else:
-			(sprite.material as ShaderMaterial).set_shader_parameter("clock_seconds", clock)
+	components.advance(clock)
 
 func configure_surface(platform) -> void:
 	var signature: Array = [platform.mask_texture, platform.mask_revision, platform.grid_size, platform.cell_pixels]

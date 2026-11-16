@@ -1,9 +1,11 @@
 # Proposed shared asset-set contract
 
-Design specification for the approved Step 1 scope. No loader or schema validator
-is implemented here. The names below describe the target model; existing theme
-manifests remain unchanged. See [the inventory](theme-inventory.md) for what is
-available today and what still needs a migration decision.
+Semantic contract defined in Step 1. The common loading/rendering subset is now
+implemented in Step 4; see [the runtime format and example](assets-and-rendering.md).
+The full theme/role model below remains the migration target; supplied legacy
+manifests are unchanged and consumed through explicit adapters. See
+[the inventory](theme-inventory.md) for what is available today and what still
+needs a migration decision.
 
 ## 1. Theme and set hierarchy
 
