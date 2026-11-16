@@ -86,7 +86,9 @@ to join the old geometry exactly. Further branches grow toward newly eligible
 territory. Independent groves keep independent trees. Merging groves preserve both
 sets of branches, replace both hubs with one new trunk, and grow transition limbs
 toward the former centers. A topology-history cache restores the original canopy
-and trunk through Undo; Erase removes unsupported branches/trees.
+and trunk through Undo; Erase removes unsupported branches/trees. Finished trunk
+and branch animations become settled layers immediately; restarting the board
+clock for an unrelated placement cannot hide or replay those completed layers.
 
 Each new game snapshots the local month once: March–May sakura, June–August green
 maple, September–November red maple, December–February bare branches with patchy

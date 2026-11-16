@@ -121,6 +121,29 @@ func _run() -> void:
 	check(trees.groups.size() == 1 and trees.trunks.size() == 1 and former_trunks.all(func(id): return not trees.trunks.has(id)), "Merging groves replaces both old trunks with one new hub")
 	check(trees.groups[0].center.is_equal_approx(Vector2(3.5, 3.0) * 256), "Merged trunk uses the centroid of the entire connected territory")
 	for id: int in fixed: check(trees.branches.has(id) and trees.branches[id].node.transform == fixed[id], "Merging never moves either established canopy")
+	# Every placement restarts the board clock. Finished tree layers must not
+	# replay an earlier wave when the rake topology has not changed.
+	for layers in [1, 3]:
+		trees.reset(10)
+		var prior := Rules.empty_board(9)
+		for width in range(3, 3 + layers):
+			var current := block(width, 2)
+			model.build(prior, current)
+			visuals.reconcile(model, false)
+			visuals.advance(model.duration)
+			prior = current
+		var appearance: String = trees.appearance_signature()
+		for move in range(2):
+			var next_board := prior.duplicate(true)
+			next_board[6][6 + move] = 2
+			model.build(prior, next_board)
+			visuals.reconcile(model, false)
+			check(trees.trunks.values().all(func(item): return item.node.progress == 1), "An unrelated placement never hides a completed trunk")
+			check(trees.branches.values().all(func(item): return item.node.material.get_shader_parameter("progress") == 1), "An unrelated placement never rolls back a completed canopy layer")
+			visuals.advance(model.duration)
+			check(trees.branches.values().all(func(item): return item.node.material.get_shader_parameter("progress") == 1), "A short unrelated animation leaves all tree layers visible")
+			check(trees.appearance_signature() == appearance, "Unrelated moves do not alter the established tree")
+			prior = next_board
 	for month in range(1, 13):
 		var expected: String = "winter" if month in [12, 1, 2] else ("spring" if month < 6 else ("summer" if month < 9 else "autumn"))
 		check(Trees.season_for_month(month) == expected, "All local months map to the agreed seasons")
@@ -189,6 +212,7 @@ func check_game(initial: Array, expanded: Array) -> void:
 		if DirAccess.dir_exists_absolute(scene.gallery.directory):
 			for file: String in DirAccess.open(scene.gallery.directory).get_files(): DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
 			DirAccess.remove_absolute(scene.gallery.directory)
+	await check_clock_reset(scene)
 	scene._reset()
 	check(scene.board_view.zen_visuals.trees.groups.is_empty() and scene.board_view.zen_visuals.trees.snapshots.is_empty(), "New game resets the canopy history")
 	var before := block(3, 2)
@@ -215,3 +239,37 @@ func check_game(initial: Array, expanded: Array) -> void:
 	check(scene.board_view.zen_visuals.trees.groups.is_empty(), "Actual Erase removes unsupported tree growth")
 	scene.queue_free()
 	await process_frame
+
+func check_clock_reset(scene) -> void:
+	for layers in [1, 3]:
+		scene._reset()
+		var prior := Rules.empty_board(9)
+		for width in range(3, 3 + layers):
+			var current := block(width, 2)
+			scene.game.board = current
+			scene.board_view.animate_growth(prior, current)
+			scene.board_view.set_process(false)
+			scene.board_view.advance_growth(100)
+			scene._refresh()
+			prior = current
+		await frames()
+		var to_pixels: Transform2D = root.get_stretch_transform() * scene.board_view.get_global_transform_with_canvas()
+		var origin: Vector2 = to_pixels * scene.board_view._point(Vector2.ONE)
+		var crop := Rect2i(Vector2i(origin), Vector2i(to_pixels.basis_xform(Vector2(7, 4) * scene.board_view.pitch)))
+		var expected_image: Image = root.get_texture().get_image().get_region(crop)
+		expected_image.save_png("res://build/zen-trees/rollback-%d-before.png" % layers)
+		var expected: PackedByteArray = expected_image.get_data()
+		for move in range(2):
+			var after := prior.duplicate(true)
+			after[7][1 + move] = 2
+			scene.game.board = after
+			scene.board_view.animate_growth(prior, after)
+			scene.board_view.set_process(false)
+			scene._refresh()
+			await frames()
+			root.get_texture().get_image().get_region(crop).save_png("res://build/zen-trees/rollback-%d-move-%d.png" % [layers, move])
+			check(root.get_texture().get_image().get_region(crop).get_data() == expected, "Native tree pixels stay unchanged when the next placement resets the clock")
+			scene.board_view.advance_growth(100)
+			await frames()
+			check(root.get_texture().get_image().get_region(crop).get_data() == expected, "Native tree pixels stay unchanged after the unrelated short animation")
+			prior = after

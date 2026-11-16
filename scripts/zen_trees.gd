@@ -243,9 +243,14 @@ func _install(settled: bool, starts: Dictionary) -> void:
 
 func advance(clock: float) -> void:
 	for item: Dictionary in trunks.values():
+		# The board clock starts at zero on every placement. A completed layer
+		# belongs to the settled tree, never to a previous placement's clock.
+		if item.start >= 0.0 and clock >= item.start + TRUNK_SECONDS: item.start = -100.0
 		item.node.progress = smoothstep(0, 1, clampf((clock - item.start) / TRUNK_SECONDS, 0, 1))
 		item.node.queue_redraw()
-	for item: Dictionary in branches.values(): item.node.material.set_shader_parameter("progress", smoothstep(0, 1, clampf((clock - item.start) / BRANCH_SECONDS, 0, 1)))
+	for item: Dictionary in branches.values():
+		if item.start >= 0.0 and clock >= item.start + BRANCH_SECONDS: item.start = -100.0
+		item.node.material.set_shader_parameter("progress", smoothstep(0, 1, clampf((clock - item.start) / BRANCH_SECONDS, 0, 1)))
 
 func configure_surface(platform) -> void:
 	if platform != null: screen_pixel = 256.0 / platform.cell_pixels
