@@ -1,6 +1,7 @@
 extends RefCounted
 # Clockwork's ordinary sets use the shared loader/selector/renderer. Existing
 # pressure, operation and retirement hooks keep their legacy component IDs.
+const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
@@ -54,8 +55,8 @@ static func render_spec(event: Dictionary, settled: bool, straight: bool) -> Dic
 	var bound := Assets.bind_part(spec, treatment)
 	assert(bound.ok, str(bound.errors))
 	spec = bound.part
+	spec = Assembly.rotated(spec, roundi(event.rotation / (PI / 2)))
 	spec.position_cells = event.center
-	spec.rotation_radians = event.rotation
 	spec.lifecycle = "external"
 	spec.flip_v = spec.has("straight_flip_ports") and straight and NAMES[int(event.direction)] in spec.straight_flip_ports
 	if spec.get("material", {}).get("provider", "") == "clockwork.tube":

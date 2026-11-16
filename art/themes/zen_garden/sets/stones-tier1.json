@@ -35,25 +35,8 @@
       "parts": {
         "half": {
           "asset": {
-            "provider": "variants",
-            "variants": {
-              "N": {
-                "provider": "texture",
-                "path": "../artwork/stone_paths/half_stone_N_256.png"
-              },
-              "E": {
-                "provider": "texture",
-                "path": "../artwork/stone_paths/half_stone_E_256.png"
-              },
-              "S": {
-                "provider": "texture",
-                "path": "../artwork/stone_paths/half_stone_S_256.png"
-              },
-              "W": {
-                "provider": "texture",
-                "path": "../artwork/stone_paths/half_stone_W_256.png"
-              }
-            }
+            "provider": "texture",
+            "path": "../artwork/stone_paths/half_stone_N_256.png"
           },
           "pivot_px": [
             128,
@@ -64,7 +47,12 @@
             0.7,
             0.7
           ],
-          "anchor": "shared_edge_midpoint"
+          "anchor": "shared_edge_midpoint",
+          "canonical_port": 0,
+          "flip_h_ports": [
+            "S",
+            "W"
+          ]
         }
       }
     }

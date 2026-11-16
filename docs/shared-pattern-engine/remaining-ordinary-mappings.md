@@ -36,7 +36,8 @@ it to a role does not freeze its geometry into a single image.
   assignments remain unused; the existing directional modules still draw there.
 - **Coral (implemented):** straight cells lose the decorative core; arms remain. Isolated,
   endpoint and branching cells retain the existing core/junction assemblies.
-  Canonical image reuse and direction-specific mask handling are preserved.
+  Canonical image reuse now includes the single retained NE mask; arm fields
+  are generated. See [canonical assembly](canonical-assembly.md).
   Native checks confirm both straight orientations remain continuous without a
   replacement core.
 - **Vines:** straight cells lose their holding/frond motif. Their connection
@@ -57,8 +58,8 @@ change is enabled; existing saved artwork PNGs remain readable.
 | Family | Preserve for Tier 1 migration |
 | --- | --- |
 | Zen rakes | Existing canonical procedural relief geometry, exact edge grooves, sand shader and staged fixed-canvas center addition |
-| Zen stepping stones | Four explicitly directional half-stone PNGs, boundary-midpoint anchors, 70% scale and ordinary fade |
-| Coral | Canonical arm image/rotation, two-front reveal, corner-specific junction masks/dependencies and persistent component ordering |
+| Zen stepping stones | One canonical N half-stone PNG with port rotations/mirrors, boundary-midpoint anchors, 70% scale and ordinary fade |
+| Coral | Canonical arm/junction images and fields, two-front reveal, directional dependencies and persistent component ordering |
 | Vines | Registered procedural curves, existing per-edge foliage and sound schedule; extract ordinary drawing from the board without rebuilding it |
 | Labyrinth | Registered procedural hedge/pyramid providers; preserve wall visibility and existing higher-tier bench openings |
 

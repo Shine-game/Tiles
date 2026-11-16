@@ -1,5 +1,6 @@
 extends RefCounted
 # Zen's ordinary sets. Ponds, historical trees and landmarks stay project-owned.
+const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
@@ -7,7 +8,6 @@ const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const ROOT := "res://art/themes/zen_garden/sets/"
-const DIRECTIONS := ["N", "E", "S", "W"]
 static var families: Dictionary = {}
 
 static func install() -> void:
@@ -44,7 +44,7 @@ static func rake_spec(cell: Vector2i, mask: int) -> Dictionary:
 	var part: Dictionary = selected.rake if selected.has("rake") else Cells.parts_for_role(families.rakes[1], "vine").rake
 	var spec := _placed(part, cell)
 	if mask != 0 and canonical.mask != 1: spec.asset.params.mask = canonical.mask
-	spec.quarter_turns = canonical.turns
+	spec = Assembly.rotated(spec, canonical.turns, Cells.anchor(cell))
 	return spec
 
 static func stone_specs(cell: Vector2i, mask: int) -> Array[Dictionary]:
@@ -57,11 +57,8 @@ static func stone_specs(cell: Vector2i, mask: int) -> Array[Dictionary]:
 	var vine: Dictionary = Cells.parts_for_role(families.stones[1], "vine").half
 	for direction in range(4):
 		if not mask & (1 << direction): continue
-		var spec := _placed(vine, cell)
-		spec.asset = Assets.select_variant(spec.asset, DIRECTIONS[direction])
-		var anchor := Vector2(Geometry.OFFSETS[direction]) * 128.0
-		spec.position_cells = Cells.anchor(cell, vine.anchor, direction)
-		spec.offset_px = -anchor
+		var spec := Assembly.on_port(vine, cell, direction)
+		spec.asset_root = ROOT
 		specs.append(spec)
 	return specs
 

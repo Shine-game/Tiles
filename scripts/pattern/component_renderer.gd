@@ -1,6 +1,7 @@
 class_name PatternComponentRenderer
 extends RefCounted
 
+const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 static var node_providers: Dictionary = {}
 static var draw_providers: Dictionary = {}
@@ -52,8 +53,7 @@ static func configure_sprite(sprite: Sprite2D, spec: Dictionary) -> void:
 	if spec.has("offset_px"): sprite.offset = vector(spec.offset_px)
 	if spec.has("scale"): sprite.scale = vector(spec.scale, Vector2.ONE)
 	if spec.has("size_cells") and sprite.texture != null: sprite.scale = vector(spec.size_cells) * pixels / sprite.texture.get_size()
-	if spec.has("rotation_radians"): sprite.rotation = spec.rotation_radians
-	if spec.has("quarter_turns"): sprite.rotation = float(spec.quarter_turns) * PI / 2
+	if spec.has("rotation_radians") or spec.has("quarter_turns"): sprite.rotation = Assembly.rotation(spec)
 	if spec.has("texture_filter"): sprite.texture_filter = spec.texture_filter
 	if spec.has("z_index"): sprite.z_index = spec.z_index
 	if spec.has("flip_h"): sprite.flip_h = spec.flip_h
@@ -112,8 +112,7 @@ func ensure(id: String, spec: Dictionary, parent: Node) -> CanvasItem:
 	elif result is Node2D or result is Control:
 		if spec.has("position_cells"): result.position = vector(spec.position_cells) * float(spec.get("pixels_per_cell", 256.0))
 		if spec.has("position_px"): result.position = vector(spec.position_px)
-		if spec.has("rotation_radians"): result.rotation = spec.rotation_radians
-		if spec.has("quarter_turns"): result.rotation = float(spec.quarter_turns) * PI / 2
+		if spec.has("rotation_radians") or spec.has("quarter_turns"): result.rotation = Assembly.rotation(spec)
 		if spec.has("scale"): result.scale = vector(spec.scale, Vector2.ONE)
 		if result is Control and spec.has("size_cells"): result.size = vector(spec.size_cells) * float(spec.get("pixels_per_cell", 256.0))
 		if spec.has("texture_filter"): result.texture_filter = spec.texture_filter

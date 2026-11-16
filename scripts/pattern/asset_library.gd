@@ -30,6 +30,16 @@ static func validate(asset: Variant, root: String = "res://") -> Array:
 	if status not in ["available", "missing", "unused"]: return ["Unknown asset status: " + status]
 	if status != "available": return ["Required asset is " + status] if asset.get("required", false) else []
 	var provider: String = str(asset.get("provider", "texture"))
+	if provider == "linear_reveal":
+		var params: Variant = asset.get("params", {})
+		if not params is Dictionary: return ["Linear reveal needs parameters"]
+		var size: Variant = params.get("size_px")
+		if not size is Array or size.size() != 2 or not size.all(func(n): return (n is int or n is float) and n == floorf(n) and n > 0 and n <= 4096): return ["Linear reveal needs a positive pixel size up to 4096"]
+		for name: String in ["zero_px", "one_px"]:
+			var v: Variant = params.get(name)
+			if not v is Array or v.size() != 2 or not v.all(func(n): return n is int or n is float): return ["Linear reveal needs two pixel-space endpoints"]
+		if params.zero_px == params.one_px: return ["Linear reveal endpoints must differ"]
+		return []
 	if provider == "variants":
 		var choices: Variant = asset.get("variants")
 		if not choices is Dictionary or choices.is_empty(): return ["Variant asset needs named treatments"]
@@ -86,6 +96,10 @@ static func resolve(asset: Variant, root: String = "res://", errors: Array = [])
 	if provider == "variants":
 		var chosen: Variant = select_variant(asset, str(asset.get("variant", "")), errors)
 		return resolve(chosen, root, errors) if chosen != null else null
+	if provider == "linear_reveal":
+		var key := "linear_reveal/" + var_to_bytes(asset.params).hex_encode()
+		if not generated.has(key): generated[key] = _linear_reveal(asset.params)
+		return generated[key]
 	if provider not in ["texture", "atlas"]:
 		var params: Dictionary = asset.get("params", {})
 		var key := provider + "/" + var_to_bytes(params).hex_encode()
@@ -180,3 +194,16 @@ static func load_set(source: Variant, root: String = "res://") -> Dictionary:
 				var target: Variant = definition.roles[role]
 				if target != null and (not target is String or not definition.compositions.has(target)): errors.append("Unknown composition for role " + role)
 	return {"ok": errors.is_empty(), "errors": errors, "definition": definition.duplicate(true), "root": root}
+
+static func _linear_reveal(params: Dictionary) -> Texture2D:
+	var size := Vector2i(int(params.size_px[0]), int(params.size_px[1]))
+	var a := Vector2(float(params.zero_px[0]), float(params.zero_px[1]))
+	var b := Vector2(float(params.one_px[0]), float(params.one_px[1]))
+	var delta := b - a
+	var values := PackedByteArray()
+	values.resize(size.x * size.y)
+	for y in range(size.y):
+		for x in range(size.x):
+			var u := (Vector2(x + 0.5, y + 0.5) - a).dot(delta) / delta.length_squared()
+			values[y * size.x + x] = roundi(clampf(u, 0, 1) * 255)
+	return ImageTexture.create_from_image(Image.create_from_data(size.x, size.y, false, Image.FORMAT_R8, values))

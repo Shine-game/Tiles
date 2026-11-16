@@ -1,6 +1,7 @@
 class_name ClockworkGrowth
 extends "res://scripts/growth.gd"
 
+const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Ordinary = preload("res://scripts/clockwork_sets.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const ROOT := "res://art/themes/clockwork_workshop/"
@@ -116,7 +117,7 @@ func build(before: Array, after: Array) -> void:
 			if value(after, other) != color:
 				continue
 			var old_arm: bool = old and value(before, other) == color
-			var arm := add_part("T01", color, cell, Cells.anchor(cell, vine.anchor), old_arm, _emission(cell), travel + tail, (direction - int(vine.orientation_base_port)) * PI / 2, key("T01_" + NAMES[direction], color, cell))
+			var arm := add_part("T01", color, cell, Cells.anchor(cell, vine.anchor), old_arm, _emission(cell), travel + tail, Assembly.port_turns(direction, int(vine.orientation_base_port)) * PI / 2, key("T01_" + NAMES[direction], color, cell))
 			arm.direction = direction
 			# Always use the canonical core field; shader supplies its reverse front.
 			arm.edge_start = -100.0 if old_arm else _emission(other) + travel

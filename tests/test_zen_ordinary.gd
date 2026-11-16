@@ -15,6 +15,15 @@ func check(ok: bool, message: String) -> void:
 func edge_pixel(direction: int, along: int, inset: int = 0) -> Vector2i:
 	return [Vector2i(along, inset), Vector2i(255 - inset, along), Vector2i(along, 255 - inset), Vector2i(inset, along)][direction]
 
+func stone_image(direction: int) -> Image:
+	var sprite := Visuals.stone_sprite(Vector2i.ZERO, direction)
+	var image: Image = sprite.texture.get_image().duplicate()
+	if sprite.flip_h: image.flip_x()
+	if sprite.flip_v: image.flip_y()
+	for i in range(posmod(roundi(sprite.rotation / (PI / 2)), 4)): image.rotate_90(CLOCKWISE)
+	sprite.free()
+	return image
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -109,8 +118,8 @@ func _run() -> void:
 			if is_nan(value) or is_inf(value) or value < 0 or value > 1:
 				check(false, "Height fields stay finite and normalized")
 	for pair in [[0, 2], [1, 3]]:
-		var a: Image = Visuals.STONES[pair[0]].get_image()
-		var b: Image = Visuals.STONES[pair[1]].get_image()
+		var a: Image = stone_image(pair[0])
+		var b: Image = stone_image(pair[1])
 		var error := 0.0
 		var rgb_error := 0.0
 		for along in range(256):
@@ -119,8 +128,8 @@ func _run() -> void:
 			error = maxf(error, absf(left.a - right.a))
 			if left.a > 0.5 and right.a > 0.5:
 				rgb_error = maxf(rgb_error, maxf(absf(left.r - right.r), maxf(absf(left.g - right.g), absf(left.b - right.b))))
-		check(error == 0, "Supplied opposing stone halves join with identical alpha")
-		check(rgb_error == 0, "Supplied opposing stone halves join with identical visible RGB")
+		check(error == 0, "Rotated canonical stone halves join with identical alpha")
+		check(rgb_error == 0, "Rotated canonical stone halves join with identical visible RGB")
 	for d in range(4):
 		var cell := Vector2i(2, 2)
 		var first := Visuals.stone_sprite(cell, d)
@@ -128,8 +137,8 @@ func _run() -> void:
 		check(first.scale == Vector2.ONE * 0.70 and other.scale == first.scale, "Stepping-stone halves are thirty percent smaller")
 		var max_gap := 0.0
 		for along in range(257):
-			var a: Vector2 = [Vector2(along, 0), Vector2(256, along), Vector2(along, 256), Vector2(0, along)][d]
-			var b: Vector2 = [Vector2(along, 0), Vector2(256, along), Vector2(along, 256), Vector2(0, along)][(d + 2) % 4]
+			var a := Vector2(along, 0)
+			var b := Vector2(256 - along, 0)
 			var actual_a: Vector2 = first.transform * (a - Vector2.ONE * 128 + first.offset)
 			var actual_b: Vector2 = other.transform * (b - Vector2.ONE * 128 + other.offset)
 			max_gap = maxf(max_gap, actual_a.distance_to(actual_b))

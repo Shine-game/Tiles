@@ -21,6 +21,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   endpoint artwork, following the revised endpoint assignment.
 - [Coral Tier 0/1 implementation](coral-ordinary-sets.md): live multipart port
   selection, core suppression on straights and preserved directional fields.
+- [Canonical assembly correction](canonical-assembly.md): shared port rotation,
+  all-theme directional audit and operation after redundant files are removed.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 

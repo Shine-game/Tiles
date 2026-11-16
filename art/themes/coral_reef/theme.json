@@ -332,7 +332,23 @@
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_n.png",
+        "mask": {
+          "provider": "linear_reveal",
+          "params": {
+            "size_px": [
+              256,
+              256
+            ],
+            "zero_px": [
+              128,
+              128
+            ],
+            "one_px": [
+              128,
+              0
+            ]
+          }
+        },
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -349,7 +365,23 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_n.png",
+      "growth_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      },
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 0
     },
@@ -833,7 +865,23 @@
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_n.png",
+        "mask": {
+          "provider": "linear_reveal",
+          "params": {
+            "size_px": [
+              256,
+              256
+            ],
+            "zero_px": [
+              128,
+              128
+            ],
+            "one_px": [
+              128,
+              0
+            ]
+          }
+        },
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -850,7 +898,23 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_n.png",
+      "growth_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      },
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 90
     },
@@ -1334,7 +1398,23 @@
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_n.png",
+        "mask": {
+          "provider": "linear_reveal",
+          "params": {
+            "size_px": [
+              256,
+              256
+            ],
+            "zero_px": [
+              128,
+              128
+            ],
+            "one_px": [
+              128,
+              0
+            ]
+          }
+        },
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1351,7 +1431,23 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_n.png",
+      "growth_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      },
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 180
     },
@@ -1835,7 +1931,23 @@
           ]
         },
         "path_length_px": 128,
-        "mask": "masks/arm_n.png",
+        "mask": {
+          "provider": "linear_reveal",
+          "params": {
+            "size_px": [
+              256,
+              256
+            ],
+            "zero_px": [
+              128,
+              128
+            ],
+            "one_px": [
+              128,
+              0
+            ]
+          }
+        },
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1852,7 +1964,23 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/arm_n.png",
+      "growth_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      },
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 270
     },
@@ -2459,7 +2587,7 @@
         "trigger": "both_adjacent_arms_reach_elbow",
         "origin_px": [
           166.5,
-          166.5
+          88.5
         ],
         "direction": "outward from declared source through actual alpha geometry",
         "duration_seconds": 0.12,
@@ -2484,87 +2612,87 @@
           "points": [
             [
               166.5,
-              166.5
+              88.5
             ],
             [
               167.5,
-              166.5
+              88.5
             ],
             [
               168.5,
-              166.5
+              88.5
             ],
             [
               169.5,
-              166.5
+              88.5
             ],
             [
               170.5,
-              166.5
+              88.5
             ],
             [
               171.5,
-              166.5
+              88.5
             ],
             [
               172.5,
-              166.5
+              88.5
             ],
             [
               173.5,
-              166.5
+              88.5
             ],
             [
               174.5,
-              166.5
+              88.5
             ],
             [
               175.5,
-              166.5
+              88.5
             ],
             [
               176.5,
-              166.5
+              88.5
             ],
             [
               177.5,
-              166.5
+              89.5
             ],
             [
               178.5,
-              166.5
+              89.5
             ],
             [
               179.5,
-              166.5
+              89.5
             ],
             [
               180.5,
-              166.5
+              89.5
             ]
           ]
         },
-        "path_length_px": 14.0,
-        "mask": "masks/junction_es.png",
+        "path_length_px": 14.4142,
+        "mask": "masks/junction_ne.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
           166.5,
-          166.5
+          88.5
         ],
         "end_px": [
           180.5,
-          166.5
+          89.5
         ],
         "allowed_growth_directions": [
           "forward"
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_es.png",
+      "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 90,
-      "growth_mask_rotation_clockwise": 90
+      "growth_mask_rotation_clockwise": 0
     },
     {
       "id": "junction_sw",
@@ -2604,8 +2732,8 @@
       "animation": {
         "trigger": "both_adjacent_arms_reach_elbow",
         "origin_px": [
-          88.5,
-          166.5
+          166.5,
+          88.5
         ],
         "direction": "outward from declared source through actual alpha geometry",
         "duration_seconds": 0.12,
@@ -2629,88 +2757,88 @@
           "format": "polyline",
           "points": [
             [
-              88.5,
-              166.5
+              166.5,
+              88.5
             ],
             [
-              88.5,
-              167.5
+              167.5,
+              88.5
             ],
             [
-              88.5,
-              168.5
+              168.5,
+              88.5
             ],
             [
-              88.5,
-              169.5
+              169.5,
+              88.5
             ],
             [
-              88.5,
-              170.5
+              170.5,
+              88.5
             ],
             [
-              88.5,
-              171.5
+              171.5,
+              88.5
             ],
             [
-              88.5,
-              172.5
+              172.5,
+              88.5
             ],
             [
-              88.5,
-              173.5
+              173.5,
+              88.5
             ],
             [
-              88.5,
-              174.5
+              174.5,
+              88.5
             ],
             [
-              88.5,
-              175.5
+              175.5,
+              88.5
             ],
             [
-              88.5,
-              176.5
+              176.5,
+              88.5
             ],
             [
-              89.5,
-              177.5
+              177.5,
+              89.5
             ],
             [
-              89.5,
-              178.5
+              178.5,
+              89.5
             ],
             [
-              89.5,
-              179.5
+              179.5,
+              89.5
             ],
             [
-              89.5,
-              180.5
+              180.5,
+              89.5
             ]
           ]
         },
         "path_length_px": 14.4142,
-        "mask": "masks/junction_sw.png",
+        "mask": "masks/junction_ne.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
-          88.5,
-          166.5
+          166.5,
+          88.5
         ],
         "end_px": [
-          89.5,
-          180.5
+          180.5,
+          89.5
         ],
         "allowed_growth_directions": [
           "forward"
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_sw.png",
+      "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 180,
-      "growth_mask_rotation_clockwise": 180
+      "growth_mask_rotation_clockwise": 0
     },
     {
       "id": "junction_wn",
@@ -2750,7 +2878,7 @@
       "animation": {
         "trigger": "both_adjacent_arms_reach_elbow",
         "origin_px": [
-          87.5,
+          166.5,
           88.5
         ],
         "direction": "outward from declared source through actual alpha geometry",
@@ -2775,84 +2903,88 @@
           "format": "polyline",
           "points": [
             [
-              87.5,
+              166.5,
               88.5
             ],
             [
-              87.5,
-              87.5
+              167.5,
+              88.5
             ],
             [
-              87.5,
-              86.5
+              168.5,
+              88.5
             ],
             [
-              87.5,
-              85.5
+              169.5,
+              88.5
             ],
             [
-              87.5,
-              84.5
+              170.5,
+              88.5
             ],
             [
-              87.5,
-              83.5
+              171.5,
+              88.5
             ],
             [
-              87.5,
-              82.5
+              172.5,
+              88.5
             ],
             [
-              88.5,
-              81.5
+              173.5,
+              88.5
             ],
             [
-              89.5,
-              80.5
+              174.5,
+              88.5
             ],
             [
-              89.5,
-              79.5
+              175.5,
+              88.5
             ],
             [
-              89.5,
-              78.5
+              176.5,
+              88.5
             ],
             [
-              89.5,
-              77.5
+              177.5,
+              89.5
             ],
             [
-              89.5,
-              76.5
+              178.5,
+              89.5
             ],
             [
-              89.5,
-              75.5
+              179.5,
+              89.5
+            ],
+            [
+              180.5,
+              89.5
             ]
           ]
         },
-        "path_length_px": 13.8284,
-        "mask": "masks/junction_wn.png",
+        "path_length_px": 14.4142,
+        "mask": "masks/junction_ne.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
-          87.5,
+          166.5,
           88.5
         ],
         "end_px": [
-          89.5,
-          75.5
+          180.5,
+          89.5
         ],
         "allowed_growth_directions": [
           "forward"
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_wn.png",
+      "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 270,
-      "growth_mask_rotation_clockwise": 270
+      "growth_mask_rotation_clockwise": 0
     },
     {
       "id": "colony_body",

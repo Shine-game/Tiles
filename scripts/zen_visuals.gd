@@ -12,11 +12,6 @@ const Landmark = preload("res://scripts/zen_landmark.gd")
 const SAND_SHADER = preload("res://shaders/zen_sand.gdshader")
 const SAND = preload("res://art/themes/zen_garden/artwork/ground/sand_ground_256.png")
 const CORE = preload("res://art/themes/zen_garden/artwork/cores/stepping_stone_core_256.png")
-const STONES = [
-	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_N_256.png"),
-	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_E_256.png"),
-	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_S_256.png"),
-	preload("res://art/themes/zen_garden/artwork/stone_paths/half_stone_W_256.png")]
 const STONE_SCALE := 0.70
 var ordinary_components := Components.new()
 var materials: Array[ShaderMaterial] = []

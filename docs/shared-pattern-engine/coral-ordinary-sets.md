@@ -3,8 +3,11 @@
 Coral Tier 0/1 now use live shared sets. The approved appearance change removes
 cores from straight cells, retaining their two arms. Isolated tiles and endpoints
 keep the core. Bends, Ts and crosses keep the core plus respectively one, two or
-four applicable junction pieces. The appearance version is now `2.1`; older
+four applicable junction pieces. The appearance version is now `2.2`; older
 saved artwork PNGs remain readable and new saves have a distinct fingerprint.
+
+The [canonical assembly correction](canonical-assembly.md) removes external arm
+mask dependencies and shares the retained NE junction mask across directions.
 
 ## Live configuration
 
@@ -18,8 +21,9 @@ saved artwork PNGs remain readable and new saves have a distinct fingerprint.
 Each part declares source texture variants, pivot, canvas size, orientation,
 painter group, event band, animation duration/dependencies, reveal field semantics
 and independent mask UV rotation. All four arm directions still use one canonical
-`arm_n.png` image and mask per treatment. Junction artwork still uses one canonical
-image per treatment with its original direction-specific masks and UV transforms.
+`arm_n.png` image per treatment and one generated linear reveal field. Junction
+artwork uses one canonical image per treatment and the retained NE mask. Both
+artwork and field rotate together through the shared assembly.
 
 Shared `PatternCellSets` selection now supports optional `requires_mask` bits
 (N/E/S/W = 1/2/4/8). A part is selected only when all required same-color ports
@@ -45,8 +49,9 @@ using settled restoration show the appropriate completed composition immediately
 
 Ordinary tiny fingers stay omitted for phone readability. No run decoration asset,
 spacing policy, shading correction or new artwork is introduced. Original PNGs,
-masks, shader sources and `theme.json` are untouched. The latter remains the source
-adapter for higher tiers and ground, rather than the active ordinary contract.
+masks and shader sources are untouched. `theme.json` now declares the same
+canonical sources as the sets; it remains the source adapter for higher tiers
+and ground, rather than the active ordinary contract.
 Colonies, anemones, formation support, timing, feature order, audio, water, UI and
 logical puzzle rules retain their existing behavior. Zen's inherited wave adapter
 still produces the same Zen state. Export explicitly includes both JSON sets.
@@ -61,8 +66,10 @@ Native checks additionally verify continuous alpha through both straight
 orientations without replacement cores.
 
 Native real-board comparisons cover both colors, all shapes and a straight-run
-fixture at three growth phases. All 84 non-straight cell captures match the
-pre-migration pixels. The straight/run captures represent the approved change.
+fixture at three growth phases. The original Tier 0/1 migration matched all 84 non-straight cell captures.
+The later canonical correction intentionally changes rotated junction growth
+contours; the native rotation suite now compares every direction to the canonical
+NE field. Straight core suppression remains the approved finished-art change.
 Across 580 model fixtures, all non-core events and state match; 16 duration changes
 are exactly the extra time needed for newly required cores on existing cells.
 This comparison explicitly accounts for those core lifecycle changes rather than

@@ -1,5 +1,6 @@
 extends RefCounted
 # Ordinary Coral metadata is live set data; higher tiers retain their adapter.
+const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
@@ -47,9 +48,8 @@ static func render_spec(event: Dictionary, settled: bool) -> Dictionary:
 	var bound := Assets.bind_part(spec, tier0.definition.treatments[str(event.color)])
 	assert(bound.ok, str(bound.errors))
 	spec = bound.part
+	spec = Assembly.rotated(spec, int(event.rotation))
 	spec.position_cells = event.center
-	spec.rotation_radians = (event.rotation + float(spec.quarter_turns)) * PI / 2
-	spec.erase("quarter_turns")
 	if settled or event.old: spec.material = null
 	else:
 		var params: Dictionary = spec.material.params

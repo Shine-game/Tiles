@@ -22,7 +22,7 @@ func viewport() -> SubViewport:
 	return view
 
 func rotated_texture(source: Texture2D, turns: int) -> Texture2D:
-	var pixels: Image = source.get_image()
+	var pixels: Image = source.get_image().duplicate()
 	for i in range(turns): pixels.rotate_90(CLOCKWISE)
 	return ImageTexture.create_from_image(pixels)
 
@@ -45,7 +45,7 @@ func _run() -> void:
 				var id: String = family + "_" + str(directions[turns])
 				var meta: Dictionary = spec.components[id]
 				check(meta.artwork[variant] == "artwork/%s/%s.png" % [variant, canonical], "every direction uses the one canonical image for its color")
-				check(meta.reveal_mask == "masks/%s.png" % (canonical if family == "arm" else id) and meta.animation.mask == meta.reveal_mask, "arms share a field while junctions retain their original directional fields")
+				check(meta.reveal_mask == spec.components[canonical].reveal_mask and meta.animation.mask == meta.reveal_mask, "all directions share one canonical field, including generated arms")
 				check(meta.artwork_rotation_clockwise == turns * 90, "manifest supplies the correct clockwise orientation")
 				var model = Coral.new()
 				model.build(Rules.empty_board(9), grid)
@@ -71,7 +71,7 @@ func _run() -> void:
 					expected.position = Vector2(256, 256)
 					expected.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 					expected.texture = rotated_texture(sprite.texture, turns)
-					var mask: Texture2D = rotated_texture(Visuals.texture(meta.reveal_mask), turns) if family == "arm" else Visuals.texture(meta.reveal_mask)
+					var mask: Texture2D = rotated_texture(Visuals.texture(meta.reveal_mask), turns)
 					reference.add_child(expected)
 					for clock: float in [event.start + 0.02, event.start + 0.06, event.end + 0.01]:
 						layer.advance(clock)

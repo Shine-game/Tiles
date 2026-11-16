@@ -13,6 +13,7 @@ texture path, an existing `Texture2D`, or a descriptor:
 | Provider | Data |
 | --- | --- |
 | `texture` | `path`, relative to the set root or explicit `res://`; image imports or a typed binary `Texture2D` resource |
+| `linear_reveal` | Canonical generated 8-bit field: `size_px`, `zero_px`, `one_px` |
 | `atlas` | Source `path`, `region_px: [x,y,width,height]`, optional `filter_clip` |
 | `variants` (Step 5) | Named `variants` descriptors, selected explicitly by treatment |
 | Registered procedural texture | Project-owned provider ID and `params` object |
@@ -196,3 +197,7 @@ Coral's Step 6 migration adds optional part-level `requires_mask` (integer 0–1
 The common cell selector filters parts whose required ports are not all present,
 after selecting the shape role. Omitted requirements select unconditionally.
 See [Coral ordinary sets](coral-ordinary-sets.md) for multipart examples.
+
+Shared [canonical assembly](canonical-assembly.md) now supplies quarter-turn
+rotation and shared-edge instancing for Clockwork, Coral and Zen. Procedural
+Vines/Labyrinth retain their direction-driven geometry.

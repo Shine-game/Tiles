@@ -38,5 +38,5 @@ static func component(meta: Dictionary, treatment: String, root: String) -> Dict
 	if pivot.size() == 2: placement.pivot_px = Renderer.vector(pivot)
 	# Keep growth/protection fields separate from artwork; directional masks
 	# need not share the artwork's rotation or path.
-	var mask: String = meta.get("growth_field", meta.get("reveal_mask", meta.get("growth_mask", "")))
-	return {"ok": errors.is_empty(), "errors": errors, "asset": asset, "placement": placement, "reveal_mask": "" if mask.is_empty() else Assets.path_for(mask, root)}
+	var mask: Variant = meta.get("growth_field", meta.get("reveal_mask", meta.get("growth_mask", "")))
+	return {"ok": errors.is_empty(), "errors": errors, "asset": asset, "placement": placement, "reveal_mask": ("" if mask.is_empty() else Assets.path_for(mask, root)) if mask is String else mask}

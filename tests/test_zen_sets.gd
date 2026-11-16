@@ -48,7 +48,7 @@ func _run() -> void:
 				var sprite: Sprite2D = group.get_child(1)
 				var canonical := Geometry.canonical(mask)
 				var image: Image = sprite.texture.get_image().duplicate()
-				check(is_equal_approx(sprite.rotation, canonical.turns * PI / 2) and group.get_child_count() == 2, "Rakes use one canonical relief and the correct rotation")
+				check(is_equal_approx(sprite.rotation, canonical.turns * PI / 2) and sprite.position == Vector2(4.5, 4.5) * 256 and group.get_child_count() == 2, "Rakes use one canonical relief and the correct rotation")
 				if shape != "endpoint":
 					check(image.get_data() == Geometry.height_image(canonical.mask).get_data(), "Non-endpoint rake geometry remains unchanged")
 				else:
@@ -83,7 +83,7 @@ func _run() -> void:
 					check(below.position == Vector2(4.5, 4.5) * 256 and below.scale == Vector2.ONE * 0.70, "Endpoint core matches isolated core size and center")
 					var d: int = [1, 2, 4, 8].find(mask)
 					var opposite := Visuals.stone_sprite(Vector2i(4, 4) + Geometry.OFFSETS[d], (d + 2) % 4)
-					check(above.position == opposite.position and above.scale == opposite.scale and above.offset == -opposite.offset, "Both path halves still share their boundary anchor")
+					check(above.position == opposite.position and above.scale == opposite.scale and above.offset == opposite.offset and above.flip_h != opposite.flip_h, "Both path halves still share their boundary anchor")
 					opposite.free()
 	var before := Rules.empty_board(9)
 	before[4][4] = 2
@@ -105,7 +105,7 @@ func _run() -> void:
 	check(group.get_child(1).modulate.a == 1 and group.get_child(2).modulate.a == 1 and visuals.pending.is_empty(), "Endpoint layers settle together and release the growth gate")
 	var exports := FileAccess.get_file_as_string("res://export_presets.cfg")
 	check(exports.contains("art/themes/zen_garden/sets/*.json"), "Production Zen sets are packaged for Android")
-	check(preload("res://scripts/palette.gd").theme_version() == "0.10", "The new endpoint appearance has a distinct gallery version")
+	check(preload("res://scripts/palette.gd").theme_version() == "0.11", "The new endpoint appearance has a distinct gallery version")
 	visuals.clear()
 	check(visuals.ordinary_components.nodes.is_empty(), "Full reset clears shared centerpiece ownership")
 	visuals.queue_free()

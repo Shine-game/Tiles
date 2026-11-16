@@ -254,14 +254,14 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/junction_es.png"
+                "path": "../masks/junction_ne.png"
               },
               "purpose": "reveal",
               "channel": "r",
               "encoding": "linear",
               "zero": "invisible; ground remains visible",
               "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 90
+              "rotation_degrees": 0
             }
           },
           "requires_mask": 6
@@ -321,14 +321,14 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/junction_sw.png"
+                "path": "../masks/junction_ne.png"
               },
               "purpose": "reveal",
               "channel": "r",
               "encoding": "linear",
               "zero": "invisible; ground remains visible",
               "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 180
+              "rotation_degrees": 0
             }
           },
           "requires_mask": 12
@@ -388,14 +388,14 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/junction_wn.png"
+                "path": "../masks/junction_ne.png"
               },
               "purpose": "reveal",
               "channel": "r",
               "encoding": "linear",
               "zero": "invisible; ground remains visible",
               "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 270
+              "rotation_degrees": 0
             }
           },
           "requires_mask": 9
@@ -447,8 +447,21 @@
           "masks": {
             "reveal": {
               "asset": {
-                "provider": "texture",
-                "path": "../masks/arm_n.png"
+                "provider": "linear_reveal",
+                "params": {
+                  "size_px": [
+                    256,
+                    256
+                  ],
+                  "zero_px": [
+                    128,
+                    128
+                  ],
+                  "one_px": [
+                    128,
+                    0
+                  ]
+                }
               },
               "purpose": "reveal",
               "channel": "r",
@@ -503,8 +516,21 @@
           "masks": {
             "reveal": {
               "asset": {
-                "provider": "texture",
-                "path": "../masks/arm_n.png"
+                "provider": "linear_reveal",
+                "params": {
+                  "size_px": [
+                    256,
+                    256
+                  ],
+                  "zero_px": [
+                    128,
+                    128
+                  ],
+                  "one_px": [
+                    128,
+                    0
+                  ]
+                }
               },
               "purpose": "reveal",
               "channel": "r",
@@ -559,8 +585,21 @@
           "masks": {
             "reveal": {
               "asset": {
-                "provider": "texture",
-                "path": "../masks/arm_n.png"
+                "provider": "linear_reveal",
+                "params": {
+                  "size_px": [
+                    256,
+                    256
+                  ],
+                  "zero_px": [
+                    128,
+                    128
+                  ],
+                  "one_px": [
+                    128,
+                    0
+                  ]
+                }
               },
               "purpose": "reveal",
               "channel": "r",
@@ -615,8 +654,21 @@
           "masks": {
             "reveal": {
               "asset": {
-                "provider": "texture",
-                "path": "../masks/arm_n.png"
+                "provider": "linear_reveal",
+                "params": {
+                  "size_px": [
+                    256,
+                    256
+                  ],
+                  "zero_px": [
+                    128,
+                    128
+                  ],
+                  "one_px": [
+                    128,
+                    0
+                  ]
+                }
               },
               "purpose": "reveal",
               "channel": "r",

@@ -28,6 +28,9 @@ This changes endpoint geometry, not the shading algorithm. The stone endpoint
 renders its copied core first, with the directional half-stone above it. Its
 70% scale and shared-boundary anchor are unchanged.
 
+The [canonical assembly correction](canonical-assembly.md) uses only the north
+stone-path image with rotations and seam-preserving mirrors. Current version: `0.11`.
+
 ## Runtime sets
 
 - [Rakes Tier 0](../../art/themes/zen_garden/sets/rakes-tier0.json): isolated relief.
@@ -35,7 +38,7 @@ renders its copied core first, with the directional half-stone above it. Its
   procedural vines and existing flat-stone/cairn/bamboo stages on bends/Ts/crosses.
 - [Stones Tier 0](../../art/themes/zen_garden/sets/stones-tier0.json): original core.
 - [Stones Tier 1](../../art/themes/zen_garden/sets/stones-tier1.json): copied endpoint
-  core and four explicitly directional half-stone images.
+  core and one canonical north-facing half-stone image.
 
 [`zen_sets.gd`](../../scripts/zen_sets.gd) binds these families to logical colors
 1/2. `PatternCellSets` selects shape roles and supplies shared anchors. The common
@@ -52,7 +55,7 @@ No long-run decoration was assigned. These declarations do not invent artwork.
 Landmarks, pond sectors/shrub choices, seasonal historical trees, ground, UI,
 existing shaders and logical placement rules retain their existing behavior.
 Higher-tier rake-center suppression and persistent center promotion remain.
-The appearance version is now `0.10` so new saves are distinct from older Zen
+The appearance version is now `0.11` so new saves are distinct from older Zen
 artwork. Existing gallery PNGs remain readable. Export includes all four JSON sets
 and the recognized texture resources. Original uploaded assets are untouched.
 

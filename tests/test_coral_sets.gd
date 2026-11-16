@@ -100,7 +100,7 @@ func _run() -> void:
 	parent.queue_free()
 	for id: String in ["colony_body", "colony_fold_ne", "anemone_foot", "anemone_region_0", "ground_01"]: check(not Sets.owns(id), "Higher tiers and ground stay outside the ordinary migration")
 	Palette.select_theme("coral_reef")
-	check(Palette.theme_version() == "2.1", "New core suppression has a distinct saved appearance version")
+	check(Palette.theme_version() == "2.2", "New core suppression has a distinct saved appearance version")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/coral_reef/sets/*.json"), "Production sets are included in Android exports")
 	visuals.queue_free()
 	await process_frame

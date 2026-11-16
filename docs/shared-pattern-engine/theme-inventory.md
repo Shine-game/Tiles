@@ -1,5 +1,8 @@
 # Existing themes mapped to the proposed sets
 
+This is the historical Step 1 inventory. For current directional sources and
+cleanup instructions, see [canonical assembly](canonical-assembly.md).
+
 Inspected runtime source and manifests at `951568f`. This is an implementation
 inventory, not a certification of artwork quality, complete shading maps or phone
 performance. The mappings below describe available resources; no new manifest is

@@ -18,7 +18,8 @@ var active: Dictionary = components.active
 var ground_sprites: Array[Sprite2D] = []
 var surface_signature: Array = []
 
-static func texture(path: String) -> Texture2D:
+static func texture(path: Variant) -> Texture2D:
+	if not path is String: return Assets.resolve(path, Model.ROOT)
 	if not textures.has(path):
 		textures[path] = Assets.texture(path, Model.ROOT)
 	return textures[path]

@@ -32,7 +32,7 @@ func _run() -> void:
 			var texture: Texture2D = load(Coral.ROOT + meta.artwork[variant])
 			check(texture != null and texture.get_size() == Vector2(meta.size_px[0], meta.size_px[1]), "native dimensions " + id + "/" + variant)
 		if not id.begins_with("ground_"):
-			check(ResourceLoader.exists(Coral.ROOT + meta.reveal_mask), "growth field " + id)
+			check(preload("res://scripts/pattern/asset_library.gd").validate(meta.reveal_mask, Coral.ROOT).is_empty(), "growth field " + id)
 	var fixtures: Array = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/coral_redesign_scenarios.json"))
 	var model = Coral.new()
 	for fixture: Dictionary in fixtures:
@@ -101,7 +101,7 @@ func _run() -> void:
 	for frame in range(4):
 		await process_frame
 	scene._select_theme("coral_reef")
-	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.1", "theme selection opens redesigned Coral Reef")
+	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.2", "theme selection opens redesigned Coral Reef")
 	check((scene.board_view.coral_visuals.position + Vector2(0, scene.board_view.surface_depth())).is_equal_approx(scene.board_view._floor_point(Vector2.ZERO)), "reef ground and coral share the elevated surface above the placement grid")
 	check(scene.game.moves == 0 and scene.game.undo_left == 3, "theme does not change gameplay or helper budgets")
 	scene.game.board = block
@@ -142,7 +142,7 @@ func _run() -> void:
 	scene.board_view.show_settled(block, true)
 	check(scene.board_view.coral_visuals.ordinals == order, "restoration preserves feature order")
 	check(scene.board_view.coral_visuals.registry[ground_key].rotation == ground.rotation, "ground selection stays fixed after restoration")
-	check(Gallery.fingerprint(block, 0, "coral_reef", "2.1") != Gallery.fingerprint(block, 0, "coral_reef", "2.0"), "new art can be saved beside an old reef design")
+	check(Gallery.fingerprint(block, 0, "coral_reef", "2.2") != Gallery.fingerprint(block, 0, "coral_reef", "2.1"), "new art can be saved beside an old reef design")
 	for dimensions: Vector2i in [Vector2i(240, 320), Vector2i(390, 844), Vector2i(844, 390)]:
 		root.size = dimensions
 		for frame in range(4):
