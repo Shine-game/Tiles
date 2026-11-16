@@ -27,8 +27,11 @@ Undo/Erase removes only unsupported landmarks and restores ordinary motifs.
 Gallery captures preserve the live stacking order. Rocks fill a two-cell square.
 The lantern is half that height, with its pedestal center anchored to the 2×2
 center. Its four-cell rake pattern remains visible underneath: the sand pattern
-finishes first, pauses briefly, then the lantern appears above it. Both types
-retain their aspect ratio and screen-facing lighting.
+finishes first, pauses briefly, then the lantern appears above it. Rock formations
+follow the same sequence: the ordinary stepping-stone pattern finishes first,
+then the 2×2 rock artwork appears above it. Both underlying patterns remain in
+place through the overlay animation and in saved artwork. Both types retain
+their aspect ratio and screen-facing lighting.
 Missing pagoda/day-night variants, ponds, trees and the
 decorative Zen frame are still pending. No Clockwork or Coral art is substituted.
 

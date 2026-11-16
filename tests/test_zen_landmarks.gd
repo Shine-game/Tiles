@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Rules = preload("res://scripts/rules.gd")
+const Geometry = preload("res://scripts/zen_geometry.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Model = preload("res://scripts/zen_growth.gd")
 const Visuals = preload("res://scripts/zen_visuals.gd")
@@ -36,8 +37,12 @@ func _run() -> void:
 			visuals.reconcile(model, true)
 			check(visuals.landmarks.size() == (extent.x - 1) * (extent.y - 1), "Both colors create every eligible overlapping 2x2")
 			check(visuals.formation_cells.size() == extent.x * extent.y and visuals.centerpieces.is_empty(), "Landmarks cover their supporting union without ordinary center stones")
-			for group: Node in visuals.registry.values():
-				check(group.get_child_count() == (2 if color == 1 else 1), "Lanterns preserve rake motifs; rocks retain plain sand below their artwork")
+			for cell: Vector2i in visuals.registry:
+				var mask := Geometry.neighbor_mask(grid, cell)
+				var halves := 0
+				for d in range(4):
+					if mask & (1 << d): halves += 1
+				check(visuals.registry[cell].get_child_count() == (2 if color == 1 else 1 + halves), "Both landmark types preserve their basic pattern below the artwork")
 			for sprite: Sprite2D in visuals.landmarks.values():
 				check(sprite.color == color and sprite.rotation == 0, "Landmark preserves logical color and screen-facing lighting")
 				check(sprite.texture == (Landmark.LANTERN if color == 1 else Landmark.ROCKS[sprite.variant]), "Landmark uses the supplied artwork for its color")
@@ -155,22 +160,22 @@ func check_game() -> void:
 		scene._place()
 		check(scene.game.moves == 1 and scene.board_view.zen_visuals.landmarks.size() == 1, "Actual Place completes each color's 2x2 landmark")
 		check(scene.board_view.growing, "Actual Place is gated by landmark growth")
-		if color == 1:
-			scene.board_view.set_process(false)
-			var event: Dictionary = scene.board_view.pattern.colonies[Vector2i(4, 3)]
-			var lantern: Sprite2D = scene.board_view.zen_visuals.landmarks[Landmark.identity(Vector2i(4, 3), 1)]
-			var rake: Sprite2D = scene.board_view.zen_visuals.registry[Vector2i(5, 3)].get_child(1)
-			var rake_id := rake.get_instance_id()
-			var rake_texture := rake.texture
-			var rake_position := rake.position
-			check(event.start > event.sand_end and lantern.modulate.a == 0, "Lantern waits until the raked-sand phase is complete")
-			scene.board_view.advance_growth(event.sand_end)
-			check(rake.modulate.a == 1 and lantern.modulate.a == 0, "Completed 2x2 rake pattern appears alone before the lantern")
-			await capture("raked-sand-first")
-			scene.board_view.advance_growth(event.start + Landmark.GROW_SECONDS * 0.5 - scene.board_view.clock)
-			check(lantern.modulate.a > 0 and lantern.modulate.a < 1 and scene.board_view.growing, "Lantern appears above the finished pattern while Place remains gated")
-			check(rake.get_instance_id() == rake_id and rake.texture == rake_texture and rake.position == rake_position and rake.modulate.a == 1, "Lantern animation preserves the completed rake artwork in place")
-			await capture("lantern-halfway")
+		scene.board_view.set_process(false)
+		var event: Dictionary = scene.board_view.pattern.colonies[Vector2i(4, 3)]
+		var landmark: Sprite2D = scene.board_view.zen_visuals.landmarks[Landmark.identity(Vector2i(4, 3), color)]
+		var pattern: Array = []
+		for group: Node in scene.board_view.zen_visuals.registry.values():
+			for child: Node in group.get_children():
+				if child is Sprite2D:
+					pattern.append({"sprite": child, "id": child.get_instance_id(), "texture": child.texture, "position": child.position})
+		check(event.start > event.pattern_end and landmark.modulate.a == 0, "Both landmarks wait for the basic-pattern phase to complete")
+		scene.board_view.advance_growth(event.pattern_end)
+		check(landmark.modulate.a == 0 and pattern.all(func(item): return item.sprite.modulate.a == 1), "The full basic pattern appears alone before its 2x2 artwork")
+		await capture("raked-sand-first" if color == 1 else "stepping-stones-first")
+		scene.board_view.advance_growth(event.start + Landmark.GROW_SECONDS * 0.5 - scene.board_view.clock)
+		check(landmark.modulate.a > 0 and landmark.modulate.a < 1 and scene.board_view.growing, "The artwork appears above the finished pattern while Place remains gated")
+		check(pattern.all(func(item): return item.sprite.get_instance_id() == item.id and item.sprite.texture == item.texture and item.sprite.position == item.position and item.sprite.modulate.a == 1), "The overlay preserves every basic-pattern sprite in place")
+		await capture("lantern-halfway" if color == 1 else "rocks-halfway")
 		scene.board_view.advance_growth(100)
 		check(not scene.board_view.growing, "Place unlocks when the landmark has finished appearing")
 		await capture("formed-%d" % color)

@@ -9,8 +9,8 @@ const ROCKS := [
 	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png"),
 	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png")]
 const GROW_SECONDS := 0.45
-const SAND_SECONDS := 0.30
-const SAND_HOLD_SECONDS := 0.10
+const PATTERN_SECONDS := 0.30
+const PATTERN_HOLD_SECONDS := 0.10
 # Center of the visible pedestal footprint in the supplied 1254x1254 master.
 const LANTERN_BASE_PIVOT := Vector2(627.0, 1090.0)
 var origin := Vector2i.ZERO

@@ -68,9 +68,8 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			face.material = sand_material(Vector2(cell))
 			materials.append(face.material)
 			group.add_child(face)
-			# Raked formations keep their four-cell sand pattern under the lantern.
-			# Rock formations still replace the ordinary stepping-stone motifs.
-			if color == 0 or color == 2 and formation_cells.has(cell): continue
+			# Both landmark types preserve their ordinary four-cell pattern below.
+			if color == 0: continue
 			var mask := Geometry.neighbor_mask(board, cell)
 			if color == 1:
 				var spec := Geometry.canonical(mask)
