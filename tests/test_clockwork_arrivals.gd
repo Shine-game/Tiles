@@ -49,6 +49,9 @@ func _run() -> void:
 				var incoming_center: float = Clock.arm_arrival(arm, 0.0) + Clock.REVEAL_TAIL
 				check(is_equal_approx(model.arrivals[cell], incoming_center), "center wakes exactly when its incoming tube is fully revealed there")
 				for id: String in ["C01", "C02", "C03"]:
+					if not Clock.has_wheel(after, cell):
+						check(not model.components.has(Clock.key(id, color, cell)), "straight cells have no socket, wheel or axle cap")
+						continue
 					var core: Dictionary = model.components[Clock.key(id, color, cell)]
 					check(core.start >= incoming_center - 0.000001, "socket, gear and pin cannot precede incoming pressure")
 				check(arm.start >= model.arrivals[cell] + Clock.CORE_EMIT_DELAY - 0.000001, "new center cannot emit an outward front before it wakes")
@@ -110,17 +113,20 @@ func _run() -> void:
 		var arrival: float = view.pattern.arrivals[cell]
 		view.advance_growth(arrival - 0.06 - view.clock)
 		for id: String in ["C01", "C02", "C03"]:
+			if not Clock.has_wheel(after, cell):
+				check(not visuals.registry.has(Clock.key(id, 1, cell)), "straight cells render only their tubes")
+				continue
 			var entry: Dictionary = visuals.registry[Clock.key(id, 1, cell)]
 			var visible: float = float(entry.node.material.get_shader_parameter("rise")) if id != "C03" else entry.node.modulate.a
 			check(visible == 0, "real new core parts are invisible before the tube reaches the center")
-		if probe != null:
+		if probe != null and Clock.has_wheel(after, cell):
 			var core: Sprite2D = visuals.registry[Clock.key("C02", 1, cell)].node
 			sprite.texture = core.texture
 			sprite.material = core.material
 			var image: Image = await capture(probe)
 			check(image.is_invisible(), "GPU core is fully transparent before incoming tube arrival")
 		view.advance_growth(arrival + 0.15 - view.clock)
-		if probe != null:
+		if probe != null and Clock.has_wheel(after, cell):
 			var image: Image = await capture(probe)
 			check(not image.is_invisible(), "GPU core rises only after incoming tube arrival")
 		var incoming := "W" if cell == Vector2i(5, 5) else "N"

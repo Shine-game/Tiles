@@ -228,6 +228,9 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 		if event.id == "H02_rotating": wheel_caps.append(entry)
 		if event.id in ["H03_shutters_left", "H03_shutters_right"]: vent_shutters.append(entry)
 		entry.node.rotation = event.rotation
+		# Opposite straight-tube halves share the same highlight orientation at
+		# their exposed center join. Growth still travels along the local X axis.
+		entry.node.flip_v = event.id == "T01" and not Model.has_wheel(next.board, event.cell) and int(event.direction) in [2, 3]
 		entry.node.modulate = Color.WHITE
 		if event.id.begins_with("plate_"):
 			var ink := ShaderMaterial.new()
@@ -284,7 +287,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 		existing.event = event
 		next.chains[identity] = event
 	for cell: Vector2i in core_angles.keys():
-		if not next.arrivals.has(cell):
+		if not Model.has_wheel(next.board, cell):
 			core_angles.erase(cell)
 			core_speed.erase(cell)
 	for cell: Vector2i in gear_angles.keys():
@@ -407,6 +410,7 @@ func _update_angles(delta: float) -> void:
 				registry[identity].node.rotation = gear_angles[cell]
 				registry[identity].node.material.set_shader_parameter("turn_angle", gear_angles[cell])
 	for cell: Vector2i in model.arrivals:
+		if not Model.has_wheel(model.board, cell): continue
 		var awake := false
 		for support: Vector2i in model.powered.get(cell, []):
 			var mechanism: Dictionary = model.mechanisms[support]

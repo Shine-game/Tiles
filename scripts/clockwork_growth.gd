@@ -23,6 +23,19 @@ static func specification() -> Dictionary:
 static func key(id: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [id, color, cell.y, cell.x]
 
+static func connection_mask(grid: Array, cell: Vector2i) -> int:
+	var color := value(grid, cell)
+	if color == 0: return 0
+	var mask := 0
+	for direction in range(4):
+		if value(grid, cell + DIRS[direction]) == color: mask |= 1 << direction
+	return mask
+
+static func has_wheel(grid: Array, cell: Vector2i) -> bool:
+	# Isolated cells, endpoints, bends, Ts and crosses carry the full assembly.
+	# Only two opposite same-color connections make a tube-only straight cell.
+	return value(grid, cell) != 0 and connection_mask(grid, cell) not in [5, 10]
+
 static func cap_for(directions: Array) -> String:
 	if directions.size() < 2:
 		return "H00_plain_hatch"
@@ -88,8 +101,11 @@ func build(before: Array, after: Array) -> void:
 		var color: int = value(after, cell)
 		var old: bool = value(before, cell) == color
 		var at: float = -100 if old else float(arrivals[cell])
-		for id: String in ["C01", "C02", "C03"]:
-			add_part(id, color, cell, Vector2(cell) + Vector2.ONE * 0.5, old, maxf(0, at) + (0.05 if id != "C01" else 0), 0.35)
+		var straight := not has_wheel(after, cell)
+		if not straight:
+			var old_wheel := old and has_wheel(before, cell)
+			for id: String in ["C01", "C02", "C03"]:
+				add_part(id, color, cell, Vector2(cell) + Vector2.ONE * 0.5, old_wheel, maxf(0, at) + (0.05 if id != "C01" else 0), 0.35)
 		for direction in range(4):
 			var other: Vector2i = cell + DIRS[direction]
 			if value(after, other) != color:

@@ -1,6 +1,6 @@
 # Clockwork Workshop
 
-Clockwork is the startup theme and first entry in the theme cycle: Clockwork → Vines → Labyrinth → Coral Reef. Drafting paper fills the entire screen; the shared frame component displays the supplied walnut texture. Its fixed geometry remains a 14-unit rim and 10-unit lower sidewall. Occupied plates, offered pieces and hovering pieces use 4 UI units of thickness in this theme. Other themes retain their existing depth rules.
+Clockwork is selectable in Settings → Themes. Drafting paper fills the entire screen; the shared frame component displays the supplied walnut texture. Its fixed geometry remains a 14-unit rim and 10-unit lower sidewall. Occupied plates, offered pieces and hovering pieces use 4 UI units of thickness in this theme. Other themes retain their existing depth rules.
 
 ## Source and agreed rules
 
@@ -23,6 +23,17 @@ Cap choice follows topology, so symmetry is not arbitrarily broken by decorative
 
 ## State and motion
 
+Ordinary wheels follow same-color orthogonal connectivity. Isolated cells and
+endpoints have wheels; bends, Ts and crosses have wheels and their tubes. Only
+straight cells (two opposite connections) omit the complete socket/wheel/axle
+assembly and join their tube halves through the center. Opposing straight halves
+share a consistent shading orientation at this exposed join. Extending an endpoint
+into a straight removes its wheel; adding a branch to a straight constructs one.
+Undo/Erase recalculates this state while preserving surviving components. All
+2×2 supports retain their wheels because their connections include a bend.
+Clockwork appearance version 1.1 / `workshop4-straight-tubes-v5` distinguishes
+new gallery captures from earlier wheels-on-every-cell artwork.
+
 `clockwork_growth.gd` derives keyed components, mechanisms, chains, support membership, cap types, pins and construction times from before/after boards. Concave and convex exposed contour corners receive rivets; mixed-color ties choose the first actual perimeter support by row/column. Plate texture selection is stable by board coordinate.
 
 `clockwork_visuals.gd` reconciles persistent sprite identities rather than rebuilding shared cores. Construction time and operating time are separate. Active core wheels rotate counterclockwise at approximately 14 rpm, central and upper gears clockwise at 10 rpm and on a shared axle phase, and decorative caps at 3 rpm. Unpowered small wheels stay still. Starts ease in; supported wheels retain phase on additional placements, helpers and theme changes. Chain links are batched in two shader strips per connection, drawing original link art at 2× size (about 108×48 painted source pixels) with a 58-source-pixel pitch instead of 29, roughly five link positions per run instead of nine. Run centerlines remain at ±28 source pixels, the two strip canvases are 128 pixels high, and return housings enlarge only 20% to 108 pixels to give the wider links clearance. Each run starts at its own axle so the larger pitch assembles symmetrically. Linear chain speed and assembly duration stay unchanged. This preserves opposite circulation without thousands of per-link nodes/timers. Return paths are concealed by the provided junction housing, as an artistic abstraction rather than a physical four-chain transmission.
@@ -36,6 +47,11 @@ The first implementation operates completed mechanisms normally. `ClockworkVisua
 Original, deterministic stereo PCM samples provide a quiet looping tick/tock background, soft coupling clicks, muted gear-seat clunks and short steam breaths. Generate them with `python3 tools/synthesize_clockwork_audio.py`; no external recordings are used. Tick/tock is at −24 dB player gain; click −18, clunk −16, steam −23. Four one-shot voices and per-kind rate limits bound busy assemblies. The previous foliage/bell and reef layers do not play in this theme. Rapid theme changes cancel obsolete fades, and scene cleanup stops all voices.
 
 ## Validation and limits
+
+`tests/test_clockwork_wheel_rule.gd` checks all 16 connection shapes in both
+metals, wheel promotion/removal, mixed-color exclusion, dense mechanism supports,
+and actual Place/Undo/Erase. With a graphics display it also verifies the exposed
+straight join's coverage and shading against the supplied tube artwork.
 
 `tests/test_clockwork_arrivals.gd` reproduces the attached L-shaped piece from the supplied recordings in every rotation and both metals, checks multi-source and independent growth, and verifies on the GPU that each new core stays transparent before arrival. It also checks that completed incoming tubes do not disappear before the later outgoing emission.
 

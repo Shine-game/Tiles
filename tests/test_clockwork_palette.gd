@@ -47,7 +47,7 @@ func _run() -> void:
 		check(model.mechanisms.size() == 9 and model.chains.size() == 12, "artwork split preserves the mechanism graph")
 		check(examples.pin.node.texture.resource_path == Model.ROOT + "artwork/pins/plate_pin_" + primary + ".png", "plate rivets retain their supporting logical color")
 		visuals.queue_free()
-	check(Platform.surface_revision("clockwork") == "workshop4-v4", "gallery distinguishes alternating-metal designs")
+	check(Platform.surface_revision("clockwork") == "workshop4-straight-tubes-v5", "gallery distinguishes the revised wheel layout with alternating-metal designs")
 	await process_frame
 	print("Clockwork palette: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
