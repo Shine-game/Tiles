@@ -26,7 +26,7 @@ static func theme_id() -> String:
 	return "clockwork" if clockwork else ("coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines"))
 
 static func theme_version() -> String:
-	if zen_garden: return "0.3"
+	if zen_garden: return "0.4"
 	return "1.0" if clockwork else ("2.0" if coral_reef else "")
 
 static func theme_name() -> String:

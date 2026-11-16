@@ -24,9 +24,12 @@ raked sand receives the supplied stone lantern, and stepping stones receive one
 of four rock formations. Rock choice is deterministic per origin. Surviving
 landmarks retain their nodes, positions and stacking order as the board grows.
 Undo/Erase removes only unsupported landmarks and restores ordinary motifs.
-Gallery captures preserve the live stacking order. The masters are uniformly
-scaled into a two-cell square without rotating their baked lighting or changing
-their aspect ratio. Missing pagoda/day-night variants, ponds, trees and the
+Gallery captures preserve the live stacking order. Rocks fill a two-cell square.
+The lantern is half that height, with its pedestal center anchored to the 2×2
+center. Its four-cell rake pattern remains visible underneath: the sand pattern
+finishes first, pauses briefly, then the lantern appears above it. Both types
+retain their aspect ratio and screen-facing lighting.
+Missing pagoda/day-night variants, ponds, trees and the
 decorative Zen frame are still pending. No Clockwork or Coral art is substituted.
 
 ## Geometry and rendering

@@ -16,7 +16,9 @@ func build(before: Array, after: Array) -> void:
 		var latest := -100.0
 		for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
 			latest = maxf(latest, float(arrivals[origin + offset]))
-		formation.start = -100.0 if formation.old else latest + 0.30
+		formation.sand_end = latest + preload("res://scripts/zen_landmark.gd").SAND_SECONDS
+		var hold := preload("res://scripts/zen_landmark.gd").SAND_HOLD_SECONDS if formation.color == 1 else 0.0
+		formation.start = -100.0 if formation.old else formation.sand_end + hold
 		formation.end = formation.start + preload("res://scripts/zen_landmark.gd").GROW_SECONDS
 		formation.ready = formation.end
 		if not formation.old: duration = maxf(duration, formation.end)

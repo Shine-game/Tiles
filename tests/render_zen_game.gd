@@ -65,7 +65,7 @@ func _run() -> void:
 	scene._refresh()
 	check(scene.board_view.zen_visuals.formation_cells.size() == 6 and scene.board_view.zen_visuals.landmarks.size() == 2, "Every eligible overlapping 2x2 has its landmark")
 	for group: Node in scene.board_view.zen_visuals.registry.values():
-		check(group.get_child_count() == 1, "Landmarks replace ordinary motifs above the shared sand")
+		check(group.get_child_count() == 2, "Raked formations preserve their sand pattern under the lantern")
 	check(scene.game.board == unfinished, "Landmarks do not change the logical board")
 	await capture("overlapping-landmarks")
 	unfinished[3][3] = 0

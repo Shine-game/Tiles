@@ -9,6 +9,10 @@ const ROCKS := [
 	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png"),
 	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png")]
 const GROW_SECONDS := 0.45
+const SAND_SECONDS := 0.30
+const SAND_HOLD_SECONDS := 0.10
+# Center of the visible pedestal footprint in the supplied 1254x1254 master.
+const LANTERN_BASE_PIVOT := Vector2(627.0, 1090.0)
 var origin := Vector2i.ZERO
 var color := 1
 var variant := 0
@@ -35,10 +39,13 @@ func configure(event: Dictionary, settled: bool) -> void:
 	texture = ROCKS[variant] if color == 2 else LANTERN
 	position = (Vector2(origin) + Vector2.ONE) * 256.0
 	rotation = 0.0
-	# Fit within the two-cell square without distorting the nonsquare masters.
-	scale = Vector2.ONE * 512.0 / maxf(texture.get_width(), texture.get_height())
+	# Rocks keep their two-cell size. The lantern is half its former size and
+	# its pedestal, rather than the whole image, sits on the formation center.
+	var canvas_pixels := 256.0 if color == 1 else 512.0
+	scale = Vector2.ONE * canvas_pixels / maxf(texture.get_width(), texture.get_height())
+	offset = texture.get_size() * 0.5 - LANTERN_BASE_PIVOT if color == 1 else Vector2.ZERO
 	var extent: Vector2 = texture.get_size() * scale
-	material.set_shader_parameter("artwork_origin", position - extent * 0.5)
+	material.set_shader_parameter("artwork_origin", position + (offset - texture.get_size() * 0.5) * scale)
 	material.set_shader_parameter("artwork_pixels", extent)
 	start = event.start
 	growing = not settled and not event.old

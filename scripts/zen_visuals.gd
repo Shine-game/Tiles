@@ -68,7 +68,9 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 			face.material = sand_material(Vector2(cell))
 			materials.append(face.material)
 			group.add_child(face)
-			if color == 0 or formation_cells.has(cell): continue
+			# Raked formations keep their four-cell sand pattern under the lantern.
+			# Rock formations still replace the ordinary stepping-stone motifs.
+			if color == 0 or color == 2 and formation_cells.has(cell): continue
 			var mask := Geometry.neighbor_mask(board, cell)
 			if color == 1:
 				var spec := Geometry.canonical(mask)
@@ -85,7 +87,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 				sprite.material = ink
 				materials.append(ink)
 				group.add_child(sprite)
-				var stage := Centerpiece.stage_for(mask)
+				var stage := 0 if formation_cells.has(cell) else Centerpiece.stage_for(mask)
 				if stage > 0:
 					if not centerpieces.has(cell):
 						var center := Centerpiece.new()

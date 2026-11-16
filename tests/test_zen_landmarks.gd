@@ -35,13 +35,19 @@ func _run() -> void:
 			model.build(Rules.empty_board(9), grid)
 			visuals.reconcile(model, true)
 			check(visuals.landmarks.size() == (extent.x - 1) * (extent.y - 1), "Both colors create every eligible overlapping 2x2")
-			check(visuals.formation_cells.size() == extent.x * extent.y and visuals.centerpieces.is_empty(), "Landmarks replace ordinary motifs across their supporting union")
+			check(visuals.formation_cells.size() == extent.x * extent.y and visuals.centerpieces.is_empty(), "Landmarks cover their supporting union without ordinary center stones")
+			for group: Node in visuals.registry.values():
+				check(group.get_child_count() == (2 if color == 1 else 1), "Lanterns preserve rake motifs; rocks retain plain sand below their artwork")
 			for sprite: Sprite2D in visuals.landmarks.values():
 				check(sprite.color == color and sprite.rotation == 0, "Landmark preserves logical color and screen-facing lighting")
 				check(sprite.texture == (Landmark.LANTERN if color == 1 else Landmark.ROCKS[sprite.variant]), "Landmark uses the supplied artwork for its color")
-				check(sprite.position == (Vector2(sprite.origin) + Vector2.ONE) * 256, "Landmark is centered exactly on its four cells")
+				check(sprite.position == (Vector2(sprite.origin) + Vector2.ONE) * 256, "Landmark anchor is centered exactly on its four cells")
 				var extent_pixels: Vector2 = sprite.texture.get_size() * sprite.scale
-				check(is_equal_approx(maxf(extent_pixels.x, extent_pixels.y), 512) and is_equal_approx(sprite.scale.x, sprite.scale.y), "Masters fit two cells with their aspect ratio unchanged")
+				check(is_equal_approx(maxf(extent_pixels.x, extent_pixels.y), 256 if color == 1 else 512) and is_equal_approx(sprite.scale.x, sprite.scale.y), "Lantern is half size; rocks keep their size and aspect ratio")
+				if color == 1:
+					var pedestal: Vector2 = sprite.position + (Landmark.LANTERN_BASE_PIVOT - sprite.texture.get_size() * 0.5 + sprite.offset) * sprite.scale
+					check(pedestal.is_equal_approx(sprite.position), "Lantern pedestal stays centered on the 2x2")
+					check(sprite.material.get_shader_parameter("artwork_origin").is_equal_approx(sprite.position + (sprite.offset - sprite.texture.get_size() * 0.5) * sprite.scale), "Surface clipping follows the shifted lantern image")
 			check(model.components.is_empty() and model.flowers.is_empty(), "No Coral or vine art/events are substituted")
 	# Opposite-color contact and diagonals do not invent a same-color 2x2.
 	var mixed := block(2, 2, 1)
@@ -149,6 +155,22 @@ func check_game() -> void:
 		scene._place()
 		check(scene.game.moves == 1 and scene.board_view.zen_visuals.landmarks.size() == 1, "Actual Place completes each color's 2x2 landmark")
 		check(scene.board_view.growing, "Actual Place is gated by landmark growth")
+		if color == 1:
+			scene.board_view.set_process(false)
+			var event: Dictionary = scene.board_view.pattern.colonies[Vector2i(4, 3)]
+			var lantern: Sprite2D = scene.board_view.zen_visuals.landmarks[Landmark.identity(Vector2i(4, 3), 1)]
+			var rake: Sprite2D = scene.board_view.zen_visuals.registry[Vector2i(5, 3)].get_child(1)
+			var rake_id := rake.get_instance_id()
+			var rake_texture := rake.texture
+			var rake_position := rake.position
+			check(event.start > event.sand_end and lantern.modulate.a == 0, "Lantern waits until the raked-sand phase is complete")
+			scene.board_view.advance_growth(event.sand_end)
+			check(rake.modulate.a == 1 and lantern.modulate.a == 0, "Completed 2x2 rake pattern appears alone before the lantern")
+			await capture("raked-sand-first")
+			scene.board_view.advance_growth(event.start + Landmark.GROW_SECONDS * 0.5 - scene.board_view.clock)
+			check(lantern.modulate.a > 0 and lantern.modulate.a < 1 and scene.board_view.growing, "Lantern appears above the finished pattern while Place remains gated")
+			check(rake.get_instance_id() == rake_id and rake.texture == rake_texture and rake.position == rake_position and rake.modulate.a == 1, "Lantern animation preserves the completed rake artwork in place")
+			await capture("lantern-halfway")
 		scene.board_view.advance_growth(100)
 		check(not scene.board_view.growing, "Place unlocks when the landmark has finished appearing")
 		await capture("formed-%d" % color)
