@@ -206,49 +206,107 @@ func _layout_row(controls: Array, rect: Rect2, gap: float) -> void:
 	for i in range(controls.size()):
 		_set_rect(controls[i], Rect2(rect.position + Vector2(i * (width + gap), 0), Vector2(width, rect.size.y)))
 
+func _layout_insets(view: Vector2) -> Vector4:
+	var short_side := minf(view.x, view.y)
+	var side := clampf(short_side * 0.04, 12, 32)
+	var vertical := clampf(short_side * 0.05, 24, 40)
+	var inset := Vector4(side, vertical, side, vertical)
+	if OS.has_feature("android") or OS.has_feature("ios"):
+		var window := Vector2(DisplayServer.window_get_size())
+		if window.x > 0 and window.y > 0:
+			var safe := Rect2(DisplayServer.get_display_safe_area())
+			safe.position -= Vector2(DisplayServer.window_get_position())
+			safe = safe.intersection(Rect2(Vector2.ZERO, window))
+			if safe.has_area():
+				var factor := view / window
+				var clearance := clampf(short_side * 0.015, 6, 12)
+				inset.x = maxf(inset.x, safe.position.x * factor.x + clearance)
+				inset.y = maxf(inset.y, safe.position.y * factor.y + clearance)
+				inset.z = maxf(inset.z, (window.x - safe.end.x) * factor.x + clearance)
+				inset.w = maxf(inset.w, (window.y - safe.end.y) * factor.y + clearance)
+	return inset
+
+func _header_metrics(view: Vector2, inset: float, gap: float, icon_gap: float) -> Dictionary:
+	var preview_height: float = 2 * board_view.pitch + 8.0
+	var left_space: float = view.x / 2 - 2 * board_view.pitch - inset - gap
+	var icon_limit := maxf(16, (left_space - icon_gap) / 2)
+	var icon_side := minf(minf(64 * 1.3, view.y * 0.12), icon_limit)
+	var helper_height := clampf(view.y * 0.08, 24, 44)
+	var group_height := icon_side + gap + helper_height
+	return {"icon": icon_side, "helper": helper_height, "group": group_height, "preview": preview_height, "height": maxf(preview_height, group_height)}
+
 func _layout() -> void:
 	if not is_instance_valid(board_view):
 		return
 	var view: Vector2 = size
+	if view.x <= 0 or view.y <= 0: return
 	var pad: float = clampf(minf(view.x, view.y) * 0.01, 4, 8)
-	var button_side: float = (view.x - 5 * pad) / 4
-	if view.x > view.y:
-		button_side = minf(button_side, view.y * 0.22)
+	var gap: float = clampf(minf(view.x, view.y) * 0.015, 6, 12)
+	var safe := _layout_insets(view)
+	var side_inset := maxf(safe.x, safe.z)
+	var button_side := maxf(1, minf((view.x - 2 * side_inset - 3 * gap) / 4, view.y * 0.20))
 	for control: Control in _controls():
 		control.add_theme_font_size_override("font_size", clampi(roundi(button_side * 0.2), 12, 28))
-	var dock_width: float = 4 * button_side + 3 * pad
-	var dock := Rect2((view.x - dock_width) / 2, view.y - pad - button_side, dock_width, button_side)
-	_layout_row([blue_button, coral_button, flip_button, place_button], dock, pad)
-	# Maximize the board first, reserving only two playing-cell rows above it.
-	var side: float = view.x - 2 * pad
-	var header_height := 52.0
-	var icon_side := 64.0
-	var helper_height := 36.0
 	var icon_gap: float = 2 * pad
-	for iteration in range(8):
-		board_view.size = Vector2.ONE * side
+	# The frame stays exactly on the phone's vertical midpoint. Find the largest
+	# square with enough safe space for both control bands, rather than moving
+	# the frame up to squeeze the buttons against the screen edges.
+	var low := 1.0
+	var high := maxf(1, minf(view.x - 2 * side_inset, view.y - 2 * (safe.w + button_side + gap)))
+	for iteration in range(12):
+		var candidate := (low + high) * 0.5
+		board_view.size = Vector2.ONE * candidate
 		board_view.update_geometry()
-		var tile_header: float = maxf(52, 2 * board_view.pitch + 8)
-		var base_icon: float = minf(64, tile_header * 0.52)
-		# Keep the enlarged controls clear of a centered four-cell source tray.
-		var icon_limit: float = (view.x / 2 - 2 * board_view.pitch - 2 * pad - icon_gap) / 2
-		icon_side = minf(base_icon * 1.3, maxf(20, icon_limit))
-		helper_height = minf(36, maxf(20, tile_header - base_icon - pad))
-		header_height = maxf(tile_header, icon_side + pad + helper_height)
-		side = maxf(1, minf(view.x - 2 * pad, dock.position.y - header_height - 3 * pad))
-	_set_rect(board_view, Rect2(Vector2((view.x - side) / 2, 0), Vector2.ONE * side))
+		var metrics := _header_metrics(view, side_inset, gap, icon_gap)
+		if float(metrics.height) <= (view.y - candidate) * 0.5 - safe.y - gap:
+			low = candidate
+		else:
+			high = candidate
+	var side := low
+	_set_rect(board_view, Rect2((view - Vector2.ONE * side) * 0.5, Vector2.ONE * side))
 	board_view.update_geometry()
-	board_view.position.y = header_height + 2 * pad
+	var metrics := _header_metrics(view, side_inset, gap, icon_gap)
+	var icon_side: float = metrics.icon
+	var helper_height: float = metrics.helper
+	var header_center: float = (safe.y + board_view.position.y - gap) * 0.5
+	var icon_y: float = header_center - float(metrics.group) * 0.5
 	var group_width: float = 2 * icon_side + icon_gap
 	for i in range(2):
-		_set_rect(indicators[i].panel, Rect2(pad + i * (icon_side + icon_gap), pad, icon_side, icon_side))
-	for control: Button in [undo_button, skip_button, erase_button]:
-		control.add_theme_font_size_override("font_size", clampi(roundi(helper_height * 0.42), 10, 16))
-	_layout_row([undo_button, skip_button, erase_button], Rect2(pad, icon_side + 2 * pad, group_width, helper_height), pad)
-	_set_rect(palette_button, Rect2(view.x - pad - minf(64, icon_side), pad, minf(64, icon_side), minf(64, icon_side)))
+		_set_rect(indicators[i].panel, Rect2(side_inset + i * (icon_side + icon_gap), icon_y, icon_side, icon_side))
+	_set_rect(palette_button, Rect2(view.x - side_inset - minf(64, icon_side), icon_y, minf(64, icon_side), minf(64, icon_side)))
 	var preview_width: float = 4 * board_view.pitch
-	_set_rect(piece_view, Rect2((view.x - preview_width) / 2, pad, preview_width, header_height))
+	_set_rect(piece_view, Rect2((view.x - preview_width) / 2, header_center - float(metrics.preview) * 0.5, preview_width, metrics.preview))
 	piece_view.cell_pitch = board_view.pitch
+	var helper_y := icon_y + icon_side + gap
+	var helper_width := group_width
+	var usable_helpers := 3 * 40.0 + 2 * gap
+	if helper_width < usable_helpers:
+		if side_inset + usable_helpers + gap <= piece_view.position.x:
+			helper_width = usable_helpers
+		elif maxf(helper_y, piece_view.get_rect().end.y + gap) + helper_height <= board_view.position.y - gap:
+			# Tall narrow phones have room below the preview for wider hit areas.
+			helper_y = maxf(helper_y, piece_view.get_rect().end.y + gap)
+			helper_width = usable_helpers
+		elif float(metrics.preview) <= icon_side:
+			# Compact windows can share the first row with the preview instead.
+			piece_view.position.y = icon_y
+			helper_width = usable_helpers
+	var helper_font := clampi(roundi(helper_height * 0.42), 10, 18)
+	var font: Font = erase_button.get_theme_font("font")
+	var text_width := (helper_width - 2 * gap) / 3 - 6
+	while helper_font > 8:
+		var widest := 0.0
+		for label: String in ["↶ 3", "⇥ 3", "⌫ 3", "× 3"]:
+			widest = maxf(widest, font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, helper_font).x)
+		if widest <= text_width: break
+		helper_font -= 1
+	for control: Button in [undo_button, skip_button, erase_button]:
+		control.add_theme_font_size_override("font_size", helper_font)
+	_layout_row([undo_button, skip_button, erase_button], Rect2(side_inset, helper_y, helper_width, helper_height), gap)
+	var dock_width: float = 4 * button_side + 3 * gap
+	var dock_y: float = (board_view.get_rect().end.y + gap + view.y - safe.w - button_side) * 0.5
+	var dock := Rect2((view.x - dock_width) / 2, dock_y, dock_width, button_side)
+	_layout_row([blue_button, coral_button, flip_button, place_button], dock, gap)
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
 	_set_rect(zen_background, Rect2(Vector2.ZERO, view))
 	_sync_zen_background()
@@ -662,6 +720,8 @@ func _apply_button_style(button: Button, active: bool = false, color: int = 1) -
 		if button in [undo_button, skip_button, erase_button]:
 			style.content_margin_top = 2
 			style.content_margin_bottom = 2
+			style.content_margin_left = 3
+			style.content_margin_right = 3
 		if theme_options.has(button):
 			style.content_margin_left = 18
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))

@@ -32,7 +32,7 @@ func _run() -> void:
 	for i in range(4): await process_frame
 	scene.size = Vector2(720, 1100)
 	scene._layout()
-	check(is_equal_approx(scene.indicators[0].panel.size.x, 64 * 1.3), "symmetry controls are thirty percent larger at the reference viewport")
+	check(scene.indicators[0].panel.size.x > 64 and scene.indicators[0].panel.size.x <= 64 * 1.3, "enlarged symmetry controls fit beside the centered preview with safe margins")
 	check(is_equal_approx(scene.indicators[1].panel.position.x - scene.indicators[0].panel.get_rect().end.x, 14.4), "symmetry spacing doubles from 7.2 to 14.4")
 	check(is_equal_approx(scene.erase_button.get_rect().end.x, scene.indicators[1].panel.get_rect().end.x), "joker row expands to the enlarged symmetry pair")
 	check(is_equal_approx(scene.piece_view.get_rect().get_center().x, 360), "preview is centered on the screen")

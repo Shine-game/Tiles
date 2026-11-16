@@ -125,6 +125,19 @@ func _run() -> void:
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO, dimensions).grow(0.1)
 				check(bounds.encloses(scene.board_view.get_rect()), "board fits every theme/size/orientation")
+				check(scene.board_view.get_rect().get_center().is_equal_approx(dimensions * 0.5), "playing field is centered vertically and horizontally")
+				var safe: Vector4 = scene._layout_insets(dimensions)
+				check(scene.palette_button.position.y >= safe.y - 0.1 and scene.indicators[0].panel.position.y >= safe.y - 0.1, "top controls stay below the safe screen margin")
+				check(scene.blue_button.get_rect().end.y <= dimensions.y - safe.w + 0.1, "bottom controls stay above the safe screen margin")
+				check(scene.blue_button.position.x >= safe.x - 0.1 and scene.place_button.get_rect().end.x <= dimensions.x - safe.z + 0.1, "bottom controls stay clear of both side edges")
+				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button, scene.palette_button, scene.indicators[0].panel, scene.indicators[1].panel]:
+					check(not button.get_rect().intersects(scene.piece_view.get_rect()), "header controls never cover the incoming-piece hit area")
+				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button]:
+					var style: StyleBox = button.get_theme_stylebox("normal")
+					var text_width: float = button.get_theme_font("font").get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
+					check(text_width <= button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT) + 0.1, "joker label fits: %s %s %s text %.1f available %.1f" % [theme, dimensions, button.text, text_width, button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT)])
+				if scene.board_view.board_frame.is_present():
+					check(absf(scene.board_view.board_frame.get_global_rect().get_center().y - dimensions.y * 0.5) < 0.1, "decorative frame itself is on the screen's vertical midpoint")
 				check(scene.erase_button.get_rect().end.y <= scene.board_view.position.y, "jokers stay above the board")
 				check(scene.undo_button.position.y > scene.indicators[0].panel.position.y and scene.undo_button.position.x == scene.indicators[0].panel.position.x, "jokers sit below the symmetry controls")
 				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "individual buttons remain unframed")
@@ -133,8 +146,8 @@ func _run() -> void:
 					check(bounds.encloses(button.get_rect()), "bottom buttons stay on screen")
 				check(scene.board_view.get_rect().end.y <= scene.blue_button.position.y + 0.1, "field stays above the large controls")
 				if dimensions.y >= dimensions.x * 1.5:
-					check(scene.board_view.size.x >= dimensions.x * 0.96, "portrait board nearly touches both sides")
-					check(scene.blue_button.position.x <= dimensions.x * 0.02 and scene.place_button.get_rect().end.x >= dimensions.x * 0.98, "large buttons span almost the full portrait width")
+					check(scene.board_view.size.x >= (dimensions.x - 2 * maxf(safe.x, safe.z)) * 0.95, "portrait board fills the width available inside safe margins")
+					check(is_equal_approx(scene.blue_button.position.x, maxf(safe.x, safe.z)) and is_equal_approx(scene.place_button.get_rect().end.x, dimensions.x - maxf(safe.x, safe.z)), "portrait buttons span the safely inset dock")
 				scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 				scene._refresh()
 				check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical active piece retains playing-cell scale")

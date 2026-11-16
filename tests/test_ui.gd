@@ -42,7 +42,7 @@ func _run() -> void:
 		await process_frame
 	check(scene.palette_options.size() == 5, "palette button offers exactly five pairs")
 	check(scene.palette_button.get_global_rect().get_center().x > scene.get_viewport_rect().size.x * 0.8, "palette button is at top right")
-	check(scene.palette_button.position.y < 30, "palette button sits at the top edge")
+	check(scene.palette_button.position.y >= scene._layout_insets(scene.size).y, "settings is safely inset from the screen's top edge")
 	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 0.1, "active piece is centered at top")
 	var unchanged_board: Array = scene.game.board.duplicate(true)
 	for i in range(5):
