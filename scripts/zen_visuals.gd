@@ -2,6 +2,7 @@ class_name ZenVisuals
 extends Node2D
 
 const Geometry = preload("res://scripts/zen_geometry.gd")
+const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const SAND_SHADER = preload("res://shaders/zen_sand.gdshader")
 const SAND = preload("res://art/themes/zen_garden/artwork/ground/sand_ground_256.png")
 const CORE = preload("res://art/themes/zen_garden/artwork/cores/stepping_stone_core_256.png")
@@ -15,6 +16,7 @@ var materials: Array[ShaderMaterial] = []
 var registry: Dictionary = {}
 var pending: Dictionary = {}
 var blank_cells: Dictionary = {}
+var centerpieces: Dictionary = {}
 
 static func sand_material(origin: Vector2 = Vector2.ZERO) -> ShaderMaterial:
 	var ink := ShaderMaterial.new()
@@ -34,18 +36,21 @@ static func unfinished_cells(board: Array) -> Dictionary:
 					result[Vector2i(x, y) + offset] = true
 	return result
 
-func clear() -> void:
+func clear(keep_centers: bool = false) -> void:
 	for child: Node in get_children():
+		if keep_centers and child.has_meta("zen_centerpiece"): continue
 		remove_child(child)
 		child.queue_free()
 	materials.clear()
 	registry.clear()
 	pending.clear()
 	blank_cells.clear()
+	if not keep_centers: centerpieces.clear()
 
 func reconcile(model, settled: bool, complete: bool = false) -> void:
-	clear()
+	clear(true)
 	var board: Array = model.board
+	var retained_centers: Dictionary = {}
 	blank_cells = unfinished_cells(board)
 	for y in range(board.size()):
 		for x in range(board.size()):
@@ -79,6 +84,16 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 				sprite.material = ink
 				materials.append(ink)
 				group.add_child(sprite)
+				var stage := Centerpiece.stage_for(mask)
+				if stage > 0:
+					if not centerpieces.has(cell):
+						var center := Centerpiece.new()
+						center.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
+						add_child(center)
+						centerpieces[cell] = center
+					var start := maxf(0, float(model.arrivals.get(cell, 0)))
+					centerpieces[cell].configure(stage, settled, start)
+					retained_centers[cell] = true
 			else:
 				for d in range(4):
 					if mask != 0 and not mask & (1 << d): continue
@@ -93,9 +108,16 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 				for i in range(1, group.get_child_count()):
 					var sprite: CanvasItem = group.get_child(i)
 					pending[sprite] = float(model.arrivals[cell])
+	for cell: Vector2i in centerpieces.keys():
+		if retained_centers.has(cell): continue
+		var center: Node = centerpieces[cell]
+		remove_child(center)
+		center.queue_free()
+		centerpieces.erase(cell)
 	advance(100.0 if settled else 0.0)
 
 func advance(clock: float) -> void:
+	for center: Node in centerpieces.values(): center.advance(clock)
 	for sprite: CanvasItem in pending.keys():
 		var progress := clampf((clock - float(pending[sprite])) / 0.30, 0, 1)
 		sprite.modulate.a = smoothstep(0, 1, progress)

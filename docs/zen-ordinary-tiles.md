@@ -11,7 +11,15 @@ Undo/Erase reconciliation, the axes overlay and completed gallery saves.
 The two button pigments distinguish the logical construction colors; both share
 one sand material on the board. Existing themes remain available.
 
-Missing center decorations remain empty. Cells in unfinished 2×2 landmarks,
+Bends carry one centered stone, T-junctions carry the three-stone cairn, and
+crosses carry that cairn with bamboo behind it. All rotations share the same
+screen-facing artwork. Source PNGs stay unchanged; a compositing shader blends
+their aligned stages on one fixed canvas so the stone is drawn only once.
+The center node persists when topology changes; only newly added stages fade in.
+Undo/Erase restores the appropriate lower stage. The normalized canvas is 60%
+of a cell, fitting the stone within the inner groove clearance.
+
+Cells in unfinished 2×2 landmarks,
 including overlapping formations, show plain sand without replacement artwork.
 Ponds, trees and the decorative Zen frame have not been implemented. No Clockwork
 or Coral art is substituted. The logical board still records both colors.
@@ -40,6 +48,7 @@ hashes are in `art/themes/zen_garden/source-assets.json`.
 
 ```sh
 godot --headless --path . --script res://tests/test_zen_ordinary.gd
+godot --headless --path . --script res://tests/test_zen_centerpieces.gd
 godot --path . --script res://tests/render_zen_game.gd
 ```
 
