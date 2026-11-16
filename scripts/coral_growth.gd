@@ -38,22 +38,16 @@ static func component_duration(id: String) -> float:
 	return float(specification().components[id].animation.duration_seconds)
 
 static func dependent_start(id: String, parents: Dictionary) -> float:
-	var start := -100.0
-	for dependency: Dictionary in specification().components[id].animation.dependencies:
-		var parent: Dictionary = parents[dependency.component]
-		var ready: float = parent.end if dependency.get("event", "") == "complete" else arrival(parent, float(dependency.at_mask_u))
-		start = maxf(start, ready + float(dependency.get("delay_seconds", 0)))
-	return start
+	return Timing.dependent_start(specification().components[id].animation.dependencies, parents)
 
 static func key(kind: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [kind, color, cell.y, cell.x]
 
 static func arrival(event: Dictionary, u: float) -> float:
-	return minf(event.start + u * event.stroke, event.reverse + (1 - u) * event.stroke) if event.two_fronts else event.start + u * event.stroke
+	return Timing.front_arrival(event.start, event.reverse, event.stroke, event.two_fronts, u)
 
 static func end_time(start: float, reverse: float, stroke: float, two_fronts: bool) -> float:
-	var peak: float = clampf((reverse + stroke - start) / (2 * stroke), 0, 1) if two_fronts else 1.0
-	return (minf(start + peak * stroke, reverse + (1 - peak) * stroke) if two_fronts else start + stroke) + SOFT
+	return Timing.front_end(start, reverse, stroke, two_fronts, SOFT)
 
 func _add(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, start: float, stroke: float, reverse: float = 0, two_fronts: bool = false, rotation: int = 0, identity: String = "") -> Dictionary:
 	var meta: Dictionary = specification().components[id]

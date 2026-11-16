@@ -8,6 +8,8 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const ComponentState = preload("res://scripts/pattern/component_state.gd")
+const LegacyEvents = preload("res://scripts/pattern/legacy_events.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Frame = preload("res://scripts/board_frame.gd")
@@ -28,6 +30,7 @@ var zen_visuals: ZenVisuals
 var zen_floor: ColorRect
 var board: Array = []
 var pattern = Growth.new()
+var construction_state := ComponentState.new()
 var clock := 0.0
 var growing := false
 var field := Rect2()
@@ -76,6 +79,7 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	_sync_zen(true)
 	clock = 0
 	growing = clockwork and pattern.duration > 0
+	_sync_construction(not growing, preserve_direction)
 	set_process(growing)
 	if not preserve_direction:
 		placement_revision = 0
@@ -184,6 +188,7 @@ func _restyle() -> void:
 		coral_visuals.advance(clock)
 	if zen_garden: zen_visuals.advance(clock)
 	growing = clock < pattern.duration
+	_sync_construction(false, true, clock, false)
 	set_process(growing)
 	visual_state_changed.emit(pattern, growing, true, clock, placement_revision)
 	if not growing:
@@ -256,16 +261,23 @@ func animate_growth(before: Array, after: Array) -> void:
 	_sync_zen(false)
 	announced_flowers.clear()
 	growing = pattern.duration > 0
+	_sync_construction(false, true)
 	set_process(growing)
 	visual_state_changed.emit(pattern, growing, true, clock, placement_revision)
 	if growing:
 		growth_started.emit()
 	queue_redraw()
 
+func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart: bool = true) -> void:
+	var events: Dictionary = LegacyEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
+	construction_state.reconcile(events, 0.0 if settled else pattern.duration, at, settled, preserve, restart)
+	clock = construction_state.schedule.clock
+	growing = construction_state.schedule.running()
+
 func advance_growth(delta: float) -> void:
 	if not growing:
 		return
-	clock = minf(pattern.duration, clock + maxf(0, delta))
+	clock = construction_state.advance(delta)
 	if coral_reef:
 		coral_visuals.advance(clock)
 	if zen_garden: zen_visuals.advance(clock)
@@ -277,7 +289,7 @@ func advance_growth(delta: float) -> void:
 		if not flower.old and not announced_flowers.has(corner) and clock >= flower.start + Growth.FLOWER_POP * 0.12:
 			announced_flowers[corner] = true
 			flower_opened.emit(corner, flower.color)
-	if clock >= pattern.duration:
+	if not construction_state.schedule.running():
 		growing = false
 		set_process(false)
 		growth_finished.emit()

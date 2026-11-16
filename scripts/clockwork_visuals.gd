@@ -2,6 +2,7 @@ class_name ClockworkVisuals
 extends Node2D
 
 signal cue(kind: String)
+const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Model = preload("res://scripts/clockwork_growth.gd")
 const RISE = preload("res://shaders/clockwork_rise.gdshader")
 const REVEAL = preload("res://shaders/clockwork_reveal.gdshader")
@@ -151,9 +152,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			if chain_nodes.has(identity) and event.old:
 				var active: Dictionary = chain_nodes[identity].event
 				if not active.old and previous_clock < active.end:
-					event = active.duplicate()
-					event.start -= previous_clock
-					event.end -= previous_clock
+					event = Timing.shifted(active, previous_clock)
 					next.chains[identity] = event
 					next.duration = maxf(next.duration, event.end)
 		for mechanism: Dictionary in next.mechanisms.values(): mechanism.chain_end = -100.0
@@ -196,10 +195,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 		if registry.has(identity):
 			entry = registry[identity]
 			if preserve and (not settled or reverse) and event.old and not entry.event.old and previous_clock < entry.event.end:
-				event = entry.event.duplicate()
-				event.start -= previous_clock
-				event.end -= previous_clock
-				if event.has("edge_start"): event.edge_start -= previous_clock
+				event = Timing.shifted(entry.event, previous_clock, ["start", "end", "edge_start"])
 				next.duration = maxf(next.duration, event.end)
 		else:
 			var sprite := Sprite2D.new()
@@ -280,9 +276,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			chain_nodes[identity] = {"node": parent, "event": event, "strips": strips, "moving_since": motion_clock if settled or event.old else -1.0}
 		var existing: Dictionary = chain_nodes[identity]
 		if preserve and (not settled or reverse) and event.old and not existing.event.old and previous_clock < existing.event.end:
-			event = existing.event.duplicate()
-			event.start -= previous_clock
-			event.end -= previous_clock
+			event = Timing.shifted(existing.event, previous_clock)
 			next.duration = maxf(next.duration, event.end)
 		existing.event = event
 		next.chains[identity] = event
@@ -319,7 +313,7 @@ func configure_surface(platform) -> void:
 		sprite.material.set_shader_parameter("screen_pixel", 256.0 / platform.cell_pixels)
 
 func _progress(event: Dictionary, clock: float) -> float:
-	return 1.0 if event.old else smoothstep(0, 1, clampf((clock - float(event.start)) / maxf(0.001, event.seconds), 0, 1))
+	return Timing.smooth(float(event.start), event.seconds, clock, event.old)
 
 func advance(clock: float) -> void:
 	visual_clock = clock

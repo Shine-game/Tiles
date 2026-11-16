@@ -88,5 +88,6 @@ workspace rather than becoming production assets.
 Existing theme and UI tests remain applicable. Native Clockwork, pond and tree
 checks cover actual rendering/capture behavior in addition to headless topology.
 Shading, artwork, palette order, UI layout, appearance versions and game rules
-are unchanged. Step 3's common persistent-state/growth scheduler is not implemented
-by this change and requires the next approval.
+are unchanged. Step 2 did not include common construction state or scheduling; those are now
+documented separately in [the Step 3 implementation](state-and-growth.md). Asset
+loading and renderer migration still require Step 4 approval.

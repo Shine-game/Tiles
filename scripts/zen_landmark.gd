@@ -1,6 +1,7 @@
 class_name ZenLandmark
 extends Sprite2D
 
+const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const SURFACE = preload("res://shaders/zen_landmark.gdshader")
 const LANTERN = preload("res://art/themes/zen_garden/artwork/architecture/stone_lantern_2x2_visual.png")
 const ROCKS := [
@@ -53,7 +54,7 @@ func configure(event: Dictionary, settled: bool) -> void:
 
 func advance(clock: float) -> void:
 	if not growing: return
-	modulate.a = smoothstep(0, 1, clampf((clock - start) / GROW_SECONDS, 0, 1))
+	modulate.a = Timing.smooth(start, GROW_SECONDS, clock)
 	if modulate.a >= 1.0: growing = false
 
 func configure_surface(platform) -> void:

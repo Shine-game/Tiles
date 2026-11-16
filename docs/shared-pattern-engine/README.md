@@ -1,12 +1,14 @@
 # Shared pattern engine — migration plan
 
-Step 1 delivered the design specification and inventory. Step 2 extracted shared
-topology through compatibility adapters. Artwork, timing, masks, shading, game
-rules and the player interface remain unchanged.
+Steps 1–3 delivered the design specification, inventory, shared topology and
+common construction state/clock through compatibility adapters. Artwork, timing,
+masks, shading, game rules and the player interface remain unchanged.
 Inventory baseline: commit `951568f` (all five themes inspected).
 
 - [Asset-set contract](asset-contract.md): proposed shared data and behavior rules.
 - [Step 2 implementation](topology.md): geometry API, adapters and verification.
+- [Step 3 implementation](state-and-growth.md): persistent construction state, clock,
+  dependencies, capture and restoration.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -37,7 +39,7 @@ as authorization to implement the remaining steps.
 | --- | --- | --- | --- |
 | 1 | Asset-set contract and inventory of all themes | Current behavior distinguished from target rules; gaps and exceptions listed; documentation only | Complete |
 | 2 | Shared topology classification and formation graph | All 16 masks, colors, rotations, overlapping 2×2s, and 2×3 joins covered; adapters preserve current consumers | Complete |
-| 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Awaiting approval |
+| 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Complete |
 | 4 | Common asset loading and component rendering | Sprites, multipart assemblies and registered procedural providers use explicit pivots, masks, layers and reveal rules | Awaiting approval |
 | 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Awaiting approval |
 | 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Awaiting approval |

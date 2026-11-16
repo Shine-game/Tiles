@@ -1,6 +1,7 @@
 class_name ZenCenterpiece
 extends Node2D
 
+const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const ROOT := "res://art/themes/zen_garden/artwork/centers/"
 const FILES := ["one_flat_top_stone_256.png", "three_stone_cairn_256.png", "tall_bamboo_behind_cairn_visual.png"]
 const TEXTURES := [
@@ -50,7 +51,7 @@ func configure(next_stage: int, settled: bool, start: float = 0.0) -> void:
 
 func advance(clock: float) -> void:
 	for i: int in growing.keys():
-		progress[i] = smoothstep(0, 1, clampf((clock - float(growing[i])) / GROW_SECONDS, 0, 1))
+		progress[i] = Timing.smooth(float(growing[i]), GROW_SECONDS, clock)
 		if progress[i] >= 1: growing.erase(i)
 	_update_material()
 

@@ -1,6 +1,7 @@
 class_name TileGrowth
 extends RefCounted
 
+const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 
 # A deterministic event schedule in board coordinates. Rendering never changes it.

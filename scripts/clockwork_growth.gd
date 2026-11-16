@@ -81,7 +81,7 @@ func _emission(cell: Vector2i) -> float:
 	return 0.0 if arrivals[cell] < 0 else float(arrivals[cell]) + CORE_EMIT_DELAY
 
 static func arm_arrival(arm: Dictionary, u: float) -> float:
-	return minf(arm.start + u * arm.seconds, arm.edge_start + (1.0 - u) * arm.seconds)
+	return Timing.front_arrival(arm.start, arm.edge_start, arm.seconds, true, u)
 
 func build(before: Array, after: Array) -> void:
 	super.build(before, after)
@@ -111,8 +111,7 @@ func build(before: Array, after: Array) -> void:
 			# Always use the canonical core field; shader supplies its reverse front.
 			arm.edge_start = -100.0 if old_arm else _emission(other) + HALF_TRAVEL
 			arm.seconds = HALF_TRAVEL
-			var peak: float = clampf((arm.edge_start + arm.seconds - arm.start) / (2 * arm.seconds), 0, 1)
-			arm.end = -100.0 if old_arm else minf(arm.start + peak * arm.seconds, arm.edge_start + (1.0 - peak) * arm.seconds) + REVEAL_TAIL
+			arm.end = -100.0 if old_arm else Timing.front_end(arm.start, arm.edge_start, arm.seconds, true, REVEAL_TAIL)
 			if not old_arm:
 				duration = maxf(duration, arm.end)
 			if direction in [1, 2]:
