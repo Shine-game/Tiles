@@ -795,7 +795,7 @@ func _confirm_new_game(message: String, action: Callable) -> void:
 	confirmation.popup_centered(Vector2i(mini(360, int(size.x - 24)), 160))
 
 func _request_theme(id: String) -> void:
-	if id == Palette.theme_id():
+	if id not in Palette.THEMES or id == Palette.theme_id():
 		return
 	_confirm_new_game("Switch to %s and start a new game?" % Palette.theme_label(id), _select_theme.bind(id))
 

@@ -120,7 +120,7 @@ func _run() -> void:
 		garden[cell.y][cell.x] = 1
 	for cell: Vector2i in [Vector2i(3, 2), Vector2i(4, 2), Vector2i(4, 3), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(6, 5), Vector2i(6, 6), Vector2i(5, 6), Vector2i(5, 7), Vector2i(6, 7)]:
 		garden[cell.y][cell.x] = 2
-	for theme: String in ["vines", "labyrinth", "coral_reef"]:
+	for theme: String in ["vines", "coral_reef"]:
 		scene._select_theme(theme)
 		scene.game.board = garden.duplicate(true)
 		scene.board_view.show_settled(scene.game.board)

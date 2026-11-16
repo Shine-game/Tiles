@@ -15,12 +15,6 @@
       "appearance": "",
       "material": "Awaiting theme artwork; use the shared frame geometry."
     },
-    "labyrinth": {
-      "enabled": false,
-      "texture": "",
-      "appearance": "",
-      "material": "Awaiting theme artwork; use the shared frame geometry."
-    },
     "coral_reef": {
       "enabled": true,
       "texture": "res://assets/frames/coral_reef_frame.png",

@@ -3,7 +3,6 @@ extends RefCounted
 # Geometry and existing timing are adapted, not recomputed. No nodes/textures
 # are stored in the common state. Render-node migration belongs to Step 4.
 const Growth = preload("res://scripts/growth.gd")
-const Maze = preload("res://scripts/labyrinth_growth.gd")
 const Landmark = preload("res://scripts/zen_landmark.gd")
 const Pond = preload("res://scripts/zen_pond.gd")
 const Trees = preload("res://scripts/zen_trees.gd")
@@ -45,7 +44,7 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 			var flower: Dictionary = model.flowers[corner]
 			_put(events, prefix + "formation/%d/%d/%d" % [flower.color, corner.y - 1, corner.x - 1], flower.start, flower.start + Growth.FLOWER_POP, flower.old, corner - Vector2i.ONE)
 		for link: Dictionary in model.links:
-			var seconds := Maze.WALL_RECEDE + Maze.BENCH_POP if theme == "labyrinth" else Growth.LINK_GROW + Growth.STAR_POP
+			var seconds := Growth.LINK_GROW + Growth.STAR_POP
 			_put(events, prefix + "connection/%d/%s" % [link.color, str(Growth.edge_key(link.a, link.b))], link.start, link.start + seconds, link.old, [link.a, link.b])
 	return events
 

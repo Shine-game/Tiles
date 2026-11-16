@@ -12,18 +12,14 @@ const PAIRS = [
 const INVALID := Color("96999c")
 const INVALID_BORDER := Color("6f7377")
 static var selected_index := 0
-static var labyrinth := false
 static var coral_reef := false
 static var clockwork := false
 static var zen_garden := true
-const THEMES := ["zen_garden", "clockwork", "vines", "labyrinth", "coral_reef"]
-const HEDGE_GREEN := Color("119d45")
-const HEDGE_ROSE := Color("f43877")
-const SAND := Color("efe1c3")
+const THEMES := ["zen_garden", "clockwork", "vines", "coral_reef"]
 
 static func theme_id() -> String:
 	if zen_garden: return "zen_garden"
-	return "clockwork" if clockwork else ("coral_reef" if coral_reef else ("labyrinth" if labyrinth else "vines"))
+	return "clockwork" if clockwork else ("coral_reef" if coral_reef else "vines")
 
 static func theme_version() -> String:
 	if zen_garden: return "0.11"
@@ -34,7 +30,7 @@ static func theme_name() -> String:
 	return theme_label(theme_id())
 
 static func theme_label(id: String) -> String:
-	return {"zen_garden": "Zen Garden", "clockwork": "Clockwork Workshop", "vines": "Vines", "labyrinth": "Labyrinth", "coral_reef": "Coral Reef"}.get(id, id)
+	return {"zen_garden": "Zen Garden", "clockwork": "Clockwork Workshop", "vines": "Vines", "labyrinth": "Labyrinth (archived)", "coral_reef": "Coral Reef"}.get(id, id)
 
 static func select_theme(id: String) -> bool:
 	if id not in THEMES:
@@ -42,7 +38,6 @@ static func select_theme(id: String) -> bool:
 	clockwork = id == "clockwork"
 	zen_garden = id == "zen_garden"
 	coral_reef = id == "coral_reef"
-	labyrinth = id == "labyrinth"
 	return true
 
 static func select(index: int) -> bool:
@@ -58,8 +53,6 @@ static func tile(color: int) -> Color:
 		return Color("bc783d") if color == 1 else Color("59676e")
 	if coral_reef:
 		return Color("f49f7f") if color == 1 else Color("69bfae")
-	if labyrinth:
-		return HEDGE_GREEN if color == 1 else HEDGE_ROSE
 	return PAIRS[selected_index].colors[0 if color == 1 else 1]
 
 static func accent(color: int) -> Color:
@@ -77,14 +70,14 @@ static func floor_color() -> Color:
 		return Color("c4b99b")
 	if coral_reef:
 		return Color.WHITE
-	return SAND if labyrinth else PAIRS[selected_index].floor
+	return PAIRS[selected_index].floor
 
 static func dark() -> bool:
 	return floor_color().get_luminance() < 0.4
 
 static func background() -> Color:
 	if zen_garden: return floor_color()
-	return Color("e5d4ae") if clockwork else (Color("d6ece6") if coral_reef else (SAND if labyrinth else floor_color()))
+	return Color("e5d4ae") if clockwork else (Color("d6ece6") if coral_reef else floor_color())
 
 static func controls() -> Color:
 	if zen_garden: return Color("f4f1e8")
@@ -107,8 +100,6 @@ static func garden() -> Color:
 		return Color("a3a29a")
 	if coral_reef:
 		return Color.WHITE
-	if labyrinth:
-		return Color("f6e9ce")
 	# One continuous terrace, including boundaries between the two pigments.
 	return floor_color().lightened(0.09) if dark() else floor_color().darkened(0.035)
 

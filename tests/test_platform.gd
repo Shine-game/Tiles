@@ -62,7 +62,7 @@ func _run() -> void:
 	root.add_child(scene)
 	for frame in range(4):
 		await process_frame
-	for theme: String in ["vines", "labyrinth", "coral_reef"]:
+	for theme: String in ["vines", "coral_reef"]:
 		scene._select_theme(theme)
 		scene._reset()
 		var view = scene.board_view

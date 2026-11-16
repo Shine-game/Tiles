@@ -34,7 +34,8 @@ The board dispatches the Vines set provider and retains reusable curve/brush
 primitives. Ordinary wash, edge and holding implementations have moved out of
 `board_view.gd`; the legacy whole-theme Vines callback has been removed. Existing
 flower and flower-link drawing stays in its current higher-tier hooks and painter
-order. Labyrinth's separate procedural adapter is unchanged.
+order. Labyrinth's separate procedural adapter was unchanged at this checkpoint and
+has subsequently been removed with that theme.
 
 ## Construction and preserved behavior
 

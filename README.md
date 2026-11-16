@@ -34,25 +34,24 @@ and gallery saves include it. See [the Zen implementation](docs/zen-ordinary-til
 
 ## Clockwork Workshop
 
-**Clockwork Workshop** remains available in the theme selector alongside Zen Garden, Vines, Labyrinth and Coral Reef. Copper/gunmetal mechanisms alternate primary-metal cores, tubes, solid lower gears, chains and tops with opposite-metal ornate upper gears. Tube-to-wheel collars are omitted; tube-to-tube couplings remain. Chain links are rendered at twice their original size with half the density. They assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
+**Clockwork Workshop** remains available in the theme selector alongside Zen Garden, Vines and Coral Reef. Copper/gunmetal mechanisms alternate primary-metal cores, tubes, solid lower gears, chains and tops with opposite-metal ornate upper gears. Tube-to-wheel collars are omitted; tube-to-tube couplings remain. Chain links are rendered at twice their original size with half the density. They assemble on fused metal plates over full-screen drafting paper, surrounded by the shared walnut frame. Same-color 2×2 mechanisms activate their supporting wheels; adjacent mechanisms grow moving chains, then receive topology-based finishing caps. Unconnected wheels remain stationary. A quiet ticking clock, assembly clicks/clunks and restrained steam accompany construction. Undo/Erase reverse unsupported parts without resetting surviving motion. See [the agreed rules and implementation](docs/clockwork-workshop.md).
 
 ## Shared theme frames
 
-All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. The playing field and floating Settings box use the theme frame; individual buttons keep tinted backgrounds and outlines. Vines/Labyrinth await their own frame and background artwork; they use their palette floor or sand color across the screen.
+All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. The playing field and floating Settings box use the theme frame; individual buttons keep tinted backgrounds and outlines. Vines awaits its own frame and background artwork and uses its palette floor across the screen.
 
 ## Raised occupied platform
 
-Vines, Labyrinth and Coral Reef share a raised occupied surface **24 source pixels thick per 256px cell**; Clockwork uses **4 UI units** as specified in its handoff. Empty space stays flat: white in Vines/Labyrinth and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
+Vines and Coral Reef share a raised occupied surface **24 source pixels thick per 256px cell**; Clockwork uses **4 UI units** as specified in its handoff. Empty space stays flat: white in Vines and pale lagoon blue-green in Coral Reef. Incoming, hovering and occupied tiles use the same surface shader: rounded outer corners, softly shaded lower sidewalls, a fine upper lip and a soft contact shadow. Occupied ground fuses into one continuous surface; its exposed convex corners retain the same rounding. Shared edges vanish immediately, including between different player colors. Steps and holes receive the appropriate exposed boundaries.
 
 Ground, wall, and shadow appear as soon as placement commits. Undo/Erase update the outline immediately; plant growth runs independently on the upper face. Coral keeps all six original rotating ground textures. The shader adds no background paper. Gallery captures include the platform and preserve older images separately. See [the platform implementation notes](docs/raised-platform.md).
 
-## Labyrinth theme
+## Available themes
 
-The **Themes** page in Settings lists **Clockwork Workshop, Vines, Labyrinth, and Coral Reef**. Confirming a different theme starts a fresh game with a new offered piece and full helper budgets. The five original palettes remain available under Themes → Vine colors. Labyrinth uses two fixed identities: pure green hedges and green hedges filled with rose blossoms; source pieces and color swatches match those identities. Sandy ground remains visible to both sides of the thicker shrub walls, creating the appearance of paths. The surrounding screen uses the sandy theme background.
-
-The same side-connected growth schedule extends hedges between matching-color square centers. Walls occupy about 24% of a cell width, with two staggered rows of roses on the flowering shrubs. Ordinary centers grow taller, faceted pyramid hedges with broader bases (36% of a cell width). A completed same-color 2×2 loop encloses a taller tree at its shared corner. Two orthogonally neighboring trees of the same color share one existing enclosure wall. Once both trees finish rising, that common wall recedes over 0.18 seconds, followed by a 0.22-second bench rise in its place. The outer walls remain. Four trees in a 3×3 block create four such openings/benches; diagonal and different-color neighbors never create one. Place waits for the entire sequence. Undo and Erase rebuild trees, walls, and benches from the resulting board.
-
-Paths are visual sandy spaces; there is no player character or route-solving rule. The theme changes the drawing, not the puzzle's symmetry or placement rules. Growth whispers and bell accents accompany hedges and new trees.
+Settings → Themes offers **Zen Garden, Clockwork Workshop, Vines and Coral Reef**.
+Confirming a different theme starts a fresh game with full helper budgets. The
+five Vines palettes remain available under Themes → Vine colors. Labyrinth has
+been removed; previously saved gallery images remain viewable.
 
 ## Coral Reef theme — redesign v2
 
@@ -110,7 +109,7 @@ To capture a reproducible graphical preview, run `godot --path . --script tests/
 
 ## Sound and shallow depth
 
-Vines and Labyrinth growth have a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. These two themes remain silent while the board is idle. Coral Reef uses the supplied looping reef ambience, three growth textures, three short colony bubbles and two long anemone bubbles. Cues follow the visual timeline, coalesce nearby feature starts and fade safely on cancellation. See [Coral audio integration](docs/coral-audio.md) for levels, routing and provenance.
+Vines growth has a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. Vines remains silent while the board is idle. Coral Reef uses the supplied looping reef ambience, three growth textures, three short colony bubbles and two long anemone bubbles. Cues follow the visual timeline, coalesce nearby feature starts and fade safely on cancellation. See [Coral audio integration](docs/coral-audio.md) for levels, routing and provenance.
 
 `assets/audio/foliage.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
 
@@ -143,7 +142,9 @@ Steps 1–5 provide the specification, inventory, shared topology, component sta
 construction scheduling, common asset/rendering foundation, and
 [Clockwork Tier 0/1 sets](docs/shared-pattern-engine/clockwork-ordinary-sets.md).
 Zen, Coral and [Vines ordinary sets](docs/shared-pattern-engine/vines-ordinary-sets.md)
-have since migrated in Step 6. Remaining migrations require their separate approvals.
+have since migrated in Step 6. Labyrinth was removed, completing Step 6 for the four active themes.
+[Step 7: shared Tier 2 formation assembly](docs/shared-pattern-engine/tier2-migration-plan.md)
+is the next approval checkpoint.
 Shading work remains deferred.
 
 ## Tests
@@ -161,7 +162,6 @@ godot --headless --audio-driver Dummy --path . --script tests/test_board_frame.g
 godot --headless --audio-driver Dummy --path . --script tests/test_clockwork.gd
 godot --headless --path . --script tests/test_ui.gd
 godot --headless --path . --script tests/test_gallery.gd
-godot --headless --path . --script tests/test_labyrinth.gd
 godot --headless --path . --script tests/test_coral.gd
 godot --headless --path . --script tests/test_platform.gd
 ```
@@ -169,7 +169,6 @@ godot --headless --path . --script tests/test_platform.gd
 The runners cover generation, symmetry orbits, placement, independent helper budgets, exact-piece Undo, non-refunding erasures, recovery from empty/finished gardens, routed touch and mouse gestures, committed symmetry indicators, the growth gate, audio, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display `tests/test_ui.gd` also writes `/tmp/tiles-godot.png`.
 
 Run `tests/test_gallery.gd` on a graphical display to additionally test real clean artwork capture, repeated-save deduplication, gallery navigation, and saving a 100% filled board. It writes `build/helpers-preview.png`, `build/gallery-artwork-preview.png`, and `build/gallery-browser-preview.png` for visual review. Tests use isolated temporary gallery directories and remove only their own records.
-Run `tests/render_labyrinth.gd` on a graphical display to capture a real Place-driven hedge/tree/bench sequence to `build/labyrinth-frames/`, `build/labyrinth-preview.png`, and clean gallery artwork at `build/labyrinth-artwork.png`.
 
 Run `tests/render_coral.gd` on a graphical display for the real supplied shader, Place-driven colony/anemone growth, clean gallery capture, and undo reconciliation. It writes `build/coral-frames/`, `build/coral-preview.png`, `build/coral-artwork.png`, and `build/coral-redesign-9x9.png`/`build/coral-redesign-11x11.png`.
 
@@ -182,8 +181,6 @@ Run `tests/render_platform.gd` on a graphical display for shader assertions and 
 - `scripts/coral_growth.gd`: directional multi-source reveal schedule and derived colony/shelf events.
 - `scripts/coral_visuals.gd`: persistent keyed sprites, feature order, texture cache, and private active reveal materials.
 - `scripts/gallery.gd`: persistent local artwork and metadata storage.
-- `scripts/labyrinth_growth.gd`: shared-wall openings and bench timing after tree growth.
-- `scripts/labyrinth_renderer.gd`: full green/rose shrub walls, broad pyramid centers, taller trees, and wooden benches.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
 - `scripts/growth_audio.gd`: synchronized foliage and flower sounds.

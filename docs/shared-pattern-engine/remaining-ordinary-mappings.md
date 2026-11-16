@@ -1,7 +1,7 @@
 # Step 6 — remaining ordinary-set mapping review
 
-Status: Zen, Coral and Vines ordinary sets are implemented; Labyrinth remains a
-proposal. See [Zen](zen-ordinary-sets.md), [Coral](coral-ordinary-sets.md) and
+Status: complete for the four active themes. Zen, Coral and Vines ordinary sets
+are implemented; Labyrinth was removed at the owner's request. See [Zen](zen-ordinary-sets.md), [Coral](coral-ordinary-sets.md) and
 [Vines](vines-ordinary-sets.md). The endpoint rows below reflect
 the user's instruction to copy Tier 0 artwork and overlap the path ending.
 
@@ -18,7 +18,6 @@ use their own treatment; no cross-theme artwork substitutions are proposed.
 | Zen stepping stones | Existing stepping-stone core | Copied Tier 0 core plus path ending | Unassigned | Unassigned | Unassigned |
 | Coral Reef | Existing color-specific core | Same core | Core plus its applicable junction piece | Core plus its two applicable junction pieces | Core plus its four junction pieces |
 | Vines | Existing holding/frond motif | Same procedural motif | Same motif | Same motif | Same motif |
-| Labyrinth | Existing pyramid | Same pyramid | Same pyramid | Same pyramid | Same pyramid |
 
 Reuse does not require separate copies of PNGs. Shape-specific compositions may
 reference the same source artwork or procedural provider. Coral's multipart
@@ -44,12 +43,9 @@ it to a role does not freeze its geometry into a single image.
   curves and existing edge leaves remain. Endpoints/bends/Ts/crosses retain the
   current direction-aware motif. Preserve the existing diffuse pigment wash,
   growth phases, leaf direction choices and transient edge stars.
-- **Labyrinth:** straight cells lose the center pyramid. Their hedge connections
-  remain. Isolated/endpoint/bend/T/cross pyramids keep the existing provider.
 
 The user revised and approved the Zen endpoint assignments; these are now live.
-Stepping-stone bend/T/cross center artwork remains a later assignment. Coral and
-the two remaining themes reuse existing motifs, but their straight suppression is an
+Stepping-stone bend/T/cross center artwork remains a later assignment. Coral and Vines reuse existing motifs, but their straight suppression is an
 intentional appearance change. Update their runtime appearance versions when each
 change is enabled; existing saved artwork PNGs remain readable.
 
@@ -61,7 +57,6 @@ change is enabled; existing saved artwork PNGs remain readable.
 | Zen stepping stones | One canonical N half-stone PNG with port rotations/mirrors, boundary-midpoint anchors, 70% scale and ordinary fade |
 | Coral | Canonical arm/junction images and fields, two-front reveal, directional dependencies and persistent component ordering |
 | Vines | Registered procedural curves, existing per-edge foliage and sound schedule; extract ordinary drawing from the board without rebuilding it |
-| Labyrinth | Registered procedural hedge/pyramid providers; preserve wall visibility and existing higher-tier bench openings |
 
 Existing leaves, coupling parts and mandatory junctions retain their current
 roles. None becomes optional long-run decoration simply because it is small.
@@ -75,8 +70,7 @@ included in Step 6.
 
 ## Implementation order and acceptance
 
-After approval of these assignments, migrate **Zen Garden, Coral, Vines, then
-Labyrinth**, with a separately reviewable result for each theme before enabling
+The active migrations were **Zen Garden, Coral and Vines**, with a separately reviewable result for each theme before enabling
 the next. Each migration should:
 
 1. Add live Tier 0/1 set definitions and explicit treatment/role/missing-slot data.
@@ -89,5 +83,5 @@ the next. Each migration should:
 5. Update export inclusion, documentation and appearance version as applicable;
    run focused shared/theme checks and push the completed theme for review.
 
-Vines is ready for review. Labyrinth retains its existing rendering until its
-migration is approved.
+Step 6 is complete for the four active themes. The
+[next proposal](tier2-migration-plan.md) covers shared Tier 2 assembly.

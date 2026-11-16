@@ -56,10 +56,7 @@ func _run() -> void:
 					var picture: Image = scene.gallery.picture(record).get_image()
 					var point: Vector2i = Vector2i(capture._point(Vector2(1.5, 1.5)))
 					var sample: Color = picture.get_pixelv(point)
-					if theme == "labyrinth":
-						check(sample.is_equal_approx(Palette.platform_color()), "empty saved labyrinth cells contain plain raised ground")
-					else:
-						check(sample.a > 0.99, "empty saved cells contain an opaque background tile")
+					check(sample.a > 0.99, "empty saved cells contain an opaque background tile")
 					check(scene.game.board == snapshot and scene.game.moves == 0, "saving does not place tiles in the live game")
 					await scene._save_design()
 					check(scene.gallery.entries().size() == records.size(), "completed captures still deduplicate repeated saves")

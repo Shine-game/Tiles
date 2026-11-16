@@ -3,14 +3,12 @@ extends RefCounted
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Geometry = preload("res://scripts/zen_geometry.gd")
-const Maze = preload("res://scripts/labyrinth_renderer.gd")
 static var installed := false
 
 static func install() -> void:
 	if installed: return
 	installed = true
 	Assets.register_provider("zen.rake_relief", _rake, _rake_parameters)
-	Renderer.register_draw_provider("legacy.labyrinth", _maze)
 
 static func _rake_parameters(params: Dictionary) -> Array:
 	var mask: Variant = params.get("mask", -1)
@@ -19,9 +17,6 @@ static func _rake_parameters(params: Dictionary) -> Array:
 
 static func _rake(params: Dictionary) -> Texture2D:
 	return ImageTexture.create_from_image(Geometry.height_image(int(params.mask)))
-
-static func _maze(view) -> void:
-	Maze.draw(view)
 
 static func component(meta: Dictionary, treatment: String, root: String) -> Dictionary:
 	var paths: Dictionary = meta.get("assets", meta.get("artwork", {}))

@@ -26,6 +26,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
   all-theme directional audit and operation after redundant files are removed.
 - [Vines Tier 0/1 implementation](vines-ordinary-sets.md): live procedural parts,
   shared role selection and persistent holding-motif construction records.
+- [Step 7 proposal](tier2-migration-plan.md): shared 2×2 assembly for all four
+  active themes, preserving existing artwork, prerequisites and phase order.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -59,8 +61,8 @@ as authorization to implement the remaining steps.
 | 3 | Persistent component state and growth scheduler | Stable identities, dependency timing, settled layers, removal, Undo/Erase and reset work across clock restarts | Complete |
 | 4 | Common asset loading and component rendering | Sprites, multipart assemblies and registered procedural providers use explicit pivots, masks, layers and reveal rules | Complete |
 | 5 | Clockwork Tier 0/1 pilot | Agreed wheel rule, tube arrivals, boundary couplings, motion, audio and gallery phases retained | Complete |
-| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Zen, Coral and Vines migrated; review before Labyrinth |
-| 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Awaiting approval |
+| 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Complete for all four active themes; Labyrinth removed |
+| 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Proposal ready for approval |
 | 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones, vines or benches; historical state preserved | Awaiting approval |
 | 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Awaiting approval |
 
@@ -86,7 +88,7 @@ format are not runtime interfaces until implemented in their approved step.
 
 [The existing handoff guide](../theme-handoff/README.md) and its example remain
 source-package documentation, not an already working shared-engine format.
-Clockwork higher tiers and Coral still consume different legacy manifests; Zen, Vines and
-Labyrinth have no equivalent runtime set manifest. This proposal does not rename
-or reinterpret any of those files. Steps 4–5 introduced explicit adapters and the Clockwork ordinary sets before
-Step 9 retires obsolete formats or consolidates the artist handoff.
+Clockwork and Coral higher tiers still consume legacy manifests; all four active
+themes now have live ordinary sets. Labyrinth has been removed. Existing supplied
+files are not silently reinterpreted as the new schema. Step 9 will consolidate
+remaining formats and the artist handoff after their consumers migrate.

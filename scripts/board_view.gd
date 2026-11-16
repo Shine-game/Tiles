@@ -9,7 +9,6 @@ signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
 const Vines = preload("res://scripts/vines_sets.gd")
-const Components = preload("res://scripts/pattern/component_renderer.gd")
 const AssetProviders = preload("res://scripts/pattern/legacy_assets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
 const LegacyEvents = preload("res://scripts/pattern/legacy_events.gd")
@@ -22,8 +21,6 @@ const Workshop = preload("res://scripts/clockwork_visuals.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
-const MazeGrowth = preload("res://scripts/labyrinth_growth.gd")
-const MazeRenderer = preload("res://scripts/labyrinth_renderer.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Zen = preload("res://scripts/zen_growth.gd")
@@ -49,7 +46,6 @@ var show_axes := false:
 		_sync_axes()
 var show_guides := true
 var growth_before: Array = []
-var labyrinth := false
 var coral_reef := false
 var coral_visuals: CoralVisuals
 var occupied_platform: OccupiedPlatform
@@ -95,15 +91,14 @@ func sync_board(grid: Array) -> void:
 		show_settled(grid)
 	elif Palette.clockwork and not clockwork:
 		show_settled(grid, true)
-	elif labyrinth != Palette.labyrinth or coral_reef != Palette.coral_reef or clockwork != Palette.clockwork or zen_garden != Palette.zen_garden:
+	elif coral_reef != Palette.coral_reef or clockwork != Palette.clockwork or zen_garden != Palette.zen_garden:
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
-	labyrinth = Palette.labyrinth
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	zen_garden = Palette.zen_garden
-	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else (MazeGrowth.new() if labyrinth else Growth.new())))
+	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else Growth.new()))
 	pattern.build(before, after)
 	if board_frame == null:
 		board_frame = Frame.new()
@@ -395,9 +390,6 @@ func _draw() -> void:
 	if show_guides:
 		_draw_guides()
 	if coral_reef or clockwork or zen_garden:
-		return
-	if labyrinth:
-		Components.draw("legacy.labyrinth", self)
 		return
 	Vines.draw(self)
 

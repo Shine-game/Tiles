@@ -1,7 +1,8 @@
 # Existing themes mapped to the proposed sets
 
 This is the historical Step 1 inventory. For current directional sources and
-cleanup instructions, see [canonical assembly](canonical-assembly.md).
+cleanup instructions, see [canonical assembly](canonical-assembly.md). Labyrinth
+was subsequently removed; its source links below refer to Git history.
 
 Inspected runtime source and manifests at `951568f`. This is an implementation
 inventory, not a certification of artwork quality, complete shading maps or phone
@@ -192,8 +193,8 @@ rule/preview/gallery tests.
 
 ## Labyrinth
 
-Sources: [`labyrinth_growth.gd`](../../scripts/labyrinth_growth.gd),
-[`labyrinth_renderer.gd`](../../scripts/labyrinth_renderer.gd), base
+Sources: [`labyrinth_growth.gd`](https://github.com/Shine-game/Tiles/blob/1f5feed/scripts/labyrinth_growth.gd),
+[`labyrinth_renderer.gd`](https://github.com/Shine-game/Tiles/blob/1f5feed/scripts/labyrinth_renderer.gd), base
 [`growth.gd`](../../scripts/growth.gd). Artwork is procedural; no standalone set
 manifest or sprite pack.
 

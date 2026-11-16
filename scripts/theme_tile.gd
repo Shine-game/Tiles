@@ -1,7 +1,6 @@
 extends Control
 
 const Brush = preload("res://scripts/botanical_brush.gd")
-const Maze = preload("res://scripts/labyrinth_renderer.gd")
 var theme_id := "vines"
 var pitch := 1.0
 var core: Texture2D
@@ -27,8 +26,6 @@ func _draw() -> void:
 		# The centered decoration is unfinished: show the theme's sand tile.
 	elif core != null:
 		draw_texture_rect_region(core, rect.grow(-pitch * 0.12), core_region)
-	elif theme_id == "labyrinth":
-		Maze._pyramid(self, size / 2 + Vector2(0, pitch * 0.1), 1, 1.7)
 	else:
 		var ink: Color = preload("res://scripts/palette.gd").PAIRS[0].colors[0]
 		for i in range(4):
@@ -38,6 +35,6 @@ func _draw() -> void:
 
 func _ground() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = {"zen_garden": Color("f0ece3"), "clockwork": Color("a3a29a"), "coral_reef": Color("edd7ad"), "labyrinth": Color("efe1c3")}.get(theme_id, Color("fff5fb"))
+	style.bg_color = {"zen_garden": Color("f0ece3"), "clockwork": Color("a3a29a"), "coral_reef": Color("edd7ad")}.get(theme_id, Color("fff5fb"))
 	style.set_corner_radius_all(4)
 	return style

@@ -75,6 +75,14 @@ func _run() -> void:
 	click(scene.settings_options[0])
 	await process_frame
 	check(scene.menu_page == "Themes" and scene.theme_options.size() == Palette.THEMES.size(), "Themes lists all names and core tiles")
+	check(Palette.THEMES == ["zen_garden", "clockwork", "vines", "coral_reef"], "Only the four supported themes are offered")
+	var active_theme := Palette.theme_id()
+	check(not Palette.select_theme("labyrinth") and Palette.theme_id() == active_theme, "The removed theme cannot be selected or change the current theme")
+	var active_game = scene.game
+	scene._request_theme("labyrinth")
+	check(not scene.confirmation.visible and scene.game == active_game, "Removed theme requests do not open confirmation or reset a game")
+	scene._select_theme("labyrinth")
+	check(scene.game == active_game and Palette.theme_id() == active_theme, "Obsolete theme IDs cannot switch the game through its direct handler")
 	var previous = scene.game
 	click(scene.theme_options[Palette.THEMES.find("coral_reef")])
 	await process_frame

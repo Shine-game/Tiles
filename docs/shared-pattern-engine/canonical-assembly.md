@@ -41,7 +41,6 @@ field. Junctions load the retained `junction_ne.png` mask in every direction.
 | Zen stepping-stone paths | One `half_stone_N_256.png`; shared edge placement, rotation and declared S/W tangential mirroring |
 | Zen rake shapes | One procedural geometry/relief per canonical topology shape; shared rotation to all orientations |
 | Vines | One procedural curve/foliage implementation follows the connection direction; no compass sprite pack |
-| Labyrinth | One procedural wall implementation follows the connection direction; no compass sprite pack |
 
 Clockwork pressure/motion hooks and its existing straight-tube shading flips remain.
 Zen's old four stone paintings differed internally, so E/S/W now deliberately reuse
@@ -54,6 +53,9 @@ different regions of asymmetrical rocks and protect distinct peaks; they remain
 separate coverage data. Tree/season/rock variants and separate mechanism parts are
 also different content, not compass copies. This change does not collapse those
 masks/variants or migrate higher-tier policies.
+
+Labyrinth was subsequently removed from the game; it is no longer an active
+theme or a pending artwork migration.
 
 ## Cleanup and appearance
 
