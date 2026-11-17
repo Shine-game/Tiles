@@ -32,7 +32,7 @@ static func validate(value: Variant, schema: Variant, path: String = "$") -> Arr
 			if not value.has(key): errors.append(path + "." + key + ": required")
 		if value.size() < int(schema.get("minProperties", 0)): errors.append(path + ": too few properties")
 		for key: Variant in value:
-			if not key is String:
+			if not key is String and not key is StringName:
 				errors.append(path + ": keys must be strings")
 			elif properties.has(key): errors.append_array(validate(value[key], properties[key], path + "." + key))
 			elif schema.has("additionalProperties"): errors.append_array(validate(value[key], schema.additionalProperties, path + "." + key))

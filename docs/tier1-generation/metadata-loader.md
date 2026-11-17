@@ -137,3 +137,5 @@ Use the commands in asset-import.md, replacing the runner with
 `tests/test_sprite_metadata.gd` and the resource pack with
 `build/tier1-loader-check.pck`. Existing pattern-asset and theme-registry tests
 remain regression checks.
+
+The shared [placement planner](placement-planner.md) now consumes this interface. Growth-time integration and live rendering remain later stages.

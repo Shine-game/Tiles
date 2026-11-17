@@ -92,7 +92,7 @@ static func _settings(source: Variant) -> Dictionary:
 				if not data.defaults.get(block, {}) is Dictionary or not data.defaults[block].has(field): errors.append("Missing default " + block + "." + field)
 	if not data.get("loading") is Dictionary or not data.loading.get("allow_review_assets") is bool: errors.append("Expected loading.allow_review_assets boolean")
 	if not data.get("lighting") is Dictionary or Schema.validate(data.lighting.get("world_direction"), schema.definition.properties.direction).size() > 0: errors.append("Expected lighting.world_direction vector")
-	elif _vector(data.lighting.world_direction).is_zero_approx(): errors.append("World lighting direction must be nonzero")
+	elif not _vector(data.lighting.world_direction).is_finite() or _vector(data.lighting.world_direction).is_zero_approx(): errors.append("World lighting direction must be nonzero")
 	if not errors.is_empty(): return _failure(loaded.path, errors)
 	return loaded
 
@@ -120,6 +120,7 @@ static func occupancy(path: String) -> Dictionary:
 static func _ordered_ranges(data: Dictionary, path: String, errors: Array) -> void:
 	for key: String in ["count", "scale", "range_deg"]:
 		if data.has(key) and data[key][0] > data[key][1]: errors.append(path + "." + key + ": range must be ascending")
+		if key == "count" and data.has(key) and data[key][1] > 2147483647: errors.append(path + ".count: exceeds the RNG integer range")
 
 static func _semantic(data: Dictionary) -> Array:
 	var errors: Array = []
@@ -218,22 +219,24 @@ static func load_sprite(source: Variant, root: String = "res://", settings_sourc
 	var origin: Array = data.get("frame", {}).get("origin", [float(canvas[0]) / 2, float(canvas[1]) / 2]) if data.kind == "base" else data.attachment
 	var marker: Array = data.get("frame", {}).get("up", [origin[0], origin[1] - 1]) if data.kind == "base" else data.get("direction", [origin[0], origin[1] - 1])
 	var forward := _vector(marker) - _vector(origin)
-	if forward.is_zero_approx(): errors.append("Native direction must be nonzero")
+	if not forward.is_finite() or forward.is_zero_approx(): errors.append("Native direction must be finite and nonzero")
 	if not _inside(origin, canvas): errors.append("Placement origin must be inside canvas")
 	var light := _vector(data.lighting.toward) - _vector(origin) if data.has("lighting") else Vector2.ZERO
-	if data.has("lighting") and light.is_zero_approx(): errors.append("Lighting direction must be nonzero")
+	if data.has("lighting") and (not light.is_finite() or light.is_zero_approx()): errors.append("Lighting direction must be finite and nonzero")
 	var resolved := {"origin": origin, "forward": _pair(forward.normalized()), "lighting": _pair(light.normalized()), "has_lighting": data.has("lighting"), "spawn": _merge(defaults.spawn, data.get("spawn", {})), "orientation": _merge(defaults.orientation, data.get("orientation", {})), "variation": _merge(defaults.variation, data.get("variation", {})), "constraints": _merge(defaults.constraints, data.get("constraints", {})), "transforms": _merge({"allow_flip_x": defaults.allow_flip_x, "allow_flip_y": defaults.allow_flip_y}, data.get("transforms", {}))}
 	var anchors: Array = []
 	for anchor: Dictionary in data.get("anchors", []):
 		var position := _vector(anchor.position)
 		if not _inside(anchor.position, canvas): errors.append("anchors/" + anchor.id + ": position outside canvas")
 		var native := _vector(anchor.forward) - position if anchor.has("forward") else forward
+		if not native.is_finite(): errors.append("anchors/" + anchor.id + ": direction exceeds source-coordinate precision")
 		var normalized := anchor.duplicate(true)
 		normalized.forward = _pair(native.normalized())
 		normalized.growth_at = anchor.get("growth_at", 0.0)
 		normalized.orientation = _merge(resolved.orientation, anchor.get("orientation", {}))
 		anchors.append(normalized)
 	for connection: Dictionary in data.get("connections", []):
+		if not _vector(connection.toward).is_finite(): errors.append("connections/" + connection.id + ": direction exceeds source-coordinate precision")
 		if not _inside(connection.position, canvas): errors.append("connections/" + connection.id + ": position outside canvas")
 	if not errors.is_empty(): return _failure(loaded.path, errors)
 	var reveals: Dictionary = {}

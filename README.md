@@ -200,3 +200,5 @@ The earlier browser proof of concept remains available in Git history at commit 
 ## Tier 1 artwork migration
 
 Corrected sprite artwork and universal metadata are staged for all four themes. See [the asset import contract](docs/tier1-generation/asset-import.md) for catalogs, logical-color bindings, export checks and the boundary between imported assets and the upcoming generation integration. The [shared metadata loader](docs/tier1-generation/metadata-loader.md) validates those catalogs and adapts them to existing pattern-set descriptors; placement and rendering activation remain staged.
+
+The [deterministic tier 1 planner](docs/tier1-generation/placement-planner.md) now resolves base lighting, anchors, weighted decoration choices, independent mirrors and source-alpha constraints. It produces stable placement data; growth timing and board rendering integration remain staged.
