@@ -1,8 +1,8 @@
 {
   "engine": "Godot 4.6.3",
   "checks": {
-    "coral_junctions_source": 165,
-    "coral_junctions_exported_pack": 165,
+    "coral_junctions_source": 213,
+    "coral_junctions_exported_pack": 213,
     "shared_junctions": 213,
     "theme_registry": 82,
     "tier1_integration": 392
@@ -13,5 +13,6 @@
   "apk_or_device_tested": false,
   "notes": [
     "Legacy test_coral_sets and test_coral fail on missing legacy center nodes on both the previous committed version and this change; focused junction and tier-zero checks pass."
-  ]
+  ],
+  "core_regressions": "Both colors: isolated-to-endpoint in all four directions, retained node/artwork/size, new endpoint artwork/size, painter order, and undo."
 }

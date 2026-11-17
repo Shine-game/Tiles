@@ -102,5 +102,5 @@ models. The test uses the Vines assets temporarily for the other model adapters;
 it does not configure those themes with substitute artwork in production.
 
 Coral tier-0 isolated cores reuse the matching bend PNG at their original one-square
-canvas size, independently of the 150% junction assembly scale. Endpoint cores
-retain their existing artwork.
+canvas size, independently of the 150% junction assembly scale. Open endpoint cores use the same matching bend PNG at 100% canvas size. Both
+isolated and endpoint cores draw above the growing stems and decorations.

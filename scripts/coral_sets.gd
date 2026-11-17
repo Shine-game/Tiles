@@ -62,7 +62,7 @@ static func propagation() -> Dictionary:
 
 static func render_spec(event: Dictionary, settled: bool) -> Dictionary:
 	var spec: Dictionary = part(event.id).duplicate(true)
-	if event.get("tier0", false):
+	if event.id == "core":
 		spec = Cells.parts_for_role(tier0, "isolated")[event.id].duplicate(true)
 		spec.asset_root = tier0.root
 	var bound := Assets.bind_part(spec, tier0.definition.treatments[str(event.color)])

@@ -112,8 +112,7 @@ func build(before: Array, after: Array) -> void:
 		var vines := Ordinary.vines(mask)
 		if centers.has("core"):
 			var old_core: bool = old and Ordinary.centers(Topology.neighbor_mask(before, cell)).has("core")
-			var core_event := _add("core", color, cell, center, old_core, maxf(0, arrivals[cell]), component_duration("core"))
-			core_event.tier0 = mask == 0
+			_add("core", color, cell, center, old_core, maxf(0, arrivals[cell]), component_duration("core"))
 		var arms: Dictionary = {}
 		for direction in range(4):
 			var other: Vector2i = cell + OFFSETS[direction]

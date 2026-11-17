@@ -49,6 +49,29 @@ func run():
   var node=view.coral_visuals.registry["core/%d/2/2"%color]
   check(node.texture.resource_path.ends_with("coral_tier1_bend_color%d_basic.png"%color),"Tier zero uses matching bend artwork")
   check((node.texture.get_size()*node.scale).is_equal_approx(Vector2(256,256)),"Tier zero retains its original one-square size")
+ # Reproduce adding the first same-color tile to an isolated core, for every direction.
+ for color in [1,2]:
+  for direction in Topology.DIRECTIONS:
+   var initial=Rules.empty_board(7)
+   initial[3][3]=color
+   view.show_settled(initial)
+   var key="core/%d/3/3"%color
+   var original=view.coral_visuals.registry[key]
+   var original_texture=original.texture
+   var pair=initial.duplicate(true)
+   var endpoint=Vector2i(3,3)+direction
+   pair[endpoint.y][endpoint.x]=color
+   view.animate_growth(initial,pair)
+   view.set_process(false)
+   check(view.coral_visuals.registry[key]==original and original.texture==original_texture,"First addition retains the original core node and artwork")
+   check(original.visible and original.material==null,"Existing core stays visible without restarting its reveal")
+   check((original.texture.get_size()*original.scale).is_equal_approx(Vector2(256,256)),"Existing endpoint retains 100 percent core size")
+   view.advance_growth(100)
+   var tip=view.coral_visuals.registry["core/%d/%d/%d"%[color,endpoint.y,endpoint.x]]
+   check(tip.texture==original_texture and (tip.texture.get_size()*tip.scale).is_equal_approx(Vector2(256,256)),"New open endpoint uses the same artwork at 100 percent")
+   check(tip.get_parent().z_index+tip.z_index+view.coral_visuals.z_index>view.tier1_layer.z_index+1,"Core draws above stems and leaves")
+   view.show_settled(initial,true)
+   check(view.coral_visuals.registry[key].texture==original_texture,"Undo restores the same isolated core")
  var before=Rules.empty_board(7)
  before[3][1]=1
  var after=before.duplicate(true)
