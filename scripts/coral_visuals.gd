@@ -7,6 +7,7 @@ const Ordinary = preload("res://scripts/coral_sets.gd")
 const Model = preload("res://scripts/coral_growth.gd")
 const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
 static var textures: Dictionary = {}
+var generative_tier1 := false
 var components := Components.new()
 var registry: Dictionary = components.nodes
 var groups: Dictionary = {}
@@ -63,6 +64,9 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 	surface_signature.clear()
 	for identity: String in model.components:
 		var event: Dictionary = model.components[identity]
+		if generative_tier1 and event.id.begins_with("arm_"):
+			components.remove(identity)
+			continue
 		var ordinary: bool = Ordinary.owns(event.id)
 		var placement: Dictionary
 		placement = Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)

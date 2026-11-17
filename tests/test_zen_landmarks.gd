@@ -184,7 +184,7 @@ func check_game() -> void:
 		if color == 1:
 			check(scene.board_view.zen_visuals.centerpieces[Vector2i(4, 4)].stage == 1, "Undo restores the bend's single stone")
 		else:
-			check(scene.board_view.zen_visuals.registry[Vector2i(4, 4)].get_child_count() > 1, "Undo restores ordinary stepping-stone paths")
+			check(not scene.board_view.tier1_layer.plans.is_empty(), "Undo restores ordinary stepping-stone paths")
 		board[3][5] = color
 		scene.game.board = board
 		scene.board_view.show_settled(board)

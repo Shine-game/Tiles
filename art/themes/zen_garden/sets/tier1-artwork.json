@@ -4,7 +4,7 @@
   "theme_id": "zen_garden",
   "artwork_theme": "zen",
   "tier": 1,
-  "status": "staged",
+  "status": "active",
   "coordinate_system": {
     "units": "source_pixels",
     "origin": "top_left",

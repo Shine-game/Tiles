@@ -43,6 +43,14 @@ func _run() -> void:
 				var plan := planner.plan(catalog, family_id, int(color), "actual/" + theme, 42, context)
 				check(plan.ok, "Production base has a valid orientation: " + theme)
 				if not plan.ok: continue
+				if turns == 0:
+					var lean_context := context.duplicate(true)
+					lean_context.include_footprints = false
+					var lean := planner.plan(catalog, family_id, int(color), "actual/" + theme, 42, lean_context)
+					check(lean.ok and lean.fingerprint == plan.fingerprint and lean.rejections == plan.rejections, "Live footprint optimization preserves choices and all constraints")
+					for i in range(plan.decorations.size()):
+						check(is_equal_approx(lean.decorations[i].visible_radius_px, plan.decorations[i].visible_radius_px), "Optimized radius matches occupied pixel-square geometry")
+						if theme == "zen_garden": check(lean.decorations[i].footprint_computed and lean.decorations[i].footprint == plan.decorations[i].footprint, "Protected spatial rules retain complete footprints")
 				var record: Dictionary
 				for base: Dictionary in catalog.families[family_id].bases:
 					if base.path == plan.base.metadata_path: record = base; break

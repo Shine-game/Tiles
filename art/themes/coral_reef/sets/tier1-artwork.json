@@ -4,7 +4,7 @@
   "theme_id": "coral_reef",
   "artwork_theme": "coral",
   "tier": 1,
-  "status": "staged",
+  "status": "active",
   "coordinate_system": {
     "units": "source_pixels",
     "origin": "top_left",

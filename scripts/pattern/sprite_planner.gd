@@ -60,8 +60,9 @@ static func _matrix(angle: float, scale: Vector2, pivot: Vector2, target: Vector
 
 static func _context_errors(context: Dictionary) -> Array:
 	var errors: Array = []
+	if context.has("include_footprints") and not context.include_footprints is bool: errors.append("include_footprints must be boolean")
 	for key: Variant in context:
-		if key not in ["origin_cells", "size_cells", "target_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path"]: errors.append("Unknown placement field: " + str(key))
+		if key not in ["origin_cells", "size_cells", "target_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints"]: errors.append("Unknown placement field: " + str(key))
 	for key: String in ["origin_cells", "size_cells", "target_forward", "world_light"]:
 		if context.has(key) and not _valid_vector(context[key], key == "size_cells", key in ["target_forward", "world_light"]): errors.append("Invalid placement vector: " + key)
 	if context.has("base_path") and not context.base_path is String: errors.append("base_path must be a metadata path")
@@ -136,7 +137,7 @@ static func _accepted(anchor: Dictionary, decoration: Dictionary) -> bool:
 		if tag in anchor.accepts: return true
 	return false
 
-func _decoration(base: Dictionary, base_transform: Transform2D, variant: String, anchor: Dictionary, decoration: Dictionary, settings: Dictionary, seed: int, component: String, light: Vector2, occupied: Dictionary) -> Dictionary:
+func _decoration(base: Dictionary, base_transform: Transform2D, variant: String, anchor: Dictionary, decoration: Dictionary, settings: Dictionary, seed: int, component: String, light: Vector2, occupied: Dictionary, include_footprints: bool) -> Dictionary:
 	var rules := Metadata.rules(base.definition, decoration.definition, anchor, settings)
 	if not rules.ok: return {"ok": false, "reason": "invalid_growth_override"}
 	if rules.animation.mode == "progressive" and not decoration.reveals.has(variant): return {"ok": false, "reason": "missing_reveal"}
@@ -155,13 +156,14 @@ func _decoration(base: Dictionary, base_transform: Transform2D, variant: String,
 	for form: Vector2 in forms:
 		var rotation := desired if mode == "random" else desired - (_vector(decoration.resolved.forward) * form).angle()
 		var local := _matrix(rotation, form * scale, _vector(decoration.resolved.origin), _vector(anchor.position))
-		var footprint := _footprint.raster(decoration.images[variant], local, _vector(decoration.resolved.origin))
+		var needs_raster: bool = include_footprints or rules.constraints.get("inside_canvas", false) or "avoid" in rules.constraints.get("base_overlap_checks", [])
+		var footprint := _footprint.raster(decoration.images[variant], local, _vector(decoration.resolved.origin)) if needs_raster else _footprint.summary(decoration.images[variant], local, _vector(decoration.resolved.origin))
 		reason = _footprint.rejection(footprint, base.images[variant], Vector2i(_vector(base.canvas_px)), _vector(anchor.position), rules.constraints, occupied)
 		if not reason.is_empty(): continue
 		var transform := base_transform * local
 		var score := transform.basis_xform(_vector(decoration.resolved.lighting)).normalized().dot(light) if decoration.resolved.has_lighting else 0.0
 		if not chosen.is_empty() and score <= chosen.light_score + EPSILON: continue
-		chosen = {"ok": true, "id": component + "/anchor/" + anchor.id, "anchor_id": anchor.id, "metadata_path": decoration.path, "image_path": decoration.images[variant], "variant": variant, "transform": transform, "local_transform": local, "attachment": decoration.resolved.origin.duplicate(), "flip_x": form.x < 0, "flip_y": form.y < 0, "rotation_deg": rad_to_deg(rotation), "scale": scale, "light_score": score, "growth_at": anchor.growth_at, "rules": rules, "footprint": footprint.cells.keys(), "visible_radius_px": footprint.radius}
+		chosen = {"ok": true, "id": component + "/anchor/" + anchor.id, "anchor_id": anchor.id, "metadata_path": decoration.path, "image_path": decoration.images[variant], "variant": variant, "transform": transform, "local_transform": local, "attachment": decoration.resolved.origin.duplicate(), "flip_x": form.x < 0, "flip_y": form.y < 0, "rotation_deg": rad_to_deg(rotation), "scale": scale, "light_score": score, "growth_at": anchor.growth_at, "rules": rules, "footprint": footprint.cells.keys(), "footprint_computed": needs_raster, "visible_radius_px": footprint.radius}
 		if rules.animation.mode == "progressive": chosen.reveal = decoration.reveals[variant].duplicate(true)
 		if not decoration.resolved.has_lighting: break
 	return chosen if not chosen.is_empty() else {"ok": false, "reason": reason}
@@ -206,6 +208,13 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 	anchors = _shuffle(anchors, _rng(seed, component_id, "anchors"))
 	var catalog_decorations: Array = family.decorations.duplicate()
 	catalog_decorations.sort_custom(func(a, b): return a.path < b.path)
+	# Any protected decoration requires footprints for all participants, even
+	# if an earlier participant permits overlap. Omission is presentation-only.
+	var include_footprints: bool = context.get("include_footprints", true) or base.resolved.constraints.get("avoid_deco_overlap", false)
+	for record: Dictionary in catalog_decorations:
+		include_footprints = include_footprints or record.resolved.constraints.get("avoid_deco_overlap", false)
+	for anchor: Dictionary in anchors:
+		include_footprints = include_footprints or anchor.get("constraints", {}).get("avoid_deco_overlap", false)
 	var decorations: Array = []
 	var occupied: Dictionary = {}
 	var positions: Array[Vector2] = []
@@ -219,7 +228,7 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 		var compatible := catalog_decorations.filter(func(record): return _accepted(anchor, record))
 		if compatible.is_empty(): rejections.incompatible_tags = int(rejections.get("incompatible_tags", 0)) + 1
 		for record: Dictionary in _weighted(compatible, _rng(seed, component_id, "anchor/" + anchor.id + "/catalog")):
-			var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied)
+			var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied, include_footprints)
 			if not candidate.ok:
 				rejections[candidate.reason] = int(rejections.get(candidate.reason, 0)) + 1
 				continue

@@ -1,0 +1,309 @@
+{
+  "stage": 6,
+  "engine_tested": "4.6.3.stable",
+  "project_target": "4.7.2",
+  "theme_status": "All four catalogs active; Zen rakes remain legacy",
+  "test_runners_passed": 42,
+  "test_runners_total": 43,
+  "passing_runner_checks": 16161,
+  "checks": [
+    {
+      "test": "test_board_frame",
+      "checks": 61,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_clockwork",
+      "checks": 235,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_clockwork_arrivals",
+      "checks": 189,
+      "failures": 0,
+      "backend": "OpenGL compatibility / Mesa llvmpipe"
+    },
+    {
+      "test": "test_clockwork_native",
+      "checks": 19,
+      "failures": 0,
+      "backend": "OpenGL compatibility / Mesa llvmpipe"
+    },
+    {
+      "test": "test_clockwork_palette",
+      "checks": 57,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_clockwork_sets",
+      "checks": 528,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_clockwork_wheel_rule",
+      "checks": 565,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_coral",
+      "checks": 782,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_coral_arm_rotation",
+      "checks": 112,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_coral_audio",
+      "checks": 53,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_coral_sets",
+      "checks": 1365,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_field_axes",
+      "checks": 297,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_gallery",
+      "checks": 19,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_gallery_completion",
+      "checks": 48,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_growth",
+      "checks": 100,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_pattern_assembly",
+      "checks": 68,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_pattern_assets",
+      "checks": 39,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_pattern_state",
+      "checks": 379,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_pattern_topology",
+      "checks": 1589,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_piece_surface",
+      "checks": 1821,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_platform",
+      "checks": 43,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_reef_water",
+      "checks": 20,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_rules",
+      "checks": 721,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_settings",
+      "checks": 2602,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sound_and_depth",
+      "checks": 29,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sprite_growth",
+      "checks": 234,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sprite_metadata",
+      "checks": 260,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sprite_planner",
+      "checks": 681,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sprite_presenter",
+      "checks": 131,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_sprite_reveal_render",
+      "checks": 8,
+      "failures": 0,
+      "backend": "OpenGL compatibility / Mesa llvmpipe"
+    },
+    {
+      "test": "test_theme_registry",
+      "checks": 82,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_tier1_artwork",
+      "checks": 797,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_tier1_integration",
+      "checks": 382,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_tier2_sets",
+      "checks": 353,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_tier3_connections",
+      "checks": 78,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_ui",
+      "checks": 564,
+      "failures": 24,
+      "backend": "OpenGL compatibility / Mesa llvmpipe"
+    },
+    {
+      "test": "test_vines_sets",
+      "checks": 500,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_centerpieces",
+      "checks": 40,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_landmarks",
+      "checks": 198,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_ordinary",
+      "checks": 324,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_ponds",
+      "checks": 170,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_sets",
+      "checks": 104,
+      "failures": 0,
+      "backend": "headless"
+    },
+    {
+      "test": "test_zen_trees",
+      "checks": 78,
+      "failures": 0,
+      "backend": "headless"
+    }
+  ],
+  "rendered_theme_checks": {
+    "checks": 13,
+    "failures": 0
+  },
+  "export_pack": {
+    "preset": "Android",
+    "production_tests": [
+      {
+        "test": "test_tier1_integration",
+        "checks": 373,
+        "failures": 0
+      },
+      {
+        "test": "test_sprite_presenter",
+        "checks": 131,
+        "failures": 0
+      },
+      {
+        "test": "test_tier1_artwork",
+        "checks": 797,
+        "failures": 0
+      }
+    ],
+    "note": "Synthetic authoring-fixture tests are source-only; immutable PCK runs use --production-only. No APK/device run."
+  },
+  "known_baseline_failure": {
+    "test": "test_ui",
+    "failures": 24,
+    "baseline_commit": "2705d1e",
+    "assertion_messages_match_in_order": true,
+    "note": "Same failures reproduce headlessly on archived baseline and with X11/OpenGL on current tree."
+  },
+  "dense_11x11_initial_ms": {
+    "coral_before": 36576,
+    "coral_after": 2558,
+    "clockwork": 1132,
+    "vines": 622,
+    "zen_garden": 2453
+  },
+  "dense_note": "Two connected color regions; executor observations, not mobile benchmarks."
+}

@@ -12,10 +12,12 @@ const ROOT := "sprite-presentation"
 var renderer := Renderer.new()
 var diagnostics: Array = []
 var _fields: Dictionary = {}
+var _settled_treatments: Dictionary = {}
 
 func clear() -> void:
 	renderer.clear()
 	_fields.clear()
+	_settled_treatments.clear()
 	diagnostics.clear()
 
 func _fail(message: String) -> bool:
@@ -63,11 +65,19 @@ func _base_field(base: Dictionary, field: Dictionary, override: Variant) -> Dict
 
 # Reconcile only on layout/source changes. View scaling may change independently.
 # All resources and timing revisions are checked before touching the live tree.
-func reconcile(plans: Dictionary, timeline: Dictionary, state, parent: Node2D, cells_to_pixels: Transform2D = Transform2D(0.0, Vector2(256, 256), 0.0, Vector2.ZERO), base_fields: Dictionary = {}) -> bool:
+func _ink(uniforms: Dictionary, treatment: Dictionary) -> ShaderMaterial:
+	if not treatment.is_empty():
+		uniforms.merge({"recolor": true, "palette_source": treatment.source_color, "palette_target": treatment.target_color})
+	return Renderer.material(Reveal, uniforms)
+
+func reconcile(plans: Dictionary, timeline: Dictionary, state, parent: Node2D, cells_to_pixels: Transform2D = Transform2D(0.0, Vector2(256, 256), 0.0, Vector2.ZERO), base_fields: Dictionary = {}, treatments: Dictionary = {}) -> bool:
 	diagnostics.clear()
 	if not is_instance_valid(parent) or not _valid_transform(cells_to_pixels): return _fail("Invalid presentation parent or view transform")
 	if timeline.get("version") != Growth.VERSION: return _fail("Unsupported sprite timeline")
+	for treatment: Variant in treatments.values():
+		if not treatment is Dictionary or not treatment.get("source_color") is Color or not treatment.get("target_color") is Color: return _fail("Palette treatment needs source_color and target_color")
 	var prepared: Array = []
+	var next_treatments: Dictionary = {}
 	var ids: Array = plans.keys()
 	ids.sort()
 	for id: String in ids:
@@ -79,11 +89,16 @@ func reconcile(plans: Dictionary, timeline: Dictionary, state, parent: Node2D, c
 		var base_texture := Assets.resolve(plan.base.image_path, "res://", diagnostics)
 		if base_texture == null or base_texture.get_size() != Renderer.vector(plan.base.canvas_px): return _fail("Base texture does not match canvas: " + id)
 		var field: Dictionary = component.field
+		var treatment: Dictionary = treatments.get(id, {})
+		var settled_material: ShaderMaterial
+		if not treatment.is_empty():
+			settled_material = _ink({"reveal_progress": 1.0}, treatment)
+			next_treatments[ROOT + "/" + id + "/base"] = settled_material
 		var base_material: ShaderMaterial
 		if not field.old and state.schedule.clock < field.source_end:
 			var built := _base_field(plan.base, field, base_fields.get(id))
 			if not built.ok: return _fail("Invalid base reveal: " + id + str(built.get("errors", [])))
-			base_material = Renderer.material(Reveal, {"time_field": true, "reveal_field": built.texture, "field_start": built.start, "soft_seconds": built.soft_seconds, "visual_clock": state.schedule.clock})
+			base_material = _ink({"time_field": true, "reveal_field": built.texture, "field_start": built.start, "soft_seconds": built.soft_seconds, "visual_clock": state.schedule.clock}, treatment)
 		var decorations: Array = []
 		for placement: Dictionary in plan.decorations:
 			var event_id := Growth.event_id(placement.id)
@@ -95,11 +110,12 @@ func reconcile(plans: Dictionary, timeline: Dictionary, state, parent: Node2D, c
 			var texture := Assets.resolve(placement.image_path, "res://", diagnostics)
 			if texture == null: return _fail("Missing decoration texture: " + event_id)
 			var ink: ShaderMaterial
+			if settled_material != null: next_treatments[event_id] = _ink({"reveal_progress": 1.0}, treatment)
 			if event.mode == "progressive" and record.phase != "settled":
 				if not placement.has("reveal"): return _fail("Progressive decoration has no reveal: " + event_id)
 				var mask := Assets.resolve(placement.reveal, "res://", diagnostics)
 				if mask == null or mask.get_size() != texture.get_size(): return _fail("Invalid decoration reveal: " + event_id)
-				ink = Renderer.material(Reveal, {"reveal_field": mask, "reveal_progress": record.progress})
+				ink = _ink({"reveal_field": mask, "reveal_progress": record.progress}, treatment)
 			decorations.append({"id": event_id, "asset": texture, "source_transform": placement.local_transform, "material": ink, "growth_at": placement.growth_at})
 		decorations.sort_custom(func(a, b): return a.growth_at < b.growth_at if a.growth_at != b.growth_at else a.id < b.id)
 		prepared.append({"id": id, "base": plan.base, "asset": base_texture, "material": base_material, "field": field, "decorations": decorations})
@@ -120,11 +136,15 @@ func reconcile(plans: Dictionary, timeline: Dictionary, state, parent: Node2D, c
 			group.move_child(node, -1)
 			keep.append(deco.id)
 	renderer.remove_missing(keep)
+	_settled_treatments = next_treatments
 	advance(state)
 	return true
 
 func advance(state) -> void:
 	renderer.advance(state.schedule.clock, state)
+	for id: String in _settled_treatments:
+		var node = renderer.nodes.get(id)
+		if is_instance_valid(node) and node.material == null: node.material = _settled_treatments[id]
 
 func set_view_transform(value: Transform2D) -> bool:
 	if not _valid_transform(value): return _fail("Invalid view transform")

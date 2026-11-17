@@ -23,8 +23,10 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 	var events: Dictionary = {}
 	var prefix := theme + "/"
 	if theme == "clockwork":
-		var parts: Dictionary = model.components if workshop == null else workshop.registry
-		for key: String in parts: _part(events, prefix + "part/", key, parts[key] if workshop == null else parts[key].event)
+		var parts: Dictionary = model.components.duplicate()
+		if workshop != null:
+			for key: String in workshop.registry: parts[key] = workshop.registry[key].event
+		for key: String in parts: _part(events, prefix + "part/", key, parts[key])
 		var chains: Dictionary = model.chains if workshop == null else workshop.chain_nodes
 		for key: String in chains: _part(events, prefix + "chain/", key, chains[key] if workshop == null else chains[key].event)
 		if workshop != null:

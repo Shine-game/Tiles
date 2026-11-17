@@ -52,13 +52,13 @@ static func rake_spec(cell: Vector2i, mask: int) -> Dictionary:
 	spec = Assembly.rotated(spec, canonical.turns, Cells.anchor(cell))
 	return spec
 
-static func stone_specs(cell: Vector2i, mask: int) -> Array[Dictionary]:
+static func stone_specs(cell: Vector2i, mask: int, include_paths: bool = true) -> Array[Dictionary]:
 	var selected := centers(2, mask)
 	var specs: Array[Dictionary] = []
 	# The endpoint core is below the directional path ending, and is a distinct
 	# source file so later endpoint artwork edits cannot change isolated tiles.
 	for part: Dictionary in selected.values(): specs.append(_placed(part, cell))
-	if mask == 0: return specs
+	if mask == 0 or not include_paths: return specs
 	var vine: Dictionary = Cells.parts_for_role(families.stones[1], "vine").half
 	for direction in range(4):
 		if not mask & (1 << direction): continue

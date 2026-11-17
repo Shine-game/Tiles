@@ -63,7 +63,7 @@
   "themes": {
     "zen_garden": {
       "name": "Zen Garden",
-      "version": "0.11",
+      "version": "0.12",
       "colors": [
         "ab946b",
         "687567"
@@ -104,12 +104,21 @@
       },
       "tier1_artwork": {
         "catalog": "res://art/themes/zen_garden/sets/tier1-artwork.json",
-        "status": "staged"
+        "status": "active",
+        "source_layout": "shared_edges",
+        "family": "stones",
+        "logical_color": 2,
+        "size_cells": [
+          0.7,
+          0.7
+        ],
+        "duration_sec": 0.24,
+        "layer_z_index": 1
       }
     },
     "clockwork": {
       "name": "Clockwork Workshop",
-      "version": "1.1",
+      "version": "1.2",
       "colors": [
         "bc783d",
         "59676e"
@@ -151,12 +160,17 @@
       },
       "tier1_artwork": {
         "catalog": "res://art/themes/clockwork_workshop/sets/tier1-artwork.json",
-        "status": "staged"
+        "status": "active",
+        "source_layout": "components",
+        "component_ports": {
+          "T01": "direction"
+        },
+        "layer_z_index": 1
       }
     },
     "vines": {
       "name": "Vines",
-      "version": "1.0",
+      "version": "1.1",
       "colors": [],
       "ui": {
         "controls": "eeedf3",
@@ -187,12 +201,20 @@
       },
       "tier1_artwork": {
         "catalog": "res://art/themes/vines/sets/tier1-artwork.json",
-        "status": "staged"
+        "status": "active",
+        "source_layout": "edge_halves",
+        "size_cells": [
+          1.0039370078740157,
+          1.0039370078740157
+        ],
+        "layer_z_index": -1,
+        "decoration_z_index": 0,
+        "stroke_seconds": 0.14
       }
     },
     "coral_reef": {
       "name": "Coral Reef",
-      "version": "2.2",
+      "version": "2.3",
       "colors": [
         "f49f7f",
         "69bfae"
@@ -524,7 +546,15 @@
       },
       "tier1_artwork": {
         "catalog": "res://art/themes/coral_reef/sets/tier1-artwork.json",
-        "status": "staged"
+        "status": "active",
+        "source_layout": "components",
+        "component_ports": {
+          "arm_n": 0,
+          "arm_e": 1,
+          "arm_s": 2,
+          "arm_w": 3
+        },
+        "layer_z_index": 3
       }
     }
   }

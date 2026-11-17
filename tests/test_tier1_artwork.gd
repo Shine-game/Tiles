@@ -50,7 +50,7 @@ func _initialize() -> void:
 	var expected := {"coral_reef": "coral", "clockwork": "clockwork", "vines": "vines", "zen_garden": "zen"}
 	for theme_id: String in expected:
 		var link: Dictionary = registry.themes[theme_id].get("tier1_artwork", {})
-		check(link.get("status") == "staged", "Import is staged: " + theme_id)
+		check(link.get("status") == "active", "Universal tier 1 is active: " + theme_id)
 		var path: String = link.get("catalog", "")
 		var catalog := read_json(path)
 		check(catalog.get("schema") == "tiles.sprite-catalog.v1" and catalog.get("tier") == 1, "Tier 1 catalog format: " + theme_id)

@@ -91,7 +91,7 @@ func _run() -> void:
 	mixed[4][5] = 2
 	view.show_settled(mixed)
 	check(view.construction_state.records.has(Sets.identity(1, center)), "Different-color contact leaves the first color's endpoint motif intact")
-	check(Palette.theme_version() == "1.0" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
+	check(Palette.theme_version() == "1.1" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/vines/sets/*.json"), "Both sets are packaged in Android exports")
 	check(Sets.renderer.diagnostics.is_empty(), "All real Vines drawing batches use valid providers")
 	view.queue_free()
@@ -128,7 +128,7 @@ func check_game() -> void:
 	check(scene._can_save(), "The normal game allows saving the symmetric design")
 	await scene._save_design()
 	var entries: Array = scene.gallery.entries()
-	check(entries.size() == 1 and entries[0].theme == "vines" and entries[0].theme_version == "1.0", "The normal gallery records the new set-driven appearance")
+	check(entries.size() == 1 and entries[0].theme == "vines" and entries[0].theme_version == "1.1", "The normal gallery records the new set-driven appearance")
 	if not entries.is_empty(): scene.gallery.picture(entries[0]).get_image().save_png("res://build/vines-sets/artwork.png")
 	for f: String in DirAccess.open(scene.gallery.directory).get_files(): DirAccess.remove_absolute(scene.gallery.directory.path_join(f))
 	DirAccess.remove_absolute(scene.gallery.directory)

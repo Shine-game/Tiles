@@ -13,6 +13,7 @@ const SAND_SHADER = preload("res://shaders/zen_sand.gdshader")
 const SAND = preload("res://art/themes/zen_garden/artwork/ground/sand_ground_256.png")
 const CORE = preload("res://art/themes/zen_garden/artwork/cores/stepping_stone_core_256.png")
 const STONE_SCALE := 0.70
+var generative_tier1 := false
 var ordinary_components := Components.new()
 var materials: Array[ShaderMaterial] = []
 var registry: Dictionary = {}
@@ -102,7 +103,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 					centerpieces[cell].configure(stage, settled, start)
 					retained_centers[cell] = true
 			else:
-				for spec: Dictionary in Sets.stone_specs(cell, mask):
+				for spec: Dictionary in Sets.stone_specs(cell, mask, not generative_tier1):
 					group.add_child(Components.sprite(spec))
 			if not settled and float(model.arrivals.get(cell, -100.0)) >= 0:
 				# Only decoration fades in; the new sand slab is immediately solid.

@@ -140,6 +140,21 @@
         "runtime_palette_policy": {
           "type": "string",
           "minLength": 1
+        },
+        "source_colors": {
+          "type": "object",
+          "properties": {
+            "1": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "2": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
         }
       },
       "required": [

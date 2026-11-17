@@ -4,7 +4,7 @@
   "theme_id": "vines",
   "artwork_theme": "vines",
   "tier": 1,
-  "status": "staged",
+  "status": "active",
   "coordinate_system": {
     "units": "source_pixels",
     "origin": "top_left",
@@ -35,6 +35,10 @@
   },
   "palette": {
     "source_palette": "Rose / Violet",
-    "runtime_palette_policy": "deferred_until_renderer_integration"
+    "runtime_palette_policy": "hsv_relative_to_source_palette",
+    "source_colors": {
+      "1": "#ee83ac",
+      "2": "#854edb"
+    }
   }
 }

@@ -7,11 +7,13 @@ const MAX_FOOTPRINTS := 128
 var _pixels: Dictionary = {}
 var _bounds: Dictionary = {}
 var _footprints: Dictionary = {}
+var _radii: Dictionary = {}
 
 func clear() -> void:
 	_pixels.clear()
 	_bounds.clear()
 	_footprints.clear()
+	_radii.clear()
 
 func cache_sizes() -> Dictionary:
 	return {"images": _pixels.size(), "footprints": _footprints.size()}
@@ -33,6 +35,27 @@ func _source(path: String) -> Dictionary:
 		_pixels[path] = pixels
 		_bounds[path] = Rect2i(low, high - low)
 	return {"ok": true, "pixels": _pixels[path], "bounds": _bounds[path]}
+
+func summary(path: String, transform: Transform2D, attachment: Vector2) -> Dictionary:
+	# A uniform rotation/reflection preserves radius. Reuse the source radius
+	# when no rule (and no caller) needs the actual occupied-cell raster.
+	if not transform.is_finite(): return {"ok": false, "reason": "invalid_transform"}
+	if not is_equal_approx(transform.x.length(), transform.y.length()) or not is_zero_approx(transform.x.dot(transform.y)): return raster(path, transform, attachment)
+	var source := _source(path)
+	if not source.ok: return source
+	var region := transform * Rect2(Vector2(source.bounds.position) - Vector2.ONE * 0.5, Vector2(source.bounds.size))
+	if (ceilf(region.size.x) + 1) * (ceilf(region.size.y) + 1) > 1048576: return {"ok": false, "reason": "footprint_budget"}
+	var key := var_to_bytes([path, attachment]).hex_encode()
+	if not _radii.has(key):
+		var squared := 0.0
+		for pixel: Vector2i in source.pixels:
+			# The farthest corner of each source pixel square is opposite the
+			# attachment on both axes; no four-corner loop is necessary.
+			var delta := (Vector2(pixel) - attachment).abs() + Vector2.ONE * 0.5
+			squared = maxf(squared, delta.length_squared())
+		if _radii.size() >= MAX_FOOTPRINTS: _radii.erase(_radii.keys()[0])
+		_radii[key] = sqrt(squared)
+	return {"ok": true, "cells": {}, "radius": _radii[key] * transform.x.length()}
 
 func raster(path: String, transform: Transform2D, attachment: Vector2) -> Dictionary:
 	var key := var_to_bytes([path, transform, attachment]).hex_encode()

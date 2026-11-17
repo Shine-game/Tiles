@@ -128,6 +128,8 @@ func _remove(entry: Dictionary, animate: bool) -> void:
 	retiring.append(entry)
 	retire_duration = maxf(retire_duration, entry.retire_end)
 
+var generative_tier1 := false
+
 func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bool = false) -> void:
 	if not preserve:
 		clear()
@@ -162,6 +164,9 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			next.mechanisms[chain.a].chain_end = maxf(next.mechanisms[chain.a].chain_end, chain.end)
 			next.mechanisms[chain.b].chain_end = maxf(next.mechanisms[chain.b].chain_end, chain.end)
 	var events: Dictionary = next.components.duplicate()
+	if generative_tier1:
+		for identity: String in events.keys():
+			if events[identity].id == "T01": events.erase(identity)
 	for cell: Vector2i in next.arrivals:
 		var ground := Model.ground_choice(cell)
 		var id := "plate_%02d" % ground.variant

@@ -1,7 +1,8 @@
 # Tier 1 sprite rendering bridge — step 5
 
 `PatternSpritePresenter` renders the step-3 plans against the step-4 timeline.
-It is staged infrastructure: existing theme views remain active until step 6.
+It was introduced as staged infrastructure in step 5 and is now active through
+the board binding described in `theme-activation.md`.
 No asset or metadata changes are required for this step.
 
 ## Host contract
@@ -74,6 +75,10 @@ of clipping, source color, reflection, timed fronts and soft completion.
 
 Validation used Godot 4.6.3 and Mesa llvmpipe OpenGL compatibility; the project
 target is Godot 4.7.2. Android pack validation proves resource availability, not
-an APK/device run. Step 6 must bind each theme's board parts and source fields,
-handle retiring source plans, and activate the new presentation family by family.
+an APK/device run. Step 6 binds the board parts, source fields and retirement through
+`PatternTier1Layer`; see `theme-activation.md`.
 Zen rake artwork remains unavailable and its legacy path must remain in use.
+
+The optional final `treatments` argument maps component IDs to `source_color` /
+`target_color` Colors. These use the shared HSV palette shader and retain a
+private completed-art treatment after the reveal material is cleared.
