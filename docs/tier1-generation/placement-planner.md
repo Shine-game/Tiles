@@ -167,3 +167,5 @@ and scale; independent mirrors and decoration lighting; weighted selection;
 orientation rules; radius/spacing/tile/alpha/overlap/gap constraints; diagnostics
 and cache isolation. It also runs against a resource pack from an empty project
 directory. Validation totals and engine limitations are in planner-validation.json.
+
+The [growth timing bridge](growth-timing.md) now binds these layouts to structural waves. Live renderer/board activation remains the next stage.

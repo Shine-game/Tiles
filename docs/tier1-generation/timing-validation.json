@@ -1,0 +1,40 @@
+{
+  "stage": 4,
+  "base_revision": "94526a10ab001c11ba89f74200dd4f7f0ca5a0a6",
+  "engine_tested": "Godot 4.6.3.stable.official.7d41c59c4",
+  "project_target_engine": "Godot 4.7.2",
+  "headless_editor_import": "passed",
+  "sprite_growth_test": {
+    "checks": 234,
+    "failures": 0
+  },
+  "isolated_exported_pack_timing_test": {
+    "checks": 234,
+    "failures": 0
+  },
+  "existing_shared_state_test": {
+    "checks": 218,
+    "failures": 0
+  },
+  "existing_growth_test": {
+    "checks": 100,
+    "failures": 0
+  },
+  "existing_tier2_sets_test": {
+    "checks": 353,
+    "failures": 0
+  },
+  "existing_tier3_connections_test": {
+    "checks": 78,
+    "failures": 0
+  },
+  "actual_growth_models_exercised": [
+    "coral_reef",
+    "clockwork",
+    "vines",
+    "zen_garden"
+  ],
+  "structural_events_and_prerequisites_unchanged": true,
+  "live_renderer_activated": false,
+  "apk_or_device_tested": false
+}

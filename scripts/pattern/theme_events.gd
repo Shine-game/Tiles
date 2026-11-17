@@ -45,6 +45,13 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 			var seconds := Growth.LINK_GROW + Growth.STAR_POP
 			_put(events, prefix + "connection/%d/%s" % [link.color, str(Growth.edge_key(link.a, link.b))], link.start, link.start + seconds, link.old, [link.a, link.b])
 	events.merge(Formations.state_events(model.tier2_records(), theme, events))
+	# Decoration events enter the existing lifecycle after structural formation
+	# dependencies were collected. Their tail cannot move higher-tier starts.
+	for id: String in model.sprite_growth_events:
+		if events.has(id):
+			push_error("Sprite timing identity collides with a structural event: " + id)
+			continue
+		events[id] = model.sprite_growth_events[id].duplicate(true)
 	return events
 
 static func _zen(events: Dictionary, prefix: String, model, zen) -> void:
