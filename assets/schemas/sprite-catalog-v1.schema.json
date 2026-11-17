@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "tiles.sprite-catalog.v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "theme_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artwork_theme": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tier": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "staged",
+        "active"
+      ]
+    },
+    "coordinate_system": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "const": "source_pixels"
+        },
+        "origin": {
+          "const": "top_left"
+        },
+        "dimensions": {
+          "const": "per_sprite_canvas_px"
+        }
+      },
+      "required": [
+        "units",
+        "origin",
+        "dimensions"
+      ],
+      "additionalProperties": false
+    },
+    "families": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "logical_colors": {
+            "type": "object",
+            "properties": {
+              "1": {
+                "type": "object",
+                "properties": {
+                  "image_variant": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "treatment": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "image_variant",
+                  "treatment"
+                ],
+                "additionalProperties": false
+              },
+              "2": {
+                "type": "object",
+                "properties": {
+                  "image_variant": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "treatment": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "image_variant",
+                  "treatment"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [],
+            "additionalProperties": false,
+            "minProperties": 1
+          },
+          "bases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "decorations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "logical_colors",
+          "bases",
+          "decorations"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "legacy_families": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "palette": {
+      "type": "object",
+      "properties": {
+        "source_palette": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_palette_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_colors": {
+          "type": "object",
+          "properties": {
+            "1": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "2": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        }
+      },
+      "required": [
+        "source_palette",
+        "runtime_palette_policy"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "theme_id",
+    "artwork_theme",
+    "tier",
+    "status",
+    "coordinate_system",
+    "families"
+  ],
+  "additionalProperties": false
+}

@@ -8,6 +8,8 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const Tier1Layer = preload("res://scripts/pattern/tier1_layer.gd")
+const Tier1Sources = preload("res://scripts/pattern/tier1_sources.gd")
 const VineModel = preload("res://scripts/vines_growth.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
@@ -35,6 +37,11 @@ var zen_floor: ColorRect
 var board: Array = []
 var pattern = Growth.new()
 var construction_state := ComponentState.new()
+var tier1_layer: PatternTier1Layer
+var sprite_elapsed := 0.0
+var sprite_reverse := false
+var generative_tier1: bool:
+	get: return Tier1Sources.active(Palette.theme_id())
 var clock := 0.0
 var growing := false
 var field := Rect2()
@@ -71,11 +78,14 @@ func _ready() -> void:
 	set_process(false)
 
 func show_settled(grid: Array, preserve_direction: bool = false) -> void:
+	sprite_elapsed = clock
 	var reverse: bool = preserve_direction and clockwork and clockwork_visuals != null and board != grid
+	sprite_reverse = reverse
 	growth_canceled.emit()
 	announced_flowers.clear()
 	board = grid
 	_build_pattern(grid, grid)
+	growth_before = grid.duplicate(true)
 	_adopt_directions(preserve_direction)
 	_sync_coral(true, preserve_direction)
 	_sync_workshop(true, preserve_direction, reverse)
@@ -185,7 +195,6 @@ func _restyle() -> void:
 	_sync_coral(false, true)
 	_sync_workshop(false, true)
 	_sync_zen(false)
-	clock = minf(clock, pattern.duration)
 	if coral_reef:
 		coral_visuals.advance(clock)
 	if zen_garden: zen_visuals.advance(clock)
@@ -205,6 +214,7 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 			coral_visuals = CoralLayer.new()
 			coral_visuals.z_index = 1
 			add_child(coral_visuals)
+		coral_visuals.generative_tier1 = generative_tier1
 		coral_visuals.show()
 		coral_visuals.reconcile(pattern, settled, true)
 		coral_visuals.advance(0 if settled else clock)
@@ -218,6 +228,7 @@ func _sync_zen(settled: bool) -> void:
 			zen_visuals = ZenLayer.new()
 			zen_visuals.z_index = 1
 			add_child(zen_visuals)
+		zen_visuals.generative_tier1 = generative_tier1
 		zen_visuals.show()
 		zen_visuals.reconcile(pattern, settled, complete_background)
 		if zen_floor == null:
@@ -241,6 +252,7 @@ func _sync_workshop(settled: bool, preserve: bool, reverse: bool = false) -> voi
 			clockwork_visuals = Workshop.new()
 			add_child(clockwork_visuals)
 			clockwork_visuals.cue.connect(workshop_cue.emit)
+		clockwork_visuals.generative_tier1 = generative_tier1
 		clockwork_visuals.show()
 		clockwork_visuals.reconcile(pattern, settled, preserve, reverse)
 		if reverse:
@@ -252,6 +264,8 @@ func _sync_workshop(settled: bool, preserve: bool, reverse: bool = false) -> voi
 		clockwork_visuals.hide()
 
 func animate_growth(before: Array, after: Array) -> void:
+	sprite_elapsed = clock
+	sprite_reverse = false
 	placement_revision += 1
 	board = after
 	growth_before = before.duplicate(true)
@@ -271,16 +285,26 @@ func animate_growth(before: Array, after: Array) -> void:
 	queue_redraw()
 
 func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart: bool = true) -> void:
+	if tier1_layer == null:
+		tier1_layer = Tier1Layer.new()
+		add_child(tier1_layer)
+	var okay := tier1_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0, sprite_reverse)
+	if not okay: push_error("Tier 1 preparation failed: " + str(tier1_layer.diagnostics))
 	var events: Dictionary = ThemeEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
+	events.merge(tier1_layer.retirement_events())
 	if Palette.theme_id() == "vines": events.merge(Vines.center_events(pattern, growth_before, settled))
-	construction_state.reconcile(events, 0.0 if settled else pattern.duration, at, settled, preserve, restart)
+	construction_state.reconcile(events, 0.0 if settled else maxf(pattern.duration, pattern.sprite_visual_duration), at, settled, preserve, restart)
 	clock = construction_state.schedule.clock
 	growing = construction_state.schedule.running()
+	if not tier1_layer.present(construction_state, _sprite_view_transform()): push_error("Tier 1 presentation failed: " + str(tier1_layer.diagnostics))
+	sprite_elapsed = 0.0
+	sprite_reverse = false
 
 func advance_growth(delta: float) -> void:
 	if not growing:
 		return
 	clock = construction_state.advance(delta)
+	if tier1_layer != null: tier1_layer.advance(construction_state)
 	if coral_reef:
 		coral_visuals.advance(clock)
 	if zen_garden: zen_visuals.advance(clock)
@@ -346,7 +370,11 @@ func update_geometry() -> void:
 			sprite.material.set_shader_parameter("grid_size", occupied_platform.grid_size)
 			sprite.material.set_shader_parameter("screen_pixel", 256.0 / pitch)
 
+	if tier1_layer != null: tier1_layer.set_view_transform(_sprite_view_transform())
 	_sync_axes()
+
+func _sprite_view_transform() -> Transform2D:
+	return Transform2D(0.0, Vector2.ONE * pitch, 0.0, _point(Vector2.ZERO))
 
 func _sync_axes() -> void:
 	var enabled: bool = show_axes and show_guides and not complete_background and not board.is_empty()

@@ -101,7 +101,7 @@ func _run() -> void:
 	for frame in range(4):
 		await process_frame
 	scene._select_theme("coral_reef")
-	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.2", "theme selection opens redesigned Coral Reef")
+	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.3", "theme selection opens redesigned Coral Reef")
 	check((scene.board_view.coral_visuals.position + Vector2(0, scene.board_view.surface_depth())).is_equal_approx(scene.board_view._floor_point(Vector2.ZERO)), "reef ground and coral share the elevated surface above the placement grid")
 	check(scene.game.moves == 0 and scene.game.undo_left == 3, "theme does not change gameplay or helper budgets")
 	scene.game.board = block
@@ -116,6 +116,14 @@ func _run() -> void:
 	var ground: Sprite2D = scene.board_view.coral_visuals.registry[ground_key]
 	check(ground.material != null and ground.material.shader == scene.board_view.coral_visuals.GROUND_SURFACE, "new ground immediately uses shared rounded surface without growth reveal")
 	for event: Dictionary in scene.board_view.pattern.components.values():
+		if event.id.begins_with("arm_"):
+			var plan: Dictionary = scene.board_view.tier1_layer.plans["coral_reef/" + event.key]
+			var sprite: Sprite2D = scene.board_view.tier1_layer.presenter.renderer.nodes["sprite-presentation/coral_reef/" + event.key + "/base"]
+			var source_bounds := Rect2(sprite.texture.get_image().get_used_rect())
+			source_bounds.position -= Vector2.ONE * 0.5
+			var cell_bounds := Rect2(event.center - Vector2.ONE * 0.5, Vector2.ONE).grow(0.01)
+			check(cell_bounds.encloses(plan.base.transform * source_bounds), "Generated base stays in its owning cell")
+			continue
 		var sprite: Sprite2D = scene.board_view.coral_visuals.registry[event.key]
 		check(sprite.scale == Vector2.ONE, "no old scaling workaround: " + event.id)
 		if event.id.begins_with("arm_") or event.id.begins_with("fingers_") or event.id.begins_with("junction_"):

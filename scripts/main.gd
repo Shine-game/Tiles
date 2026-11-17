@@ -360,6 +360,7 @@ func _update_summaries(board: Array) -> void:
 
 func _surface_revision(theme: String) -> String:
 	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1"
+	if Themes.profile(theme).get("tier1_artwork", {}).get("status") == "active": revision += "/tier1-generative-v1"
 	if board_view.board_frame != null and board_view.board_frame.is_present():
 		revision += "/frame-" + board_view.board_frame.appearance
 	if theme == "zen_garden" and board_view.zen_visuals != null and board_view.zen_visuals.pond != null:

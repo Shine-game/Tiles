@@ -1,0 +1,32 @@
+{
+  "stage": 2,
+  "base_revision": "cb8b29e824e5c9a2df232d4f22bbfcc08c6481c0",
+  "engine_tested": "Godot 4.6.3.stable.official.7d41c59c4",
+  "project_target_engine": "Godot 4.7.2",
+  "headless_editor_import": "passed",
+  "metadata_loader_test": {
+    "checks": 260,
+    "failures": 0
+  },
+  "existing_pattern_assets_test": {
+    "checks": 39,
+    "failures": 0
+  },
+  "existing_theme_registry_test": {
+    "checks": 82,
+    "failures": 0
+  },
+  "artwork_inventory_test": {
+    "checks": 797,
+    "failures": 0
+  },
+  "catalogs_schema_validated": 4,
+  "production_geometries_loaded": 53,
+  "android_resource_pack_export": "passed",
+  "isolated_pack_loader_test": {
+    "checks": 260,
+    "failures": 0
+  },
+  "generator_or_renderer_activation_changed": false,
+  "apk_or_device_tested": false
+}

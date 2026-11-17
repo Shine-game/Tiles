@@ -130,7 +130,7 @@ func _run() -> void:
 			var image: Image = await capture(probe)
 			check(not image.is_invisible(), "GPU core rises only after incoming tube arrival")
 		var incoming := "W" if cell == Vector2i(5, 5) else "N"
-		var tube: Sprite2D = visuals.registry[Clock.key("T01_" + incoming, 1, cell)].node
+		var tube: Sprite2D = view.tier1_layer.presenter.renderer.nodes["sprite-presentation/clockwork/" + Clock.key("T01_" + incoming, 1, cell) + "/base"]
 		check(tube.material == null and tube.modulate.a == 1, "completed incoming tube stays visible before its later outward emission")
 	view.advance_growth(view.pattern.duration + 1)
 	check(not view.growing, "Place gate includes the recalculated downstream construction")

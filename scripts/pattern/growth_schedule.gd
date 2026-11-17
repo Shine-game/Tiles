@@ -54,3 +54,33 @@ static func shifted(event: Dictionary, elapsed: float, time_fields: Array = ["st
 	for field: String in time_fields:
 		if result.has(field): result[field] -= elapsed
 	return result
+
+static func field_arrival(fronts: Array, u: float) -> float:
+	var earliest := INF
+	for front: Dictionary in fronts:
+		earliest = minf(earliest, float(front.start) + absf(u - float(front.origin_u)) * float(front.seconds))
+	return earliest
+
+static func field_end(fronts: Array, from_u: float = 0.0, to_u: float = 1.0) -> float:
+	# The earliest-arrival envelope is piecewise linear. Its maximum is at
+	# a domain endpoint, source origin, or intersection of two valid branches.
+	var low := minf(from_u, to_u)
+	var high := maxf(from_u, to_u)
+	var points: Array = [low, high]
+	var branches: Array = []
+	for front: Dictionary in fronts:
+		var origin: float = front.origin_u
+		var seconds: float = front.seconds
+		if origin >= low and origin <= high: points.append(origin)
+		branches.append({"slope": -seconds, "offset": float(front.start) + origin * seconds, "low": low, "high": minf(high, origin)})
+		branches.append({"slope": seconds, "offset": float(front.start) - origin * seconds, "low": maxf(low, origin), "high": high})
+	for i in range(branches.size()):
+		for j in range(i):
+			var a: Dictionary = branches[i]
+			var b: Dictionary = branches[j]
+			if is_equal_approx(a.slope, b.slope): continue
+			var u: float = (b.offset - a.offset) / (a.slope - b.slope)
+			if u >= maxf(a.low, b.low) and u <= minf(a.high, b.high): points.append(u)
+	var finish := -INF
+	for u: float in points: finish = maxf(finish, field_arrival(fronts, u))
+	return finish

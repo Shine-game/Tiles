@@ -1,6 +1,7 @@
 class_name TileGrowth
 extends RefCounted
 
+const SpriteTiming = preload("res://scripts/pattern/sprite_growth.gd")
 const Connections = preload("res://scripts/pattern/connection_assembly.gd")
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
@@ -23,6 +24,8 @@ var edges: Array = []
 var flowers: Dictionary = {}
 var links: Array = []
 var duration := 0.0
+var sprite_growth_events: Dictionary = {}
+var sprite_visual_duration := 0.0
 var boundary_crossings: Dictionary = {}
 
 static func value(grid: Array, cell: Vector2i) -> int:
@@ -57,6 +60,8 @@ static func is_flower(grid: Array, corner: Vector2i, color: int) -> bool:
 	return Topology.is_formation(grid, corner - Vector2i.ONE, color)
 
 func build(before: Array, after: Array) -> void:
+	sprite_growth_events.clear()
+	sprite_visual_duration = 0.0
 	board = after.duplicate(true)
 	arrivals.clear()
 	edges.clear()
@@ -166,3 +171,16 @@ func flower_link_fraction() -> float:
 
 func tier2_records() -> Dictionary:
 	return Formations.bind_records(board, flowers, "", flower_seconds(), Vector2i.ONE)
+
+# Add decorative lifetimes only after structural scheduling has completed.
+# The shared component state extends its visual clock from these blocking events;
+# tier 2/3 continue to read the original structural model duration/events.
+func schedule_sprite_growth(plans: Dictionary, bindings: Dictionary, timeline: RefCounted, options: Dictionary = {}) -> Dictionary:
+	if not timeline is SpriteTiming: return {"ok": false, "errors": ["Expected a PatternSpriteGrowth timeline"]}
+	var timing := options.duplicate(true)
+	timing.structural_duration = duration
+	var result: Dictionary = timeline.reconcile(plans, bindings, timing)
+	if result.ok:
+		sprite_growth_events = result.events.duplicate(true)
+		sprite_visual_duration = result.visual_duration
+	return result

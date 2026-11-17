@@ -1,0 +1,20 @@
+{
+  "stage": 5,
+  "engine_tested": "4.6.3.stable",
+  "project_target": "4.7.2",
+  "checks": {
+    "presenter": 131,
+    "shader_pixels_opengl_llvmpipe": 7,
+    "pattern_assets": 39,
+    "pattern_state": 218,
+    "sprite_metadata": 260,
+    "sprite_planner": 638,
+    "sprite_growth": 234,
+    "growth": 100,
+    "theme_registry": 82,
+    "isolated_export_pack_presenter": 131
+  },
+  "failures": 0,
+  "pack_export": "Android resource pack, not APK/device validation",
+  "activation": "staged; theme activation is step 6"
+}

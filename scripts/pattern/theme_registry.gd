@@ -63,6 +63,29 @@ static func validate(data: Variant) -> Array:
 					if not tiers.has(tier): errors.append(id + ": missing tier " + tier)
 				for tier: String in tiers:
 					if tier not in ["0", "1", "2", "3"] or not project_file(tiers[tier], "json"): errors.append(id + ": invalid set path for tier " + tier)
+		if profile.has("tier1_artwork"):
+			var artwork: Variant = profile.tier1_artwork
+			if not artwork is Dictionary or artwork.get("status") not in ["staged", "active"] or not project_file(artwork.get("catalog"), "json"):
+				errors.append(id + ": invalid tier1_artwork catalog link")
+			else:
+				var layout: Variant = artwork.get("source_layout")
+				if artwork.status == "active" and layout == null: errors.append(id + ": active tier1_artwork needs source_layout")
+				if layout != null and layout not in ["components", "edge_halves", "shared_edges"]: errors.append(id + ": unsupported source_layout")
+				if layout == "components":
+					var ports: Variant = artwork.get("component_ports")
+					if not ports is Dictionary or ports.is_empty(): errors.append(id + ": components layout needs component_ports")
+					else:
+						for port: Variant in ports.values():
+							if not (port is String and not port.is_empty()) and not ((port is int or port is float) and port == floorf(port) and port >= 0 and port <= 3): errors.append(id + ": invalid component port")
+				if artwork.has("size_cells"):
+					var size: Variant = artwork.size_cells
+					if not size is Array or size.size() != 2 or not size.all(func(n): return (n is int or n is float) and is_finite(n) and n > 0): errors.append(id + ": invalid sprite size_cells")
+				for field: String in ["stroke_seconds", "duration_sec"]:
+					if artwork.has(field) and (not (artwork[field] is int or artwork[field] is float) or not is_finite(float(artwork[field])) or artwork[field] < 0): errors.append(id + ": invalid " + field)
+				for field: String in ["layer_z_index", "decoration_z_index", "seed"]:
+					if artwork.has(field) and (not (artwork[field] is int or artwork[field] is float) or not is_finite(float(artwork[field])) or artwork[field] != floorf(artwork[field])): errors.append(id + ": invalid " + field)
+				if artwork.has("logical_color") and (not (artwork.logical_color is int or artwork.logical_color is float) or artwork.logical_color != floorf(artwork.logical_color) or artwork.logical_color < 1 or artwork.logical_color > 2): errors.append(id + ": invalid sprite logical_color")
+				if artwork.has("family") and (not artwork.family is String or artwork.family.is_empty()): errors.append(id + ": invalid sprite family")
 		if profile.get("environment") is Dictionary and profile.environment.has("catalog"):
 			if not project_file(profile.environment.catalog, "json"): errors.append(id + ": invalid environment catalog")
 	if not data.get("frame_geometry") is Dictionary: errors.append("Missing shared frame geometry")
@@ -116,3 +139,6 @@ static func palette_pairs() -> Array:
 		pair.colors = [Color(pair.colors[0]), Color(pair.colors[1])]
 		pair.floor = Color(pair.floor)
 	return pairs
+
+static func sprite_catalog_path(id: String) -> String:
+	return profile(id).get("tier1_artwork", {}).get("catalog", "")

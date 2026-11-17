@@ -105,7 +105,7 @@ func _run() -> void:
 	check(group.get_child(1).modulate.a == 1 and group.get_child(2).modulate.a == 1 and visuals.pending.is_empty(), "Endpoint layers settle together and release the growth gate")
 	var exports := FileAccess.get_file_as_string("res://export_presets.cfg")
 	check(exports.contains("art/themes/zen_garden/sets/*.json"), "Production Zen sets are packaged for Android")
-	check(preload("res://scripts/palette.gd").theme_version() == "0.11", "The new endpoint appearance has a distinct gallery version")
+	check(preload("res://scripts/palette.gd").theme_version() == "0.12", "The new endpoint appearance has a distinct gallery version")
 	visuals.clear()
 	check(visuals.ordinary_components.nodes.is_empty(), "Full reset clears shared centerpiece ownership")
 	visuals.queue_free()

@@ -14,6 +14,8 @@ var diagnostics: Array = []
 var kinds: Dictionary = {}
 var state_bindings: Dictionary = {}
 var external_lifecycle: Dictionary = {}
+var mask_lifecycle: Dictionary = {}
+var mask_progress: Dictionary = {}
 
 static func register_node_provider(id: String, factory: Callable) -> void:
 	node_providers[id] = factory
@@ -48,6 +50,25 @@ static func material(shader: Shader, uniforms: Dictionary = {}) -> ShaderMateria
 
 static func configure_sprite(sprite: Sprite2D, spec: Dictionary) -> void:
 	if spec.has("asset"): sprite.texture = Assets.resolve(spec.asset, spec.get("asset_root", "res://"))
+	if spec.has("source_transform"):
+		# Metadata coordinates address integer pixel centers; Sprite2D's native
+		# uncentered quad addresses pixel edges, hence the half-pixel offset.
+		sprite.centered = false
+		sprite.offset = Vector2(-0.5, -0.5)
+		sprite.flip_h = false
+		sprite.flip_v = false
+		sprite.transform = spec.source_transform
+		sprite.set_meta("pattern_source_transform", true)
+		if spec.has("texture_filter"): sprite.texture_filter = spec.texture_filter
+		if spec.has("z_index"): sprite.z_index = spec.z_index
+		return
+	if sprite.has_meta("pattern_source_transform"):
+		sprite.transform = Transform2D.IDENTITY
+		sprite.centered = true
+		sprite.offset = Vector2.ZERO
+		sprite.flip_h = false
+		sprite.flip_v = false
+		sprite.remove_meta("pattern_source_transform")
 	var pixels: float = spec.get("pixels_per_cell", 256.0)
 	if spec.has("position_cells"): sprite.position = vector(spec.position_cells) * pixels
 	if spec.has("position_px"): sprite.position = vector(spec.position_px)
@@ -108,6 +129,7 @@ func ensure(id: String, spec: Dictionary, parent: Node) -> CanvasItem:
 	if provider == "sprite":
 		placement.asset = Assets.resolve(spec.asset, spec.get("asset_root", "res://"), diagnostics)
 		if placement.asset == null: return null
+	if nodes.has(id) and not is_instance_valid(nodes[id]): release(id)
 	if nodes.has(id) and kinds[id] != provider: remove(id)
 	if not nodes.has(id):
 		var node: CanvasItem
@@ -126,6 +148,8 @@ func ensure(id: String, spec: Dictionary, parent: Node) -> CanvasItem:
 		nodes[id] = node
 		kinds[id] = provider
 	external_lifecycle[id] = spec.get("lifecycle", "fade") == "external"
+	mask_lifecycle[id] = spec.get("lifecycle", "fade") == "reveal"
+	if mask_lifecycle[id] and not state_bindings.has(id): nodes[id].visible = false
 	var result: CanvasItem = nodes[id]
 	if result.get_parent() != parent: result.reparent(parent, false)
 	if result is Sprite2D: configure_sprite(result, placement)
@@ -135,6 +159,7 @@ func ensure(id: String, spec: Dictionary, parent: Node) -> CanvasItem:
 		if spec.has("rotation_radians") or spec.has("quarter_turns"): result.rotation = Assembly.rotation(spec)
 		if spec.has("scale"): result.scale = vector(spec.scale, Vector2.ONE)
 		if result is Control and spec.has("size_cells"): result.size = vector(spec.size_cells) * float(spec.get("pixels_per_cell", 256.0))
+		if spec.has("source_transform") and result is Node2D: result.transform = spec.source_transform
 		if spec.has("texture_filter"): result.texture_filter = spec.texture_filter
 		if spec.has("z_index"): result.z_index = spec.z_index
 	if spec.has("material"):
@@ -150,8 +175,13 @@ func reveal(id: String, event: Dictionary, clock_uniform: String, clear_on_settl
 	active[id] = event
 	reveal_bindings[id] = {"clock_uniform": clock_uniform, "clear_on_settled": clear_on_settled}
 
+func stop_reveal(id: String) -> void:
+	active.erase(id)
+	reveal_bindings.erase(id)
+
 func advance(clock: float, state = null) -> void:
 	for id: String in active.keys():
+		if nodes.has(id) and not is_instance_valid(nodes[id]): release(id)
 		if not nodes.has(id):
 			active.erase(id)
 			reveal_bindings.erase(id)
@@ -165,10 +195,23 @@ func advance(clock: float, state = null) -> void:
 		elif node.material != null: node.material.set_shader_parameter(reveal_bindings[id].clock_uniform, clock)
 	if state != null:
 		for id: String in nodes.keys():
+			if not is_instance_valid(nodes[id]):
+				release(id)
+				continue
 			if external_lifecycle.get(id, false): continue
 			if state.records.has(id):
 				state_bindings[id] = true
-				nodes[id].modulate.a = state.records[id].progress
+				if mask_lifecycle.get(id, false):
+					var record: Dictionary = state.records[id]
+					var node: CanvasItem = nodes[id]
+					node.visible = record.phase != "waiting"
+					node.modulate.a = record.progress if record.phase == "retiring" else 1.0
+					if record.phase != "retiring": mask_progress[id] = record.progress
+					if record.phase == "settled":
+						node.material = null
+						stop_reveal(id)
+					elif node.material != null: node.material.set_shader_parameter("reveal_progress", mask_progress.get(id, 1.0))
+				else: nodes[id].modulate.a = state.records[id].progress
 			elif state_bindings.has(id): remove(id)
 
 func sync(parts: Dictionary, parent: Node, state = null) -> bool:
@@ -210,14 +253,16 @@ func compose(loaded: Dictionary, composition: String, parent: Node, state = null
 func release(id: String) -> CanvasItem:
 	# A theme retirement hook can keep drawing a removed node without the
 	# common owner mistaking it for a surviving construction component.
-	var node: CanvasItem = nodes.get(id)
+	var node: Variant = nodes.get(id)
 	nodes.erase(id)
 	kinds.erase(id)
 	active.erase(id)
 	reveal_bindings.erase(id)
 	state_bindings.erase(id)
 	external_lifecycle.erase(id)
-	return node
+	mask_lifecycle.erase(id)
+	mask_progress.erase(id)
+	return node if is_instance_valid(node) else null
 
 func remove(id: String) -> void:
 	var node := release(id)

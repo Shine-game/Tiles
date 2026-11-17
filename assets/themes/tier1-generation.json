@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "lighting": {
+    "world_direction": [
+      -1,
+      -1
+    ],
+    "selection": "maximize_dot_product",
+    "tie_break": [
+      "no_flip",
+      "flip_x",
+      "flip_y",
+      "flip_xy"
+    ],
+    "connection_alignment_has_priority": true
+  },
+  "defaults": {
+    "frame_origin": "canvas_center",
+    "frame_up": "one_pixel_above_origin",
+    "allow_flip_x": false,
+    "allow_flip_y": false,
+    "spawn": {
+      "mode": "direct",
+      "count": [
+        0,
+        0
+      ],
+      "minimum_spacing_px": 0,
+      "duration_sec": 0.35
+    },
+    "orientation": {
+      "mode": "relative",
+      "angle_deg": 0,
+      "jitter_deg": 0
+    },
+    "variation": {
+      "weight": 1,
+      "scale": [
+        1,
+        1
+      ]
+    },
+    "constraints": {
+      "inside_canvas": false,
+      "edge_margin_px": 0,
+      "base_overlap": "allow",
+      "base_gap_px": 0,
+      "avoid_deco_overlap": false
+    }
+  },
+  "placement": {
+    "maximum_decorations_per_anchor": 1,
+    "layer": "overlay",
+    "candidate_order": "seeded_shuffle",
+    "selection": "without_replacement",
+    "unmet_count": "place_fewer_and_report"
+  },
+  "loading": {
+    "allow_review_assets": true,
+    "allow_draft_assets": false
+  },
+  "decoration_mirroring": {
+    "selection": "seeded_uniform_among_allowed_forms",
+    "no_lighting_forms": [
+      "identity",
+      "flip_x_if_allowed",
+      "flip_y_if_allowed",
+      "flip_xy_if_both_allowed"
+    ],
+    "with_lighting": "constrain_by_placement_then_maximize_light_score_then_seeded_tie_break",
+    "weight_applies_to_artwork_before_mirror_selection": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "tiles.sprite-catalog.v1",
+  "id": "coral-tier1-artwork",
+  "theme_id": "coral_reef",
+  "artwork_theme": "coral",
+  "tier": 1,
+  "status": "active",
+  "coordinate_system": {
+    "units": "source_pixels",
+    "origin": "top_left",
+    "dimensions": "per_sprite_canvas_px"
+  },
+  "families": {
+    "default": {
+      "logical_colors": {
+        "1": {
+          "image_variant": "color1",
+          "treatment": "salmon"
+        },
+        "2": {
+          "image_variant": "color2",
+          "treatment": "turquoise"
+        }
+      },
+      "bases": [
+        "../artwork/tier1/coral_tier1_vine_color1_basic.json"
+      ],
+      "decorations": [
+        "../artwork/tier1/coral_tier1_deco_color1_1.json",
+        "../artwork/tier1/coral_tier1_deco_color1_10.json",
+        "../artwork/tier1/coral_tier1_deco_color1_11.json",
+        "../artwork/tier1/coral_tier1_deco_color1_12.json",
+        "../artwork/tier1/coral_tier1_deco_color1_2.json",
+        "../artwork/tier1/coral_tier1_deco_color1_3.json",
+        "../artwork/tier1/coral_tier1_deco_color1_4.json",
+        "../artwork/tier1/coral_tier1_deco_color1_5.json",
+        "../artwork/tier1/coral_tier1_deco_color1_6.json",
+        "../artwork/tier1/coral_tier1_deco_color1_7.json",
+        "../artwork/tier1/coral_tier1_deco_color1_8.json",
+        "../artwork/tier1/coral_tier1_deco_color1_9.json"
+      ]
+    }
+  }
+}
