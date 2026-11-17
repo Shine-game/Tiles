@@ -31,18 +31,18 @@
   },
   "spawn": {
     "count": [
-      10,
-      12
+      6,
+      8
     ],
     "minimum_spacing_px": 0,
     "group_count_ranges": {
       "upper": [
-        5,
-        6
+        3,
+        4
       ],
       "lower": [
-        5,
-        6
+        3,
+        4
       ]
     }
   },

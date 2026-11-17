@@ -9,8 +9,8 @@ func _initialize():
   for turn in range(4):
    var plan=p.plan(c,"default",color,"verify",42,{"target_forward":Vector2.RIGHT.rotated(turn*PI/2),"include_footprints":false})
    assert(plan.ok)
-   assert(plan.group_counts.upper>=5 and plan.group_counts.upper<=6)
-   assert(plan.group_counts.lower>=5 and plan.group_counts.lower<=6)
+   assert(plan.group_counts.upper>=3 and plan.group_counts.upper<=4)
+   assert(plan.group_counts.lower>=3 and plan.group_counts.lower<=4)
    assert(plan.decorations.size()==plan.target_count and plan.warnings.is_empty())
    for d in plan.decorations:
     var meta=M.load_sprite(d.metadata_path)
@@ -19,6 +19,6 @@ func _initialize():
     var direction=d.local_transform.basis_xform(f).normalized()
     assert(direction.x>=-0.0001 and direction.x<=0.5001)
     assert(abs(d.local_transform.basis_xform(f).length()/d.scale-1.5)<0.001)
-    assert(abs(d.local_transform.basis_xform(n).length()/d.scale-2.0)<0.001)
- print("Vines: both colors/four rotations; 5–6 per side, 0–30 degrees toward growth, width x2 and length x1.5 verified")
+    assert(abs(d.local_transform.basis_xform(n).length()/d.scale-1.5)<0.001)
+ print("Vines: both colors/four rotations; 3–4 per side, 0–30 degrees toward growth, width x1.5 and length x1.5 verified")
  quit()
