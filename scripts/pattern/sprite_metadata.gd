@@ -128,12 +128,18 @@ static func _semantic(data: Dictionary) -> Array:
 	if data.kind == "decoration":
 		for field: String in ["frame", "anchors", "connections", "orientation"]:
 			if data.has(field): errors.append(field + ": belongs on a base or anchor, not a decoration")
-		for field: String in ["count", "minimum_spacing_px", "group_counts"]:
+		for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]:
 			if data.get("spawn", {}).has(field): errors.append("spawn." + field + ": belongs on a base")
 		if data.get("spawn", {}).get("mode") == "progressive" and not data.has("direction"): errors.append("Progressive decoration requires an explicit direction marker")
 	else:
 		if data.get("spawn", {}).has("reveal_mask"): errors.append("spawn.reveal_mask belongs on a decoration")
 		var quotas: Dictionary = data.get("spawn", {}).get("group_counts", {})
+		quotas = quotas.duplicate()
+		for group: String in data.get("spawn", {}).get("group_count_ranges", {}):
+			var limits: Array = data.spawn.group_count_ranges[group]
+			if limits[0] > limits[1]: errors.append("Group count range must be ascending")
+			if quotas.has(group): errors.append("Group cannot have both fixed and ranged counts")
+			quotas[group] = limits[1]
 		for group: String in quotas:
 			if group.is_empty(): errors.append("spawn.group_counts: group name cannot be empty")
 			var capacity := 0
@@ -153,7 +159,7 @@ static func _semantic(data: Dictionary) -> Array:
 				if item.has("forward") and _vector(item.forward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero forward vector")
 				if item.has("toward") and _vector(item.toward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero connection vector")
 				for field: String in ["spawn", "orientation"]: _ordered_ranges(item.get(field, {}), collection + "/" + item.id + "." + field, errors)
-				for field: String in ["count", "minimum_spacing_px", "group_counts"]:
+				for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]:
 					if item.get("spawn", {}).has(field): errors.append(collection + "/" + item.id + ": " + field + " belongs on the base")
 	if data.status == "ready" and not data.get("authoring", {}).get("pending", []).is_empty(): errors.append("Ready artwork has unresolved authoring.pending entries")
 	return errors
@@ -233,6 +239,11 @@ static func load_sprite(source: Variant, root: String = "res://", settings_sourc
 	var resolved := {"origin": origin, "forward": _pair(forward.normalized()), "lighting": _pair(light.normalized()), "has_lighting": data.has("lighting"), "spawn": _merge(defaults.spawn, data.get("spawn", {})), "orientation": _merge(defaults.orientation, data.get("orientation", {})), "variation": _merge(defaults.variation, data.get("variation", {})), "constraints": _merge(defaults.constraints, data.get("constraints", {})), "transforms": _merge({"allow_flip_x": defaults.allow_flip_x, "allow_flip_y": defaults.allow_flip_y}, data.get("transforms", {}))}
 	var reserved := 0
 	for amount: Variant in resolved.spawn.get("group_counts", {}).values(): reserved += int(amount)
+	var reserved_max := reserved
+	for limits: Array in resolved.spawn.get("group_count_ranges", {}).values():
+		reserved += int(limits[0])
+		reserved_max += int(limits[1])
+	if reserved_max > resolved.spawn.count[1]: errors.append("Group maximum counts exceed maximum total")
 	if reserved > resolved.spawn.count[0]: errors.append("spawn.group_counts: reserved counts exceed minimum total count")
 	var anchors: Array = []
 	for anchor: Dictionary in data.get("anchors", []):
@@ -314,7 +325,7 @@ static func rules(base: Dictionary, decoration: Dictionary, anchor: Dictionary, 
 	var defaults: Dictionary = settings.defaults
 	var animation: Dictionary = defaults.spawn.duplicate(true)
 	for item: Dictionary in [decoration, base, anchor]: animation.merge(item.get("spawn", {}), true)
-	for field: String in ["count", "minimum_spacing_px", "group_counts"]: animation.erase(field)
+	for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]: animation.erase(field)
 	if animation.mode == "progressive" and not decoration.has("direction"): return _failure("spawn", ["Progressive override requires an explicit decoration direction"])
 	var orientation := _merge(_merge(defaults.orientation, base.get("orientation", {})), anchor.get("orientation", {}))
 	var variation := _merge(_merge(defaults.variation, base.get("variation", {})), decoration.get("variation", {}))

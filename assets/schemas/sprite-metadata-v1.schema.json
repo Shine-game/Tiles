@@ -145,6 +145,19 @@
             "minimum": 0,
             "maximum": 2147483647
           }
+        },
+        "group_count_ranges": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
         }
       },
       "required": [],
@@ -223,6 +236,15 @@
           "exclusiveMinimum": 0
         },
         "scale": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0.001
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "growth_scale": {
           "type": "array",
           "items": {
             "type": "number",

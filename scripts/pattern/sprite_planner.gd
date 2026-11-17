@@ -156,6 +156,14 @@ func _decoration(base: Dictionary, base_transform: Transform2D, variant: String,
 	for form: Vector2 in forms:
 		var rotation := desired if mode == "random" else desired - (_vector(decoration.resolved.forward) * form).angle()
 		var local := _matrix(rotation, form * scale, _vector(decoration.resolved.origin), _vector(anchor.position))
+		if rules.variation.has("growth_scale"):
+			var forward := _vector(decoration.resolved.forward)
+			var across := Vector2(-forward.y, forward.x)
+			var axes := Transform2D(across, forward, Vector2.ZERO)
+			var factors := _vector(rules.variation.growth_scale)
+			var stretch := axes * Transform2D(Vector2(factors.x, 0), Vector2(0, factors.y), Vector2.ZERO) * axes.affine_inverse()
+			local = local * stretch
+			local.origin = _vector(anchor.position) - local.basis_xform(_vector(decoration.resolved.origin))
 		var needs_raster: bool = include_footprints or rules.constraints.get("inside_canvas", false) or "avoid" in rules.constraints.get("base_overlap_checks", [])
 		var footprint := _footprint.raster(decoration.images[variant], local, _vector(decoration.resolved.origin)) if needs_raster else _footprint.summary(decoration.images[variant], local, _vector(decoration.resolved.origin))
 		reason = _footprint.rejection(footprint, base.images[variant], Vector2i(_vector(base.canvas_px)), _vector(anchor.position), rules.constraints, occupied)
@@ -219,7 +227,14 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 	var occupied: Dictionary = {}
 	var positions: Array[Vector2] = []
 	var rejections: Dictionary = {}
-	var quotas: Dictionary = base.resolved.spawn.get("group_counts", {})
+	var quotas: Dictionary = base.resolved.spawn.get("group_counts", {}).duplicate()
+	for group: String in base.resolved.spawn.get("group_count_ranges", {}):
+		var limits: Array = base.resolved.spawn.group_count_ranges[group]
+		quotas[group] = _rng(seed, component_id, "group/" + group).randi_range(int(limits[0]), int(limits[1]))
+	var reserved := 0
+	for amount: Variant in quotas.values(): reserved += int(amount)
+	target = maxi(target, reserved)
+	if not base.resolved.spawn.get("group_count_ranges", {}).is_empty() and anchors.all(func(a): return quotas.has(a.get("group", ""))): target = reserved
 	var requests: Array = []
 	var group_names: Array = quotas.keys()
 	group_names.sort()

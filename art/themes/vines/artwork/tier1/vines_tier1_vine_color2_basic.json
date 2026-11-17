@@ -31,10 +31,20 @@
   },
   "spawn": {
     "count": [
-      2,
-      4
+      10,
+      12
     ],
-    "minimum_spacing_px": 25
+    "minimum_spacing_px": 0,
+    "group_count_ranges": {
+      "upper": [
+        5,
+        6
+      ],
+      "lower": [
+        5,
+        6
+      ]
+    }
   },
   "anchors": [
     {
@@ -52,10 +62,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.055118
+      "growth_at": 0.055118,
+      "group": "upper"
     },
     {
       "id": "upper_02",
@@ -72,10 +83,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.149606
+      "growth_at": 0.149606,
+      "group": "upper"
     },
     {
       "id": "upper_03",
@@ -92,10 +104,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.244094
+      "growth_at": 0.244094,
+      "group": "upper"
     },
     {
       "id": "upper_04",
@@ -112,10 +125,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.338583
+      "growth_at": 0.338583,
+      "group": "upper"
     },
     {
       "id": "upper_05",
@@ -132,10 +146,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.433071
+      "growth_at": 0.433071,
+      "group": "upper"
     },
     {
       "id": "upper_06",
@@ -152,10 +167,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.527559
+      "growth_at": 0.527559,
+      "group": "upper"
     },
     {
       "id": "upper_07",
@@ -172,10 +188,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.622047
+      "growth_at": 0.622047,
+      "group": "upper"
     },
     {
       "id": "upper_08",
@@ -192,10 +209,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.716535
+      "growth_at": 0.716535,
+      "group": "upper"
     },
     {
       "id": "upper_09",
@@ -212,10 +230,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.811024
+      "growth_at": 0.811024,
+      "group": "upper"
     },
     {
       "id": "upper_10",
@@ -232,10 +251,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": 15,
         "jitter_deg": 15
       },
-      "growth_at": 0.905512
+      "growth_at": 0.905512,
+      "group": "upper"
     },
     {
       "id": "lower_01",
@@ -252,10 +272,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.055118
+      "growth_at": 0.055118,
+      "group": "lower"
     },
     {
       "id": "lower_02",
@@ -272,10 +293,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.149606
+      "growth_at": 0.149606,
+      "group": "lower"
     },
     {
       "id": "lower_03",
@@ -292,10 +314,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.244094
+      "growth_at": 0.244094,
+      "group": "lower"
     },
     {
       "id": "lower_04",
@@ -312,10 +335,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.338583
+      "growth_at": 0.338583,
+      "group": "lower"
     },
     {
       "id": "lower_05",
@@ -332,10 +356,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.433071
+      "growth_at": 0.433071,
+      "group": "lower"
     },
     {
       "id": "lower_06",
@@ -352,10 +377,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.527559
+      "growth_at": 0.527559,
+      "group": "lower"
     },
     {
       "id": "lower_07",
@@ -372,10 +398,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.622047
+      "growth_at": 0.622047,
+      "group": "lower"
     },
     {
       "id": "lower_08",
@@ -392,10 +419,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.716535
+      "growth_at": 0.716535,
+      "group": "lower"
     },
     {
       "id": "lower_09",
@@ -412,10 +440,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.811024
+      "growth_at": 0.811024,
+      "group": "lower"
     },
     {
       "id": "lower_10",
@@ -432,10 +461,11 @@
       ],
       "orientation": {
         "mode": "relative",
-        "angle_deg": 0,
+        "angle_deg": -15,
         "jitter_deg": 15
       },
-      "growth_at": 0.905512
+      "growth_at": 0.905512,
+      "group": "lower"
     }
   ],
   "authoring": {

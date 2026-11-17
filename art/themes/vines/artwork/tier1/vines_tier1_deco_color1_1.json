@@ -30,6 +30,10 @@
     "scale": [
       0.5,
       0.75
+    ],
+    "growth_scale": [
+      2,
+      1.5
     ]
   },
   "authoring": {

@@ -203,3 +203,18 @@ infeasible groups report shortfalls rather than bypassing constraints.
 Plans with reservations return the actual `group_counts`; grouped decorations
 carry `anchor_group`. Bases that omit quotas keep their existing selection order.
 The rule is universal and contains no coral-specific planner logic.
+
+Vines use `spawn.group_count_ranges: {"upper":[5,6], "lower":[5,6]}`
+for independently seeded per-side counts. Fixed and ranged quotas cannot share a
+name. Range minima must fit the minimum total and maxima must fit the maximum.
+When all anchors belong to ranged groups, the total is the sum of the sampled
+group counts. Vines retain ten candidate anchors on each side; spacing is zero
+so these requested counts are available on the existing closely spaced pairs.
+
+Optional `variation.growth_scale: [width, length]` stretches decoration geometry
+across and along its marked native growth axis, about its attachment point,
+before orientation. Vines use `[2,1.5]` on both colors, retaining the existing
+random uniform size factor. The complete matrix also carries masks and alpha
+checks. Upper leaves angle 0–30 degrees clockwise from outward perpendicular;
+lower leaves angle 0–30 degrees counterclockwise, so both lean toward native
+stem growth without leaning backward.
