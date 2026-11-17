@@ -1,0 +1,44 @@
+[
+  {
+    "shape": "bend",
+    "color": "copper",
+    "source": "H01_valve.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color1_basic.png",
+    "sha256": "bfbd84f6cbbb9b76f02dd6c2c24ef6a05112f75f9d777389b91f166f0192f4bd"
+  },
+  {
+    "shape": "bend",
+    "color": "gunmetal",
+    "source": "H01_valve.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color2_basic.png",
+    "sha256": "e4e45b75d231e1c5d0a96731e396030a98f4f26e5971749ebe6b8db01fe4f3f4"
+  },
+  {
+    "shape": "t",
+    "color": "copper",
+    "source": "H02_rotating.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color1_basic.png",
+    "sha256": "81b65c27d80d11f471394ef9c29f445371b1e3f3e5752ed3ad7ea57ed039117a"
+  },
+  {
+    "shape": "t",
+    "color": "gunmetal",
+    "source": "H02_rotating.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color2_basic.png",
+    "sha256": "ed52c2159c4d414f3be7952300f7d38b645be2f0a96517ebb662d0d34bdce7e2"
+  },
+  {
+    "shape": "cross",
+    "color": "copper",
+    "source": "H03_exhaust.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color1_basic.png",
+    "sha256": "7e0a7c8eda64a5f5ecc5ecb92ce8c6d57ffdc955a707be7147cf7a746203a1fa"
+  },
+  {
+    "shape": "cross",
+    "color": "gunmetal",
+    "source": "H03_exhaust.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color2_basic.png",
+    "sha256": "e2dcccbe86330fefe4b046f9aa635a8afa14f6d60ba67c3d2418962e45f26290"
+  }
+]

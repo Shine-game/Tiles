@@ -35,7 +35,7 @@ func run() -> void:
 		board.set_process(false)
 		var layer = board.tier1_layer
 		check(layer.diagnostics.is_empty(), "Live preparation/presentation succeeds: " + theme + str(layer.diagnostics))
-		check(not layer.plans.is_empty() and not board.pattern.sprite_growth_events.is_empty(), "Live plans and decoration events: " + theme)
+		check(not layer.plans.is_empty() and (not board.junction_layer.events.is_empty() if theme == "clockwork" else not board.pattern.sprite_growth_events.is_empty()), "Live plans and overlays: " + theme)
 		check(board.construction_state.schedule.duration >= board.pattern.sprite_visual_duration, "Gate includes decoration tails: " + theme)
 		var expected := Sources.descriptors(board.pattern, theme, empty)
 		check(layer.plans.size() == expected.size(), "Every structural attachment is presented exactly once: " + theme)

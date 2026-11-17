@@ -25,7 +25,23 @@ func run():
      rings+=1
      assert((deco.transform*Vector2(deco.attachment[0],deco.attachment[1])).is_equal_approx(Vector2(2.5,2.5)))
      assert(deco.metadata_path.ends_with("deco_color1_1.json"))
-   assert(rings==(1 if mask in [1,2,4,8,5,10] else 0))
+   assert(rings==(1 if mask in [5,10] else 0))
+   var shape=Topology.shape(mask)
+   var id="junction/clockwork/%d/2/2/%s"%[color,shape]
+   var eligible=shape in ["bend","t","cross"]
+   assert(view.junction_layer.events.has(id)==eligible)
+   var core_id="C01/%d/2/2"%color
+   if mask in [0,1,2,4,8]:assert(view.clockwork_visuals.registry.has(core_id))
+   if eligible:
+    assert(not view.clockwork_visuals.registry.has(core_id))
+    var config=view.junction_layer.configuration("clockwork")
+    var record=view.junction_layer.load_sprite(config.shapes[shape][str(color)])
+    var spec=view.junction_layer.specs[id]
+    assert(record.scale==1.0 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0)
+    assert(record.texture.resource_path.ends_with("color%d_basic.png"%color))
+    assert((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)))
+    assert(spec.material==null and view.junction_layer.renderer.nodes[id].visible)
+
  view.queue_free()
- print("Clockwork center rings: both colors, all 16 masks; exactly one centered fixed ring for straights/endpoints only")
+ print("Clockwork center rings: both colors, all 16 masks; exactly one centered fixed ring for straight interiors only; no rings on starting cores or endpoints")
  quit()

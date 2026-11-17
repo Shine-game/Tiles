@@ -1,0 +1,16 @@
+{
+  "engine": "Godot 4.6.3",
+  "source_and_exported_pack": "Both colors and all 16 masks pass core preservation, no core/endpoint rings, straight-only fixed rings, bend/T/X binding, center, 100 percent size, free rotation and original color checks.",
+  "shared_junction_checks": 231,
+  "theme_registry_checks": 82,
+  "rendered_theme_checks": 13,
+  "integration_checks": 386,
+  "failures": 0,
+  "original_png_bytes_preserved": true,
+  "source_canvas": [
+    512,
+    512
+  ],
+  "note": "Supplied PNGs have substantial transparent padding; canvas fitting at 100 percent preserves that padding.",
+  "apk_or_device_tested": false
+}

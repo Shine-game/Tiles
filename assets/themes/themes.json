@@ -119,7 +119,7 @@
     },
     "clockwork": {
       "name": "Clockwork Workshop",
-      "version": "1.2",
+      "version": "1.3",
       "colors": [
         "bc783d",
         "59676e"
@@ -168,15 +168,29 @@
         },
         "layer_z_index": 1,
         "center_join_masks": [
-          1,
-          2,
-          4,
-          8,
           5,
           10
         ],
         "fixed_decoration_path": "res://art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_1.json",
         "decoration_z_index": 3
+      },
+      "junctions": {
+        "enabled": true,
+        "z_index": 6,
+        "shapes": {
+          "bend": {
+            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color1_basic.json",
+            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color2_basic.json"
+          },
+          "t": {
+            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color1_basic.json",
+            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color2_basic.json"
+          },
+          "cross": {
+            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color1_basic.json",
+            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color2_basic.json"
+          }
+        }
       }
     },
     "vines": {
