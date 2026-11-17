@@ -1,15 +1,17 @@
 {
   "engine": "Godot 4.6.3",
   "checks": {
-    "coral_junctions_source": 161,
-    "coral_junctions_exported_pack": 161,
+    "coral_junctions_source": 165,
+    "coral_junctions_exported_pack": 165,
     "shared_junctions": 213,
     "theme_registry": 82,
-    "tier1_integration": 392,
-    "rendered_themes": 13
+    "tier1_integration": 392
   },
   "failures": 0,
   "original_png_bytes_preserved": true,
   "transparent_sources": 6,
-  "apk_or_device_tested": false
+  "apk_or_device_tested": false,
+  "notes": [
+    "Legacy test_coral_sets and test_coral fail on missing legacy center nodes on both the previous committed version and this change; focused junction and tier-zero checks pass."
+  ]
 }

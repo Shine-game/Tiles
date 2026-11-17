@@ -36,12 +36,19 @@ func run():
    var record=view.junction_layer.load_sprite(config.shapes[shape][str(color)])
    var spec=view.junction_layer.specs[id]
    check(record.path.contains("color%d"%color),"Coral color maps to its own archive")
-   check(record.scale==1.0 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0,"Full scale and unrestricted rotation")
+   check(record.scale==1.5 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0,"150 percent scale and unrestricted rotation")
    check(spec.material==null,"Original salmon and teal artwork is preserved")
    check((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)),"Canvas center maps to square center")
    check(not view.coral_visuals.registry.has("core/%d/2/2"%color),"Old coral center removed")
    check(not view.tier1_layer.plans.is_empty(),"Underlying growth remains")
    check(view.junction_layer.renderer.nodes[id].visible,"Settled junction is visible")
+ for color in [1,2]:
+  var isolated=Rules.empty_board(5)
+  isolated[2][2]=color
+  view.show_settled(isolated)
+  var node=view.coral_visuals.registry["core/%d/2/2"%color]
+  check(node.texture.resource_path.ends_with("coral_tier1_bend_color%d_basic.png"%color),"Tier zero uses matching bend artwork")
+  check((node.texture.get_size()*node.scale).is_equal_approx(Vector2(256,256)),"Tier zero retains its original one-square size")
  var before=Rules.empty_board(7)
  before[3][1]=1
  var after=before.duplicate(true)

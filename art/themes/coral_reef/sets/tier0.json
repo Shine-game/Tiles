@@ -18,17 +18,17 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/core.png"
+                "path": "../artwork/junctions/coral_tier1_bend_color1_basic.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/core.png"
+                "path": "../artwork/junctions/coral_tier1_bend_color2_basic.png"
               }
             }
           },
           "pivot_px": [
-            128,
-            128
+            626.5,
+            626.5
           ],
           "size_px": [
             256,
@@ -65,7 +65,11 @@
               "one": "exact original component RGBA, retained permanently",
               "rotation_degrees": 0
             }
-          }
+          },
+          "size_cells": [
+            1,
+            1
+          ]
         }
       }
     }
