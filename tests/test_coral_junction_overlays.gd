@@ -36,7 +36,7 @@ func run():
    var record=view.junction_layer.load_sprite(config.shapes[shape][str(color)])
    var spec=view.junction_layer.specs[id]
    check(record.path.contains("color%d"%color),"Coral color maps to its own archive")
-   check(record.scale==1.5 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0,"150 percent scale and unrestricted rotation")
+   check(is_equal_approx(record.scale,1.7 if shape=="cross" else 1.5) and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0,"Shape-specific scale and unrestricted rotation")
    check(spec.material==null,"Original salmon and teal artwork is preserved")
    check((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)),"Canvas center maps to square center")
    check(not view.coral_visuals.registry.has("core/%d/2/2"%color),"Old coral center removed")

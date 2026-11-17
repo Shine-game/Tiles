@@ -9,7 +9,7 @@ The source growth and its decorations remain underneath. Legacy bend/T/X center
 art is suppressed only for themes that enable the new bindings. Vines is enabled
 with the supplied flowers. Coral is enabled with the supplied anemones (file 1 =
 bend, 2 = T, 3 = X), matching salmon color1 and teal color2. Coral uses canvas-center
-pivots, scale 1.5, any rotation, and preserves the original artwork colors. The other
+pivots, scale 1.5 for bends/T and 1.7 for X, any rotation, and preserves the original artwork colors. The other
 themes can enable the same system when their three shape-specific assets are supplied. No separate junction renderer is needed.
 The existing higher-tier formations and links keep their own artwork and schedule.
 
@@ -102,5 +102,5 @@ models. The test uses the Vines assets temporarily for the other model adapters;
 it does not configure those themes with substitute artwork in production.
 
 Coral tier-0 isolated cores reuse the matching bend PNG at their original one-square
-canvas size, independently of the 150% junction assembly scale. Open endpoint cores use the same matching bend PNG at 100% canvas size. Both
+canvas size, independently of the shape-specific junction assembly scale. Open endpoint cores use the same matching bend PNG at 100% canvas size. Both
 isolated and endpoint cores draw above the growing stems and decorations.
