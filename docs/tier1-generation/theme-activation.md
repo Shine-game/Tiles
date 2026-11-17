@@ -122,3 +122,12 @@ its decorations. Both tube bases keep their original growth fields. Ring overlay
 sit above ordinary wheel caps so endpoint rings remain visible. Bends, T/X shapes
 and isolated cells receive no ring. The alternate ring asset remains available in
 the catalog but is not selected by the active fixed-design rule.
+
+Zen stones now use `cell_centers`: each logical-color-2 square receives one
+full 255px-canvas stone centered at (x+0.5,y+0.5), at one-cell canvas size.
+This includes isolated and endpoint squares; shared-edge placement and legacy
+stone cores are suppressed. Rake squares retain their existing rendering.
+Small-decoration local scales change from 1 to 1.4 because base canvas size
+changes from 0.7 to 1: the resulting on-board size is exactly twice the previous
+size (1.4 / 0.7). The visible-radius budget increases proportionally to 11.2px;
+canvas, stone-alpha, gap and decoration-overlap checks remain enabled.

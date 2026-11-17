@@ -54,7 +54,7 @@ func run() -> void:
 			check(board.clockwork_visuals.registry.values().all(func(entry): return entry.event.id not in ["T01", "T03"]), "Legacy tubes and oversized boundary rings are replaced")
 			check(board.construction_state.records.keys().any(func(id): return id.begins_with("clockwork/part/T01_")), "Tube structural events remain available")
 		elif theme == "zen_garden":
-			check(layer.plans.size() == 3, "Zen shared edges have one stone each")
+			check(layer.plans.size() == 4, "Zen stone squares have one centered stone each")
 			check(not board.zen_visuals.centerpieces.is_empty(), "Rake centerpieces retained")
 		board.advance_growth(0.04)
 		var prior_clock: float = board.clock

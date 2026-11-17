@@ -44,7 +44,7 @@
     "base_overlap": "avoid",
     "base_gap_px": 3,
     "avoid_deco_overlap": true,
-    "max_radius_px": 8
+    "max_radius_px": 11.2
   },
   "anchors": [
     {

@@ -102,7 +102,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 					var start := maxf(0, float(model.arrivals.get(cell, 0)))
 					centerpieces[cell].configure(stage, settled, start)
 					retained_centers[cell] = true
-			else:
+			elif not generative_tier1:
 				for spec: Dictionary in Sets.stone_specs(cell, mask, not generative_tier1):
 					group.add_child(Components.sprite(spec))
 			if not settled and float(model.arrivals.get(cell, -100.0)) >= 0:

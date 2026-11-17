@@ -70,7 +70,7 @@ static func validate(data: Variant) -> Array:
 			else:
 				var layout: Variant = artwork.get("source_layout")
 				if artwork.status == "active" and layout == null: errors.append(id + ": active tier1_artwork needs source_layout")
-				if layout != null and layout not in ["components", "edge_halves", "shared_edges"]: errors.append(id + ": unsupported source_layout")
+				if layout != null and layout not in ["components", "edge_halves", "shared_edges", "cell_centers"]: errors.append(id + ": unsupported source_layout")
 				if layout == "components":
 					var ports: Variant = artwork.get("component_ports")
 					if not ports is Dictionary or ports.is_empty(): errors.append(id + ": components layout needs component_ports")

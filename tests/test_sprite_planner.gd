@@ -70,7 +70,7 @@ func _run() -> void:
 					check((deco.transform * attachment).is_equal_approx(plan.base.transform * anchor), "Attachment follows the whole base rotation/reflection")
 					check(deco.id == "actual/" + theme + "/anchor/" + deco.anchor_id, "Decoration identity is stable across redraws")
 					if theme == "zen_garden":
-						check(deco.visible_radius_px <= 8.0001, "Zen visible footprint obeys its radius limit")
+						check(deco.visible_radius_px <= 11.2001, "Zen visible footprint obeys its radius limit")
 						var inside := true
 						var disjoint := true
 						for cell: Vector2i in deco.footprint:

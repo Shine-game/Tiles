@@ -39,6 +39,14 @@ static func descriptors(model, theme: String, before: Array) -> Array:
 				var other: Vector2i = edge.b if side == 0 else edge.a
 				var id := theme + "/%d/%d/%d/%d/%d" % [edge.color, cell.y, cell.x, other.y, other.x]
 				result.append({"id": id, "family": config.get("family", "default"), "color": edge.color, "context": {"origin_cells": Vector2(cell) + Vector2.ONE * 0.5, "size_cells": _size(config), "target_forward": Vector2(other - cell)}, "binding": {"event": edge, "stroke_seconds": config.get("stroke_seconds", Growth.STEP), "u_range": [0.0, 0.5] if side == 0 else [1.0, 0.5]}})
+	elif layout == "cell_centers":
+		var color := int(config.get("logical_color", 2))
+		var seconds := float(config.get("duration_sec", 0.24))
+		for cell: Vector2i in model.arrivals:
+			if Topology.value(model.board, cell) != color: continue
+			var old := Topology.value(before, cell) == color
+			var start := maxf(0.0, model.arrivals[cell])
+			result.append({"id": theme + "/stone/%d/%d" % [cell.y, cell.x], "family": config.get("family", "default"), "color": color, "context": {"origin_cells": Vector2(cell) + Vector2.ONE * 0.5, "size_cells": _size(config)}, "binding": {"event": {"old": old, "start": start, "end": start + seconds}}})
 	elif layout == "shared_edges":
 		var color := int(config.get("logical_color", 2))
 		var seconds := float(config.get("duration_sec", 0.24))
