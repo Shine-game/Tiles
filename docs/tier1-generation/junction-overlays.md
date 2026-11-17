@@ -112,6 +112,6 @@ Vines assembly sizes: core and bend 100%, T 130%, X 180%. Opposite-color
 artwork and unrestricted stable rotation apply to all these Vines overlays.
 
 Clockwork binds copper color1 and gunmetal color2: H01 valve = bend, H02 rotating
-= T, H03 exhaust = X. All use canvas-center pivots, 100% scale and free stable
+= T, H03 exhaust = X. All use canvas-center pivots, 500% scale and free stable
 rotation, preserving source colors. Its existing C01 starting/endpoint cores have
 no added ring. Center rings are restricted to straight interiors (masks 5 and 10).

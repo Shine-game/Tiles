@@ -37,7 +37,7 @@ func run():
     var config=view.junction_layer.configuration("clockwork")
     var record=view.junction_layer.load_sprite(config.shapes[shape][str(color)])
     var spec=view.junction_layer.specs[id]
-    assert(record.scale==1.0 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0)
+    assert(record.scale==5.0 and record.rotation.range_deg[0]==0.0 and record.rotation.range_deg[1]==360.0)
     assert(record.texture.resource_path.ends_with("color%d_basic.png"%color))
     assert((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)))
     assert(spec.material==null and view.junction_layer.renderer.nodes[id].visible)

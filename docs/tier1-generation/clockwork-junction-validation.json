@@ -12,5 +12,7 @@
     512
   ],
   "note": "Supplied PNGs have substantial transparent padding; canvas fitting at 100 percent preserves that padding.",
-  "apk_or_device_tested": false
+  "apk_or_device_tested": false,
+  "current_scale": 5.0,
+  "current_scale_verification": "Source clockwork all-mask and both-color checks plus theme registry passed at 500 percent; exported-pack results above describe the original 100 percent integration."
 }
