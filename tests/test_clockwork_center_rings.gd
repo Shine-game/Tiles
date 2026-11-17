@@ -37,7 +37,7 @@ func run():
     var node=view.junction_layer.renderer.nodes[shared_core]
     assert(node.texture.resource_path.ends_with("clockwork_tier1_core_color%d_basic.png"%color))
     assert(node.visible and node.material==null)
-    assert(view.junction_layer.specs[shared_core].source_transform.basis_xform(Vector2.RIGHT).is_equal_approx(Vector2.RIGHT/256.0))
+    assert(view.junction_layer.specs[shared_core].source_transform.basis_xform(Vector2.RIGHT).is_equal_approx(Vector2.RIGHT*0.8/256.0))
     for old_part in ["C01","C02","C03"]:assert(not view.clockwork_visuals.registry.has("%s/%d/2/2"%[old_part,color]))
    if eligible:
     assert(not view.clockwork_visuals.registry.has(core_id))

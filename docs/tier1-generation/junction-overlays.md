@@ -114,5 +114,5 @@ artwork and unrestricted stable rotation apply to all these Vines overlays.
 Clockwork binds copper color1 and gunmetal color2: H01 valve = bend, H02 rotating
 = T, H03 exhaust = X. All use canvas-center pivots, 500% scale and free stable
 rotation, preserving source colors. Its starting/endpoint cores use one supplied composite PNG each,
-through `shapes.core`, at 100% with no rotation. Legacy C01/C02/C03 layers
+through `shapes.core`, at 80% with no rotation. Legacy C01/C02/C03 layers
 are suppressed there; no added ring is drawn. Center rings are restricted to straight interiors (masks 5 and 10).
