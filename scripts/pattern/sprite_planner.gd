@@ -219,29 +219,45 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 	var occupied: Dictionary = {}
 	var positions: Array[Vector2] = []
 	var rejections: Dictionary = {}
-	for anchor: Dictionary in anchors:
-		if decorations.size() >= target: break
-		var position := _vector(anchor.position)
-		if positions.any(func(previous): return position.distance_to(previous) < float(base.resolved.spawn.minimum_spacing_px) - EPSILON):
-			rejections.spacing = int(rejections.get("spacing", 0)) + 1
-			continue
-		var compatible := catalog_decorations.filter(func(record): return _accepted(anchor, record))
-		if compatible.is_empty(): rejections.incompatible_tags = int(rejections.get("incompatible_tags", 0)) + 1
-		for record: Dictionary in _weighted(compatible, _rng(seed, component_id, "anchor/" + anchor.id + "/catalog")):
-			var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied, include_footprints)
-			if not candidate.ok:
-				rejections[candidate.reason] = int(rejections.get(candidate.reason, 0)) + 1
+	var quotas: Dictionary = base.resolved.spawn.get("group_counts", {})
+	var requests: Array = []
+	var group_names: Array = quotas.keys()
+	group_names.sort()
+	for group: String in group_names:
+		requests.append({"group": group, "count": int(quotas[group]), "anchors": anchors.filter(func(anchor): return anchor.get("group", "") == group)})
+	requests.append({"group": null, "count": target, "anchors": anchors.filter(func(anchor): return not quotas.has(anchor.get("group", "")))})
+	var group_counts: Dictionary = {}
+	for request: Dictionary in requests:
+		var placed := 0
+		for anchor: Dictionary in request.anchors:
+			if decorations.size() >= target or placed >= request.count: break
+			var position := _vector(anchor.position)
+			if positions.any(func(previous): return position.distance_to(previous) < float(base.resolved.spawn.minimum_spacing_px) - EPSILON):
+				rejections.spacing = int(rejections.get("spacing", 0)) + 1
 				continue
-			decorations.append(candidate)
-			positions.append(position)
-			for cell: Vector2i in candidate.footprint: occupied[cell] = occupied.get(cell, false) or candidate.rules.constraints.avoid_deco_overlap
-			break
+			var compatible := catalog_decorations.filter(func(record): return _accepted(anchor, record))
+			if compatible.is_empty(): rejections.incompatible_tags = int(rejections.get("incompatible_tags", 0)) + 1
+			for record: Dictionary in _weighted(compatible, _rng(seed, component_id, "anchor/" + anchor.id + "/catalog")):
+				var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied, include_footprints)
+				if not candidate.ok:
+					rejections[candidate.reason] = int(rejections.get(candidate.reason, 0)) + 1
+					continue
+				decorations.append(candidate)
+				placed += 1
+				if anchor.has("group"): candidate.anchor_group = anchor.group
+				positions.append(position)
+				for cell: Vector2i in candidate.footprint: occupied[cell] = occupied.get(cell, false) or candidate.rules.constraints.avoid_deco_overlap
+				break
+		if request.group != null: group_counts[request.group] = placed
 	decorations.sort_custom(func(a, b): return a.growth_at < b.growth_at if a.growth_at != b.growth_at else a.anchor_id < b.anchor_id)
 	var choices: Array = [base.path, placement.rotation_deg, placement.flip_x, placement.flip_y]
 	for item: Dictionary in decorations: choices.append([item.anchor_id, item.metadata_path, item.flip_x, item.flip_y, item.rotation_deg, item.scale])
 	var warnings: Array = []
 	if decorations.size() < target: warnings.append("Placed %d/%d decorations; constraints were retained" % [decorations.size(), target])
+	for group: String in group_names:
+		if group_counts[group] < int(quotas[group]): warnings.append("Group %s placed %d/%d decorations; constraints were retained" % [group, group_counts[group], int(quotas[group])])
 	var result := {"ok": true, "errors": [], "warnings": warnings, "component_id": component_id, "seed": seed, "planner_version": VERSION, "base": placement, "decorations": decorations, "target_count": target, "rejections": rejections, "fingerprint": var_to_bytes(choices).hex_encode().sha256_text()}
+	if not quotas.is_empty(): result.group_counts = group_counts
 	if _plans.size() >= MAX_PLANS: _plans.erase(_plans.keys()[0])
 	_plans[key] = result.duplicate(true)
 	return result

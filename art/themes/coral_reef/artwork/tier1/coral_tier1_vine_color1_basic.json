@@ -34,7 +34,10 @@
       4,
       6
     ],
-    "minimum_spacing_px": 20
+    "minimum_spacing_px": 20,
+    "group_counts": {
+      "spine": 2
+    }
   },
   "anchors": [
     {
@@ -62,10 +65,12 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "perpendicular",
-        "angle_deg": 180
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
       },
-      "growth_at": 0.0938
+      "growth_at": 0.0938,
+      "group": "spine"
     },
     {
       "id": "A03",
@@ -102,7 +107,13 @@
       "accepts": [
         "coral_sprout"
       ],
-      "growth_at": 0.25
+      "growth_at": 0.25,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
     },
     {
       "id": "A06",
@@ -140,10 +151,12 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "perpendicular",
-        "angle_deg": 180
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
       },
-      "growth_at": 0.4062
+      "growth_at": 0.4062,
+      "group": "spine"
     },
     {
       "id": "A09",
@@ -180,7 +193,13 @@
       "accepts": [
         "coral_sprout"
       ],
-      "growth_at": 0.5625
+      "growth_at": 0.5625,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
     },
     {
       "id": "A12",
@@ -218,10 +237,12 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "perpendicular",
-        "angle_deg": 180
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
       },
-      "growth_at": 0.7188
+      "growth_at": 0.7188,
+      "group": "spine"
     },
     {
       "id": "A15",
@@ -258,7 +279,13 @@
       "accepts": [
         "coral_sprout"
       ],
-      "growth_at": 0.875
+      "growth_at": 0.875,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
     },
     {
       "id": "A18",
@@ -278,7 +305,8 @@
       "Turquoise source texture was row-aligned to that silhouette and its exact alpha.",
       "All 18 original attachment positions and growth order estimates are retained.",
       "Lighting marker is visually authored to the lit flank; it is not a measured physical light-source position.",
-      "Ready covers source-asset/placement validation, not integration into the game."
+      "Ready covers source-asset/placement validation, not integration into the game.",
+      "Six existing central-spine anchors form the spine group; exactly two parallel sprouts are selected within the total decoration count."
     ]
   },
   "constraints": {

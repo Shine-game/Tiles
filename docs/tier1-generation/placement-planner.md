@@ -169,3 +169,37 @@ and cache isolation. It also runs against a resource pack from an empty project
 directory. Validation totals and engine limitations are in planner-validation.json.
 
 The [growth timing bridge](growth-timing.md) now binds these layouts to structural waves. Live renderer/board activation remains the next stage.
+
+## Optional anchor group counts
+
+A base can reserve an exact number of decorations on a named subset of anchors.
+For example, coral keeps its total count at 4–6 while reserving two on the spine:
+
+```json
+"spawn": {
+  "count": [4, 6],
+  "minimum_spacing_px": 20,
+  "group_counts": {"spine": 2}
+}
+```
+
+The six existing central anchors A02, A05, A08, A11, A14 and A17 carry
+`"group": "spine"`. Their positions are [125,116], [125,96], [125,76],
+[126,56], [125,36] and [125,16]. Their orientation is `relative`, angle 0,
+jitter 0, so their native growth directions align exactly with the stem. The
+remaining twelve anchors retain perpendicular growth with ±10° variation.
+Both coral color sidecars contain the same settings and coordinates.
+
+`spawn.group_counts` is optional and belongs only on a base. Values are
+nonnegative integers; their sum must fit the minimum total count, and each
+reservation must have enough authored anchors. The planner considers reserved
+groups first, in sorted group-name order, with seeded anchor selection within
+each group. It then fills the remaining total from anchors outside the reserved
+groups. A zero quota excludes that group. An anchor group without a declared
+quota remains eligible for ordinary selection. One decoration per anchor still
+applies. Spacing, attachment, alpha and overlap constraints remain in force;
+infeasible groups report shortfalls rather than bypassing constraints.
+
+Plans with reservations return the actual `group_counts`; grouped decorations
+carry `anchor_group`. Bases that omit quotas keep their existing selection order.
+The rule is universal and contains no coral-specific planner logic.

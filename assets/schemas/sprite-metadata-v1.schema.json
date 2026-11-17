@@ -137,6 +137,14 @@
         "minimum_spacing_px": {
           "type": "number",
           "minimum": 0
+        },
+        "group_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
         }
       },
       "required": [],
@@ -374,6 +382,10 @@
             },
             "required": [],
             "additionalProperties": false
+          },
+          "group": {
+            "type": "string",
+            "minLength": 1
           }
         },
         "required": [

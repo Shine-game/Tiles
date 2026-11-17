@@ -28,6 +28,7 @@ func simple_base() -> Dictionary:
 	var d := raw(CORAL)
 	d.spawn = {"count": [0, 0], "minimum_spacing_px": 0}
 	d.anchors = []
+	d.orientation = {"mode": "relative", "angle_deg": 0, "jitter_deg": 0}
 	d.lighting = {"toward": [80, 128]}
 	d.constraints = {"base_overlap": "allow"}
 	return d
