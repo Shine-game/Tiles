@@ -112,8 +112,9 @@
           1,
           1
         ],
-        "duration_sec": 0.24,
-        "layer_z_index": 1
+        "duration_sec": 0.48,
+        "layer_z_index": 1,
+        "progression_scale": 2.0
       }
     },
     "clockwork": {

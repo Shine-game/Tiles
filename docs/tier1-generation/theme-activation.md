@@ -131,3 +131,8 @@ Small-decoration local scales change from 1 to 1.4 because base canvas size
 changes from 0.7 to 1: the resulting on-board size is exactly twice the previous
 size (1.4 / 0.7). The visible-radius budget increases proportionally to 11.2px;
 canvas, stone-alpha, gap and decoration-overlap checks remain enabled.
+
+Full-square stone timing uses `progression_scale: 2` and `duration_sec: 0.48`.
+Zen scales new stone-cell arrival times before scheduling its landmarks, ponds
+and trees. Rake arrivals and settled-cell sentinels remain unchanged. Stone
+landmarks wait for at least the full stone reveal before their hold/growth phases.
