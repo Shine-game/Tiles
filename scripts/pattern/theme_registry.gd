@@ -75,7 +75,7 @@ static func validate(data: Variant) -> Array:
 						var value: Variant = junctions[field]
 						if not (value is int or value is float) or not is_finite(float(value)) or value != floorf(value): errors.append(id + ": junction " + field + " must be an integer")
 						elif field == "z_index" and absf(value) > 4096: errors.append(id + ": junction z_index out of range")
-				for shape: String in ["bend", "t", "cross"]:
+				for shape: String in (["bend", "t", "cross", "core"] if junctions.shapes.has("core") else ["bend", "t", "cross"]):
 					var bindings: Variant = junctions.get("shapes", {}).get(shape)
 					if not bindings is Dictionary: errors.append(id + ": missing junction shape " + shape)
 					else:

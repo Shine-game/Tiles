@@ -39,7 +39,7 @@ func run():
    var record=view.junction_layer.load_sprite(original_config.shapes[shape][str(color)])
    check((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)),"Marked center maps to square center")
    check(record.path.contains("color%d"%color),"Logical pink stem uses violet asset, and vice versa")
-   check(record.scale==1.0,"Flower remains 100 percent")
+   check(is_equal_approx(record.scale,{"bend":1.0,"t":1.3,"cross":1.8}[shape]),"Shape-specific flower size")
    check(spec.material.get_shader_parameter("palette_target")==Palette.accent(color),"Every palette uses the opposite stem color")
    var node=view.junction_layer.renderer.nodes[id]
    var matrix=node.transform
@@ -55,6 +55,27 @@ func run():
    view.advance_growth(100)
    check(not view.growing,"Direct overlay adds no growth tail")
 
+ # Core bindings alias isolated and endpoint topology to one stable artwork identity.
+ for color in [1,2]:
+  var initial=Rules.empty_board(7)
+  initial[3][3]=color
+  view.show_settled(initial)
+  var core_id="junction/vines/%d/3/3/core"%color
+  var initial_spec=view.junction_layer.specs[core_id]
+  var core_record=view.junction_layer.load_sprite(original_config.shapes.core[str(color)])
+  var bend_record=view.junction_layer.load_sprite(original_config.shapes.bend[str(color)])
+  check(core_record.texture==bend_record.texture and core_record.scale==1.0,"Starting core reuses bend artwork at 100 percent")
+  for direction in Topology.DIRECTIONS:
+   view.show_settled(initial)
+   var pair=initial.duplicate(true)
+   var tip=Vector2i(3,3)+direction
+   pair[tip.y][tip.x]=color
+   view.animate_growth(initial,pair)
+   view.set_process(false)
+   check(view.junction_layer.specs[core_id].source_transform==initial_spec.source_transform and view.junction_layer.events[core_id].old,"Starting core remains stable when it becomes an endpoint")
+   view.advance_growth(100)
+   var tip_id="junction/vines/%d/%d/%d/core"%[color,tip.y,tip.x]
+   check(view.junction_layer.renderer.nodes[tip_id].visible and view.junction_layer.specs[tip_id].asset==core_record.texture,"New endpoint receives the same visible core")
  # The same class also replaces configured centers in every other model.
  for theme in ["coral_reef","clockwork","zen_garden"]:
   var saved_junctions=Themes.definition.themes[theme].get("junctions", {}).duplicate(true)

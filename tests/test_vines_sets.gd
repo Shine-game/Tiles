@@ -53,14 +53,14 @@ func _run() -> void:
 						var p: Vector2i = center + Growth.Topology.DIRECTIONS[d]
 						grid[p.y][p.x] = color
 				view.show_settled(grid)
-				check(view.construction_state.records.has(Sets.identity(color, center)) == (mask in [0, 1, 2, 4, 8]), "Legacy holding motifs remain only on isolated and endpoint cells")
+				check(view.construction_state.records.has("junction/vines/%d/4/4/core" % color) == (mask in [0, 1, 2, 4, 8]), "Shared core overlays appear only on isolated and endpoint cells")
 				check(view.construction_state.records.has("vines/cell/%d/4/4" % color), "The diffuse cell wash remains even where the holding motif is suppressed")
 				check(Sets.centers(mask).is_empty() == (mask in [5, 10]), "Both straight orientations share the same center omission rule")
 	var endpoint := Rules.empty_board(9)
 	endpoint[4][3] = 1
 	endpoint[4][4] = 1
 	view.show_settled(endpoint)
-	var original: Dictionary = view.construction_state.records[Sets.identity(1, center)]
+	var original: Dictionary = view.construction_state.records["junction/vines/1/4/4/core"]
 	var wave: int = original.created_in
 	var straight := endpoint.duplicate(true)
 	straight[4][5] = 1
@@ -68,7 +68,7 @@ func _run() -> void:
 	var key := Growth.edge_key(edge.a, edge.b)
 	view.direction_by_edge[key].flow = -1
 	view.animate_growth(endpoint, straight)
-	check(not view.construction_state.records.has(Sets.identity(1, center)), "Continuing an endpoint removes its holding component")
+	check(not view.construction_state.records.has("junction/vines/1/4/4/core"), "Continuing an endpoint removes its holding component")
 	check(view.direction_by_edge[key].flow == -1, "Existing edge flow choices survive the migration")
 	var branch := straight.duplicate(true)
 	branch[3][4] = 1
@@ -87,12 +87,12 @@ func _run() -> void:
 	view.animate_growth(branch, with_other)
 	check(view.construction_state.records[junction_id].created_in == established_wave and view.junction_layer.renderer.nodes[junction_id].visible, "Unrelated placements preserve established motif state without a clock-reset rollback")
 	view.show_settled(endpoint, true)
-	check(view.construction_state.records[Sets.identity(1, center)].phase == "settled", "Undo/Erase-style restoration shows the settled endpoint immediately")
+	check(view.construction_state.records["junction/vines/1/4/4/core"].phase == "settled", "Undo/Erase-style restoration shows the settled endpoint immediately")
 	var mixed := endpoint.duplicate(true)
 	mixed[4][5] = 2
 	view.show_settled(mixed)
-	check(view.construction_state.records.has(Sets.identity(1, center)), "Different-color contact leaves the first color's endpoint motif intact")
-	check(Palette.theme_version() == "1.2" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
+	check(view.construction_state.records.has("junction/vines/1/4/4/core"), "Different-color contact leaves the first color's endpoint motif intact")
+	check(Palette.theme_version() == "1.3" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/vines/sets/*.json"), "Both sets are packaged in Android exports")
 	check(Sets.renderer.diagnostics.is_empty(), "All real Vines drawing batches use valid providers")
 	view.queue_free()

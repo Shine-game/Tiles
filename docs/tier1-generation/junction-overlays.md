@@ -2,8 +2,11 @@
 
 `PatternJunctionLayer` is the single overlay loader, assembler and lifecycle
 adapter for every theme. It uses same-color square topology: two adjacent ports
-are a bend, three are a T, and four are an X (`cross` in configuration). Straights,
-endpoints and isolated cells keep their existing behavior.
+are a bend, three are a T, and four are an X (`cross` in configuration). Straight interiors omit core overlays. An optional `shapes.core` binding uses one
+100% core asset at isolated starting cells and open endpoints, with a stable
+identity across the isolated-to-endpoint transition. Vines enables this binding;
+its core sidecars reuse the matching bend PNGs. Other themes retain their existing
+starting/endpoint core providers (Coral anemones, Clockwork C01 and Zen cores).
 
 The source growth and its decorations remain underneath. Legacy bend/T/X center
 art is suppressed only for themes that enable the new bindings. Vines is enabled
@@ -104,3 +107,6 @@ it does not configure those themes with substitute artwork in production.
 Coral tier-0 isolated cores reuse the matching bend PNG at their original one-square
 canvas size, independently of the shape-specific junction assembly scale. Open endpoint cores use the same matching bend PNG at 100% canvas size. Both
 isolated and endpoint cores draw above the growing stems and decorations.
+
+Vines assembly sizes: core and bend 100%, T 130%, X 180%. Opposite-color
+artwork and unrestricted stable rotation apply to all these Vines overlays.

@@ -1,0 +1,21 @@
+{
+  "engine_tested": "4.6.3.stable",
+  "checks": {
+    "shared_junctions": 231,
+    "exported_pack": 224,
+    "vines_sets": 500,
+    "coral_junctions": 213,
+    "theme_registry": 82,
+    "tier1_integration": 392
+  },
+  "failures": 0,
+  "sizes": {
+    "core": 1.0,
+    "bend": 1.0,
+    "t": 1.3,
+    "cross": 1.8
+  },
+  "core_tests": "Both colors, stable isolated-to-endpoint transitions in every direction and visible new endpoint cores.",
+  "other_themes": "Coral, Clockwork and both Zen families already define isolated and endpoint cores; their artwork and size settings are retained.",
+  "export": "Android resource pack; no APK/device test"
+}

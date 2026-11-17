@@ -16,9 +16,12 @@ var _records: Dictionary = {}
 static func configuration(theme: String) -> Dictionary:
 	return Themes.profile(theme).get("junctions", {})
 
+static func role(shape: String, config: Dictionary) -> String:
+	return "core" if shape in ["isolated", "endpoint"] and config.get("shapes", {}).has("core") else shape
+
 static func handles(theme: String, shape: String) -> bool:
 	var config := configuration(theme)
-	return config.get("enabled", false) and config.get("shapes", {}).has(shape)
+	return config.get("enabled", false) and config.get("shapes", {}).has(role(shape, config))
 
 static func number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value))
@@ -77,7 +80,7 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 	# Preflight every shape/color before replacing the live presentation.
 	var loaded: Dictionary = {}
 	var paths: Dictionary = {}
-	for shape: String in ["bend", "t", "cross"]:
+	for shape: String in (["bend", "t", "cross", "core"] if config.shapes.has("core") else ["bend", "t", "cross"]):
 		if not config.get("shapes", {}).get(shape) is Dictionary:
 			diagnostics.append("Junction configuration needs bend, t and cross bindings")
 			return false
@@ -94,7 +97,7 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 				return false
 			loaded[shape][color] = record
 	for cell: Vector2i in model.arrivals:
-		var shape := Topology.shape(Topology.neighbor_mask(model.board, cell))
+		var shape := role(Topology.shape(Topology.neighbor_mask(model.board, cell)), config)
 		if not loaded.has(shape): continue
 		var color := Topology.value(model.board, cell)
 		var record: Dictionary = loaded[shape][str(color)]
@@ -107,7 +110,7 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		# 100% uses one square of source canvas. No raster or artwork resampling.
 		var transform := Transform2D(deg_to_rad(degrees), Vector2.ONE * record.scale / maxf(record.size.x, record.size.y), 0.0, Vector2.ZERO)
 		transform.origin = Vector2(cell) + Vector2.ONE * 0.5 - transform.basis_xform(record.center)
-		var old := settled or (Topology.value(before, cell) == color and Topology.shape(Topology.neighbor_mask(before, cell)) == shape)
+		var old := settled or (Topology.value(before, cell) == color and role(Topology.shape(Topology.neighbor_mask(before, cell)), config) == shape)
 		var start := maxf(at, float(model.arrivals[cell]))
 		var revision: String = record.revision + "/" + str(degrees)
 		if preserve and not settled and events.has(id) and events[id].revision == revision:
