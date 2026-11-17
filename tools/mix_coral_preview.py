@@ -9,7 +9,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 RATE = 48000
 schedule = json.loads((ROOT / 'build/coral-audio-events.json').read_text())
-meta = json.loads((ROOT / 'art/themes/coral_reef/theme.json').read_text())['audio']
+meta = json.loads((ROOT / 'assets/themes/themes.json').read_text())['themes']['coral_reef']['audio']
 assets = {asset['id']: asset for asset in meta['assets']}
 length = round(schedule['duration'] * RATE)
 times = np.arange(length) / RATE

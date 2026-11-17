@@ -1,0 +1,508 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "coral-tier3",
+  "tier": 3,
+  "roles": {
+    "anemone": "anemone"
+  },
+  "compositions": {
+    "anemone": {
+      "parts": {
+        "anemone_foot": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_foot.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_foot.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 70,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.2,
+            "dependencies": []
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_foot.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_0": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_0.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_0.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_0.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_1": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_1.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_1.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_1.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_2": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_2.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_2.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_2.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_3": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_3.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_3.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_3.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_4": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_4.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_4.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_4.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_5": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_5.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_5.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_5.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_6": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_6.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_6.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_6.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_region_7": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_region_7.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_region_7.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 71,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.28,
+            "dependencies": [
+              {
+                "component": "anemone_oral_disc",
+                "event": "complete",
+                "delay_seconds": 0
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_region_7.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        },
+        "anemone_oral_disc": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/salmon/anemone_oral_disc.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/turquoise/anemone_oral_disc.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            256
+          ],
+          "size_px": [
+            256,
+            512
+          ],
+          "layer": 72,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.12,
+            "dependencies": [
+              {
+                "component": "anemone_foot",
+                "at_mask_u": 0,
+                "delay_seconds": 0.04
+              }
+            ]
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../masks/anemone_oral_disc.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "growth origin",
+              "one": "growth tip",
+              "rotation_degrees": 0
+            }
+          },
+          "group_z_index": 7
+        }
+      }
+    }
+  }
+}

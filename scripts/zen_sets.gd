@@ -1,4 +1,5 @@
 extends RefCounted
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 # Zen's ordinary sets. Ponds, historical trees and landmarks stay project-owned.
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const SURFACE = preload("res://shaders/zen_landmark.gdshader")
@@ -6,7 +7,7 @@ const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
-const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
+const Catalog = preload("res://scripts/zen_assets.gd")
 const Geometry = preload("res://scripts/zen_geometry.gd")
 const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const ROOT := "res://art/themes/zen_garden/sets/"
@@ -21,7 +22,7 @@ static func install() -> void:
 	for family: String in ["rakes", "stones"]:
 		var tiers: Array = []
 		for tier in [0, 1, 2]:
-			var loaded := Assets.load_set(ROOT + family + "-tier%d.json" % tier)
+			var loaded := Assets.load_set(Themes.pattern_set_path("zen_garden", tier, family))
 			assert(loaded.ok, str(loaded.errors))
 			for composition: Dictionary in loaded.definition.compositions.values():
 				for part: Dictionary in composition.parts.values():

@@ -1,5 +1,6 @@
 extends Control
 
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 var theme_id := "vines"
 var pitch := 1.0
@@ -9,10 +10,7 @@ var core_region := Rect2()
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
-	var path: String = {
-		"clockwork": "res://art/themes/clockwork_workshop/artwork/copper/C01.png",
-		"coral_reef": "res://art/themes/coral_reef/artwork/salmon/core.png",
-	}.get(theme_id, "")
+	var path: String = Themes.profile(theme_id).get("preview", {}).get("core", "")
 	if not path.is_empty():
 		core = load(path)
 		core_region = Rect2(core.get_image().get_used_rect())
@@ -35,6 +33,6 @@ func _draw() -> void:
 
 func _ground() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = {"zen_garden": Color("f0ece3"), "clockwork": Color("a3a29a"), "coral_reef": Color("edd7ad")}.get(theme_id, Color("fff5fb"))
+	style.bg_color = Color(Themes.profile(theme_id).get("preview", {}).get("ground", "fff5fb"))
 	style.set_corner_radius_all(4)
 	return style

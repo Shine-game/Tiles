@@ -38,7 +38,7 @@ and gallery saves include it. See [the Zen implementation](docs/zen-ordinary-til
 
 ## Shared theme frames
 
-All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/frames/frames.json`. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. The playing field and floating Settings box use the theme frame; individual buttons keep tinted backgrounds and outlines. Vines awaits its own frame and background artwork and uses its palette floor across the screen.
+All frame geometry, fitting and rendering use `scripts/board_frame.gd`. Central instructions are in [the shared frame contract](docs/theme-frames.md); theme personalization lives in `assets/themes/themes.json` under each theme’s `frame` profile. The common nine-slice geometry is a 14-unit rim plus a 10-unit lower sidewall, with input-transparent square openings and shared reef lighting. Coral Reef uses the original bleached-timber PNG supplied in `Coral_Reef_Frame.zip`, with its transparent opening and painted 10-unit lower sidewall preserved. The playing field and floating Settings box use the theme frame; individual buttons keep tinted backgrounds and outlines. Vines awaits its own frame and background artwork and uses its palette floor across the screen.
 
 ## Raised occupied platform
 
@@ -63,7 +63,7 @@ Same-color 2×2 loops develop body/fold/finger colony layers. **Only immediate h
 
 Place remains locked until the full sequence resolves. Undo/Erase preserve valid underlying coral and remove invalid features; reset cancels pending work. Gallery captures copy painter order and record reef version `2.0`, preserving older saved images while allowing the redesigned board to be saved separately.
 
-See [the assessment](docs/coral-reef-analysis.md), [independent audit](docs/coral-reef-audit.json), and [supplied provenance](docs/coral-reef-rights.md). Source artwork and masks come from `Coral_Reef_Redesign_01.zip`. The runtime manifest uses one north-facing arm image per color and one shared arm mask. Junctions also share one artwork per color but retain all four original directional growth masks; the reveal shader compensates their coordinates when rotating the artwork. See [the coral asset cleanup list](docs/coral-arm-assets.md) for the redundant PNGs and import files that can be deleted, and the junction masks that must be kept. Source masters and review videos do not ship in the APK. Artwork and masks use lossless linear/clamped sampling without mipmaps, matching the validated ground seams. Device performance remains unverified, especially the 3,382-component worst-case 11×11 reef.
+See [the assessment](docs/coral-reef-analysis.md), [independent audit](docs/coral-reef-audit.json), and [supplied provenance](docs/coral-reef-rights.md). Source artwork and masks come from `Coral_Reef_Redesign_01.zip`. The shared sets use one north-facing arm image per color and one generated canonical arm field. Junctions share one artwork per color and one northeast mask, rotated independently through the common assembly rules. See [the coral asset cleanup list](docs/coral-arm-assets.md) for the redundant PNGs and import files that can be deleted, and the canonical junction mask that must be kept. Source masters and review videos do not ship in the APK. Artwork and masks use lossless linear/clamped sampling without mipmaps, matching the validated ground seams. Device performance remains unverified, especially the 3,382-component worst-case 11×11 reef.
 
 ## Local gallery
 
@@ -144,8 +144,10 @@ construction scheduling, common asset/rendering foundation, and
 Zen, Coral and [Vines ordinary sets](docs/shared-pattern-engine/vines-ordinary-sets.md)
 have since migrated in Step 6. Labyrinth was removed, completing Step 6 for the four active themes.
 [Step 7: shared Tier 2 formation assembly](docs/shared-pattern-engine/tier2-assembly.md)
-is implemented for all four themes. Step 8, the shared Tier 3 connection interface,
-is the next approval checkpoint.
+is implemented for all four themes. [Step 8](docs/shared-pattern-engine/tier3-connections.md)
+shares Tier 3 connection prerequisites while preserving specialized growth/history.
+[Step 9](docs/shared-pattern-engine/theme-registry.md) consolidates theme/UI settings
+and the remaining Clockwork/Coral catalogs; the nine-step migration is complete.
 Shading work remains deferred.
 
 ## Tests

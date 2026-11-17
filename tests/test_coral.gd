@@ -24,7 +24,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	Palette.select_theme("vines")
-	var spec := Coral.specification()
+	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/coral_source_catalog.json"))
 	check(spec.components.size() == 38, "32 growing components plus six ground variants")
 	for id: String in spec.components:
 		var meta: Dictionary = spec.components[id]

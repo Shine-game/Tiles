@@ -1,5 +1,6 @@
 extends RefCounted
-# Coral Tier 0/1/2 metadata is live set data; Tier 3 retains its adapter.
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
+# All Coral artwork catalogs use shared sets; specialized growth stays theme-owned.
 const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
@@ -11,21 +12,33 @@ static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
 static var tier2: Dictionary = {}
 static var catalog: Dictionary = {}
+static var tier3: Dictionary = {}
+static var environment: Dictionary = {}
+static var special: Dictionary = {}
+static var grounds: Dictionary = {}
 
 static func install() -> void:
 	if not tier0.is_empty(): return
 	Renderer.register_material_provider("coral.reveal", _reveal)
-	tier0 = Assets.load_set(ROOT + "tier0.json")
-	tier1 = Assets.load_set(ROOT + "tier1.json")
-	tier2 = Assets.load_set(ROOT + "tier2.json")
+	tier0 = Assets.load_set(Themes.pattern_set_path("coral_reef", 0))
+	tier1 = Assets.load_set(Themes.pattern_set_path("coral_reef", 1))
+	tier2 = Assets.load_set(Themes.pattern_set_path("coral_reef", 2))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid Tier 2 part schedule")
-	for loaded: Dictionary in [tier0, tier1, tier2]:
-		for composition: Dictionary in loaded.definition.compositions.values():
-			for id: String in composition.parts:
-				var spec: Dictionary = composition.parts[id].duplicate(true)
-				spec.asset_root = loaded.root
-				catalog[id] = spec
+	tier3 = Assets.load_set(Themes.pattern_set_path("coral_reef", 3))
+	environment = Assets.load_set(Themes.profile("coral_reef").environment.catalog)
+	assert(tier3.ok and environment.ok, str(tier3.errors + environment.errors))
+	catalog = Assets.catalog([tier0, tier1, tier2])
+	special = Assets.catalog([tier3])
+	grounds = Assets.catalog([environment])
+
+static func special_part(id: String) -> Dictionary:
+	install()
+	return special[id]
+
+static func ground_part(id: String) -> Dictionary:
+	install()
+	return grounds[id]
 
 static func owns(id: String) -> bool:
 	install()
@@ -79,3 +92,18 @@ static func _reveal(params: Dictionary) -> ShaderMaterial:
 static func formation_parts() -> Dictionary:
 	install()
 	return Formations.parts(tier2)
+
+static func special_render_spec(event: Dictionary, settled: bool) -> Dictionary:
+	var spec: Dictionary = (ground_part(event.id) if event.id.begins_with("ground_") else special_part(event.id)).duplicate(true)
+	var bound := Assets.bind_part(spec, tier0.definition.treatments[str(event.color)])
+	assert(bound.ok, str(bound.errors))
+	spec = bound.part
+	spec.position_cells = event.center
+	spec.rotation_radians = event.rotation * PI / 2
+	if not event.id.begins_with("ground_"):
+		spec.material = null if settled or event.old else {"provider": "coral.reveal", "params": {
+			"artwork": spec.asset, "growth_mask": spec.masks.reveal.asset, "asset_root": spec.asset_root,
+			"growth_mask_rotation_radians": deg_to_rad(float(spec.masks.reveal.rotation_degrees)),
+			"start_at_zero": event.start, "start_at_one": event.reverse,
+			"stroke_seconds": event.stroke, "front_one_enabled": event.two_fronts}}
+	return spec

@@ -30,7 +30,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	var spec: Dictionary = Coral.specification()
+	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/coral_source_catalog.json"))
 	var center := Vector2i(4, 4)
 	for family: String in ["arm", "junction"]:
 		var canonical: String = "arm_n" if family == "arm" else "junction_ne"

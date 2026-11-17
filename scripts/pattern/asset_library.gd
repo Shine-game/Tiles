@@ -208,3 +208,19 @@ static func _linear_reveal(params: Dictionary) -> Texture2D:
 			var u := (Vector2(x + 0.5, y + 0.5) - a).dot(delta) / delta.length_squared()
 			values[y * size.x + x] = roundi(clampf(u, 0, 1) * 255)
 	return ImageTexture.create_from_image(Image.create_from_data(size.x, size.y, false, Image.FORMAT_R8, values))
+
+# Flatten explicitly ordered sets once; later tiers may reuse an existing role ID.
+static func catalog(loaded_sets: Array) -> Dictionary:
+	var parts: Dictionary = {}
+	for loaded: Dictionary in loaded_sets:
+		for composition: Dictionary in loaded.definition.compositions.values():
+			for id: String in composition.parts:
+				var spec: Dictionary = composition.parts[id].duplicate(true)
+				spec.asset_root = loaded.root
+				parts[id] = spec
+	return parts
+
+static func part_texture(spec: Dictionary, treatment: String = "") -> Texture2D:
+	var bound := bind_part(spec, treatment)
+	assert(bound.ok, str(bound.errors))
+	return resolve(bound.part.asset, spec.get("asset_root", "res://")) if bound.ok else null

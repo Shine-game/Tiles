@@ -46,10 +46,11 @@ and restores lineage through Undo/capture snapshots. Existing per-part adapters 
 the common component-state lifecycle; no duplicate parent state is introduced.
 Likewise, Clockwork's rebased surviving chain clocks remain renderer-owned.
 
-Tier 3 appearance metadata and specialized shaders retain their current consumers.
+At Step 8, Tier 3 appearance metadata and specialized shaders retained their current consumers.
 This step does not pretend that tree history, pond masks and Clockwork mechanisms
 can be described by one sprite recipe. Tier 0/1/2 set loading and common rendering
-continue unchanged. Remaining metadata consolidation belongs to Step 9.
+continue unchanged. [Step 9](theme-registry.md) subsequently consolidated the remaining Clockwork/Coral
+artwork metadata and retired the source-format adapters.
 
 ## Verification
 

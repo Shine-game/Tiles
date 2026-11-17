@@ -106,11 +106,8 @@ static func layer(id: String) -> int:
 	if Ordinary.owns(id): return int(Ordinary.part(id).z_index)
 	if id.begins_with("plate_"): return 0
 	if id == "pin": return 2
-	if id == "L01": return 4
-	if id == "L02": return 5
-	if id == "L03": return 6
-	if id in ["J00_chain_junction", "H03_opaque_underlay"]: return 8
-	return 9
+	if id == "chain": return 9
+	return int(Ordinary.special_part(id).z_index)
 
 func _remove(entry: Dictionary, animate: bool) -> void:
 	ordinary_components.release(entry.event.key)
@@ -211,11 +208,11 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				sprite = Components.sprite({})
 				var variant: String = art_variant(event.id, event.color)
 				if event.id.begins_with("plate_"):
-					sprite.texture = texture("artwork/ground/" + event.id + ".png")
+					sprite.texture = Assets.part_texture(Ordinary.ground_part(event.id))
 				elif event.id == "pin":
-					sprite.texture = texture("artwork/pins/plate_pin_" + variant + ".png")
+					sprite.texture = Assets.part_texture(Ordinary.ground_part("pin"), variant)
 				else:
-					sprite.texture = texture(Model.specification().components[event.id].assets[variant])
+					sprite.texture = Assets.part_texture(Ordinary.special_part(event.id), variant)
 				Components.configure_sprite(sprite, {"texture_filter": CanvasItem.TEXTURE_FILTER_LINEAR, "position_cells": event.center})
 				if event.id == "J00_chain_junction": sprite.scale = Vector2.ONE * CHAIN_HOUSING_SCALE
 				sprite.z_index = layer(event.id)
@@ -261,7 +258,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 				strip.position = Vector2(0, (-CHAIN_RUN_OFFSET if run == 0 else CHAIN_RUN_OFFSET) - CHAIN_CANVAS * 0.5)
 				strip.size = Vector2(256, CHAIN_CANVAS)
 				var ink := Components.material(CHAIN)
-				ink.set_shader_parameter("link_art", texture(Model.specification().components.CH01_link.assets[art_variant("CH01_link", event.color)]))
+				ink.set_shader_parameter("link_art", Assets.part_texture(Ordinary.special_part("CH01_link"), art_variant("CH01_link", event.color)))
 				ink.set_shader_parameter("reverse_run", run == 1)
 				ink.set_shader_parameter("link_scale", CHAIN_LINK_SCALE)
 				strip.material = ink

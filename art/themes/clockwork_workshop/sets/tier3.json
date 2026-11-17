@@ -1,0 +1,300 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "clockwork-tier3",
+  "tier": 3,
+  "roles": {
+    "mechanism_finishing": "mechanism_finishing"
+  },
+  "compositions": {
+    "mechanism_finishing": {
+      "parts": {
+        "H00_plain_hatch": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H00_plain_hatch.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H00_plain_hatch.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H01_valve": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H01_valve.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H01_valve.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H02_rotating": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H02_rotating.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H02_rotating.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_exhaust": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H03_exhaust.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H03_exhaust.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "J00_chain_junction": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/J00_chain_junction.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/J00_chain_junction.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 60,
+          "z_index": 8,
+          "texture_filter": 2
+        },
+        "H00_left_shutter": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H00_left_shutter.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H00_left_shutter.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H00_right_shutter": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H00_right_shutter.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H00_right_shutter.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_opaque_underlay": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H03_opaque_underlay.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H03_opaque_underlay.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 8,
+          "texture_filter": 2
+        },
+        "H03_shutters_left": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H03_shutters_left.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H03_shutters_left.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_shutters_right": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/H03_shutters_right.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/H03_shutters_right.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "CH01_link": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../artwork/copper/CH01_link.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../artwork/gunmetal/CH01_link.png"
+              }
+            }
+          },
+          "pivot_px": [
+            32.0,
+            32.0
+          ],
+          "size_px": [
+            64,
+            64
+          ],
+          "layer": 55,
+          "z_index": 9,
+          "texture_filter": 2
+        }
+      }
+    }
+  }
+}

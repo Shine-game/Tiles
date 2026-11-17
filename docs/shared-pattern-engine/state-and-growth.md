@@ -12,7 +12,7 @@ constants, game rules and appearance versions remain unchanged.
 - [`component_state.gd`](../../scripts/pattern/component_state.gd): identity-keyed
   persistent records, lifecycle transitions, retirement, stable component ordinals,
   deltas and independent settled capture copies.
-- [`legacy_events.gd`](../../scripts/pattern/legacy_events.gd): translates current
+- [`theme_events.gd`](../../scripts/pattern/theme_events.gd): translates current
   theme events into that common record format without loading a new asset format
   or rebuilding theme artwork. No nodes/textures enter the common records.
 

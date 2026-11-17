@@ -1,21 +1,15 @@
 class_name BoardFrame
 extends NinePatchRect
 
-const SETTINGS := "res://assets/frames/frames.json"
-static var settings: Dictionary = {}
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 var theme_id := ""
 var appearance := ""
 
-static func specification() -> Dictionary:
-	if settings.is_empty():
-		settings = JSON.parse_string(FileAccess.get_file_as_string(SETTINGS))
-	return settings
-
 static func profile(theme: String) -> Dictionary:
-	return specification().themes.get(theme, {"enabled": false, "texture": "", "appearance": ""})
+	return Themes.profile(theme).get("frame", {"enabled": false, "texture": "", "appearance": ""})
 
 static func margins() -> Vector4:
-	var geometry: Dictionary = specification().geometry
+	var geometry: Dictionary = Themes.specification().frame_geometry
 	var rim: float = geometry.rim
 	return Vector4(rim, rim, rim, rim + float(geometry.sidewall))
 
@@ -59,7 +53,7 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 		texture = artwork
 	elif not path.is_empty() and ResourceLoader.exists(path, "Texture2D"):
 		texture = load(path)
-	if texture != null and texture.get_size() != Vector2(specification().geometry.source_size[0], specification().geometry.source_size[1]):
+	if texture != null and texture.get_size() != Vector2(Themes.specification().frame_geometry.source_size[0], Themes.specification().frame_geometry.source_size[1]):
 		texture = null
 	visible = texture != null
 	if visible:

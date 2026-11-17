@@ -9,35 +9,16 @@ const CELL_SECONDS := 0.20
 const HALF_SECONDS := 0.10
 const DIR_NAMES := ["n", "e", "s", "w"]
 const OFFSETS = Topology.DIRECTIONS
-static var manifest: Dictionary = {}
 var components: Dictionary = {}
 var colonies: Dictionary = {}
 var unions: Dictionary = {}
-
-static func specification() -> Dictionary:
-	if manifest.is_empty():
-		manifest = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "theme.json"))
-		# Normalize runtime metadata without altering the supplied manifest.
-		var by_id: Dictionary = {}
-		for item: Dictionary in manifest.components:
-			item.size_px = item.canvas_px
-			item.layer = item.draw_order
-			item.reveal_mask = item.growth_mask
-			by_id[item.id] = item
-		for item: Dictionary in manifest.ground_components:
-			item.size_px = item.canvas_px
-			item.layer = 0
-			item.artwork = {"salmon": item.artwork, "turquoise": item.artwork}
-			by_id[item.id] = item
-		manifest.components = by_id
-	return manifest
 
 static func ground_choice(cell: Vector2i) -> Dictionary:
 	var hashed: int = ((cell.x * 73856093) ^ (cell.y * 19349663) ^ 1409) & 0xffffffff
 	return {"id": "ground_%02d" % [hashed % 6 + 1], "rotation": (hashed >> 8) % 4}
 
 static func metadata(id: String) -> Dictionary:
-	return Ordinary.part(id) if Ordinary.owns(id) else specification().components[id]
+	return Ordinary.part(id) if Ordinary.owns(id) else (Ordinary.ground_part(id) if id.begins_with("ground_") else Ordinary.special_part(id))
 
 static func component_duration(id: String) -> float:
 	return float(metadata(id).animation.duration_seconds)

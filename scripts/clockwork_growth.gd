@@ -10,18 +10,12 @@ const REVEAL_TAIL := 0.035
 const CORE_EMIT_DELAY := 0.15
 const DIRS = Topology.DIRECTIONS
 const NAMES := ["N", "E", "S", "W"]
-static var manifest: Dictionary = {}
 var components: Dictionary = {}
 var mechanisms: Dictionary = {}
 var chains: Dictionary = {}
 var powered: Dictionary = {}
 var pins: Array = []
 var dismantling := false
-
-static func specification() -> Dictionary:
-	if manifest.is_empty():
-		manifest = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "theme.json"))
-	return manifest
 
 static func key(id: String, color: int, cell: Vector2i) -> String:
 	return "%s/%d/%d/%d" % [id, color, cell.y, cell.x]
@@ -46,7 +40,7 @@ static func ground_choice(cell: Vector2i) -> Dictionary:
 	return {"variant": h % 2 + 1, "rotation": (h >> 8) % 4}
 
 func add_part(id: String, color: int, cell: Vector2i, center: Vector2, old: bool, start: float, seconds: float, rotation: float = 0, identity: String = "") -> Dictionary:
-	var meta: Dictionary = Ordinary.part(id) if Ordinary.owns(id) else specification().components[id]
+	var meta: Dictionary = Ordinary.part(id) if Ordinary.owns(id) else Ordinary.special_part(id)
 	var event := {"id": id, "color": color, "cell": cell, "center": center, "old": old, "start": -100.0 if old else start, "seconds": seconds, "end": -100.0 if old else start + seconds, "rotation": rotation, "key": key(id, color, cell) if identity.is_empty() else identity, "layer": meta.layer}
 	components[event.key] = event
 	if not old:

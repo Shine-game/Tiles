@@ -1,47 +1,6 @@
 {
-  "id": "coral_reef",
-  "version": "2.0",
-  "scope": "Consolidated redesigned artwork, growth fields, numeric paths and visual-state integration contract.",
-  "cell_px": [
-    256,
-    256
-  ],
-  "connection_bits": {
-    "n": 1,
-    "e": 2,
-    "s": 4,
-    "w": 8
-  },
-  "anchors_px": {
-    "center": [
-      128,
-      128
-    ],
-    "n": [
-      128,
-      0
-    ],
-    "e": [
-      256,
-      128
-    ],
-    "s": [
-      128,
-      256
-    ],
-    "w": [
-      0,
-      128
-    ]
-  },
-  "proportions": {
-    "nominal_body_width_px": 77,
-    "painted_body_span_px": 78,
-    "ordinary_core_canvas_painted_span_px": 78,
-    "maximum_width_with_fingers_px": 115
-  },
-  "components": [
-    {
+  "components": {
+    "core": {
       "id": "core",
       "artwork": {
         "salmon": "artwork/salmon/core.png",
@@ -268,9 +227,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/core.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 20,
+      "reveal_mask": "masks/core.png"
     },
-    {
+    "arm_n": {
       "id": "arm_n",
       "artwork": {
         "salmon": "artwork/salmon/arm_n.png",
@@ -383,9 +348,31 @@
         }
       },
       "motif_position": "ordinary supporting cell",
-      "artwork_rotation_clockwise": 0
+      "artwork_rotation_clockwise": 0,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 10,
+      "reveal_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      }
     },
-    {
+    "fingers_n_0": {
       "id": "fingers_n_0",
       "artwork": {
         "salmon": "artwork/salmon/fingers_n_0.png",
@@ -586,9 +573,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_n_0.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_n_0.png"
     },
-    {
+    "fingers_n_1": {
       "id": "fingers_n_1",
       "artwork": {
         "salmon": "artwork/salmon/fingers_n_1.png",
@@ -801,9 +794,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_n_1.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_n_1.png"
     },
-    {
+    "arm_e": {
       "id": "arm_e",
       "artwork": {
         "salmon": "artwork/salmon/arm_n.png",
@@ -916,9 +915,31 @@
         }
       },
       "motif_position": "ordinary supporting cell",
-      "artwork_rotation_clockwise": 90
+      "artwork_rotation_clockwise": 90,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 10,
+      "reveal_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      }
     },
-    {
+    "fingers_e_0": {
       "id": "fingers_e_0",
       "artwork": {
         "salmon": "artwork/salmon/fingers_e_0.png",
@@ -1119,9 +1140,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_e_0.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_e_0.png"
     },
-    {
+    "fingers_e_1": {
       "id": "fingers_e_1",
       "artwork": {
         "salmon": "artwork/salmon/fingers_e_1.png",
@@ -1334,9 +1361,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_e_1.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_e_1.png"
     },
-    {
+    "arm_s": {
       "id": "arm_s",
       "artwork": {
         "salmon": "artwork/salmon/arm_n.png",
@@ -1449,9 +1482,31 @@
         }
       },
       "motif_position": "ordinary supporting cell",
-      "artwork_rotation_clockwise": 180
+      "artwork_rotation_clockwise": 180,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 10,
+      "reveal_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      }
     },
-    {
+    "fingers_s_0": {
       "id": "fingers_s_0",
       "artwork": {
         "salmon": "artwork/salmon/fingers_s_0.png",
@@ -1652,9 +1707,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_s_0.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_s_0.png"
     },
-    {
+    "fingers_s_1": {
       "id": "fingers_s_1",
       "artwork": {
         "salmon": "artwork/salmon/fingers_s_1.png",
@@ -1867,9 +1928,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_s_1.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_s_1.png"
     },
-    {
+    "arm_w": {
       "id": "arm_w",
       "artwork": {
         "salmon": "artwork/salmon/arm_n.png",
@@ -1982,9 +2049,31 @@
         }
       },
       "motif_position": "ordinary supporting cell",
-      "artwork_rotation_clockwise": 270
+      "artwork_rotation_clockwise": 270,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 10,
+      "reveal_mask": {
+        "provider": "linear_reveal",
+        "params": {
+          "size_px": [
+            256,
+            256
+          ],
+          "zero_px": [
+            128,
+            128
+          ],
+          "one_px": [
+            128,
+            0
+          ]
+        }
+      }
     },
-    {
+    "fingers_w_0": {
       "id": "fingers_w_0",
       "artwork": {
         "salmon": "artwork/salmon/fingers_w_0.png",
@@ -2185,9 +2274,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_w_0.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_w_0.png"
     },
-    {
+    "fingers_w_1": {
       "id": "fingers_w_1",
       "artwork": {
         "salmon": "artwork/salmon/fingers_w_1.png",
@@ -2400,9 +2495,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/fingers_w_1.png",
-      "motif_position": "ordinary supporting cell"
+      "motif_position": "ordinary supporting cell",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 30,
+      "reveal_mask": "masks/fingers_w_1.png"
     },
-    {
+    "junction_ne": {
       "id": "junction_ne",
       "artwork": {
         "salmon": "artwork/salmon/junction_ne.png",
@@ -2546,9 +2647,15 @@
       "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 0,
-      "growth_mask_rotation_clockwise": 0
+      "growth_mask_rotation_clockwise": 0,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 11,
+      "reveal_mask": "masks/junction_ne.png"
     },
-    {
+    "junction_es": {
       "id": "junction_es",
       "artwork": {
         "salmon": "artwork/salmon/junction_ne.png",
@@ -2692,9 +2799,15 @@
       "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 90,
-      "growth_mask_rotation_clockwise": 0
+      "growth_mask_rotation_clockwise": 0,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 11,
+      "reveal_mask": "masks/junction_ne.png"
     },
-    {
+    "junction_sw": {
       "id": "junction_sw",
       "artwork": {
         "salmon": "artwork/salmon/junction_ne.png",
@@ -2838,9 +2951,15 @@
       "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 180,
-      "growth_mask_rotation_clockwise": 0
+      "growth_mask_rotation_clockwise": 0,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 11,
+      "reveal_mask": "masks/junction_ne.png"
     },
-    {
+    "junction_wn": {
       "id": "junction_wn",
       "artwork": {
         "salmon": "artwork/salmon/junction_ne.png",
@@ -2984,9 +3103,15 @@
       "growth_mask": "masks/junction_ne.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 270,
-      "growth_mask_rotation_clockwise": 0
+      "growth_mask_rotation_clockwise": 0,
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 11,
+      "reveal_mask": "masks/junction_ne.png"
     },
-    {
+    "colony_body": {
       "id": "colony_body",
       "artwork": {
         "salmon": "artwork/salmon/colony_body.png",
@@ -3255,9 +3380,15 @@
         "branching_allowed": true
       },
       "growth_mask": "masks/colony_body.png",
-      "motif_position": "shared corner of the four supporting cells"
+      "motif_position": "shared corner of the four supporting cells",
+      "size_px": [
+        512,
+        512
+      ],
+      "layer": 40,
+      "reveal_mask": "masks/colony_body.png"
     },
-    {
+    "colony_fold_ne": {
       "id": "colony_fold_ne",
       "artwork": {
         "salmon": "artwork/salmon/colony_fold_ne.png",
@@ -3510,9 +3641,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/colony_fold_ne.png",
-      "motif_position": "shared corner of the four supporting cells"
+      "motif_position": "shared corner of the four supporting cells",
+      "size_px": [
+        512,
+        512
+      ],
+      "layer": 41,
+      "reveal_mask": "masks/colony_fold_ne.png"
     },
-    {
+    "colony_fold_sw": {
       "id": "colony_fold_sw",
       "artwork": {
         "salmon": "artwork/salmon/colony_fold_sw.png",
@@ -3765,9 +3902,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/colony_fold_sw.png",
-      "motif_position": "shared corner of the four supporting cells"
+      "motif_position": "shared corner of the four supporting cells",
+      "size_px": [
+        512,
+        512
+      ],
+      "layer": 42,
+      "reveal_mask": "masks/colony_fold_sw.png"
     },
-    {
+    "colony_fingers_nw": {
       "id": "colony_fingers_nw",
       "artwork": {
         "salmon": "artwork/salmon/colony_fingers_nw.png",
@@ -4020,9 +4163,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/colony_fingers_nw.png",
-      "motif_position": "shared corner of the four supporting cells"
+      "motif_position": "shared corner of the four supporting cells",
+      "size_px": [
+        512,
+        512
+      ],
+      "layer": 43,
+      "reveal_mask": "masks/colony_fingers_nw.png"
     },
-    {
+    "colony_fingers_se": {
       "id": "colony_fingers_se",
       "artwork": {
         "salmon": "artwork/salmon/colony_fingers_se.png",
@@ -4275,9 +4424,15 @@
         "branching_allowed": false
       },
       "growth_mask": "masks/colony_fingers_se.png",
-      "motif_position": "shared corner of the four supporting cells"
+      "motif_position": "shared corner of the four supporting cells",
+      "size_px": [
+        512,
+        512
+      ],
+      "layer": 44,
+      "reveal_mask": "masks/colony_fingers_se.png"
     },
-    {
+    "anemone_foot": {
       "id": "anemone_foot",
       "artwork": {
         "salmon": "artwork/salmon/anemone_foot.png",
@@ -4516,9 +4671,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 70,
+      "reveal_mask": "masks/anemone_foot.png"
     },
-    {
+    "anemone_region_0": {
       "id": "anemone_region_0",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_0.png",
@@ -4763,9 +4924,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_0.png"
     },
-    {
+    "anemone_region_1": {
       "id": "anemone_region_1",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_1.png",
@@ -5010,9 +5177,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_1.png"
     },
-    {
+    "anemone_region_2": {
       "id": "anemone_region_2",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_2.png",
@@ -5257,9 +5430,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_2.png"
     },
-    {
+    "anemone_region_3": {
       "id": "anemone_region_3",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_3.png",
@@ -5504,9 +5683,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_3.png"
     },
-    {
+    "anemone_region_4": {
       "id": "anemone_region_4",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_4.png",
@@ -5751,9 +5936,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_4.png"
     },
-    {
+    "anemone_region_5": {
       "id": "anemone_region_5",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_5.png",
@@ -5998,9 +6189,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_5.png"
     },
-    {
+    "anemone_region_6": {
       "id": "anemone_region_6",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_6.png",
@@ -6245,9 +6442,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_6.png"
     },
-    {
+    "anemone_region_7": {
       "id": "anemone_region_7",
       "artwork": {
         "salmon": "artwork/salmon/anemone_region_7.png",
@@ -6492,9 +6695,15 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 71,
+      "reveal_mask": "masks/anemone_region_7.png"
     },
-    {
+    "anemone_oral_disc": {
       "id": "anemone_oral_disc",
       "artwork": {
         "salmon": "artwork/salmon/anemone_oral_disc.png",
@@ -6699,65 +6908,20 @@
           1
         ]
       ],
-      "motif_position": "midpoint between two immediate orthogonal colony centers"
-    }
-  ],
-  "topology_examples": [
-    {
-      "id": "isolated",
-      "mask": 0,
-      "references": {
-        "salmon": "../review/references/salmon/mask_00.png",
-        "turquoise": "../review/references/turquoise/mask_00.png"
-      }
+      "motif_position": "midpoint between two immediate orthogonal colony centers",
+      "size_px": [
+        256,
+        512
+      ],
+      "layer": 72,
+      "reveal_mask": "masks/anemone_oral_disc.png"
     },
-    {
-      "id": "endpoint",
-      "mask": 1,
-      "references": {
-        "salmon": "../review/references/salmon/mask_01.png",
-        "turquoise": "../review/references/turquoise/mask_01.png"
-      }
-    },
-    {
-      "id": "straight",
-      "mask": 5,
-      "references": {
-        "salmon": "../review/references/salmon/mask_05.png",
-        "turquoise": "../review/references/turquoise/mask_05.png"
-      }
-    },
-    {
-      "id": "corner",
-      "mask": 3,
-      "references": {
-        "salmon": "../review/references/salmon/mask_03.png",
-        "turquoise": "../review/references/turquoise/mask_03.png"
-      }
-    },
-    {
-      "id": "t_junction",
-      "mask": 11,
-      "references": {
-        "salmon": "../review/references/salmon/mask_11.png",
-        "turquoise": "../review/references/turquoise/mask_11.png"
-      }
-    },
-    {
-      "id": "cross",
-      "mask": 15,
-      "references": {
-        "salmon": "../review/references/salmon/mask_15.png",
-        "turquoise": "../review/references/turquoise/mask_15.png"
-      }
-    }
-  ],
-  "ground": "Six approved ground PNGs copied unchanged; appear instantly, independently of coral growth.",
-  "palette": "Salmon bodies have turquoise tips; turquoise bodies have salmon tips; alpha and geometry are identical.",
-  "ground_components": [
-    {
+    "ground_01": {
       "id": "ground_01",
-      "artwork": "artwork/ground/ground_01.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_01.png",
+        "turquoise": "artwork/ground/ground_01.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6778,11 +6942,19 @@
         180,
         270
       ],
-      "growth": "instant"
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 0
     },
-    {
+    "ground_02": {
       "id": "ground_02",
-      "artwork": "artwork/ground/ground_02.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_02.png",
+        "turquoise": "artwork/ground/ground_02.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6803,11 +6975,19 @@
         180,
         270
       ],
-      "growth": "instant"
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 0
     },
-    {
+    "ground_03": {
       "id": "ground_03",
-      "artwork": "artwork/ground/ground_03.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_03.png",
+        "turquoise": "artwork/ground/ground_03.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6828,11 +7008,19 @@
         180,
         270
       ],
-      "growth": "instant"
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 0
     },
-    {
+    "ground_04": {
       "id": "ground_04",
-      "artwork": "artwork/ground/ground_04.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_04.png",
+        "turquoise": "artwork/ground/ground_04.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6853,11 +7041,19 @@
         180,
         270
       ],
-      "growth": "instant"
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 0
     },
-    {
+    "ground_05": {
       "id": "ground_05",
-      "artwork": "artwork/ground/ground_05.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_05.png",
+        "turquoise": "artwork/ground/ground_05.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6878,11 +7074,19 @@
         180,
         270
       ],
-      "growth": "instant"
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
+      ],
+      "layer": 0
     },
-    {
+    "ground_06": {
       "id": "ground_06",
-      "artwork": "artwork/ground/ground_06.png",
+      "artwork": {
+        "salmon": "artwork/ground/ground_06.png",
+        "turquoise": "artwork/ground/ground_06.png"
+      },
       "canvas_px": [
         256,
         256
@@ -6903,699 +7107,12 @@
         180,
         270
       ],
-      "growth": "instant"
-    }
-  ],
-  "landmark": {
-    "id": "colony",
-    "canvas_px": [
-      512,
-      512
-    ],
-    "footprint_cells": [
-      [
-        0,
-        0
+      "growth": "instant",
+      "size_px": [
+        256,
+        256
       ],
-      [
-        1,
-        0
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        1,
-        1
-      ]
-    ],
-    "body_painted_bounds_px": [
-      20,
-      20,
-      491,
-      491
-    ],
-    "body_painted_span_px": [
-      471,
-      471
-    ],
-    "ordinary_enclosing_body_width_px": 77,
-    "rim": "Sculpted lip in the body artwork, not an enlarged ordinary connection stroke.",
-    "eligibility": "Every same-color occupied 2x2, including overlapping circles and circles formed over multiple placements.",
-    "external_ports_px": [
-      [
-        128,
-        0
-      ],
-      [
-        384,
-        0
-      ],
-      [
-        512,
-        128
-      ],
-      [
-        512,
-        384
-      ],
-      [
-        384,
-        512
-      ],
-      [
-        128,
-        512
-      ],
-      [
-        0,
-        384
-      ],
-      [
-        0,
-        128
-      ]
-    ],
-    "components_bottom_to_top": [
-      "colony_body",
-      "colony_fold_ne",
-      "colony_fold_sw",
-      "colony_fingers_nw",
-      "colony_fingers_se"
-    ],
-    "orientation": "Keep the body orientation stable when later neighbors are added.",
-    "anemones": "Immediate orthogonal neighboring colonies develop one joint anemone."
-  },
-  "anemone": {
-    "components_bottom_to_top": [
-      "anemone_foot",
-      "anemone_region_0",
-      "anemone_region_1",
-      "anemone_region_2",
-      "anemone_region_3",
-      "anemone_region_4",
-      "anemone_region_5",
-      "anemone_region_6",
-      "anemone_region_7",
-      "anemone_oral_disc"
-    ],
-    "canvas_px": [
-      256,
-      512
-    ],
-    "pivot_px": [
-      128,
-      256
-    ],
-    "crown_painted_target_px": [
-      224,
-      360
-    ],
-    "foot_painted_target_px": [
-      106,
-      370
-    ],
-    "eligible_origin_deltas": [
-      [
-        1,
-        0
-      ],
-      [
-        -1,
-        0
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        -1
-      ]
-    ],
-    "excluded": "Diagonal colony offsets, corner-only contacts, separated or opposite-colored colonies.",
-    "count": "One per immediate horizontal/vertical neighboring colony pair; no joins across intervening colonies.",
-    "position": "Midpoint of colony centers. Vertical artwork for horizontally adjacent colonies; rotate 90 degrees for vertically adjacent colonies.",
-    "regions": "Eight reveal partitions use the same crown geodesic mask and timeline; they are not separate anatomical tentacle animations.",
-    "center_policy": "Warm oral disc retained in both variants; reciprocal tentacle accents differ.",
-    "three_by_three": "Four overlapping 2x2 colonies, four anemones, no central or diagonal anemone."
-  },
-  "date": "2026-11-10",
-  "status": "Ready for integration; Godot and Android verification pending",
-  "growth_contract": {
-    "source": "Accepted logical placement; no changes to move legality, symmetry, controls, helper budgets or Place-button gate.",
-    "logical_and_visible_states_separate": true,
-    "ground": "Show immediately on occupied cells; no growth mask or animation.",
-    "main_speed_px_per_second": 1280,
-    "half_arm_length_px": 128,
-    "half_arm_seconds": 0.1,
-    "soft_front_seconds": 0.035,
-    "mask_decode": "8-bit grayscale linear data, u=red/255; not source_color.",
-    "arrival": "min(enabled0 ? start0+u*duration : INF, enabled1 ? start1+(1-u)*duration : INF)",
-    "visibility": "smoothstep(0,soft_front_seconds,clock-arrival); multiply artwork alpha once.",
-    "completion": "Force full original artwork only after every visible pixel has finished; keep node and stop active updates.",
-    "existing_sources": "Multi-source Dijkstra over new-new and new-existing same-color orthogonal center edges, 0.20 seconds per cell. Existing completed source centers start at 0.",
-    "half_arm_fronts": "For A->B, start0=t_center[A], start1=t_center[B]+0.10, duration=0.10. Both enabled; earlier front wins.",
-    "no_external_source": "All new cells bud at t=0; internal half-arms use start0=0.10, start1=0.20, duration=0.10. No outward arms at empty/opposite-color edges.",
-    "branching": "All newly required arms can propagate once their center is reached; details follow attachment dependencies.",
-    "circle": "All eight ordinary half-arms on a same-color 2x2 perimeter must be visibly complete; then grow colony_body from the existing 77px-thick circle. Overlapping circles are allowed.",
-    "anemone": "Wait for both supporting immediate-neighbor colony component sets to develop. Foot then oral disc then shared-clock crown growth.",
-    "stable_keys": "(color,cell,component), (color,colony_origin,component), (color,sorted_immediate_colony_pair,component). Preserve completed nodes and feature creation order.",
-    "painter_order": "Arms 10, junction fills 11, cores 20, fingers 30. Colony containers in creation order, body/folds/fingers within each. Anemones above colonies, foot/regions/disc within each.",
-    "undo_delete": "Receive restored authoritative board. Invalidate stale callbacks, remove invalid component/colony/pair keys only, preserve surviving artwork. Restore saved visual state if supplied; otherwise settle surviving target. Ground follows occupancy.",
-    "reset_theme_switch": "Invalidate callbacks, clear old theme registries, derive target from actual board. Theme switch may build the current board fully complete; never alter its logical colors or symmetry.",
-    "interruption": "Follow project-owned animation/gate policy; no imposed settle-on-next-placement behavior. Use explicit settle/cancel hooks only when requested by the project.",
-    "current_growth_rule": "Four colonies/four anemones in 3x3; three colonies/two anemones in filled 4x2 or 2x4.",
-    "active_existing_source": "If a logical source is still growing, borrow its predicted visible center/edge arrival from the existing visual timeline. Do not treat invisible artwork as complete, do not seed locally when a logical same-color orthogonal source exists, and do not force it to finish merely because another placement arrives."
-  },
-  "rendering": {
-    "root_scale": "display_cell_px/256",
-    "shader": "shaders/growth_reveal.gdshader",
-    "sampling": "Linear, clamp, lossless. Disable mipmaps for exact ground port profile compatibility; GPU mipmapped seams not verified.",
-    "art_alpha": "Straight RGBA; ground opaque over full occupied cell, other artwork transparent.",
-    "mask_color_space": "Linear scalar data, no source_color.",
-    "art_color_space": "source_color sampler hint.",
-    "active_materials": "Independent mutable ShaderMaterial per component; share immutable textures and Shader.",
-    "clock": "CPU clock controlled by project pause/cancel policy, not shader TIME."
-  },
-  "maximum_complexity": 4,
-  "topologies": [
-    {
-      "id": "isolated",
-      "topology_id": 0,
-      "connection_mask": 0,
-      "directions": [],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "core"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_00.png",
-        "turquoise": "../review/references/turquoise/mask_00.png"
-      },
-      "references_required_at_runtime": false
-    },
-    {
-      "id": "endpoint",
-      "topology_id": 1,
-      "connection_mask": 1,
-      "directions": [
-        "n"
-      ],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "arm_n",
-        "core",
-        "fingers_n_0",
-        "fingers_n_1"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_01.png",
-        "turquoise": "../review/references/turquoise/mask_01.png"
-      },
-      "references_required_at_runtime": false
-    },
-    {
-      "id": "straight",
-      "topology_id": 2,
-      "connection_mask": 5,
-      "directions": [
-        "n",
-        "s"
-      ],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "arm_n",
-        "arm_s",
-        "core",
-        "fingers_n_0",
-        "fingers_n_1",
-        "fingers_s_0",
-        "fingers_s_1"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_05.png",
-        "turquoise": "../review/references/turquoise/mask_05.png"
-      },
-      "references_required_at_runtime": false
-    },
-    {
-      "id": "corner",
-      "topology_id": 3,
-      "connection_mask": 3,
-      "directions": [
-        "n",
-        "e"
-      ],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "arm_n",
-        "arm_e",
-        "junction_ne",
-        "core",
-        "fingers_n_0",
-        "fingers_n_1",
-        "fingers_e_0",
-        "fingers_e_1"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_03.png",
-        "turquoise": "../review/references/turquoise/mask_03.png"
-      },
-      "references_required_at_runtime": false
-    },
-    {
-      "id": "t_junction",
-      "topology_id": 4,
-      "connection_mask": 11,
-      "directions": [
-        "n",
-        "e",
-        "w"
-      ],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "arm_n",
-        "arm_e",
-        "arm_w",
-        "junction_ne",
-        "junction_wn",
-        "core",
-        "fingers_n_0",
-        "fingers_n_1",
-        "fingers_e_0",
-        "fingers_e_1",
-        "fingers_w_0",
-        "fingers_w_1"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_11.png",
-        "turquoise": "../review/references/turquoise/mask_11.png"
-      },
-      "references_required_at_runtime": false
-    },
-    {
-      "id": "cross",
-      "topology_id": 5,
-      "connection_mask": 15,
-      "directions": [
-        "n",
-        "e",
-        "s",
-        "w"
-      ],
-      "canonical_orientation": "as direction list",
-      "allowed_rotations_clockwise": [
-        0,
-        90,
-        180,
-        270
-      ],
-      "components_bottom_to_top": [
-        "arm_n",
-        "arm_e",
-        "arm_s",
-        "arm_w",
-        "junction_ne",
-        "junction_es",
-        "junction_sw",
-        "junction_wn",
-        "core",
-        "fingers_n_0",
-        "fingers_n_1",
-        "fingers_e_0",
-        "fingers_e_1",
-        "fingers_s_0",
-        "fingers_s_1",
-        "fingers_w_0",
-        "fingers_w_1"
-      ],
-      "completed_reference": {
-        "salmon": "../review/references/salmon/mask_15.png",
-        "turquoise": "../review/references/turquoise/mask_15.png"
-      },
-      "references_required_at_runtime": false
-    }
-  ],
-  "rotation_convention": {
-    "origin": "top-left",
-    "x": "right",
-    "y": "down",
-    "positive": "clockwise",
-    "mask_quarter_turn": "((mask<<1)&15)|(mask>>3)",
-    "sprite_rotation": "about fixed pivot; rotate artwork and growth mask together",
-    "core": "Preserve core orientation once created; use the supplied directional components to add connections."
-  },
-  "normalized_anchors": {
-    "center": [
-      0.5,
-      0.5
-    ],
-    "n": [
-      0.5,
-      0
-    ],
-    "e": [
-      1,
-      0.5
-    ],
-    "s": [
-      0.5,
-      1
-    ],
-    "w": [
-      0,
-      0.5
-    ]
-  },
-  "ground_selection": {
-    "algorithm": "h=((x*73856093) XOR (y*19349663) XOR 1409) masked to 32 bits; component=ground_components[h%6]; rotation_quarters=(h>>8)%4",
-    "depends_only_on_board_coordinates": true,
-    "piece_rotation_changes_ground": false
-  },
-  "schema_version": "2.0.0",
-  "source_artwork_creator": "OpenAI image generation, directed and approved by the user; technical assembly by Codex",
-  "runtime_paths_relative_to": "runtime/theme.json containing directory",
-  "ordinary_center_rule": "Use the ordinary core at the existing starting occupied cell; preserve project-owned logical color assignment.",
-  "audio": {
-    "schema": "symmetrical_tiles.audio.v1",
-    "theme_id": "coral_reef",
-    "version": "0.1.0",
-    "status": "Draft audition; listening balance and Godot/Android verification pending",
-    "assets": [
-      {
-        "id": "reef_ambience",
-        "path": "res://assets/audio/coral_reef/reef_ambience.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 8.687791666666667,
-        "loop": true,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 8.687791666666667,
-        "gain_db": -5,
-        "source_edits": [
-          {
-            "source": "magiaz-coral-379819.mp3",
-            "range_seconds": [
-              0,
-              5.093895833333334
-            ]
-          },
-          {
-            "source": "magiaz-coral-379835.mp3",
-            "range_seconds": [
-              0,
-              5.093895833333334
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -8.68433666229248
-      },
-      {
-        "id": "growth_01",
-        "path": "res://assets/audio/coral_reef/growth_01.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.87,
-        "loop": true,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.87,
-        "gain_db": -3,
-        "source_edits": [
-          {
-            "source": "freesound_community-plant-95044.mp3",
-            "range_seconds": [
-              1.15,
-              2.2
-            ]
-          },
-          {
-            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
-            "range_seconds": [
-              9.15,
-              10.200000000000001
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -7.000000476837158
-      },
-      {
-        "id": "growth_02",
-        "path": "res://assets/audio/coral_reef/growth_02.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.87,
-        "loop": true,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.87,
-        "gain_db": -3,
-        "source_edits": [
-          {
-            "source": "freesound_community-plant-95044.mp3",
-            "range_seconds": [
-              3.05,
-              4.1
-            ]
-          },
-          {
-            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
-            "range_seconds": [
-              12.25,
-              13.3
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -7.000000476837158
-      },
-      {
-        "id": "growth_03",
-        "path": "res://assets/audio/coral_reef/growth_03.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.87,
-        "loop": true,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.87,
-        "gain_db": -3,
-        "source_edits": [
-          {
-            "source": "freesound_community-plant-95044.mp3",
-            "range_seconds": [
-              5.1,
-              6.1499999999999995
-            ]
-          },
-          {
-            "source": "freesound_community-dry-flowers-and-twigs-rustling-34133.mp3",
-            "range_seconds": [
-              33.05,
-              34.099999999999994
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -7.000000476837158
-      },
-      {
-        "id": "bubble_short_01",
-        "path": "res://assets/audio/coral_reef/bubble_short_01.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.57,
-        "loop": false,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.57,
-        "gain_db": -2,
-        "source_edits": [
-          {
-            "source": "krnbeatz-bubble-in-water-422579.mp3",
-            "range_seconds": [
-              0.3,
-              0.87
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -7.448630332946777
-      },
-      {
-        "id": "bubble_short_02",
-        "path": "res://assets/audio/coral_reef/bubble_short_02.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.57,
-        "loop": false,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.57,
-        "gain_db": -2,
-        "source_edits": [
-          {
-            "source": "krnbeatz-bubble-in-water-422579.mp3",
-            "range_seconds": [
-              1.73,
-              2.3
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -7.223212242126465
-      },
-      {
-        "id": "bubble_short_03",
-        "path": "res://assets/audio/coral_reef/bubble_short_03.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 0.57,
-        "loop": false,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 0.57,
-        "gain_db": -2,
-        "source_edits": [
-          {
-            "source": "krnbeatz-bubble-in-water-422579.mp3",
-            "range_seconds": [
-              4.1,
-              4.67
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -6.22615909576416
-      },
-      {
-        "id": "bubble_long_01",
-        "path": "res://assets/audio/coral_reef/bubble_long_01.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 1.58,
-        "loop": false,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 1.58,
-        "gain_db": -2,
-        "source_edits": [
-          {
-            "source": "krnbeatz-bubble-in-water-422579.mp3",
-            "range_seconds": [
-              4.02,
-              5.6
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -6.000000953674316
-      },
-      {
-        "id": "bubble_long_02",
-        "path": "res://assets/audio/coral_reef/bubble_long_02.ogg",
-        "sample_rate_hz": 48000,
-        "channels": 2,
-        "duration_seconds": 1.58,
-        "loop": false,
-        "loop_begin_seconds": 0,
-        "loop_end_seconds": 1.58,
-        "gain_db": -2,
-        "source_edits": [
-          {
-            "source": "krnbeatz-bubble-in-water-422579.mp3",
-            "range_seconds": [
-              6.72,
-              8.3
-            ]
-          }
-        ],
-        "uncompressed_peak_dbfs": -6.000000953674316
-      }
-    ],
-    "events": {
-      "ambience": {
-        "asset": "reef_ambience",
-        "bus": "ReefAmbience",
-        "fade_in_seconds": 1.5,
-        "fade_out_seconds": 0.6
-      },
-      "ordinary_growth": {
-        "assets": [
-          "growth_01",
-          "growth_02",
-          "growth_03"
-        ],
-        "bus": "ReefGrowth",
-        "trigger": "visible ordinary growth begins",
-        "stop": "last ordinary component in placement completes or is canceled",
-        "scope": "one texture per active placement, never one per cell or arm",
-        "fade_in_seconds": 0.025,
-        "fade_out_seconds": 0.08,
-        "maximum_voices": 2,
-        "selection": "stable placement ID modulo 3; do not use logical color"
-      },
-      "colony": {
-        "assets": [
-          "bubble_short_01",
-          "bubble_short_02",
-          "bubble_short_03"
-        ],
-        "bus": "ReefFeatures",
-        "trigger": "colony foundation visibly begins after its cycle completes",
-        "maximum_voices": 2
-      },
-      "anemone": {
-        "assets": [
-          "bubble_long_01",
-          "bubble_long_02"
-        ],
-        "bus": "ReefFeatures",
-        "trigger": "anemone foot visibly begins after supporting colonies become ready",
-        "maximum_voices": 2
-      }
-    },
-    "mix": {
-      "feature_coalescing_seconds": 0.12,
-      "scope": "same event type in the same placement",
-      "simultaneous_colony_and_anemone": "both eligible; features bus cap 2 voices, prioritize anemone if full",
-      "selection": "stable feature key hash; no immediate repeat when alternatives exist",
-      "ambience_duck_db": 2,
-      "duck_attack_seconds": 0.04,
-      "duck_release_seconds": 0.25,
-      "master_limiter_ceiling_db": -1,
-      "pan": "centered; shared mix for both logical colors"
-    },
-    "lifecycle": {
-      "undo_delete": "cancel invalid event IDs, fade active growth in 80ms; never replay survivors",
-      "reset_theme_switch": "cancel pending events, fade active SFX 80ms and ambience 600ms",
-      "save_load": "start ambience; render settled board silently",
-      "pause": "pause visual clock and audio together; do not advance cue clocks",
-      "rules": "audio follows visual callbacks and never changes occupancy, symmetry, controls or placement gates"
-    },
-    "review": {
-      "schedule": "../review/events.json",
-      "audio": "../review/reef_soundscape.mp3",
-      "video": "../review/growth_with_audio.mp4"
+      "layer": 0
     }
   }
 }

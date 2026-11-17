@@ -49,7 +49,7 @@ func _run() -> void:
 				var key := Model.key(id, color, center)
 				check(model.components.has(key) == expected and visuals.registry.has(key) == expected, "Selected multipart centers and vines follow their declared connection requirements")
 				if not expected: continue
-				var source: Dictionary = Model.specification().components[id]
+				var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/coral_source_catalog.json")).components[id]
 				var entry: Dictionary = model.components[key]
 				var node: Sprite2D = visuals.registry[key]
 				check(node.texture == Assets.texture(source.artwork[treatment], Model.ROOT), "Both treatments use the exact original canonical texture")

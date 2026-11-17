@@ -1,6 +1,6 @@
 # Shared board-frame contract
 
-This is the central implementation and handoff guide for every theme. Personalization lives only in `assets/frames/frames.json` under `themes`: texture path, appearance ID, enabled flag, material direction and provenance. The common `geometry` block applies to every theme. Do not copy layout rules or create theme-specific frame renderers.
+This is the central implementation and handoff guide for every theme. Personalization lives only in `assets/themes/themes.json` under `themes.<id>.frame`: texture path, appearance ID, enabled flag, material direction and provenance. The common `frame_geometry` block applies to every theme. Do not copy layout rules or create theme-specific frame renderers.
 
 ## Shared artwork geometry
 

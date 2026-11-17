@@ -4,10 +4,8 @@ extends Node2D
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Ordinary = preload("res://scripts/coral_sets.gd")
-const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
 const Model = preload("res://scripts/coral_growth.gd")
 const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
-const REVEAL = preload("res://art/themes/coral_reef/shaders/growth_reveal.gdshader")
 static var textures: Dictionary = {}
 var components := Components.new()
 var registry: Dictionary = components.nodes
@@ -47,7 +45,7 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 		identity = "bucket/%d" % event.bucket
 	if not groups.has(identity):
 		var node := Node2D.new()
-		node.z_index = int(Ordinary.part(event.id).group_z_index) if Ordinary.owns(event.id) else (4 if event.id.begins_with("colony_") else (7 if event.id.begins_with("anemone_") else int(event.bucket / 10)))
+		node.z_index = int(Ordinary.part(event.id).group_z_index) if Ordinary.owns(event.id) else (int(Ordinary.special_part(event.id).group_z_index) if event.id.begins_with("anemone_") else int(event.bucket / 10))
 		add_child(node)
 		groups[identity] = node
 		if not ordinals.has(identity) or (not restored and not event.old):
@@ -67,16 +65,7 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 		var event: Dictionary = model.components[identity]
 		var ordinary: bool = Ordinary.owns(event.id)
 		var placement: Dictionary
-		var meta: Dictionary = {} if ordinary else Model.specification().components[event.id]
-		if ordinary: placement = Ordinary.render_spec(event, settled)
-		else:
-			var variant: String = "salmon" if event.color == 1 else "turquoise"
-			var part := Catalog.component(meta, variant, Model.ROOT)
-			placement = part.placement.duplicate()
-			placement.asset = part.asset
-			placement.position_cells = event.center
-			placement.rotation_radians = event.rotation * PI / 2 + deg_to_rad(float(meta.get("artwork_rotation_clockwise", 0)))
-			placement.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		placement = Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)
 		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))
 		if ordinary:
 			if not (settled or event.old): components.reveal(identity, event, "clock_seconds")
@@ -87,19 +76,7 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 				sprite.material = surface
 			sprite.material.set_shader_parameter("cell_center", event.center)
 			sprite.material.set_shader_parameter("quarter_turn", float(event.rotation))
-		elif settled or event.old:
-			sprite.material = null
-		else:
-			var material := Components.material(REVEAL)
-			material.set_shader_parameter("artwork", sprite.texture)
-			material.set_shader_parameter("growth_mask", texture(meta.reveal_mask))
-			# Junctions retain their original directional geodesic fields.
-			material.set_shader_parameter("growth_mask_rotation_radians", deg_to_rad(float(meta.get("growth_mask_rotation_clockwise", 0))))
-			material.set_shader_parameter("start_at_zero", event.start)
-			material.set_shader_parameter("start_at_one", event.reverse)
-			material.set_shader_parameter("stroke_seconds", event.stroke)
-			material.set_shader_parameter("front_one_enabled", event.two_fronts)
-			sprite.material = material
+		elif not (settled or event.old):
 			components.reveal(identity, event, "clock_seconds")
 	for identity: String in groups.keys():
 		if groups[identity].get_child_count() == 0:

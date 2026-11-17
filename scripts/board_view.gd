@@ -10,15 +10,18 @@ signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: flo
 signal visual_clock_advanced(clock: float)
 const VineModel = preload("res://scripts/vines_growth.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
-const AssetProviders = preload("res://scripts/pattern/legacy_assets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
-const LegacyEvents = preload("res://scripts/pattern/legacy_events.gd")
+const ThemeEvents = preload("res://scripts/pattern/theme_events.gd")
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
+const ClockSets = preload("res://scripts/clockwork_sets.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Brush = preload("res://scripts/botanical_brush.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
 const Workshop = preload("res://scripts/clockwork_visuals.gd")
+const CoralSets = preload("res://scripts/coral_sets.gd")
+const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
@@ -62,7 +65,6 @@ var blank_ground: Node2D
 var blank_signature: Array = []
 
 func _ready() -> void:
-	AssetProviders.install()
 	z_index = 1
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
@@ -99,7 +101,8 @@ func _build_pattern(before: Array, after: Array) -> void:
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	zen_garden = Palette.zen_garden
-	pattern = Zen.new() if zen_garden else (Clock.new() if clockwork else (Coral.new() if coral_reef else VineModel.new()))
+	var model_hooks := {"zen_garden": Zen, "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
+	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
 	pattern.build(before, after)
 	if board_frame == null:
 		board_frame = Frame.new()
@@ -152,12 +155,11 @@ func _sync_blank_ground() -> void:
 			var turn := 0
 			if clockwork:
 				var choice: Dictionary = Clock.ground_choice(cell)
-				sprite.texture = Workshop.texture("artwork/ground/plate_%02d.png" % choice.variant)
+				sprite.texture = Assets.part_texture(ClockSets.ground_part("plate_%02d" % choice.variant))
 				turn = choice.rotation
 			else:
 				var choice: Dictionary = Coral.ground_choice(cell)
-				var meta: Dictionary = Coral.specification().components[choice.id]
-				sprite.texture = CoralLayer.texture(meta.artwork.salmon)
+				sprite.texture = Assets.part_texture(CoralSets.ground_part(choice.id), "salmon")
 				turn = choice.rotation
 			sprite.position = (Vector2(cell) + Vector2.ONE * 0.5) * 256
 			sprite.rotation = turn * PI / 2
@@ -269,7 +271,7 @@ func animate_growth(before: Array, after: Array) -> void:
 	queue_redraw()
 
 func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart: bool = true) -> void:
-	var events: Dictionary = LegacyEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
+	var events: Dictionary = ThemeEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
 	if Palette.theme_id() == "vines": events.merge(Vines.center_events(pattern, growth_before, settled))
 	construction_state.reconcile(events, 0.0 if settled else pattern.duration, at, settled, preserve, restart)
 	clock = construction_state.schedule.clock

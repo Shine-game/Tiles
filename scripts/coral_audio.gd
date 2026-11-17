@@ -2,7 +2,7 @@ class_name CoralAudio
 extends Node
 
 const Plan = preload("res://scripts/coral_audio_plan.gd")
-const Coral = preload("res://scripts/coral_growth.gd")
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const SILENT_DB := -60.0
 var specification: Dictionary
 var assets: Dictionary = {}
@@ -27,7 +27,7 @@ var visual_clock := 0.0
 var event_log: Array = []
 
 func _ready() -> void:
-	specification = Coral.specification().audio
+	specification = Themes.profile("coral_reef").audio
 	bus_name = "CoralReef_%d" % get_instance_id()
 	AudioServer.add_bus()
 	var index: int = AudioServer.bus_count - 1

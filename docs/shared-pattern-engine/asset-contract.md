@@ -1,10 +1,11 @@
-# Proposed shared asset-set contract
+# Shared asset-set contract
 
 Semantic contract defined in Step 1. The common loading/rendering subset is now
 implemented in Step 4; see [the runtime format and example](assets-and-rendering.md).
 Clockwork ordinary role/treatment mappings are now live in
 [Step 5](clockwork-ordinary-sets.md). The remaining theme/role model below is the migration target; supplied legacy
-manifests are unchanged and consumed through explicit adapters. See
+manifests were initially consumed through explicit adapters. Step 9 replaced those
+production adapters with [one registry and shared catalogs](theme-registry.md). See
 [the inventory](theme-inventory.md) for what is available today and what still
 needs a migration decision.
 

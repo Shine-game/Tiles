@@ -1,0 +1,164 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "coral-environment",
+  "tier": 0,
+  "roles": {
+    "ground": "ground"
+  },
+  "compositions": {
+    "ground": {
+      "parts": {
+        "ground_01": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_01.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        },
+        "ground_02": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_02.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_02.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        },
+        "ground_03": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_03.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_03.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        },
+        "ground_04": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_04.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_04.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        },
+        "ground_05": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_05.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_05.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        },
+        "ground_06": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_06.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/ground/ground_06.png"
+              }
+            }
+          },
+          "pivot_px": [
+            128,
+            128
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 0,
+          "texture_filter": 2
+        }
+      }
+    }
+  }
+}

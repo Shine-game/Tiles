@@ -1,4 +1,5 @@
 extends RefCounted
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 # Clockwork Tier 0/1/2 use the shared loader/selector/renderer. Existing
 # pressure, operation and retirement hooks keep their legacy component IDs.
 const Assembly = preload("res://scripts/pattern/assembly.gd")
@@ -14,22 +15,34 @@ static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
 static var tier2: Dictionary = {}
 static var catalog: Dictionary = {}
+static var tier3: Dictionary = {}
+static var environment: Dictionary = {}
+static var special: Dictionary = {}
+static var grounds: Dictionary = {}
 
 static func install() -> void:
 	if not tier0.is_empty(): return
 	Renderer.register_material_provider("clockwork.rise", _rise)
 	Renderer.register_material_provider("clockwork.tube", _tube)
-	tier0 = Assets.load_set(ROOT + "tier0.json")
-	tier1 = Assets.load_set(ROOT + "tier1.json")
-	tier2 = Assets.load_set(ROOT + "tier2.json")
+	tier0 = Assets.load_set(Themes.pattern_set_path("clockwork", 0))
+	tier1 = Assets.load_set(Themes.pattern_set_path("clockwork", 1))
+	tier2 = Assets.load_set(Themes.pattern_set_path("clockwork", 2))
 	assert(tier0.ok and tier1.ok and tier2.ok, "Invalid Clockwork ordinary sets: " + str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid Tier 2 part schedule")
-	for loaded: Dictionary in [tier0, tier1, tier2]:
-		for composition: Dictionary in loaded.definition.compositions.values():
-			for id: String in composition.parts:
-				var spec: Dictionary = composition.parts[id].duplicate(true)
-				spec.asset_root = loaded.root
-				catalog[id] = spec
+	tier3 = Assets.load_set(Themes.pattern_set_path("clockwork", 3))
+	environment = Assets.load_set(Themes.profile("clockwork").environment.catalog)
+	assert(tier3.ok and environment.ok, str(tier3.errors + environment.errors))
+	catalog = Assets.catalog([tier0, tier1, tier2])
+	special = Assets.catalog([tier3])
+	grounds = Assets.catalog([environment])
+
+static func special_part(id: String) -> Dictionary:
+	install()
+	return special[id]
+
+static func ground_part(id: String) -> Dictionary:
+	install()
+	return grounds[id]
 
 static func owns(id: String) -> bool:
 	install()

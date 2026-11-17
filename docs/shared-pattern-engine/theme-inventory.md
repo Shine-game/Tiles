@@ -25,7 +25,7 @@ logical colors. Zen's sand surface does not erase its distinction between colors
 
 ## Clockwork — first Tier 0/1 migration candidate
 
-Sources: [`theme.json`](../../art/themes/clockwork_workshop/theme.json),
+Sources: [`theme.json`](https://github.com/Shine-game/Tiles/blob/951568f/art/themes/clockwork_workshop/theme.json),
 [`clockwork_growth.gd`](../../scripts/clockwork_growth.gd),
 [`clockwork_visuals.gd`](../../scripts/clockwork_visuals.gd),
 [implementation notes](../clockwork-workshop.md).
@@ -129,7 +129,7 @@ Checks to retain: `test_zen_ordinary.gd`, `test_zen_centerpieces.gd`,
 
 ## Coral Reef
 
-Sources: [`theme.json`](../../art/themes/coral_reef/theme.json),
+Sources: [`theme.json`](https://github.com/Shine-game/Tiles/blob/951568f/art/themes/coral_reef/theme.json),
 [`coral_growth.gd`](../../scripts/coral_growth.gd),
 [`coral_visuals.gd`](../../scripts/coral_visuals.gd),
 [arm artwork reuse](../coral-arm-assets.md), [environment](../reef-environment.md).
@@ -224,7 +224,7 @@ Checks to retain: `test_labyrinth.gd`, `render_labyrinth.gd`, `test_growth.gd`,
 Today `board_view.gd` dispatches growth models and renderers by theme flags;
 `palette.gd` owns color branches; `main.gd` builds controls, styles buttons and
 selects screen backgrounds. `occupied_platform.gd` owns fused occupied surfaces;
-`board_frame.gd` and `assets/frames/frames.json` own shared frame geometry and
+At this inventory baseline, `board_frame.gd` and `assets/frames/frames.json` owned shared frame geometry and
 available frame art. Source/hovered pieces and field axes have their own rendering.
 
 Step 9 should reference these responsibilities from the consolidated theme

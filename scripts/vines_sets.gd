@@ -1,4 +1,5 @@
 extends RefCounted
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
@@ -17,9 +18,9 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.connection", Art.connection)
 	Components.register_draw_part_provider("vines.wash", Art.wash)
 	Components.register_draw_part_provider("vines.flower", Art.flower)
-	tier0 = Assets.load_set(ROOT + "tier0.json")
-	tier1 = Assets.load_set(ROOT + "tier1.json")
-	tier2 = Assets.load_set(ROOT + "tier2.json")
+	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
+	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
+	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
 

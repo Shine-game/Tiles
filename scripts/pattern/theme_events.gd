@@ -1,7 +1,7 @@
 extends RefCounted
 
-# Geometry and existing timing are adapted, not recomputed. No nodes/textures
-# are stored in the common state. Render-node migration belongs to Step 4.
+# Collect live theme events into the shared lifecycle. Geometry, clocks and
+# persistent history stay owned by their theme; no nodes enter common state.
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Landmark = preload("res://scripts/zen_landmark.gd")

@@ -2,7 +2,7 @@ extends SceneTree
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const State = preload("res://scripts/pattern/component_state.gd")
-const Catalog = preload("res://scripts/pattern/legacy_assets.gd")
+const Catalog = preload("res://scripts/zen_assets.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
 const PATH := "res://art/themes/clockwork_workshop/artwork/copper/C01.png"
@@ -114,14 +114,7 @@ func _run() -> void:
 	check(Assets.validate_masks(masks).is_empty(), "Masks keep explicit purpose, channel, encoding and zero/one semantics")
 	masks.masks.reveal.purpose = "lighting"
 	check(not Assets.validate_masks(masks).is_empty(), "The deferred lighting contract is not silently enabled")
-	for theme in ["clockwork", "coral"]:
-		var model := Clock.specification() if theme == "clockwork" else Coral.specification()
-		var components: Variant = model.components
-		for component: Dictionary in components.values():
-			var paths: Dictionary = component.get("assets", component.get("artwork", {}))
-			for treatment: String in paths:
-				var part := Catalog.component(component, treatment, Clock.ROOT if theme == "clockwork" else Coral.ROOT)
-				check(part.ok, "Both existing manifest formats normalize to valid shared artwork: " + theme)
+
 	check(renderer.ensure("absent", {"asset": {"status": "missing"}}, parent) == null, "Missing optional parts do not allocate blank substitute nodes")
 	renderer.clear()
 	parent.queue_free()

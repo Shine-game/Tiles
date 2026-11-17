@@ -42,7 +42,7 @@ func _run() -> void:
 				check(model.components.has(key) == wheel and visuals.ordinary_components.nodes.has(key) == wheel, "Selected centerparts are drawn by the common persistent renderer")
 				if not wheel: continue
 				var entry: Dictionary = visuals.registry[key]
-				var source: Dictionary = Clock.specification().components[id]
+				var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/clockwork_source_catalog.json")).components[id]
 				var treatment := "copper" if color == 1 else "gunmetal"
 				check(entry.node.texture == Assets.texture(source.assets[treatment], Clock.ROOT), "Treatment selection preserves the actual original metal artwork")
 				check(entry.node.position == Vector2(4.5, 4.5) * 256 and entry.node.offset == Vector2.ZERO, "Set pivots/anchors preserve the centered assembly")

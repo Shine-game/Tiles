@@ -5,6 +5,7 @@ state, the common asset/component rendering foundation through adapters, and liv
 Clockwork Tier 0/1 sets. Step 6 has migrated Zen, Coral and Vines ordinary sets, including
 the reviewed Zen endpoint composition and removal of Coral cores and Vines
 holding motifs on straights.
+Steps 7–9 share formation/connection rules and consolidate theme/UI configuration.
 Shading, game rules and the player interface remain unchanged.
 Inventory baseline: commit `951568f` (all five themes inspected).
 
@@ -31,6 +32,8 @@ Inventory baseline: commit `951568f` (all five themes inspected).
 - [Step 8 implementation](tier3-connections.md): shared pair, directed-side and
   territory prerequisites with preserved specialized growth/history.
 - [Approved Step 7 proposal](tier2-migration-plan.md): scope and migration boundaries.
+- [Step 9 implementation](theme-registry.md): one theme/UI registry, remaining
+  specialized artwork catalogs, current handoff and retired source adapters.
 - [Existing-theme inventory](theme-inventory.md): baseline implementations, available
   resources, differences from the target contract, and migration checks.
 
@@ -67,7 +70,7 @@ as authorization to implement the remaining steps.
 | 6 | Remaining themes' Tier 0/1 migration | Each theme has explicit set mappings; approved centerpiece/decor changes are identified; missing assets are not invented | Complete for all four active themes; Labyrinth removed |
 | 7 | Shared Tier 2 formations | Common origin, support, overlap and lifecycle rules; each theme retains its layering and timing | Complete |
 | 8 | Shared Tier 3 integration points | Common connection graph drives specialized ponds, trees, chains, anemones and vines; historical state preserved | Complete |
-| 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Awaiting approval |
+| 9 | Theme/UI configuration consolidation and cleanup | All themes pass runtime checks; obsolete code removed only after replacement; no competing active contracts | Complete |
 
 Step 2 may introduce a shared topology module and thin adapters in the existing
 engines. It must not switch artwork or impose the new centerpiece rule on themes
@@ -89,9 +92,10 @@ format are not runtime interfaces until implemented in their approved step.
 
 ## Relationship to existing theme handoffs
 
-[The existing handoff guide](../theme-handoff/README.md) and its example remain
-source-package documentation, not an already working shared-engine format.
-All four active themes now have live Tier 0/1/2 sets. Clockwork and Coral Tier 3
-and ground still consume legacy metadata. Labyrinth has been removed. Existing supplied
-files are not silently reinterpreted as the new schema. Step 9 will consolidate
-remaining formats and the artist handoff after their consumers migrate.
+[The current handoff guide](../theme-handoff/README.md) describes the active
+`tiles.themes.v1` registry and `tiles.pattern-set.v1` artwork catalogs. All four
+active themes use the shared format for Tiers 0–2. Clockwork/Coral finishing and
+ground catalogs also use it; specialized Tier 3 algorithms remain project code.
+The old source-package manifests and metadata adapters have been removed from
+production. See [Step 9](theme-registry.md) for runtime ownership and the remaining
+specialized code. Earlier step documents describe their historical migration state.

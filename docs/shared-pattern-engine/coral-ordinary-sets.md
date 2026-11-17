@@ -1,5 +1,10 @@
 # Step 6 — Coral ordinary sets
 
+Later consolidation: [Step 9](theme-registry.md) removed the old runtime source
+manifests and metadata adapter after migrating their remaining consumers. This
+page records the ordinary-set migration at its original step.
+
+
 This document records the ordinary-tier migration checkpoint. Tier 2 has since
 migrated through the [shared formation assembly](tier2-assembly.md).
 

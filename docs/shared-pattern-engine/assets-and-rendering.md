@@ -136,10 +136,12 @@ receive their final clock sample. No shader source or shading algorithm is chang
 
 ## Existing integration
 
-[`legacy_assets.gd`](../../scripts/pattern/legacy_assets.gd) normalizes both
-Clockwork's `assets/pivot/growth_field` and Coral's `artwork/pivot_px/reveal_mask`
-metadata. Artwork variants are selected explicitly; canonical artwork does not
-imply that its masks share its path or rotation. Old manifest files are untouched.
+Step 9 retired the original source-metadata adapter. Clockwork and Coral now read
+shared-format sets for ordinary parts, Tier 2, Tier 3 finishing and environments.
+[`zen_assets.gd`](../../scripts/zen_assets.gd) registers the rake relief provider.
+Artwork and mask variants/rotation remain independent. See
+[the active runtime ownership](theme-registry.md). The table below records the
+original Step 4 integration; Labyrinth was subsequently removed.
 
 | Existing rendering | Step 4 integration |
 | --- | --- |
