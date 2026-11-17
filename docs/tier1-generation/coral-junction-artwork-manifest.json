@@ -1,0 +1,50 @@
+[
+  {
+    "shape": "bend",
+    "color": 1,
+    "archive_color": "salmon",
+    "source": "center_1.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color1_basic.png",
+    "sha256": "26ddc3d7a901b59ed1c9beb3c39c06a8897cc96e9bb872f07cf0807677067b8e"
+  },
+  {
+    "shape": "bend",
+    "color": 2,
+    "archive_color": "teal",
+    "source": "center_1.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color2_basic.png",
+    "sha256": "65804922dc3bd7a103be8ab5a2b59f2d8078107f8e44504c8e8bedecf000dde1"
+  },
+  {
+    "shape": "t",
+    "color": 1,
+    "archive_color": "salmon",
+    "source": "center_2.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color1_basic.png",
+    "sha256": "2f5cfa2d3fac500a05de86cf8268ca9cce1089833a825460b44d9333acc8093c"
+  },
+  {
+    "shape": "t",
+    "color": 2,
+    "archive_color": "teal",
+    "source": "center_2.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color2_basic.png",
+    "sha256": "9c706d2b2782a610dd5220a25edf124d3b83d38a80a7f9491a10fc40b17668c0"
+  },
+  {
+    "shape": "cross",
+    "color": 1,
+    "archive_color": "salmon",
+    "source": "center_3.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color1_basic.png",
+    "sha256": "0bf1b8830b11500759bb30ae7f867d8f5befc649db225ca2c02829d7b44e6278"
+  },
+  {
+    "shape": "cross",
+    "color": 2,
+    "archive_color": "teal",
+    "source": "center_3.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color2_basic.png",
+    "sha256": "a35b6c4d79c713d04728778a87443826466bfa0768ceb2e31ac8915aa16081e7"
+  }
+]

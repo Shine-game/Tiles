@@ -243,7 +243,7 @@
     },
     "coral_reef": {
       "name": "Coral Reef",
-      "version": "2.3",
+      "version": "2.4",
       "colors": [
         "f49f7f",
         "69bfae"
@@ -584,6 +584,24 @@
           "arm_w": 3
         },
         "layer_z_index": 3
+      },
+      "junctions": {
+        "enabled": true,
+        "z_index": 5,
+        "shapes": {
+          "bend": {
+            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color1_basic.json",
+            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color2_basic.json"
+          },
+          "t": {
+            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color1_basic.json",
+            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color2_basic.json"
+          },
+          "cross": {
+            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color1_basic.json",
+            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color2_basic.json"
+          }
+        }
       }
     }
   }

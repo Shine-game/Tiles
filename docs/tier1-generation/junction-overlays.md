@@ -7,8 +7,10 @@ endpoints and isolated cells keep their existing behavior.
 
 The source growth and its decorations remain underneath. Legacy bend/T/X center
 art is suppressed only for themes that enable the new bindings. Vines is enabled
-with the supplied flowers; the other themes can enable the same system when their
-three shape-specific assets are supplied. No separate junction renderer is needed.
+with the supplied flowers. Coral is enabled with the supplied anemones (file 1 =
+bend, 2 = T, 3 = X), matching salmon color1 and teal color2. Coral uses canvas-center
+pivots, scale 1.0, any rotation, and preserves the original artwork colors. The other
+themes can enable the same system when their three shape-specific assets are supplied. No separate junction renderer is needed.
 The existing higher-tier formations and links keep their own artwork and schedule.
 
 ## Assembly JSON

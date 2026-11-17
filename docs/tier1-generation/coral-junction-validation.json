@@ -1,0 +1,15 @@
+{
+  "engine": "Godot 4.6.3",
+  "checks": {
+    "coral_junctions_source": 161,
+    "coral_junctions_exported_pack": 161,
+    "shared_junctions": 213,
+    "theme_registry": 82,
+    "tier1_integration": 392,
+    "rendered_themes": 13
+  },
+  "failures": 0,
+  "original_png_bytes_preserved": true,
+  "transparent_sources": 6,
+  "apk_or_device_tested": false
+}

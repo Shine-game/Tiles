@@ -57,6 +57,7 @@ func run():
 
  # The same class also replaces configured centers in every other model.
  for theme in ["coral_reef","clockwork","zen_garden"]:
+  var saved_junctions=Themes.definition.themes[theme].get("junctions", {}).duplicate(true)
   Themes.definition.themes[theme].junctions=original_config.duplicate(true)
   Palette.select_theme(theme)
   var grid=Rules.empty_board(5)
@@ -66,7 +67,8 @@ func run():
   if theme=="zen_garden":check(not view.zen_visuals.centerpieces.has(Vector2i(2,2)),"Configured overlay replaces the legacy rake centerpiece")
   if theme=="clockwork":check(not view.clockwork_visuals.registry.has("C01/1/2/2"),"Configured overlay replaces legacy clockwork center")
   if theme=="coral_reef":check(not view.coral_visuals.registry.has("core/1/2/2"),"Configured overlay replaces legacy coral center")
-  Themes.definition.themes[theme].erase("junctions")
+  if saved_junctions.is_empty():Themes.definition.themes[theme].erase("junctions")
+  else:Themes.definition.themes[theme].junctions=saved_junctions
  Palette.select_theme("vines")
  # A connected addition has a future arrival: verify exact activation and pause.
  var before=Rules.empty_board(7)
