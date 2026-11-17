@@ -51,7 +51,7 @@ func run() -> void:
 		if theme == "coral_reef":
 			check(board.coral_visuals.registry.keys().all(func(id): return not board.pattern.components[id].id.begins_with("arm_")), "Legacy coral arms are replaced")
 		elif theme == "clockwork":
-			check(board.clockwork_visuals.registry.values().all(func(entry): return entry.event.id != "T01"), "Legacy tubes are replaced")
+			check(board.clockwork_visuals.registry.values().all(func(entry): return entry.event.id not in ["T01", "T03"]), "Legacy tubes and oversized boundary rings are replaced")
 			check(board.construction_state.records.keys().any(func(id): return id.begins_with("clockwork/part/T01_")), "Tube structural events remain available")
 		elif theme == "zen_garden":
 			check(layer.plans.size() == 3, "Zen shared edges have one stone each")
