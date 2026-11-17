@@ -181,7 +181,7 @@
     },
     "vines": {
       "name": "Vines",
-      "version": "1.1",
+      "version": "1.2",
       "colors": [],
       "ui": {
         "controls": "eeedf3",
@@ -221,6 +221,24 @@
         "layer_z_index": -1,
         "decoration_z_index": 0,
         "stroke_seconds": 0.14
+      },
+      "junctions": {
+        "enabled": true,
+        "z_index": -1,
+        "shapes": {
+          "bend": {
+            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_bend_color1_basic.json",
+            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_bend_color2_basic.json"
+          },
+          "t": {
+            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color1_basic.json",
+            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color2_basic.json"
+          },
+          "cross": {
+            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_crossroad_color1_basic.json",
+            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_crossroad_color2_basic.json"
+          }
+        }
       }
     },
     "coral_reef": {

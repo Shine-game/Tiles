@@ -1,6 +1,8 @@
 class_name CoralVisuals
 extends Node2D
 
+const Junctions = preload("res://scripts/pattern/junction_layer.gd")
+const Topology = preload("res://scripts/pattern/topology.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Ordinary = preload("res://scripts/coral_sets.gd")
@@ -68,6 +70,10 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			components.remove(identity)
 			continue
 		var ordinary: bool = Ordinary.owns(event.id)
+		var cell := Vector2i(event.center - Vector2.ONE * 0.5)
+		if ordinary and not event.id.begins_with("arm_") and Junctions.handles("coral_reef", Topology.shape(Topology.neighbor_mask(model.board, cell))):
+			components.remove(identity)
+			continue
 		var placement: Dictionary
 		placement = Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)
 		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))

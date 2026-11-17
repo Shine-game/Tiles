@@ -1,0 +1,52 @@
+{
+  "engine_tested": "4.6.3.stable",
+  "project_target": "4.7.2",
+  "checks": {
+    "junctions": {
+      "checks": 213,
+      "failures": 0
+    },
+    "pack_junctions": {
+      "checks": 206,
+      "failures": 0
+    },
+    "vines": {
+      "checks": 500,
+      "failures": 0
+    },
+    "state": {
+      "checks": 392,
+      "failures": 0
+    },
+    "tier1_integration": {
+      "checks": 392,
+      "failures": 0
+    },
+    "registry": {
+      "checks": 82,
+      "failures": 0
+    },
+    "sound_depth": {
+      "checks": 29,
+      "failures": 0
+    },
+    "gallery": {
+      "checks": 48,
+      "failures": 0
+    },
+    "rendered_themes": {
+      "checks": 13,
+      "failures": 0
+    }
+  },
+  "additional_checks": [
+    "Both colors and all 16 clockwork masks retain their centered ring rules",
+    "Zen cell-centered stones and doubled small decorations retain their placement"
+  ],
+  "graphics_backend": "Mesa llvmpipe OpenGL compatibility",
+  "export": "Android resource pack; no APK/device run",
+  "notes": [
+    "Synthetic file-writing metadata cases run from source; exported pack uses --production-only.",
+    "Existing gallery test reports its known one-resource-at-exit warning after all assertions pass."
+  ]
+}

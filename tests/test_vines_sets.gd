@@ -53,7 +53,7 @@ func _run() -> void:
 						var p: Vector2i = center + Growth.Topology.DIRECTIONS[d]
 						grid[p.y][p.x] = color
 				view.show_settled(grid)
-				check(view.construction_state.records.has(Sets.identity(color, center)) == (mask not in [5, 10]), "Both colors and every palette retain centers except on straights")
+				check(view.construction_state.records.has(Sets.identity(color, center)) == (mask in [0, 1, 2, 4, 8]), "Legacy holding motifs remain only on isolated and endpoint cells")
 				check(view.construction_state.records.has("vines/cell/%d/4/4" % color), "The diffuse cell wash remains even where the holding motif is suppressed")
 				check(Sets.centers(mask).is_empty() == (mask in [5, 10]), "Both straight orientations share the same center omission rule")
 	var endpoint := Rules.empty_board(9)
@@ -73,25 +73,26 @@ func _run() -> void:
 	var branch := straight.duplicate(true)
 	branch[3][4] = 1
 	view.animate_growth(straight, branch)
-	var record: Dictionary = view.construction_state.records[Sets.identity(1, center)]
-	check(record.start == 0 and record.phase != "settled" and record.created_in > wave, "A newly required center grows on an already occupied cell")
-	check(Sets.center_scale(view, center, Sets.centers(11).motif) == 0, "New motifs start invisible on the common construction clock")
+	var junction_id := "junction/vines/1/4/4/t"
+	var record: Dictionary = view.construction_state.records[junction_id]
+	check(record.start == 0 and record.phase == "settled" and record.created_in > wave, "A newly required overlay appears on an already reached square")
+	check(view.junction_layer.renderer.nodes[junction_id].visible, "New overlay is visible at center arrival")
 	view.advance_growth(0.15)
-	check(Sets.center_scale(view, center, Sets.centers(11).motif) > 0 and Sets.center_scale(view, center, Sets.centers(11).motif) < 1, "The restored motif follows the existing pop curve")
+	check(view.junction_layer.renderer.nodes[junction_id].visible, "Direct overlay does not run the removed pop animation")
 	view.advance_growth(100)
 	check(not view.growing and record.phase == "settled", "Completed motifs release the placement gate")
 	var with_other := branch.duplicate(true)
 	with_other[0][0] = 2
 	var established_wave: int = record.created_in
 	view.animate_growth(branch, with_other)
-	check(view.construction_state.records[Sets.identity(1, center)].created_in == established_wave and Sets.center_scale(view, center, Sets.centers(11).motif) == 1, "Unrelated placements preserve established motif state without a clock-reset rollback")
+	check(view.construction_state.records[junction_id].created_in == established_wave and view.junction_layer.renderer.nodes[junction_id].visible, "Unrelated placements preserve established motif state without a clock-reset rollback")
 	view.show_settled(endpoint, true)
 	check(view.construction_state.records[Sets.identity(1, center)].phase == "settled", "Undo/Erase-style restoration shows the settled endpoint immediately")
 	var mixed := endpoint.duplicate(true)
 	mixed[4][5] = 2
 	view.show_settled(mixed)
 	check(view.construction_state.records.has(Sets.identity(1, center)), "Different-color contact leaves the first color's endpoint motif intact")
-	check(Palette.theme_version() == "1.1" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
+	check(Palette.theme_version() == "1.2" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/vines/sets/*.json"), "Both sets are packaged in Android exports")
 	check(Sets.renderer.diagnostics.is_empty(), "All real Vines drawing batches use valid providers")
 	view.queue_free()
@@ -128,7 +129,7 @@ func check_game() -> void:
 	check(scene._can_save(), "The normal game allows saving the symmetric design")
 	await scene._save_design()
 	var entries: Array = scene.gallery.entries()
-	check(entries.size() == 1 and entries[0].theme == "vines" and entries[0].theme_version == "1.1", "The normal gallery records the new set-driven appearance")
+	check(entries.size() == 1 and entries[0].theme == "vines" and entries[0].theme_version == "1.2", "The normal gallery records the new set-driven appearance")
 	if not entries.is_empty(): scene.gallery.picture(entries[0]).get_image().save_png("res://build/vines-sets/artwork.png")
 	for f: String in DirAccess.open(scene.gallery.directory).get_files(): DirAccess.remove_absolute(scene.gallery.directory.path_join(f))
 	DirAccess.remove_absolute(scene.gallery.directory)

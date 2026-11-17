@@ -2,6 +2,8 @@ class_name ClockworkVisuals
 extends Node2D
 
 signal cue(kind: String)
+const Junctions = preload("res://scripts/pattern/junction_layer.gd")
+const Topology = preload("res://scripts/pattern/topology.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Ordinary = preload("res://scripts/clockwork_sets.gd")
@@ -167,6 +169,10 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 	if generative_tier1:
 		for identity: String in events.keys():
 			if events[identity].id in ["T01", "T03"]: events.erase(identity)
+	for identity: String in events.keys():
+		var event: Dictionary = events[identity]
+		var mask := Topology.neighbor_mask(next.board, event.cell)
+		if Junctions.handles("clockwork", Topology.shape(mask)) and Ordinary.centers(mask).has(event.id): events.erase(identity)
 	for cell: Vector2i in next.arrivals:
 		var ground := Model.ground_choice(cell)
 		var id := "plate_%02d" % ground.variant

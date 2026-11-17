@@ -1,6 +1,7 @@
 class_name ZenVisuals
 extends Node2D
 
+const Junctions = preload("res://scripts/pattern/junction_layer.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Sets = preload("res://scripts/zen_sets.gd")
@@ -94,7 +95,7 @@ func reconcile(model, settled: bool, complete: bool = false) -> void:
 				sprite.material = ink
 				materials.append(ink)
 				group.add_child(sprite)
-				var center_spec := {} if formation_cells.has(cell) else Sets.center_spec(cell, mask)
+				var center_spec := {} if formation_cells.has(cell) or Junctions.handles("zen_garden", Geometry.Topology.shape(mask)) else Sets.center_spec(cell, mask)
 				var stage: int = int(center_spec.get("stage", 0))
 				if stage > 0:
 					var identity := "center/%d/%d" % [cell.y, cell.x]

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema",
+    "image"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "tiles.junction-sprite.v1"
+    },
+    "image": {
+      "type": "string",
+      "minLength": 1
+    },
+    "center": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "scale": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "rotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_deg": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1
+        },
+        "range_deg": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "not": {
+        "required": [
+          "allowed_deg",
+          "range_deg"
+        ]
+      }
+    },
+    "source_color": {
+      "type": "string",
+      "pattern": "^#?[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"
+    },
+    "color_role": {
+      "enum": [
+        "original",
+        "same",
+        "opposite"
+      ]
+    }
+  }
+}

@@ -8,6 +8,7 @@ signal growth_canceled
 signal flower_opened(corner: Vector2i, color: int)
 signal visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int)
 signal visual_clock_advanced(clock: float)
+const JunctionLayer = preload("res://scripts/pattern/junction_layer.gd")
 const Tier1Layer = preload("res://scripts/pattern/tier1_layer.gd")
 const Tier1Sources = preload("res://scripts/pattern/tier1_sources.gd")
 const VineModel = preload("res://scripts/vines_growth.gd")
@@ -38,6 +39,7 @@ var board: Array = []
 var pattern = Growth.new()
 var construction_state := ComponentState.new()
 var tier1_layer: PatternTier1Layer
+var junction_layer: PatternJunctionLayer
 var sprite_elapsed := 0.0
 var sprite_reverse := false
 var generative_tier1: bool:
@@ -290,13 +292,19 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 		add_child(tier1_layer)
 	var okay := tier1_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0, sprite_reverse)
 	if not okay: push_error("Tier 1 preparation failed: " + str(tier1_layer.diagnostics))
+	if junction_layer == null:
+		junction_layer = JunctionLayer.new()
+		add_child(junction_layer)
+	if not junction_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0): push_error(str(junction_layer.diagnostics))
 	var events: Dictionary = ThemeEvents.collect(pattern, Palette.theme_id(), zen_visuals, clockwork_visuals)
+	events.merge(junction_layer.events)
 	events.merge(tier1_layer.retirement_events())
 	if Palette.theme_id() == "vines": events.merge(Vines.center_events(pattern, growth_before, settled))
 	construction_state.reconcile(events, 0.0 if settled else maxf(pattern.duration, pattern.sprite_visual_duration), at, settled, preserve, restart)
 	clock = construction_state.schedule.clock
 	growing = construction_state.schedule.running()
 	if not tier1_layer.present(construction_state, _sprite_view_transform()): push_error("Tier 1 presentation failed: " + str(tier1_layer.diagnostics))
+	if not junction_layer.present(construction_state, _sprite_view_transform()): push_error(str(junction_layer.diagnostics))
 	sprite_elapsed = 0.0
 	sprite_reverse = false
 
@@ -305,6 +313,7 @@ func advance_growth(delta: float) -> void:
 		return
 	clock = construction_state.advance(delta)
 	if tier1_layer != null: tier1_layer.advance(construction_state)
+	if junction_layer != null: junction_layer.advance(construction_state)
 	if coral_reef:
 		coral_visuals.advance(clock)
 	if zen_garden: zen_visuals.advance(clock)
@@ -371,6 +380,7 @@ func update_geometry() -> void:
 			sprite.material.set_shader_parameter("screen_pixel", 256.0 / pitch)
 
 	if tier1_layer != null: tier1_layer.set_view_transform(_sprite_view_transform())
+	if junction_layer != null: junction_layer.transform = _sprite_view_transform()
 	_sync_axes()
 
 func _sprite_view_transform() -> Transform2D:

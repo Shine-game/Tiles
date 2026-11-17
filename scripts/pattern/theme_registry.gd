@@ -63,6 +63,24 @@ static func validate(data: Variant) -> Array:
 					if not tiers.has(tier): errors.append(id + ": missing tier " + tier)
 				for tier: String in tiers:
 					if tier not in ["0", "1", "2", "3"] or not project_file(tiers[tier], "json"): errors.append(id + ": invalid set path for tier " + tier)
+		if profile.has("junctions"):
+			var junctions: Variant = profile.junctions
+			if not junctions is Dictionary or not junctions.get("enabled") is bool: errors.append(id + ": invalid junction configuration")
+			elif junctions.enabled:
+				if not junctions.get("shapes") is Dictionary:
+					errors.append(id + ": junction shapes must be an object")
+					continue
+				for field: String in ["z_index", "seed"]:
+					if junctions.has(field):
+						var value: Variant = junctions[field]
+						if not (value is int or value is float) or not is_finite(float(value)) or value != floorf(value): errors.append(id + ": junction " + field + " must be an integer")
+						elif field == "z_index" and absf(value) > 4096: errors.append(id + ": junction z_index out of range")
+				for shape: String in ["bend", "t", "cross"]:
+					var bindings: Variant = junctions.get("shapes", {}).get(shape)
+					if not bindings is Dictionary: errors.append(id + ": missing junction shape " + shape)
+					else:
+						for color: String in ["1", "2"]:
+							if not project_file(bindings.get(color), "json"): errors.append(id + ": missing junction metadata " + shape + "/" + color)
 		if profile.has("tier1_artwork"):
 			var artwork: Variant = profile.tier1_artwork
 			if not artwork is Dictionary or artwork.get("status") not in ["staged", "active"] or not project_file(artwork.get("catalog"), "json"):

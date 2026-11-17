@@ -1,0 +1,35 @@
+{
+  "source_archive": "vines.rar",
+  "files": [
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color1_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-2.png",
+      "sha256": "aefa0e05764d9ec1691731447973c7195599b7a991487ac9665a0c002b4e6e27"
+    },
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color2_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-1.png",
+      "sha256": "8f6d7b64483df82380b76625152a7006f7475190ccb2d639d20bee9518d288c8"
+    },
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_bend_color1_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-2.png",
+      "sha256": "aefa0e05764d9ec1691731447973c7195599b7a991487ac9665a0c002b4e6e27"
+    },
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_bend_color2_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-1.png",
+      "sha256": "8f6d7b64483df82380b76625152a7006f7475190ccb2d639d20bee9518d288c8"
+    },
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_crossroad_color1_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-2.png",
+      "sha256": "aefa0e05764d9ec1691731447973c7195599b7a991487ac9665a0c002b4e6e27"
+    },
+    {
+      "file": "art/themes/vines/artwork/junctions/vines_tier1_crossroad_color2_basic.png",
+      "source": "Imagen de ChatGPT 17 nov 2026, 01_14_43-1.png",
+      "sha256": "8f6d7b64483df82380b76625152a7006f7475190ccb2d639d20bee9518d288c8"
+    }
+  ]
+}

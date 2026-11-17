@@ -1,4 +1,5 @@
 extends RefCounted
+const Junctions = preload("res://scripts/pattern/junction_layer.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
@@ -34,6 +35,7 @@ static func identity(color: int, cell: Vector2i) -> String:
 static func center_events(model, before: Array, settled: bool) -> Dictionary:
 	var events: Dictionary = {}
 	for cell: Vector2i in model.arrivals:
+		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(model.board, cell))): continue
 		var parts := centers(Topology.neighbor_mask(model.board, cell))
 		if parts.is_empty(): continue
 		var color: int = model.board[cell.y][cell.x]
@@ -59,6 +61,7 @@ static func draw(view) -> void:
 	# Higher-tier art stays in its existing providers and painter order.
 	for link: Dictionary in view.pattern.links: view._draw_link(link)
 	for cell: Vector2i in view.pattern.arrivals:
+		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(view.board, cell))): continue
 		var selected := centers(Topology.neighbor_mask(view.board, cell))
 		for id: String in selected:
 			renderer.draw_parts({id: selected[id]}, view, {"cell": cell, "scale": center_scale(view, cell, selected[id])})
