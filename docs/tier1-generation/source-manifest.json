@@ -1,0 +1,753 @@
+{
+  "source_package": "tier1_artwork_corrected.zip",
+  "source_package_sha256": "e35e0ffd7ac60c5c7a6cf78d18431e8cd1bf9facce157b41823fee93e758fe94",
+  "files": [
+    {
+      "source": "assets/clockwork_tier1_deco_color1_1.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_1.json",
+      "sha256": "10e79d1cf942e422cae56acfd09b5b6376bde53d3cb21ebb3affd927a54f246a"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color1_1.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_1.png",
+      "sha256": "4393c7a5bc553f4d0756773b50c5aff4cd819e26014d50c71dbd91a22488a1e4"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color1_2.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_2.json",
+      "sha256": "e90b8786442bdb25ef6582cf6e2cfe2fd95399b3712b5e39c4ac26905bdf774e"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color1_2.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_2.png",
+      "sha256": "84cb3e6ac66a2a39c48629fdd4bb9ca977f7ffa28dc3c3623ed46644956880fd"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color2_1.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_1.json",
+      "sha256": "10e79d1cf942e422cae56acfd09b5b6376bde53d3cb21ebb3affd927a54f246a"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color2_1.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_1.png",
+      "sha256": "fcff77c7b246ca447b789cc72e17fe642f15c97c8c29f62bce397b38f53a9b5e"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color2_2.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_2.json",
+      "sha256": "e90b8786442bdb25ef6582cf6e2cfe2fd95399b3712b5e39c4ac26905bdf774e"
+    },
+    {
+      "source": "assets/clockwork_tier1_deco_color2_2.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_2.png",
+      "sha256": "e1f3e2a5e3e3de6ae72041db7f72386f7cf0b8caf04695e61207440aab24879a"
+    },
+    {
+      "source": "assets/clockwork_tier1_vine_color1_basic.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_vine_color1_basic.json",
+      "sha256": "3c59466c4d3e6dff3abd7a86899ca86b943cfab9c99395912bc4f6990d3c1cc5"
+    },
+    {
+      "source": "assets/clockwork_tier1_vine_color1_basic.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_vine_color1_basic.png",
+      "sha256": "5cd4713fae3b1ce4fa1cedfc7eb5edb0078c964ef5a6bae1634a58de10fbdb1c"
+    },
+    {
+      "source": "assets/clockwork_tier1_vine_color2_basic.json",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_vine_color2_basic.json",
+      "sha256": "3c59466c4d3e6dff3abd7a86899ca86b943cfab9c99395912bc4f6990d3c1cc5"
+    },
+    {
+      "source": "assets/clockwork_tier1_vine_color2_basic.png",
+      "project_path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_vine_color2_basic.png",
+      "sha256": "ce7e92252f3bd36af5179eb2277d85c854897487832b45200894d732ee72e290"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_1.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_1.json",
+      "sha256": "5c51800d3e12b723bdd705be12d02b761d47aa2aed5b033d544e4e7bd6518157"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_1.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_1.png",
+      "sha256": "ffd3aedfc554d2f2aed2d8bc88da882d41c4ae97de127713ea54ac57de3c116d"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_10.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_10.json",
+      "sha256": "cc4089ea6eb88146a08636d160b93ae4c4ad903d3f08e7c4d7d8ef01c0047c92"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_10.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_10.png",
+      "sha256": "eacc35011d0417393a0704c4c54287c83f5a3e41abbb3e87fcdc4165a962b414"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_11.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_11.json",
+      "sha256": "31bd969bbc49c19c55d63fd1f5488b6532b18a1c8b2ad8f1ac2c10004e42375a"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_11.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_11.png",
+      "sha256": "ab188f460c3d38712ee86166292ac36b01a8d33a77201a46e498149753275e0f"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_12.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_12.json",
+      "sha256": "0b905c251269025eeb3a85e6bab48b64ff7b9b94f4bf2dec363ec3bfd8f71e77"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_12.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_12.png",
+      "sha256": "00a8cb91613d86fa14c12f076b84c06b7fe95696ede3ad79fdf08cab3ece125d"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_2.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_2.json",
+      "sha256": "0868a2a70707e90189b28bb9f71b18c29d4343b22916f493cefcfca719ebfffa"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_2.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_2.png",
+      "sha256": "c1e8bf05bf0c643f3f8e6be9719e654b310a8964b3016df7aabc1fc0c1e6cfc9"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_3.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_3.json",
+      "sha256": "bdc1af9dd934c57cd4fa318866d723121dc3701786cd3659753dc2b6854bd911"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_3.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_3.png",
+      "sha256": "9f72d78f0b5bbe538afb9985e93b7e6db201b6a2be0ef348e3ce039158411d1c"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_4.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_4.json",
+      "sha256": "e50d4b010bed54ed5236185990eb240171893444c62c44e5940e44b1ec958393"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_4.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_4.png",
+      "sha256": "883ba19ecb661454f191b8c10cd2a380971587fbed31bc215043fa9abfaeba4c"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_5.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_5.json",
+      "sha256": "3b9ea70e1db097f4b2fc4fff0bb7c3a12edfc8039d39d818f8de17553db62e60"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_5.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_5.png",
+      "sha256": "a64628e26217a22790e79424d58a8b13d9026a7452b672d0b1494713f9428b00"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_6.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_6.json",
+      "sha256": "f4801929d4ee85829ed659c1cc005bdec0d634807e7d38fc4e69a80d19cc2601"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_6.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_6.png",
+      "sha256": "08b055c00cffa53b82028307d4e75374510ccf84aa85fcbb12ae3d5b02f79b2d"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_7.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_7.json",
+      "sha256": "0ff45694e15a06a8c1d8a5e3c5d028fbe4a5f2c8e426dff42bf23f737ad4ecec"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_7.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_7.png",
+      "sha256": "8b79d05df68e678809194f76307e1d106672d4c7afe4563d8584c0219bf68853"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_8.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_8.json",
+      "sha256": "7bb912df6b928d4fea9f88be5a765758ed7e7b682cd082ff420aa16db4bed108"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_8.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_8.png",
+      "sha256": "ace0c4d9c7ea853109502bbd4d13b5c05f351f9c3b1ef0f4a0e9d934fc9eaaf0"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_9.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_9.json",
+      "sha256": "e40e64c4ab7105bba10c012ce08b2349c1676939ae54ff609ea6862609c6d279"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color1_9.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color1_9.png",
+      "sha256": "7e75e1fbd35ed2bfb99f8a75b7b195ecaa70ccb139e2c9f83fe8420ca3738ce0"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_1.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_1.json",
+      "sha256": "5c51800d3e12b723bdd705be12d02b761d47aa2aed5b033d544e4e7bd6518157"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_1.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_1.png",
+      "sha256": "b44b9970c6c54055bbb5a722f3ba0d683a12e6eaf0c226eecb656d781126bdad"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_10.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_10.json",
+      "sha256": "cc4089ea6eb88146a08636d160b93ae4c4ad903d3f08e7c4d7d8ef01c0047c92"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_10.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_10.png",
+      "sha256": "97afb77e79f380a044de096454b020b6889d8b4cbed71d0518203c90a81ac531"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_11.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_11.json",
+      "sha256": "31bd969bbc49c19c55d63fd1f5488b6532b18a1c8b2ad8f1ac2c10004e42375a"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_11.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_11.png",
+      "sha256": "be01c7368dfec9bbf0021a156464b7d61ac9cd141887f3a449f47a3451fd8e5a"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_12.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_12.json",
+      "sha256": "0b905c251269025eeb3a85e6bab48b64ff7b9b94f4bf2dec363ec3bfd8f71e77"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_12.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_12.png",
+      "sha256": "99f7a2b92a8064e61eb1ecf9c4d0aea3b52b1b3ce348686ecd07c21ce5ab545c"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_2.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_2.json",
+      "sha256": "0868a2a70707e90189b28bb9f71b18c29d4343b22916f493cefcfca719ebfffa"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_2.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_2.png",
+      "sha256": "21dd9cb5f5c021b6107e09ac57788f2de9b166a7b8ec13a1956d812e9991196d"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_3.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_3.json",
+      "sha256": "bdc1af9dd934c57cd4fa318866d723121dc3701786cd3659753dc2b6854bd911"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_3.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_3.png",
+      "sha256": "fce12c16ec192c3b0289c082393b843ac67d1dc43a30c464d96e0fac005c5bef"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_4.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_4.json",
+      "sha256": "e50d4b010bed54ed5236185990eb240171893444c62c44e5940e44b1ec958393"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_4.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_4.png",
+      "sha256": "adf405f8ae652a383e7237199ef9535a30b93940cfb27ebebba72c9bc504afc3"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_5.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_5.json",
+      "sha256": "3b9ea70e1db097f4b2fc4fff0bb7c3a12edfc8039d39d818f8de17553db62e60"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_5.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_5.png",
+      "sha256": "0d9dbdb5634dd3b4492f4e3836b2dd09648c3e5cd275edeeb1c3924ebc72df7e"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_6.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_6.json",
+      "sha256": "f4801929d4ee85829ed659c1cc005bdec0d634807e7d38fc4e69a80d19cc2601"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_6.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_6.png",
+      "sha256": "0aee047d659e15843c68b7cfdc6aac19d0d6ffd95adcbea980335aca9c4e42f6"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_7.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_7.json",
+      "sha256": "0ff45694e15a06a8c1d8a5e3c5d028fbe4a5f2c8e426dff42bf23f737ad4ecec"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_7.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_7.png",
+      "sha256": "7aa47f6b78ae664e3b064e9b4209619033c763ca002ce6400f1433a7353ff39a"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_8.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_8.json",
+      "sha256": "7bb912df6b928d4fea9f88be5a765758ed7e7b682cd082ff420aa16db4bed108"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_8.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_8.png",
+      "sha256": "b2b377a3226fc3645b8dcb443b04a1ac1c4608dc127c4f27880018ecd74cd76b"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_9.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_9.json",
+      "sha256": "e40e64c4ab7105bba10c012ce08b2349c1676939ae54ff609ea6862609c6d279"
+    },
+    {
+      "source": "assets/coral_tier1_deco_color2_9.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_9.png",
+      "sha256": "f2a04f7fb5bf2af5ceac2e7095c890995fceecdafdb13c2bbc67b7a310d530c0"
+    },
+    {
+      "source": "assets/coral_tier1_vine_color1_basic.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.json",
+      "sha256": "f9f04dddf085c4199bbc6e47ac0b472f18f48d1032566ea386e53f3eda8ecc75"
+    },
+    {
+      "source": "assets/coral_tier1_vine_color1_basic.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.png",
+      "sha256": "48527fe5fe83977c5c14ab1f1ab3c9e6fbe8ec975fa96e187398bd376e3d3bd8"
+    },
+    {
+      "source": "assets/coral_tier1_vine_color2_basic.json",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color2_basic.json",
+      "sha256": "f9f04dddf085c4199bbc6e47ac0b472f18f48d1032566ea386e53f3eda8ecc75"
+    },
+    {
+      "source": "assets/coral_tier1_vine_color2_basic.png",
+      "project_path": "art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color2_basic.png",
+      "sha256": "d5f90cca20ba15f06c17958d93181341835bc2df6102d669ed3e4cfb2755abeb"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_1.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json",
+      "sha256": "cce1f8463c99f276714454fdbae5102a6cdfb7c4375e6e06ba462181d6e968eb"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_1.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.png",
+      "sha256": "ef2ac88466054aad4a9ebdafe7b12829f243da9178e0f9fa246af8a56dbbb2c7"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_2.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.json",
+      "sha256": "3d0f1b261baa1de187969ca450f0da4e87c31c9788f7472ef24f6277656deba6"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_2.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.png",
+      "sha256": "66559eeea27f9ef5d853275e6b4e01c348788758cc3630f1e8d2c566440712ae"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_4.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.json",
+      "sha256": "3a00a51a174ee6f6257c9069b72963f8b695f6ee48f3ead5724f9d0d5806564e"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_4.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.png",
+      "sha256": "f333c1271047a6475ad2d260641b3aed12e9857c77e473b99ca435571553b339"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_6.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_6.json",
+      "sha256": "4d2d7c52baba57987fea18605ae2176a48310401ac58560e723bdb2686291951"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color1_6.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_6.png",
+      "sha256": "a5f8df305ce397d0e5679239ec0c0c3c6587a7092495e12a32e6b792d11091d2"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_1.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.json",
+      "sha256": "cce1f8463c99f276714454fdbae5102a6cdfb7c4375e6e06ba462181d6e968eb"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_1.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.png",
+      "sha256": "7dc4cff7899b0938408c06e4c9ffa9fc855b69991eec18dbca45a466333507d9"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_2.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.json",
+      "sha256": "3d0f1b261baa1de187969ca450f0da4e87c31c9788f7472ef24f6277656deba6"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_2.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.png",
+      "sha256": "2e153aec7b7accd092f5a7e53aafeaebac57a13f86ed62b1f9992f428d8da7fe"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_4.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.json",
+      "sha256": "3a00a51a174ee6f6257c9069b72963f8b695f6ee48f3ead5724f9d0d5806564e"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_4.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.png",
+      "sha256": "62ebc7dd7926364a86cb508b84cee7aa6506b3d5826a1591bfb2c7cd636e78b8"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_6.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_6.json",
+      "sha256": "4d2d7c52baba57987fea18605ae2176a48310401ac58560e723bdb2686291951"
+    },
+    {
+      "source": "assets/vines_tier1_deco_color2_6.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_6.png",
+      "sha256": "c28b563e099899e599328c49c8ab10c58c069aff6c395f34975eacc44418bcb8"
+    },
+    {
+      "source": "assets/vines_tier1_vine_color1_basic.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_vine_color1_basic.json",
+      "sha256": "4758ea97aef2179922ab64b4b594c07b0f0187971f5c569f9045653893f8903b"
+    },
+    {
+      "source": "assets/vines_tier1_vine_color1_basic.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_vine_color1_basic.png",
+      "sha256": "1603b235c59f48c2a63cc9cf944ac8c426ad427c699ab99f1289e9abca1f6302"
+    },
+    {
+      "source": "assets/vines_tier1_vine_color2_basic.json",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_vine_color2_basic.json",
+      "sha256": "4758ea97aef2179922ab64b4b594c07b0f0187971f5c569f9045653893f8903b"
+    },
+    {
+      "source": "assets/vines_tier1_vine_color2_basic.png",
+      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_vine_color2_basic.png",
+      "sha256": "d6f0e65b3a5840dfcc14120b72c3625cfe6ecc5e67fe077f23d744788121b69b"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_1.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.json",
+      "sha256": "8a76276f94da7b3c0eddc6abfd0ac89b9e024e0e7a3cacb963290a32336eb262"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_1.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.png",
+      "sha256": "bee42b2ce00d14a7ed184dc51643ff7c6e57dd3dc6a407bbbb401a50da649150"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_10.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_10.json",
+      "sha256": "e5d85fbc206752e785af0cca196351912c1b734f80bc19c67afe4390edfffc67"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_10.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_10.png",
+      "sha256": "0406110f72b64c8bfbb9ba21f000088a0b7f59c88357d4075bdb2f9ac1f5f2a4"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_11.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_11.json",
+      "sha256": "b88a91add6606f86ce13d22c91132892c576eb1914ffb2c9f4de14fadccb23fb"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_11.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_11.png",
+      "sha256": "3b98dfd67fd89ffe5341613bf00e07cf40d6ac33b7482d61781bc2650179a484"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_12.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_12.json",
+      "sha256": "5f1c60e822691cec1b68075484d39d01906ecdb82a9054520b045b087fe72130"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_12.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_12.png",
+      "sha256": "f7159c8ad2943726decfd90dbf9168a1950e0eaa66f1f1151e6c9a6eb2aeb287"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_13.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_13.json",
+      "sha256": "965e742a7a4940e1a31d63005156e3d11cc60fd8778d78f7119fa25150460aba"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_13.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_13.png",
+      "sha256": "f141d40238c979b2050b95471a059abc187167ba59b4eb73ceb0530380861c25"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_14.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_14.json",
+      "sha256": "058a566a114c40f8b03e6fe82007802651257c957c99c695b902747e086a2e06"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_14.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_14.png",
+      "sha256": "1967b86c31811e4cc4618bc7e614597be66e49f2ec7d969ca59c979d9a2855af"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_15.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_15.json",
+      "sha256": "e6780bbcddd78536218a998a4c0ce4fda91f5acc92e9c37720a6c0a9ec2ce2b8"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_15.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_15.png",
+      "sha256": "7c5194fdff885fdf8644a8089309aef60ec30bc716783e920df34a0bacada53d"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_16.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_16.json",
+      "sha256": "05fc6acca9f4eb355faf2b02b7a8bf75262ed6af4de81c94e2a3b85df7579036"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_16.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_16.png",
+      "sha256": "a6853783414d0942a49a4df5a262e0cf5e6609429e65ac6ef09883a18a8485f7"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_17.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_17.json",
+      "sha256": "c1dbadc2dfc17a702245e229fca0f409fcc9e06e728fcc01a2733647fdcc9e1f"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_17.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_17.png",
+      "sha256": "3ab58450698b5ffd6754f2eb59c5747532da04512fb87ab0d4a99cfc5edf6efb"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_18.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_18.json",
+      "sha256": "31453a6e71c5555bd0f88bb15a81d29aaffbfa9ecde3292af37542f1437791b8"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_18.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_18.png",
+      "sha256": "de3e9eb9de0d2213dcb10952062e842e793f693e45284c63f066050af79dd976"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_19.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_19.json",
+      "sha256": "d05aa25674bd37ea1e568efc9c74983884ba1b99edf4e84fc43f895624075c33"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_19.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_19.png",
+      "sha256": "b54d9faf389421e68c647e04f54999d730f57da631ac2cf5e547cb54785b022a"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_2.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_2.json",
+      "sha256": "2330afbc3cf36c5f376c9527a22c01fe85bddbe31359eaa9a32bc8da82ffafee"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_2.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_2.png",
+      "sha256": "ae53a0a87d9a601643a3214206e78cc46cbac97b3a9ea77ff4ebcf8f9b6f30ad"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_20.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_20.json",
+      "sha256": "99453a3cf38741eade24a56475c8e0acfbb9f283241572ce270fb77dbc30fce7"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_20.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_20.png",
+      "sha256": "0b8068daa9988af48368bdda062dd795e313c7129b92088bc9bd0921f2493c68"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_3.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_3.json",
+      "sha256": "1fec05d3cc8f3c682f21c0f942717aef41d4edca85f020f3cf29146a61e63aac"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_3.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_3.png",
+      "sha256": "94ed98d15cb9967ee70650c58b0263b19bdcbedd7a2598c2c3fb390d420036ab"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_4.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_4.json",
+      "sha256": "2df5c55ece495043d59426afc0b96676e833d6f7801a60b6e7dbfe49fe35eec2"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_4.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_4.png",
+      "sha256": "2bb96b9b14fe4f8e07684e6499e1d173360f3cab2c52a6fbadf8c98267c908be"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_5.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.json",
+      "sha256": "f3848664adede10a17f2432cef86b8fa88553b8baa3ef78354408fd21cae6a9a"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_5.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.png",
+      "sha256": "ea853e1bfcffbff0dedbeea969bbcbc21f716f3a8da223fffafd6e5ff14304e0"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_6.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_6.json",
+      "sha256": "8e276e01e2dd53295be05035a1d7ef768afac01609284ae04d14759bf0dc7f7f"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_6.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_6.png",
+      "sha256": "07bca51870f29f15451801c60f20aa25862c343a3ad78ed8b6181b511f8e07db"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_7.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_7.json",
+      "sha256": "87a3c4867c2c05888c68d3376a30fd8c43170568e97cb0599110f229453619b5"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_7.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_7.png",
+      "sha256": "3dca1316e15c34c4fd65112de11eacc9cd698d018679cdf87023dcfeba2bd712"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_8.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_8.json",
+      "sha256": "75e86a713bf81f0f36f3ae41218d74f0a47cfc2bbb9ba663e0a131996db4b4c4"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_8.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_8.png",
+      "sha256": "58486f01a67d7587bee7d0f939242f7e9a2f06be1bf74be42616f79dbcc8233a"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_9.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_9.json",
+      "sha256": "620e9171ec3109d0f041c57cb78a59272eb77800ef226b8a2df0ab017463871e"
+    },
+    {
+      "source": "assets/zen_tier1_deco_color1_9.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_9.png",
+      "sha256": "35b5a7da558b8b24dffa68148980651d5847bb3440299df9727060e0d5a1599f"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_10.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.json",
+      "sha256": "57d6e2c68221897f9b00653ba4d9ccb5bdc68ff19f340ce717bddad40eb80176"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_10.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.png",
+      "sha256": "47f7b6f54968df3e5534fb3727d631454339bc5c495b0b58aaf48e6767cc4893"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_11.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.json",
+      "sha256": "50159142b5a556b0a88a377fc00548cb1b8aa34d47eac36cac4d51000bce36e5"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_11.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.png",
+      "sha256": "ff62f1fa50dc8e1a5af563980dee46b9da492f9a8363a26e33ffd9c199bfe10e"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_12.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_12.json",
+      "sha256": "164c06f83c89efbb1f13a0f60ff058f8606137caaccc4368a8603ddec3b5779c"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_12.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_12.png",
+      "sha256": "dec9da9db292e82abe8c30c62f62e3edd589e3257a07c7c124091c31dfc26ff9"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_13.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_13.json",
+      "sha256": "1e3c561b38f77613f4cbc4632b13de72b61f10531c9834b835e3b408533c7227"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_13.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_13.png",
+      "sha256": "01d514f7119e73649e867c708046e0861a04ee9dcd1fb306cbdf0789e775e936"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_14.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_14.json",
+      "sha256": "3cab6a4a882d505de3275b482585d719c1e1bdcb2056e4c86cf8ea2dc9c2a6ea"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_14.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_14.png",
+      "sha256": "44d9ff85bff3b0b2857c76d2a673c06128a7c584767d6aa54368b00cb3fca4fb"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_15.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_15.json",
+      "sha256": "8031e047330d315dcfd0f3a590183f82d60435198d5c3e486b97e2315084d458"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_15.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_15.png",
+      "sha256": "9fabf61fc7849219ed35ab2bd01c0e91cbc8ab904b30573d65b95de0e4dd67ef"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_5.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.json",
+      "sha256": "690517fc9d6e6613db6c33bbf0665511be4eb6f9148cb1166f8af555311574c3"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_5.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.png",
+      "sha256": "f64fa96848ec3df884b875975b9265c8c9a603e7fa471f8066258933172a32a6"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_6.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.json",
+      "sha256": "cdd079e6e214d1ebe2722647c47e797c7e7144ec9f3a9c6d30cbd7b5b9cdb1fa"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_6.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.png",
+      "sha256": "18b7918c8c00c3f574e4493169892a8f393e41052a9c82fe5da8e37b936f60b6"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_7.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.json",
+      "sha256": "fdffd5053d18c5ebb902296a6ce4420b5119deacfeb9d70e98f2ec25d16e488b"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_7.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.png",
+      "sha256": "bfcde2ae9e9caa0f63fac6eab5b4ea93e5ff85396cecd3ceff9fcd1374bae930"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_8.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.json",
+      "sha256": "b1143d9c9ae06aa7ab853bcecfbd4b00acedfbb681aee4180750625f6cf7667a"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_8.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.png",
+      "sha256": "57d62133a884dc55bd2d0105dde33ff2dadeb19ec74fd3aa95ab13ea4ef6155a"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_9.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.json",
+      "sha256": "75df158465c95b7a1ae331c03db5ab18fcfa5ec91f019e5be2aecf94aa9ccc3b"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_9.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.png",
+      "sha256": "4e0b398603515f79065812cbbf8cfbafb10d8b801c139de7ed31397798abb815"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_basic.json",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_basic.json",
+      "sha256": "4e6390152aff3cc8c8baefae3c81e99ac2fb0a48e7014fd23acfecb94d774533"
+    },
+    {
+      "source": "assets/zen_tier1_stone_color1_basic.png",
+      "project_path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_basic.png",
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    }
+  ],
+  "zen_source_names": {
+    "half_stone_E_256.png": "zen_tier1_stone_color1_basic.png",
+    "half_stone_N_256.png": "zen_tier1_stone_color1_13.png",
+    "half_stone_S_256.png": "zen_tier1_stone_color1_14.png",
+    "half_stone_W_256.png": "zen_tier1_stone_color1_15.png",
+    "stone_05.png ... stone_12.png": "zen_tier1_stone_color1_5.png ... zen_tier1_stone_color1_12.png"
+  }
+}

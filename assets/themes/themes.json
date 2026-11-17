@@ -101,6 +101,10 @@
       "preview": {
         "ground": "f0ece3",
         "core": ""
+      },
+      "tier1_artwork": {
+        "catalog": "res://art/themes/zen_garden/sets/tier1-artwork.json",
+        "status": "staged"
       }
     },
     "clockwork": {
@@ -144,6 +148,10 @@
       "preview": {
         "ground": "a3a29a",
         "core": "res://art/themes/clockwork_workshop/artwork/copper/C01.png"
+      },
+      "tier1_artwork": {
+        "catalog": "res://art/themes/clockwork_workshop/sets/tier1-artwork.json",
+        "status": "staged"
       }
     },
     "vines": {
@@ -176,6 +184,10 @@
       "preview": {
         "ground": "fff5fb",
         "core": ""
+      },
+      "tier1_artwork": {
+        "catalog": "res://art/themes/vines/sets/tier1-artwork.json",
+        "status": "staged"
       }
     },
     "coral_reef": {
@@ -509,6 +521,10 @@
           "audio": "../review/reef_soundscape.mp3",
           "video": "../review/growth_with_audio.mp4"
         }
+      },
+      "tier1_artwork": {
+        "catalog": "res://art/themes/coral_reef/sets/tier1-artwork.json",
+        "status": "staged"
       }
     }
   }

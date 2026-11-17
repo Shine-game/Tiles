@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "kind": "base",
+  "status": "ready",
+  "images": {
+    "color1": "zen_tier1_stone_color1_5.png"
+  },
+  "canvas_px": [
+    255,
+    255
+  ],
+  "frame": {
+    "origin": [
+      127,
+      127
+    ]
+  },
+  "lighting": {
+    "toward": [
+      65,
+      65
+    ]
+  },
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  },
+  "spawn": {
+    "count": [
+      5,
+      9
+    ]
+  },
+  "orientation": {
+    "mode": "random",
+    "range_deg": [
+      0,
+      360
+    ]
+  },
+  "constraints": {
+    "inside_canvas": true,
+    "edge_margin_px": 1,
+    "base_overlap": "avoid",
+    "base_gap_px": 3,
+    "avoid_deco_overlap": true,
+    "max_radius_px": 8
+  },
+  "anchors": [
+    {
+      "id": "P01",
+      "position": [
+        233,
+        128
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P02",
+      "position": [
+        245,
+        155
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P03",
+      "position": [
+        244,
+        184
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P04",
+      "position": [
+        245,
+        219
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P05",
+      "position": [
+        210,
+        213
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P06",
+      "position": [
+        201,
+        245
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P07",
+      "position": [
+        170,
+        245
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P08",
+      "position": [
+        142,
+        234
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P09",
+      "position": [
+        114,
+        245
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P10",
+      "position": [
+        84,
+        244
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P11",
+      "position": [
+        53,
+        245
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P12",
+      "position": [
+        13,
+        245
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P13",
+      "position": [
+        32,
+        202
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P14",
+      "position": [
+        9,
+        182
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P15",
+      "position": [
+        9,
+        152
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P16",
+      "position": [
+        20,
+        124
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P17",
+      "position": [
+        9,
+        97
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P18",
+      "position": [
+        10,
+        69
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P19",
+      "position": [
+        10,
+        35
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P20",
+      "position": [
+        43,
+        41
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P21",
+      "position": [
+        53,
+        9
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P22",
+      "position": [
+        84,
+        9
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P23",
+      "position": [
+        112,
+        19
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P24",
+      "position": [
+        140,
+        9
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P25",
+      "position": [
+        170,
+        10
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P26",
+      "position": [
+        201,
+        9
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P27",
+      "position": [
+        242,
+        9
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P28",
+      "position": [
+        222,
+        52
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P29",
+      "position": [
+        245,
+        71
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    },
+    {
+      "id": "P30",
+      "position": [
+        245,
+        101
+      ],
+      "accepts": [
+        "pebble",
+        "moss"
+      ]
+    }
+  ],
+  "authoring": {
+    "source": "stone_05.png",
+    "notes": [
+      "255x255 verified; source filename _256 is not a dimension declaration.",
+      "Original 30 exterior candidate anchors; runtime must check the selected texture alpha.",
+      "Arbitrary rotation plus source-X reflection supplies both orientation classes without duplicate mirror states.",
+      "Light marker is visually authored and remains subject to in-game review."
+    ]
+  },
+  "variation": {
+    "scale": [
+      0.85,
+      1
+    ]
+  }
+}

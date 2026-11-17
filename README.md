@@ -196,3 +196,7 @@ Run `tests/render_platform.gd` on a graphical display for shader assertions and 
 - `main.tscn`: entry scene; `export_presets.cfg`: portable Android preset.
 
 The earlier browser proof of concept remains available in Git history at commit `1552407`; this working tree is the native Godot implementation.
+
+## Tier 1 artwork migration
+
+Corrected sprite artwork and universal metadata are staged for all four themes. See [the asset import contract](docs/tier1-generation/asset-import.md) for catalogs, logical-color bindings, export checks and the boundary between imported assets and the upcoming generation integration.

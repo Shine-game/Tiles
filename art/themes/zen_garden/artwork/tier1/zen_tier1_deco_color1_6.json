@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "zen_tier1_deco_color1_6.png"
+  },
+  "canvas_px": [
+    32,
+    32
+  ],
+  "attachment": [
+    14.66,
+    15.32
+  ],
+  "tags": [
+    "pebble"
+  ],
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  },
+  "spawn": {
+    "mode": "direct"
+  },
+  "variation": {
+    "weight": 1,
+    "scale": [
+      1,
+      1
+    ]
+  },
+  "authoring": {
+    "source": "pebble_06.png; sprite_centers.json",
+    "notes": [
+      "Supplied alpha-weighted center verified to within 0.0051 source pixels per axis.",
+      "Original or source-X mirrored form is selected generatively; mirror about attachment, then rotate.",
+      "Random orientation and stone/tile collision constraints belong to the base or anchor.",
+      "No direction marker is needed for unrestricted rotation with direct placement."
+    ]
+  }
+}

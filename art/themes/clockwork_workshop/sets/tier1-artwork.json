@@ -1,0 +1,34 @@
+{
+  "schema": "tiles.sprite-catalog.v1",
+  "id": "clockwork-tier1-artwork",
+  "theme_id": "clockwork",
+  "artwork_theme": "clockwork",
+  "tier": 1,
+  "status": "staged",
+  "coordinate_system": {
+    "units": "source_pixels",
+    "origin": "top_left",
+    "dimensions": "per_sprite_canvas_px"
+  },
+  "families": {
+    "default": {
+      "logical_colors": {
+        "1": {
+          "image_variant": "color1",
+          "treatment": "copper"
+        },
+        "2": {
+          "image_variant": "color2",
+          "treatment": "gunmetal"
+        }
+      },
+      "bases": [
+        "../artwork/tier1/clockwork_tier1_vine_color1_basic.json"
+      ],
+      "decorations": [
+        "../artwork/tier1/clockwork_tier1_deco_color1_1.json",
+        "../artwork/tier1/clockwork_tier1_deco_color1_2.json"
+      ]
+    }
+  }
+}
