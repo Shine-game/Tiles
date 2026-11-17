@@ -31,8 +31,8 @@
   },
   "spawn": {
     "count": [
-      5,
-      9
+      4,
+      6
     ],
     "minimum_spacing_px": 20
   },
@@ -47,9 +47,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.0938
     },
@@ -63,9 +62,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.0938
     },
@@ -78,11 +76,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.0938
     },
     {
@@ -95,9 +88,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.25
     },
@@ -110,11 +102,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
-      },
       "growth_at": 0.25
     },
     {
@@ -126,11 +113,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.25
     },
     {
@@ -143,9 +125,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.4062
     },
@@ -159,9 +140,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.4062
     },
@@ -174,11 +154,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.4062
     },
     {
@@ -191,9 +166,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.5625
     },
@@ -206,11 +180,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
-      },
       "growth_at": 0.5625
     },
     {
@@ -222,11 +191,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.5625
     },
     {
@@ -239,9 +203,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.7188
     },
@@ -255,9 +218,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.7188
     },
@@ -270,11 +232,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.7188
     },
     {
@@ -287,9 +244,8 @@
         "coral_sprout"
       ],
       "orientation": {
-        "mode": "relative",
-        "angle_deg": -15,
-        "jitter_deg": 5
+        "mode": "perpendicular",
+        "angle_deg": 180
       },
       "growth_at": 0.875
     },
@@ -302,11 +258,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 0,
-        "jitter_deg": 5
-      },
       "growth_at": 0.875
     },
     {
@@ -318,11 +269,6 @@
       "accepts": [
         "coral_sprout"
       ],
-      "orientation": {
-        "mode": "relative",
-        "angle_deg": 15,
-        "jitter_deg": 5
-      },
       "growth_at": 0.875
     }
   ],
@@ -337,5 +283,10 @@
   },
   "constraints": {
     "base_overlap": "require_attachment"
+  },
+  "orientation": {
+    "mode": "perpendicular",
+    "angle_deg": 0,
+    "jitter_deg": 10
   }
 }
