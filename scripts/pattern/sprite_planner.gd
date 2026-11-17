@@ -60,11 +60,13 @@ static func _matrix(angle: float, scale: Vector2, pivot: Vector2, target: Vector
 
 static func _context_errors(context: Dictionary) -> Array:
 	var errors: Array = []
+	if context.has("suppress_decorations") and not context.suppress_decorations is bool: errors.append("suppress_decorations must be boolean")
 	if context.has("include_footprints") and not context.include_footprints is bool: errors.append("include_footprints must be boolean")
 	for key: Variant in context:
-		if key not in ["origin_cells", "size_cells", "target_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints"]: errors.append("Unknown placement field: " + str(key))
+		if key not in ["origin_cells", "size_cells", "target_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints", "suppress_decorations", "decoration_path"]: errors.append("Unknown placement field: " + str(key))
 	for key: String in ["origin_cells", "size_cells", "target_forward", "world_light"]:
 		if context.has(key) and not _valid_vector(context[key], key == "size_cells", key in ["target_forward", "world_light"]): errors.append("Invalid placement vector: " + key)
+	if context.has("decoration_path") and not context.decoration_path is String: errors.append("decoration_path must be a metadata path")
 	if context.has("base_path") and not context.base_path is String: errors.append("base_path must be a metadata path")
 	var tolerance: Variant = context.get("connection_tolerance_cells", 0.01)
 	if not (tolerance is int or tolerance is float) or not is_finite(float(tolerance)) or tolerance < 0: errors.append("Invalid connection tolerance")
@@ -211,10 +213,12 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 	placement.merge({"metadata_path": base.path, "image_path": base.images[variant], "variant": variant, "canvas_px": base.canvas_px.duplicate(), "origin": base.resolved.origin.duplicate(), "id": component_id + "/base"})
 	var count: Array = base.resolved.spawn.count
 	var target := _rng(seed, component_id, "count").randi_range(int(count[0]), int(count[1]))
-	var anchors: Array = base.anchors.duplicate()
+	if context.get("suppress_decorations", false): target = 0
+	var anchors: Array = [] if context.get("suppress_decorations", false) else base.anchors.duplicate()
 	anchors.sort_custom(func(a, b): return a.id < b.id)
 	anchors = _shuffle(anchors, _rng(seed, component_id, "anchors"))
 	var catalog_decorations: Array = family.decorations.duplicate()
+	if context.has("decoration_path"): catalog_decorations = catalog_decorations.filter(func(record): return record.path == context.decoration_path)
 	catalog_decorations.sort_custom(func(a, b): return a.path < b.path)
 	# Any protected decoration requires footprints for all participants, even
 	# if an earlier participant permits overlap. Omission is presentation-only.

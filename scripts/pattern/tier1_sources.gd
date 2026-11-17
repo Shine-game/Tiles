@@ -17,6 +17,19 @@ static func descriptors(model, theme: String, before: Array) -> Array:
 			var direction := int(event.get(mapping, -1)) if mapping is String else int(mapping)
 			if direction < 0 or direction > 3: continue
 			result.append({"id": theme + "/" + key, "family": config.get("family", "default"), "color": event.color, "context": {"origin_cells": event.center, "size_cells": _size(config), "target_forward": Vector2(Topology.DIRECTIONS[direction])}, "binding": {"event": event}})
+		if config.has("center_join_masks"):
+			# A cell-center overlay is shared by its half-arms. Assign one
+			# deterministic owner; every other arm remains bare.
+			for item: Dictionary in result:
+				if config.has("fixed_decoration_path"): item.context.decoration_path = config.fixed_decoration_path
+				var event: Dictionary = item.binding.event
+				var mask := Topology.neighbor_mask(model.board, event.cell)
+				var owner := -1
+				for port in range(4):
+					if mask & (1 << port):
+						owner = port
+						break
+				item.context.suppress_decorations = not config.center_join_masks.any(func(value): return int(value) == mask) or item.context.target_forward != Vector2(Topology.DIRECTIONS[owner])
 	elif layout == "edge_halves":
 		for edge: Dictionary in model.edges:
 			# Two native half-arms meet at one edge midpoint. Both bind to the

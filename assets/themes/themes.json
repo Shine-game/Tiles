@@ -165,7 +165,17 @@
         "component_ports": {
           "T01": "direction"
         },
-        "layer_z_index": 1
+        "layer_z_index": 1,
+        "center_join_masks": [
+          1,
+          2,
+          4,
+          8,
+          5,
+          10
+        ],
+        "fixed_decoration_path": "res://art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_1.json",
+        "decoration_z_index": 3
       }
     },
     "vines": {

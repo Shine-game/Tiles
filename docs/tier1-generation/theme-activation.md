@@ -114,3 +114,11 @@ The existing `test_ui.gd` has 24 failing touch/menu assertions in this environme
 The same 24 assertion messages reproduce on the unchanged step-5 baseline, both
 in count and order. They are recorded as pre-existing, not counted as passing.
 Other checks and detailed counts are recorded in `activation-validation.json`.
+
+Clockwork center rings now use one center anchor and a fixed decoration path.
+`center_join_masks` selects endpoints (1,2,4,8) and straights (5,10). The lowest
+connected port owns the shared center overlay, while the other half-arm suppresses
+its decorations. Both tube bases keep their original growth fields. Ring overlays
+sit above ordinary wheel caps so endpoint rings remain visible. Bends, T/X shapes
+and isolated cells receive no ring. The alternate ring asset remains available in
+the catalog but is not selected by the active fixed-design rule.

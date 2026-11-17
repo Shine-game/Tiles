@@ -32,32 +32,21 @@
   "spawn": {
     "count": [
       1,
-      2
+      1
     ],
-    "minimum_spacing_px": 48
+    "minimum_spacing_px": 0
   },
   "anchors": [
     {
-      "id": "a01",
+      "id": "center_join",
       "position": [
-        160,
+        128,
         128
       ],
       "accepts": [
         "ring"
       ],
-      "growth_at": 0.25
-    },
-    {
-      "id": "a02",
-      "position": [
-        216,
-        128
-      ],
-      "accepts": [
-        "ring"
-      ],
-      "growth_at": 0.6875
+      "growth_at": 0
     }
   ],
   "authoring": {
