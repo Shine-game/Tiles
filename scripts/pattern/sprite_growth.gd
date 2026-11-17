@@ -82,7 +82,7 @@ static func _shift_field(field: Dictionary, elapsed: float) -> Dictionary:
 		result.source_end -= elapsed
 	return result
 
-static func _revision(plan: Dictionary, placement: Dictionary) -> String:
+static func placement_revision(plan: Dictionary, placement: Dictionary) -> String:
 	# Color treatment and view transforms do not replay an existing reveal.
 	return var_to_bytes([plan.get("planner_version", 1), plan.base.metadata_path, placement.metadata_path, placement.get("local_transform", Transform2D.IDENTITY), placement.growth_at, placement.rules.animation]).hex_encode().sha256_text()
 
@@ -102,7 +102,7 @@ static func _compile(plan: Dictionary, field: Dictionary) -> Dictionary:
 		if not is_finite(start) or not is_finite(end): return _fail("Decoration times exceed the supported clock range")
 		var id := event_id(placement.id)
 		if events.has(id): return _fail("Duplicate decoration timing identity: " + id)
-		events[id] = {"start": start, "end": end, "old": field.old, "blocking": true, "replay": field.replay, "owner": plan.component_id, "parent_id": plan.component_id, "placement_id": placement.id, "kind": "sprite_decoration", "mode": animation.mode, "duration_sec": duration, "growth_at": placement.growth_at, "revision": _revision(plan, placement), "layout": placement.duplicate(true)}
+		events[id] = {"start": start, "end": end, "old": field.old, "blocking": true, "replay": field.replay, "owner": plan.component_id, "parent_id": plan.component_id, "placement_id": placement.id, "kind": "sprite_decoration", "mode": animation.mode, "duration_sec": duration, "growth_at": placement.growth_at, "revision": placement_revision(plan, placement), "layout": placement.duplicate(true)}
 	return {"ok": true, "events": events}
 
 static func compile(plan: Dictionary, binding: Dictionary, settled: bool = false) -> Dictionary:

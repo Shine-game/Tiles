@@ -127,6 +127,12 @@ static func resolve(asset: Variant, root: String = "res://", errors: Array = [])
 
 static func validate_placement(spec: Dictionary) -> Array:
 	var errors: Array = []
+	if spec.has("source_transform"):
+		if not spec.source_transform is Transform2D or not spec.source_transform.is_finite() or spec.source_transform.determinant() == 0: errors.append("source_transform must be a finite invertible Transform2D")
+		if spec.get("provider", "sprite") not in ["sprite", "group"]: errors.append("source_transform requires the sprite or group provider")
+		for field: String in ["position_cells", "position_px", "pivot_px", "offset_px", "scale", "size_cells", "max_extent_cells", "rotation_radians", "quarter_turns", "flip_h", "flip_v", "centered", "pixels_per_cell"]:
+			if spec.has(field): errors.append("source_transform cannot be combined with " + field)
+	if spec.has("lifecycle") and spec.lifecycle not in ["fade", "external", "reveal"]: errors.append("Unknown component lifecycle")
 	for field: String in ["position_cells", "position_px", "pivot_px", "offset_px", "scale", "size_cells"]:
 		if not spec.has(field): continue
 		var v: Variant = spec[field]

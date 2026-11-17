@@ -179,7 +179,7 @@ static func _reveal(image_path: String, attachment: Vector2, direction: Vector2,
 						low = minf(low, projection)
 						high = maxf(high, projection)
 			if high <= 0: return _failure(image_path, ["Progressive direction has no positive visible extent"])
-			_reveals[key] = {"provider": "linear_reveal", "params": {"size_px": _pair(size), "zero_px": _pair(attachment + direction * low), "one_px": _pair(attachment + direction * high)}}
+			_reveals[key] = {"provider": "linear_reveal", "params": {"size_px": _pair(size), "zero_px": _pair(attachment + direction * low + Vector2.ONE * 0.5), "one_px": _pair(attachment + direction * high + Vector2.ONE * 0.5)}}
 	return {"ok": true, "asset": _reveals[key].duplicate(true)}
 
 static func load_sprite(source: Variant, root: String = "res://", settings_source: Variant = SETTINGS_PATH) -> Dictionary:
