@@ -119,7 +119,7 @@
     },
     "clockwork": {
       "name": "Clockwork Workshop",
-      "version": "1.4",
+      "version": "1.5",
       "colors": [
         "bc783d",
         "59676e"
@@ -157,7 +157,7 @@
       },
       "preview": {
         "ground": "a3a29a",
-        "core": "res://art/themes/clockwork_workshop/artwork/copper/C01.png"
+        "core": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.png"
       },
       "tier1_artwork": {
         "catalog": "res://art/themes/clockwork_workshop/sets/tier1-artwork.json",
@@ -189,6 +189,10 @@
           "cross": {
             "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color1_basic.json",
             "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color2_basic.json"
+          },
+          "core": {
+            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.json",
+            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color2_basic.json"
           }
         }
       }

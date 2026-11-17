@@ -6,7 +6,7 @@ are a bend, three are a T, and four are an X (`cross` in configuration). Straigh
 100% core asset at isolated starting cells and open endpoints, with a stable
 identity across the isolated-to-endpoint transition. Vines enables this binding;
 its core sidecars reuse the matching bend PNGs. Other themes retain their existing
-starting/endpoint core providers (Coral anemones, Clockwork C01 and Zen cores).
+starting/endpoint core providers (Coral anemones, Clockwork composite sprites and Zen cores).
 
 The source growth and its decorations remain underneath. Legacy bend/T/X center
 art is suppressed only for themes that enable the new bindings. Vines is enabled
@@ -113,5 +113,6 @@ artwork and unrestricted stable rotation apply to all these Vines overlays.
 
 Clockwork binds copper color1 and gunmetal color2: H01 valve = bend, H02 rotating
 = T, H03 exhaust = X. All use canvas-center pivots, 500% scale and free stable
-rotation, preserving source colors. Its existing C01 starting/endpoint cores have
-no added ring. Center rings are restricted to straight interiors (masks 5 and 10).
+rotation, preserving source colors. Its starting/endpoint cores use one supplied composite PNG each,
+through `shapes.core`, at 100% with no rotation. Legacy C01/C02/C03 layers
+are suppressed there; no added ring is drawn. Center rings are restricted to straight interiors (masks 5 and 10).

@@ -1,0 +1,26 @@
+{
+  "artwork": [
+    {
+      "source": "copper_core.png",
+      "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.png",
+      "sha256": "3a90e3fe2c17c6f5b5858444aa1ca76e0ca250333026f2d279d1cdb5586da025",
+      "scale": 1.0,
+      "rotation_deg": 0
+    },
+    {
+      "source": "gunmetal_core.png",
+      "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color2_basic.png",
+      "sha256": "044fc63fa20c3ca965d7b7ad401d3e2ca6aa15da37cba6c1f42b78ee009aaf42",
+      "scale": 1.0,
+      "rotation_deg": 0
+    }
+  ],
+  "original_bytes_preserved": true,
+  "source_and_pack": "Both colors, all 16 topologies, one composite core on isolated/endpoints, no legacy C01/C02/C03 nodes, stable first attachment, new endpoint visibility and undo.",
+  "shared_junction_checks": 231,
+  "registry_checks": 82,
+  "integration_checks": 386,
+  "failures": 0,
+  "undo_fix": "Clockwork reverse schedule includes generated pipe retirements even when legacy wheel retirements are absent.",
+  "apk_or_device_tested": false
+}

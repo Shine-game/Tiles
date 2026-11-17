@@ -93,7 +93,7 @@ func show_settled(grid: Array, preserve_direction: bool = false) -> void:
 	_sync_workshop(true, preserve_direction, reverse)
 	_sync_zen(true)
 	clock = 0
-	growing = clockwork and pattern.duration > 0
+	growing = clockwork and (pattern.duration > 0 or reverse)
 	_sync_construction(not growing, preserve_direction)
 	set_process(growing)
 	if not preserve_direction:
