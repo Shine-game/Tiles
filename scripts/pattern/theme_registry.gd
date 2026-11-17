@@ -63,6 +63,10 @@ static func validate(data: Variant) -> Array:
 					if not tiers.has(tier): errors.append(id + ": missing tier " + tier)
 				for tier: String in tiers:
 					if tier not in ["0", "1", "2", "3"] or not project_file(tiers[tier], "json"): errors.append(id + ": invalid set path for tier " + tier)
+		if profile.has("tier1_artwork"):
+			var artwork: Variant = profile.tier1_artwork
+			if not artwork is Dictionary or artwork.get("status") not in ["staged", "active"] or not project_file(artwork.get("catalog"), "json"):
+				errors.append(id + ": invalid tier1_artwork catalog link")
 		if profile.get("environment") is Dictionary and profile.environment.has("catalog"):
 			if not project_file(profile.environment.catalog, "json"): errors.append(id + ": invalid environment catalog")
 	if not data.get("frame_geometry") is Dictionary: errors.append("Missing shared frame geometry")
@@ -116,3 +120,6 @@ static func palette_pairs() -> Array:
 		pair.colors = [Color(pair.colors[0]), Color(pair.colors[1])]
 		pair.floor = Color(pair.floor)
 	return pairs
+
+static func sprite_catalog_path(id: String) -> String:
+	return profile(id).get("tier1_artwork", {}).get("catalog", "")

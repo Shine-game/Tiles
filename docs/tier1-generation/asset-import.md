@@ -2,7 +2,7 @@
 
 This change stages the corrected artwork in the Godot project. Existing tier 1
 set definitions, timing, renderers, and all higher-tier behavior remain active.
-The next step is the universal metadata loader/adapter.
+The shared loader/adapter is now implemented; see [metadata-loader.md](metadata-loader.md). Placement selection and renderer activation remain later stages.
 
 ## Layout
 

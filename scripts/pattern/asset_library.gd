@@ -1,6 +1,8 @@
 class_name PatternAssetLibrary
 extends RefCounted
 
+const SpriteMetadata = preload("res://scripts/pattern/sprite_metadata.gd")
+
 const SET_SCHEMA := "tiles.pattern-set.v1"
 static var textures: Dictionary = {}
 static var atlases: Dictionary = {}
@@ -224,3 +226,16 @@ static func part_texture(spec: Dictionary, treatment: String = "") -> Texture2D:
 	var bound := bind_part(spec, treatment)
 	assert(bound.ok, str(bound.errors))
 	return resolve(bound.part.asset, spec.get("asset_root", "res://")) if bound.ok else null
+
+# The sprite format is compiled into existing set descriptors, leaving the
+# common texture resolver, node owner and composition validator in control.
+static func load_sprite_catalog(source: Variant, root: String = "res://", expected_theme_id: String = "") -> Dictionary:
+	var catalog := SpriteMetadata.load_catalog(source, root)
+	if catalog.ok and not expected_theme_id.is_empty() and catalog.definition.theme_id != expected_theme_id:
+		return {"ok": false, "errors": [catalog.path + ": catalog theme_id does not match registry theme " + expected_theme_id]}
+	return catalog
+
+static func load_sprite_set(catalog: Dictionary, family: String, logical_color: int) -> Dictionary:
+	var adapted := SpriteMetadata.pattern_definition(catalog, family, logical_color)
+	if not adapted.ok: return adapted
+	return load_set(adapted.definition, adapted.root)
