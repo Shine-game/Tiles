@@ -118,7 +118,7 @@ through `shapes.core`, at 80% with no rotation. Legacy C01/C02/C03 layers
 are suppressed there; no added ring is drawn. Center rings are restricted to straight interiors (masks 5 and 10).
 
 Zen uses the supplied flat stone / three-stone cairn / bamboo cairn for bend / T / X
-on both paths, at 100%, centered and unrotated. Isolated and open endpoint cores
+on both paths, at 250%, centered and unrotated. Isolated and open endpoint cores
 use a single basic line stone at 100%. A shared core replaces the generated
 cell-centered base at those cells, avoiding duplicate stones; junction growth
 continues underneath. Legacy rake centerpieces are suppressed.
