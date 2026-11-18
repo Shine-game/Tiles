@@ -133,3 +133,21 @@ static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
 # Shared aligned sprite placement for tier-two artwork, without palette treatment.
 static func sprite_formation(view, spec: Dictionary, context: Dictionary) -> void:
 	fountain(view,spec,context)
+
+static func butterfly_choice(params: Dictionary, link: Dictionary) -> Dictionary:
+	var overlap := Rect2(Vector2(link.a)-Vector2.ONE,Vector2.ONE*2).intersection(Rect2(Vector2(link.b)-Vector2.ONE,Vector2.ONE*2))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = JSON.stringify([params.seed,link.color,link.a.x,link.a.y,link.b.x,link.b.y]).sha256_text().substr(0,15).hex_to_int()
+	return {"position_cells":overlap.position+Vector2(rng.randf(),rng.randf())*overlap.size,"rotation":deg_to_rad(rng.randf_range(params.rotation_range_degrees[0],params.rotation_range_degrees[1])),"overlap":overlap}
+
+static func overlap_butterfly(view, spec: Dictionary, context: Dictionary) -> void:
+	var link: Dictionary = context.link
+	var progress: float = 1.0 if link.old else clampf((view.clock-link.start)/float(spec.animation.duration_seconds),0.0,1.0)
+	if progress<=0.0:return
+	var chosen := butterfly_choice(spec.params,link)
+	var meta := fountain_metadata(spec.params.sprites[str(link.color)])
+	var extent: Vector2 = Vector2(spec.params.size_cells[0],spec.params.size_cells[1])*view.pitch
+	var origin := -Vector2(meta.center_px[0],meta.center_px[1])*extent/Vector2(meta.canvas_px[0],meta.canvas_px[1])
+	view.draw_set_transform(view._point(chosen.position_cells),chosen.rotation,Vector2.ONE)
+	view.draw_texture_rect(FountainAssets.texture(meta.image),Rect2(origin,extent),false,Color(1,1,1,progress))
+	view.draw_set_transform(Vector2.ZERO,0,Vector2.ONE)

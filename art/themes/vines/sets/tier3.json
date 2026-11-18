@@ -1,0 +1,35 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "vines-tier3",
+  "tier": 3,
+  "roles": {
+    "connection": "butterfly"
+  },
+  "compositions": {
+    "butterfly": {
+      "parts": {
+        "butterfly": {
+          "provider": "vines.overlap_butterfly",
+          "animation": {
+            "duration_seconds": 0.18
+          },
+          "params": {
+            "seed": 19321,
+            "size_cells": [
+              0.6666666666666666,
+              0.6666666666666666
+            ],
+            "rotation_range_degrees": [
+              0,
+              360
+            ],
+            "sprites": {
+              "1": "res://art/themes/vines/artwork/tier2/vines_tier2_butterfly_color2_basic.json",
+              "2": "res://art/themes/vines/artwork/tier2/vines_tier2_butterfly_color1_basic.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

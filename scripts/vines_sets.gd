@@ -11,6 +11,7 @@ const ROOT := "res://art/themes/vines/sets/"
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
 static var tier2: Dictionary = {}
+static var tier3: Dictionary = {}
 static var renderer := Components.new()
 
 static func install() -> void:
@@ -21,9 +22,12 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.flower", Art.flower)
 	Components.register_draw_part_provider("vines.fountain", Art.fountain)
 	Components.register_draw_part_provider("vines.sprite_formation", Art.sprite_formation)
+	Components.register_draw_part_provider("vines.overlap_butterfly", Art.overlap_butterfly)
 	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
 	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
+	tier3 = Assets.load_set("res://art/themes/vines/sets/tier3.json")
+	assert(tier3.ok,str(tier3.errors))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
 
@@ -61,7 +65,7 @@ static func draw(view) -> void:
 	for edge: Dictionary in ([] if view.generative_tier1 else view.pattern.edges):
 		renderer.draw_parts(Cells.parts_for_role(tier1, "vine"), view, {"edge": edge})
 	# Higher-tier art stays in its existing providers and painter order.
-	 # Water links are drawn by the independent animated fountain layer.
+
 	for cell: Vector2i in view.pattern.arrivals:
 		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(view.board, cell))): continue
 		var selected := centers(Topology.neighbor_mask(view.board, cell))
@@ -69,6 +73,8 @@ static func draw(view) -> void:
 			renderer.draw_parts({id: selected[id]}, view, {"cell": cell, "scale": center_scale(view, cell, selected[id])})
 	for corner: Vector2i in view.pattern.flowers:
 		renderer.draw_parts(Formations.parts(tier2), view, {"corner": corner, "event": view.pattern.flowers[corner]})
+	for link: Dictionary in view.pattern.links:
+		renderer.draw_parts(Cells.parts_for_role(tier3,"connection"),view,{"link":link})
 
 static func flower() -> Dictionary:
 	install()

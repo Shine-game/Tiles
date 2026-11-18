@@ -154,6 +154,16 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		if record.color_role != "original":
 			var target := Palette.accent(color) if record.color_role == "opposite" else Palette.pigment(color)
 			next_specs[id].material = Renderer.material(Reveal, {"recolor": true, "palette_source": record.source_color, "palette_target": target, "reveal_progress": 1.0})
+	if theme == "vines":
+		var duration: float = Assets.load_set(Themes.pattern_set_path(theme,2)).definition.compositions.flower.parts.flower.animation.duration_seconds
+		for id: String in next_events:
+			if not id.get_slice("/",5) in ["bend","t","cross"]:continue
+			var cell: Vector2i = next_events[id].owner
+			var covers: Array = []
+			for corner: Vector2i in model.flowers:
+				if cell.x>=corner.x-1 and cell.x<=corner.x and cell.y>=corner.y-1 and cell.y<=corner.y:
+					covers.append({"start":model.flowers[corner].start,"old":model.flowers[corner].old,"duration":duration})
+			next_events[id].flower_covers=covers
 	events = next_events
 	specs = next_specs
 	z_index = int(config.get("z_index", 1))
@@ -170,4 +180,8 @@ func present(state, view_transform: Transform2D) -> bool:
 func advance(state) -> void:
 	for id: String in renderer.nodes:
 		var record: Dictionary = state.records.get(id, {})
-		renderer.nodes[id].visible = not record.is_empty() and record.phase != "waiting"
+		var alpha := 1.0
+		for cover: Dictionary in events.get(id,{}).get("flower_covers",[]):
+			alpha = minf(alpha,0.0 if cover.old else 1.0-clampf((state.schedule.clock-cover.start)/cover.duration,0.0,1.0))
+		renderer.nodes[id].modulate.a=alpha
+		renderer.nodes[id].visible = not record.is_empty() and record.phase != "waiting" and alpha>0.0
