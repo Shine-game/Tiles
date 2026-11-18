@@ -350,7 +350,7 @@ func update_geometry() -> void:
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	if board_frame != null and board_frame.is_present():
-		field = Frame.fit(Rect2(Vector2.ZERO, size))
+		field = Frame.fit(Rect2(Vector2.ZERO, size), Palette.theme_id())
 		side = field.size.x
 		board_frame.surround(field)
 	# Keep the raised north edge and its shadow inside the field, including

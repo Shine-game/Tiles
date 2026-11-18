@@ -1,6 +1,7 @@
 class_name PatternJunctionLayer
 extends Node2D
 
+const LeafCenters = preload("res://scripts/pattern/leaf_centers.gd")
 const CellVariation = preload("res://scripts/pattern/cell_variation.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
@@ -129,6 +130,13 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 			if not previous.old and previous.start > at + (elapsed if restart else 0.0):
 				old = false
 				start = previous.start - (elapsed if restart else 0.0)
+		if shape == "core" and config.has("leaf_centers"):
+			var leaves := LeafCenters.placements(config.leaf_centers, cell, color, Topology.neighbor_mask(model.board,cell))
+			for i in range(leaves.size()):
+				var leaf_id := id + "/leaf_%d" % i
+				next_events[leaf_id] = {"start":start,"end":start,"old":old,"revision":JSON.stringify(config.leaf_centers),"owner":cell,"kind":"junction"}
+				next_specs[leaf_id] = leaves[i]
+			continue
 		next_events[id] = {"start": start, "end": start, "old": old, "revision": revision, "owner": cell, "kind": "junction"}
 		next_specs[id] = {"asset": record.texture, "source_transform": transform, "lifecycle": "external", "material": null}
 		if record.color_role != "original":

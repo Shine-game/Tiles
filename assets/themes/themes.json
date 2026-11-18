@@ -231,10 +231,21 @@
         "muted": "9b8ca6"
       },
       "frame": {
-        "enabled": false,
-        "texture": "",
-        "appearance": "",
-        "material": "Awaiting theme artwork; use the shared frame geometry."
+        "enabled": true,
+        "texture": "res://art/themes/vines/artwork/vines_frame.png",
+        "appearance": "vines-frame-1",
+        "source_rect": [
+          58,
+          58,
+          1138,
+          1138
+        ],
+        "opening_rect": [
+          108,
+          108,
+          1038,
+          1038
+        ]
       },
       "sets": {
         "default": {
@@ -284,6 +295,19 @@
             "1": "res://art/themes/vines/artwork/junctions/vines_tier1_core_color1_basic.json",
             "2": "res://art/themes/vines/artwork/junctions/vines_tier1_core_color2_basic.json"
           }
+        },
+        "leaf_centers": {
+          "decorations": [
+            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json",
+            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.json",
+            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.json"
+          ],
+          "core_count": 8,
+          "endpoint_count": 2,
+          "scale": 0.8,
+          "core_radius_cells": 0.02,
+          "endpoint_offset_cells": 0.15,
+          "endpoint_spacing_cells": 0.06
         }
       }
     },
