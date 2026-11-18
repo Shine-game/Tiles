@@ -1,0 +1,12 @@
+{
+  "cause": "Native axes of opposite half-stems point in opposite directions; local-angle-only checks missed the reversed world inclination.",
+  "fix": "Shared world-space growth_forward per edge; reflect only a backwards along-stem component after base transformation.",
+  "verification": {
+    "source_and_exported_pack": "Both colors, all four actual growth directions, three-edge paths and both halves of each edge: dot(leaf direction, growth)=0.5. Existing 64-seed density/spacing/native-size checks pass.",
+    "planner_checks": 681,
+    "integration_checks": 323,
+    "vines_sets_checks": 500,
+    "registry_checks": 82
+  },
+  "failures": 0
+}

@@ -92,7 +92,7 @@ func _run() -> void:
 	mixed[4][5] = 2
 	view.show_settled(mixed)
 	check(view.construction_state.records.has("junction/vines/1/4/4/core"), "Different-color contact leaves the first color's endpoint motif intact")
-	check(Palette.theme_version() == "1.7" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
+	check(Palette.theme_version() == "1.8" and Gallery.fingerprint(endpoint, 0, "vines", "1.0") != Gallery.fingerprint(endpoint, 0, "vines"), "New Vines appearance saves separately from historical art")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/vines/sets/*.json"), "Both sets are packaged in Android exports")
 	check(Sets.renderer.diagnostics.is_empty(), "All real Vines drawing batches use valid providers")
 	view.queue_free()

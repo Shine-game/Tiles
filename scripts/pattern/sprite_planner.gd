@@ -63,9 +63,9 @@ static func _context_errors(context: Dictionary) -> Array:
 	if context.has("suppress_decorations") and not context.suppress_decorations is bool: errors.append("suppress_decorations must be boolean")
 	if context.has("include_footprints") and not context.include_footprints is bool: errors.append("include_footprints must be boolean")
 	for key: Variant in context:
-		if key not in ["origin_cells", "size_cells", "target_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints", "suppress_decorations", "decoration_path"]: errors.append("Unknown placement field: " + str(key))
-	for key: String in ["origin_cells", "size_cells", "target_forward", "world_light"]:
-		if context.has(key) and not _valid_vector(context[key], key == "size_cells", key in ["target_forward", "world_light"]): errors.append("Invalid placement vector: " + key)
+		if key not in ["origin_cells", "size_cells", "target_forward", "growth_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints", "suppress_decorations", "decoration_path"]: errors.append("Unknown placement field: " + str(key))
+	for key: String in ["origin_cells", "size_cells", "target_forward", "growth_forward", "world_light"]:
+		if context.has(key) and not _valid_vector(context[key], key == "size_cells", key in ["target_forward", "growth_forward", "world_light"]): errors.append("Invalid placement vector: " + key)
 	if context.has("decoration_path") and not context.decoration_path is String: errors.append("decoration_path must be a metadata path")
 	if context.has("base_path") and not context.base_path is String: errors.append("base_path must be a metadata path")
 	var tolerance: Variant = context.get("connection_tolerance_cells", 0.01)
@@ -139,7 +139,7 @@ static func _accepted(anchor: Dictionary, decoration: Dictionary) -> bool:
 		if tag in anchor.accepts: return true
 	return false
 
-func _decoration(base: Dictionary, base_transform: Transform2D, variant: String, anchor: Dictionary, decoration: Dictionary, settings: Dictionary, seed: int, component: String, light: Vector2, occupied: Dictionary, include_footprints: bool) -> Dictionary:
+func _decoration(base: Dictionary, base_transform: Transform2D, variant: String, anchor: Dictionary, decoration: Dictionary, settings: Dictionary, seed: int, component: String, light: Vector2, occupied: Dictionary, include_footprints: bool, growth_forward: Vector2 = Vector2.ZERO) -> Dictionary:
 	var rules := Metadata.rules(base.definition, decoration.definition, anchor, settings)
 	if not rules.ok: return {"ok": false, "reason": "invalid_growth_override"}
 	if rules.animation.mode == "progressive" and not decoration.reveals.has(variant): return {"ok": false, "reason": "missing_reveal"}
@@ -152,6 +152,14 @@ func _decoration(base: Dictionary, base_transform: Transform2D, variant: String,
 	if mode == "random":
 		var limits: Array = rules.orientation.get("range_deg", [0, 360])
 		desired = deg_to_rad(rng.randf_range(limits[0], limits[1]))
+	# Inclination follows the assembled growth direction, not each half's native axis.
+	# Reflect only the along-stem component so outward-facing leaves stay outward.
+	if not growth_forward.is_zero_approx() and mode in ["relative", "perpendicular"]:
+		var growth := growth_forward.normalized()
+		var world_direction := base_transform.basis_xform(Vector2.from_angle(desired)).normalized()
+		if world_direction.dot(growth) < 0.0:
+			world_direction -= 2.0 * world_direction.dot(growth) * growth
+			desired = base_transform.affine_inverse().basis_xform(world_direction).angle()
 	var forms := _shuffle(_forms(decoration.resolved.transforms), _rng(seed, component, purpose + "/mirror"))
 	var chosen: Dictionary = {}
 	var reason := "no_valid_form"
@@ -263,7 +271,7 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 			var compatible := catalog_decorations.filter(func(record): return _accepted(anchor, record))
 			if compatible.is_empty(): rejections.incompatible_tags = int(rejections.get("incompatible_tags", 0)) + 1
 			for record: Dictionary in _weighted(compatible, _rng(seed, component_id, "anchor/" + anchor.id + "/catalog")):
-				var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied, include_footprints)
+				var candidate := _decoration(base, placement.transform, variant, anchor, record, catalog.settings, seed, component_id, light, occupied, include_footprints, _vector(context.get("growth_forward", Vector2.ZERO)))
 				if not candidate.ok:
 					rejections[candidate.reason] = int(rejections.get(candidate.reason, 0)) + 1
 					continue
