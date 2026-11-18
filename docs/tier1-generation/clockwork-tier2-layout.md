@@ -1,6 +1,6 @@
 # Workshop tier-two assembly
 
-Both copper and gunmetal now use the first driving wheel (`L01`) followed by the plain cap (`H00_plain_hatch`). The intermediate hub (`L02`) and upper wheel (`L03`) are absent from the live tier-two composition; their source artwork remains available in the repository.
+Both copper and gunmetal now use the first driving wheel (`L01`) followed by the plain cap (`H00_plain_hatch`). The driving wheel uses the opposite metal: copper formations use the gunmetal wheel, and gunmetal formations use the copper wheel. Caps and chains retain the formation metal. The intermediate hub (`L02`) and upper wheel (`L03`) are absent from the live tier-two composition; their source artwork remains available in the repository.
 
 The first wheel rises for 0.4 seconds. The cap follows immediately and appears over 0.25 seconds, with uniform 1.5× scale around its existing center. This also scales the plain cap used at chain terminals, so replacement does not shrink it. Chains wait for the completed mechanism.
 

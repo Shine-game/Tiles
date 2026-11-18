@@ -39,7 +39,7 @@ func run():
    var record=view.junction_layer.load_sprite(original_config.shapes[shape][str(color)])
    check((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)),"Marked center maps to square center")
    check(record.path.contains("color%d"%color),"Logical pink stem uses violet asset, and vice versa")
-   check(is_equal_approx(record.scale,{"bend":1.0,"t":1.3,"cross":1.8}[shape]),"Shape-specific flower size")
+   check(is_equal_approx(record.scale,1.0),"Shape-specific flower size")
    check(spec.material.get_shader_parameter("palette_target")==Palette.accent(color),"Every palette uses the opposite stem color")
    var node=view.junction_layer.renderer.nodes[id]
    var matrix=node.transform

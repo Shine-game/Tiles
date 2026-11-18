@@ -12,7 +12,7 @@ The source growth and its decorations remain underneath. Legacy bend/T/X center
 art is suppressed only for themes that enable the new bindings. Vines is enabled
 with the supplied flowers. Coral is enabled with the supplied anemones (file 1 =
 bend, 2 = T, 3 = X), matching salmon color1 and teal color2. Coral uses canvas-center
-pivots, scale 1.5 for bends/T and 1.7 for X, any rotation, and preserves the original artwork colors. The other
+pivots, scale 1.0 for bends/T/X, any rotation, and preserves the original artwork colors. The other
 themes can enable the same system when their three shape-specific assets are supplied. No separate junction renderer is needed.
 The existing higher-tier formations and links keep their own artwork and schedule.
 
@@ -108,7 +108,7 @@ Coral tier-0 isolated cores reuse the matching bend PNG at their original one-sq
 canvas size, independently of the shape-specific junction assembly scale. Open endpoint cores use the same matching bend PNG at 100% canvas size. Both
 isolated and endpoint cores draw above the growing stems and decorations.
 
-Vines assembly sizes: core and bend 100%, T 130%, X 180%. Opposite-color
+Vines assembly sizes: core, bend, T and X all 100%. Opposite-color
 artwork and unrestricted stable rotation apply to all these Vines overlays.
 
 Clockwork binds copper color1 and gunmetal color2: H01 valve = bend, H02 rotating

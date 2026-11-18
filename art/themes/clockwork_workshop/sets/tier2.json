@@ -39,7 +39,8 @@
             "params": {
               "height_source": 12.0
             }
-          }
+          },
+          "swap_treatment": true
         },
         "H00_plain_hatch": {
           "asset": {

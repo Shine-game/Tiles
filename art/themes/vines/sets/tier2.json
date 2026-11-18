@@ -9,75 +9,112 @@
     "flower": {
       "parts": {
         "flower": {
-          "provider": "vines.flower",
+          "provider": "vines.layered_post",
           "animation": {
-            "duration_seconds": 0.36
+            "duration_seconds": 1.8
           },
           "params": {
-            "support_finish": 0.6,
-            "stem_base_y": 0.455,
-            "stem_tangent_x": -0.18,
-            "support_leaf_y": [
-              0.025,
-              0.1
+            "canvas_px": [
+              255,
+              255
             ],
-            "support_leaf_x": [
-              0.72,
-              0.55
+            "center_px": [
+              126.5,
+              124.5
             ],
-            "support_leaf_direction_y": [
-              -0.88,
-              -1.0
+            "post_center_px": [
+              126.5,
+              124.5
             ],
-            "support_leaf_length": [
-              0.31,
-              0.19
+            "post_foot_px": [
+              127.297,
+              243.409
             ],
-            "support_leaf_width": [
-              0.12,
-              0.08
+            "size_cells": [
+              2,
+              2
             ],
-            "support_leaf_lightening": [
-              0,
-              0.15
-            ],
-            "support_leaf_alpha": [
-              0.88,
-              0.76
-            ],
-            "petal_delay": 0.12,
-            "petal_span": 0.88,
-            "radius": 0.3333333333333333,
-            "halo_layers": 3,
-            "halo_radius": 0.72,
-            "halo_step": 0.12,
-            "halo_alpha": 0.025,
-            "petals": 8,
-            "petal_root": [
-              0.04,
-              0.03
-            ],
-            "petal_length": [
-              0.96,
-              0.72
-            ],
-            "petal_width": [
-              0.55,
-              0.25
-            ],
-            "petal_lightening": [
-              0,
-              0.25
-            ],
-            "petal_alpha": [
-              0.96,
-              0.62
-            ],
-            "center_radius": 0.11,
-            "stamens": 8,
-            "stamen_distance": 0.14,
-            "stamen_radius": 0.022,
-            "stamen_alpha": 0.62
+            "shared_artwork_for_both_colors": true,
+            "layers": [
+              {
+                "id": "post",
+                "image": "../artwork/tier2/vines_tier2_post_basic.png",
+                "origin_px": [
+                  127.297,
+                  243.409
+                ],
+                "animation": {
+                  "start_seconds": 0,
+                  "duration_seconds": 0.35,
+                  "mode": "bottom_up"
+                }
+              },
+              {
+                "id": "vine",
+                "image": "../artwork/tier2/vines_tier2_vine_basic.png",
+                "origin_px": [
+                  127.297,
+                  243.409
+                ],
+                "animation": {
+                  "start_seconds": 0.35,
+                  "duration_seconds": 0.65,
+                  "mode": "bottom_up"
+                }
+              },
+              {
+                "id": "flower_1",
+                "image": "../artwork/tier2/vines_tier2_flower_1.png",
+                "origin_px": [
+                  142.955,
+                  79.103
+                ],
+                "animation": {
+                  "start_seconds": 1.0,
+                  "duration_seconds": 0.2,
+                  "mode": "open_from_origin"
+                }
+              },
+              {
+                "id": "flower_2",
+                "image": "../artwork/tier2/vines_tier2_flower_2.png",
+                "origin_px": [
+                  109.809,
+                  114.892
+                ],
+                "animation": {
+                  "start_seconds": 1.2,
+                  "duration_seconds": 0.2,
+                  "mode": "open_from_origin"
+                }
+              },
+              {
+                "id": "flower_3",
+                "image": "../artwork/tier2/vines_tier2_flower_3.png",
+                "origin_px": [
+                  140.311,
+                  162.069
+                ],
+                "animation": {
+                  "start_seconds": 1.4,
+                  "duration_seconds": 0.2,
+                  "mode": "open_from_origin"
+                }
+              },
+              {
+                "id": "flower_4",
+                "image": "../artwork/tier2/vines_tier2_flower_4.png",
+                "origin_px": [
+                  107.978,
+                  60.395
+                ],
+                "animation": {
+                  "start_seconds": 1.6,
+                  "duration_seconds": 0.2,
+                  "mode": "open_from_origin"
+                }
+              }
+            ]
           }
         }
       }
