@@ -325,82 +325,74 @@
     {
       "source": "assets/vines_tier1_deco_color1_1.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json",
-      "sha256": "cce1f8463c99f276714454fdbae5102a6cdfb7c4375e6e06ba462181d6e968eb"
+      "sha256": "7942474adb94563bcb723c531e0091f8a5ae3b4473492344f8ca4bdfc0c5ccc9",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color1_1.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.png",
-      "sha256": "ef2ac88466054aad4a9ebdafe7b12829f243da9178e0f9fa246af8a56dbbb2c7"
+      "sha256": "ef2ac88466054aad4a9ebdafe7b12829f243da9178e0f9fa246af8a56dbbb2c7",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color1_2.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.json",
-      "sha256": "3d0f1b261baa1de187969ca450f0da4e87c31c9788f7472ef24f6277656deba6"
+      "sha256": "3c5bdca9ebe372d40136e00a7406a9737e911dc2c835fe777082a3198b8fac12",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color1_2.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.png",
-      "sha256": "66559eeea27f9ef5d853275e6b4e01c348788758cc3630f1e8d2c566440712ae"
+      "sha256": "b397e9186e44db64991c0c5d6c99b63125e007e4d40905726e9361340eb333c6",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color1_4.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.json",
-      "sha256": "3a00a51a174ee6f6257c9069b72963f8b695f6ee48f3ead5724f9d0d5806564e"
+      "sha256": "f71688165b451b736aa3fd5e9b76a47d3d69e98bf5c5fde5eee8113b2fff5cfd",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color1_4.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.png",
-      "sha256": "f333c1271047a6475ad2d260641b3aed12e9857c77e473b99ca435571553b339"
-    },
-    {
-      "source": "assets/vines_tier1_deco_color1_6.json",
-      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_6.json",
-      "sha256": "4d2d7c52baba57987fea18605ae2176a48310401ac58560e723bdb2686291951"
-    },
-    {
-      "source": "assets/vines_tier1_deco_color1_6.png",
-      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_6.png",
-      "sha256": "a5f8df305ce397d0e5679239ec0c0c3c6587a7092495e12a32e6b792d11091d2"
+      "sha256": "b7b91544eb7f24fdb430b5312acb7039f0fb00d6bb2031387baa9fb933e8d733",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_1.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.json",
-      "sha256": "cce1f8463c99f276714454fdbae5102a6cdfb7c4375e6e06ba462181d6e968eb"
+      "sha256": "7942474adb94563bcb723c531e0091f8a5ae3b4473492344f8ca4bdfc0c5ccc9",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_1.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.png",
-      "sha256": "7dc4cff7899b0938408c06e4c9ffa9fc855b69991eec18dbca45a466333507d9"
+      "sha256": "7dc4cff7899b0938408c06e4c9ffa9fc855b69991eec18dbca45a466333507d9",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_2.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.json",
-      "sha256": "3d0f1b261baa1de187969ca450f0da4e87c31c9788f7472ef24f6277656deba6"
+      "sha256": "3c5bdca9ebe372d40136e00a7406a9737e911dc2c835fe777082a3198b8fac12",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_2.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.png",
-      "sha256": "2e153aec7b7accd092f5a7e53aafeaebac57a13f86ed62b1f9992f428d8da7fe"
+      "sha256": "871f52c79ce010b0dc107d2d043fcce17d495cfa0c4dbbf98caf99b9c02ad005",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_4.json",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.json",
-      "sha256": "3a00a51a174ee6f6257c9069b72963f8b695f6ee48f3ead5724f9d0d5806564e"
+      "sha256": "f71688165b451b736aa3fd5e9b76a47d3d69e98bf5c5fde5eee8113b2fff5cfd",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_deco_color2_4.png",
       "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.png",
-      "sha256": "62ebc7dd7926364a86cb508b84cee7aa6506b3d5826a1591bfb2c7cd636e78b8"
-    },
-    {
-      "source": "assets/vines_tier1_deco_color2_6.json",
-      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_6.json",
-      "sha256": "4d2d7c52baba57987fea18605ae2176a48310401ac58560e723bdb2686291951"
-    },
-    {
-      "source": "assets/vines_tier1_deco_color2_6.png",
-      "project_path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_6.png",
-      "sha256": "c28b563e099899e599328c49c8ab10c58c069aff6c395f34975eacc44418bcb8"
+      "sha256": "1ac30bfc416f4df7640c1a92c60e71c91efdb2523b898780f26de8bf302a9408",
+      "replacement_package": "leaf_variants_5x2_128px.rar"
     },
     {
       "source": "assets/vines_tier1_vine_color1_basic.json",

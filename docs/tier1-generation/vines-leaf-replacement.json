@@ -1,0 +1,94 @@
+{
+  "source_package": "leaf_variants_5x2_128px.rar",
+  "files": [
+    {
+      "source": "leaf_violet.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.png",
+      "sha256": "ef2ac88466054aad4a9ebdafe7b12829f243da9178e0f9fa246af8a56dbbb2c7",
+      "attachment": [
+        12.0,
+        114.0
+      ],
+      "direction": [
+        115.67,
+        12.67
+      ]
+    },
+    {
+      "source": "leaf_pink.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.png",
+      "sha256": "7dc4cff7899b0938408c06e4c9ffa9fc855b69991eec18dbca45a466333507d9",
+      "attachment": [
+        12.0,
+        114.0
+      ],
+      "direction": [
+        115.67,
+        12.67
+      ]
+    },
+    {
+      "source": "leaf_short_broad_violet.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.png",
+      "sha256": "b397e9186e44db64991c0c5d6c99b63125e007e4d40905726e9361340eb333c6",
+      "attachment": [
+        27.5,
+        100.5
+      ],
+      "direction": [
+        120.5,
+        5.5
+      ]
+    },
+    {
+      "source": "leaf_short_broad_pink.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.png",
+      "sha256": "871f52c79ce010b0dc107d2d043fcce17d495cfa0c4dbbf98caf99b9c02ad005",
+      "attachment": [
+        27.5,
+        100.5
+      ],
+      "direction": [
+        120.5,
+        5.5
+      ]
+    },
+    {
+      "source": "leaf_slender_violet.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.png",
+      "sha256": "b7b91544eb7f24fdb430b5312acb7039f0fb00d6bb2031387baa9fb933e8d733",
+      "attachment": [
+        10.3,
+        116.1
+      ],
+      "direction": [
+        116.17,
+        11.17
+      ]
+    },
+    {
+      "source": "leaf_slender_pink.png",
+      "image": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.png",
+      "sha256": "1ac30bfc416f4df7640c1a92c60e71c91efdb2523b898780f26de8bf302a9408",
+      "attachment": [
+        10.3,
+        116.1
+      ],
+      "direction": [
+        116.17,
+        11.17
+      ]
+    }
+  ],
+  "removed_variant": 6,
+  "preserved_rules": "3\u20134 leaves per half-side, 1.5x uniform growth scale, 0\u201330 degrees toward growth, mirrored forms, progressive growth",
+  "validation": {
+    "artwork_checks": 779,
+    "vines_sets_checks": 500,
+    "theme_registry_checks": 82,
+    "integration_checks": 358,
+    "source_and_exported_pack": "Both colors/four stem rotations: 3\u20134 leaves per side, full placement count, 0\u201330 degree forward angle, 1.5x uniform growth scale.",
+    "removed_variant_references": 0,
+    "failures": 0
+  }
+}

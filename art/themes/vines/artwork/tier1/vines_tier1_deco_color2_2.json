@@ -11,12 +11,12 @@
     128
   ],
   "attachment": [
-    28.0,
-    100.0
+    27.5,
+    100.5
   ],
   "direction": [
-    100.0,
-    28.0
+    120.5,
+    5.5
   ],
   "tags": [
     "leaf"
@@ -37,13 +37,11 @@
     ]
   },
   "authoring": {
-    "source": "leaf_variants_geometry.json: short_broad",
+    "source": "leaf_variants_5x2_128px.rar",
     "notes": [
-      "Violet=color1; pink=color2. Matching canvas and exact alpha geometry verified.",
-      "Attachment and direction preserve the supplied growth point and tip marker.",
-      "Progressive directional reveal; 0.35s is the universal default, not a duration measured from an animation.",
-      "No leaf pixels, canvas padding or native diagonal orientation were modified.",
-      "Scale 0.50\u20130.75 is an initial fit for the final 255px stem; tune in the game."
+      "Violet=color1; pink=color2. Original 128px PNG bytes preserved.",
+      "No marker JSON was supplied. Attachment and direction estimated from opaque silhouette endpoints along the native diagonal.",
+      "Retains progressive 0.35s growth, mirrored variants, scale variation and 1.5x growth scale."
     ]
   },
   "transforms": {

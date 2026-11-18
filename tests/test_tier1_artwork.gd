@@ -66,9 +66,9 @@ func _initialize() -> void:
 		if theme_id == "vines":
 			var bindings: Dictionary = catalog.families.default.logical_colors
 			check(bindings["1"].image_variant == "color2" and bindings["2"].image_variant == "color1", "Pink/violet variants match logical Rose/Violet order")
-			check(catalog.families.default.decorations.size() == 4, "Only four retained leaf designs are cataloged")
-	check(kinds.base == 15 and kinds.decoration == 38, "Catalog contains 53 distinct shared geometries")
-	check(image_paths.size() == 74, "All 74 actual PNGs resolve")
+			check(catalog.families.default.decorations.size() == 3, "Only three supplied leaf designs are cataloged")
+	check(kinds.base == 15 and kinds.decoration == 37, "Catalog contains 52 distinct shared geometries")
+	check(image_paths.size() == 72, "All 72 actual PNGs resolve")
 	check(read_json("res://assets/themes/tier1-generation.json").schema_version == 1, "Shared defaults are exported")
 	check(read_json("res://assets/schemas/sprite-metadata-v1.schema.json").has("$schema"), "Authoring schema is exported")
 	print("Tier 1 artwork: %d checks, %d failures; %d geometries, %d PNGs" % [checks, failures, metadata_paths.size(), image_paths.size()])
