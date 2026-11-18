@@ -1,3 +1,5 @@
+This butterfly assembly has been replaced by the uploaded rosa/violet flowers. See `vines-tier2-flowers.md`.
+
 # Vines tier-two butterflies
 
 `art/themes/vines/sets/tier2.json` now uses the `vines.sprite_formation` provider. Logical pink vines (1) use the rosa butterfly, and logical violet vines (2) use the violet butterfly. Source PNG bytes and original colors are preserved; no palette shader or tint is applied.
