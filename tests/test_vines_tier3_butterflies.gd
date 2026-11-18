@@ -9,7 +9,7 @@ func run():
  Palette.select_theme("vines")
  Sets.install()
  var spec: Dictionary=Sets.tier3.definition.compositions.butterfly.parts.butterfly
- assert(is_equal_approx(spec.params.size_cells[0],2.0/3.0))
+ assert(is_equal_approx(spec.params.size_cells[0],1.0))
  for color in [1,2]:
   for vertical in [false,true]:
    var view=Board.new()
@@ -44,5 +44,5 @@ func run():
    view.show_settled(corner,true)
    assert(view.junction_layer.renderer.nodes[id].visible and view.junction_layer.renderer.nodes[id].modulate.a==1.0)
    view.queue_free()
- print("Vines tier three: both colors/orientations, overlap placement, one-third size, stable rotation, small-flower crossfade and undo pass")
+ print("Vines tier three: both colors/orientations, overlap placement, half size, stable rotation, small-flower crossfade and undo pass")
  quit()

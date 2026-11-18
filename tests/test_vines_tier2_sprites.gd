@@ -20,6 +20,10 @@ func run():
   var geometry=Art.fountain_geometry(spec.params,color,Vector2(400,300),64)
   assert((geometry.rect.position+Vector2(127,127)*geometry.rect.size/255).is_equal_approx(Vector2(400,300)))
   assert(geometry.rect.size==Vector2(128,128))
+  var angle=Art.formation_rotation(spec.params,color,Vector2i(3,3))
+  assert(angle>=0 and angle<=TAU)
+  assert(angle==Art.formation_rotation(spec.params,color,Vector2i(3,3)))
+  assert(angle!=Art.formation_rotation(spec.params,color,Vector2i(4,3)))
   var empty=Rules.empty_board(7)
   var board=empty.duplicate(true)
   for y in range(2,4):

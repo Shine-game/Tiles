@@ -131,8 +131,22 @@ static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
 	view.draw_texture_rect(FountainAssets.texture(geometry.image),geometry.rect,false,Color(1,1,1,progress))
 
 # Shared aligned sprite placement for tier-two artwork, without palette treatment.
+static func formation_rotation(params: Dictionary, color: int, corner: Vector2i) -> float:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = JSON.stringify([params.get("seed",0),color,corner.x,corner.y]).sha256_text().substr(0,15).hex_to_int()
+	var angles: Array = params.get("rotation_range_degrees",[0,0])
+	return deg_to_rad(rng.randf_range(angles[0],angles[1]))
+
 static func sprite_formation(view, spec: Dictionary, context: Dictionary) -> void:
-	fountain(view,spec,context)
+	if not spec.params.get("enabled",true):return
+	var event: Dictionary = context.event
+	var progress: float = 1.0 if event.old else clampf((view.clock-event.start)/float(spec.animation.duration_seconds),0.0,1.0)
+	if progress<=0.0:return
+	var center: Vector2 = view._point(Vector2(context.corner))
+	var geometry := fountain_geometry(spec.params,event.color,Vector2.ZERO,view.pitch)
+	view.draw_set_transform(center,formation_rotation(spec.params,event.color,context.corner),Vector2.ONE)
+	view.draw_texture_rect(FountainAssets.texture(geometry.image),geometry.rect,false,Color(1,1,1,progress))
+	view.draw_set_transform(Vector2.ZERO,0,Vector2.ONE)
 
 static func butterfly_choice(params: Dictionary, link: Dictionary) -> Dictionary:
 	var overlap := Rect2(Vector2(link.a)-Vector2.ONE,Vector2.ONE*2).intersection(Rect2(Vector2(link.b)-Vector2.ONE,Vector2.ONE*2))

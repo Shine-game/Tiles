@@ -22,7 +22,12 @@
               "1": "res://art/themes/vines/artwork/tier2/vines_tier2_flower_color2_basic.json",
               "2": "res://art/themes/vines/artwork/tier2/vines_tier2_flower_color1_basic.json"
             },
-            "enabled": true
+            "enabled": true,
+            "seed": 27391,
+            "rotation_range_degrees": [
+              0,
+              360
+            ]
           }
         }
       }

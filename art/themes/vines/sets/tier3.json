@@ -16,8 +16,8 @@
           "params": {
             "seed": 19321,
             "size_cells": [
-              0.6666666666666666,
-              0.6666666666666666
+              1,
+              1
             ],
             "rotation_range_degrees": [
               0,
