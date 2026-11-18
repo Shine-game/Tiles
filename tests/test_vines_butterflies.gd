@@ -1,0 +1,32 @@
+extends SceneTree
+const Sets=preload("res://scripts/vines_sets.gd")
+const Art=preload("res://scripts/vines_renderer.gd")
+const Assets=preload("res://scripts/pattern/asset_library.gd")
+const Palette=preload("res://scripts/palette.gd")
+const Rules=preload("res://scripts/rules.gd")
+const Model=preload("res://scripts/vines_growth.gd")
+func _initialize():run.call_deferred()
+func run():
+ Palette.select_theme("vines")
+ Sets.install()
+ var spec=Sets.flower()
+ assert(spec.provider=="vines.sprite_formation" and spec.params.enabled)
+ assert(not Sets.tier2.definition.water.enabled)
+ for color in [1,2]:
+  var meta=Art.fountain_metadata(spec.params.sprites[str(color)])
+  var texture=Assets.texture(meta.image)
+  assert(texture.get_size()==Vector2(255,255))
+  assert(meta.image.ends_with("color%d_basic.png"%[3-color]))
+  var geometry=Art.fountain_geometry(spec.params,color,Vector2(400,300),64)
+  assert((geometry.rect.position+Vector2(127,127)*geometry.rect.size/255).is_equal_approx(Vector2(400,300)))
+  assert(geometry.rect.size==Vector2(128,128))
+  var empty=Rules.empty_board(7)
+  var board=empty.duplicate(true)
+  for y in range(2,4):
+   for x in range(2,4):board[y][x]=color
+  var model=Model.new()
+  model.build(empty,board)
+  assert(model.flowers.size()==1)
+  assert(model.duration>=model.flowers.values()[0].start+spec.animation.duration_seconds)
+ print("Vines butterflies: both colors, source dimensions, centered 2x2 placement and growth schedule pass")
+ quit()

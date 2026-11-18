@@ -14,8 +14,8 @@ func run():
  Palette.select_theme("vines")
  Sets.install()
  var spec := Sets.flower()
- if not spec.params.get("enabled",true):
-  Art.fountain(null,spec,{})
+ if spec.provider != "vines.fountain" or not spec.params.get("enabled",true):
+  if spec.provider == "vines.fountain": Art.fountain(null,spec,{})
   check(not Sets.tier2.definition.water.enabled,"Water disabled along with fountains")
   for color in [1,2]:
    var view=Board.new()

@@ -9,7 +9,7 @@
     "flower": {
       "parts": {
         "flower": {
-          "provider": "vines.fountain",
+          "provider": "vines.sprite_formation",
           "animation": {
             "duration_seconds": 0.25
           },
@@ -19,10 +19,10 @@
               2
             ],
             "sprites": {
-              "1": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.json",
-              "2": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.json"
+              "1": "res://art/themes/vines/artwork/tier2/vines_tier2_butterfly_color2_basic.json",
+              "2": "res://art/themes/vines/artwork/tier2/vines_tier2_butterfly_color1_basic.json"
             },
-            "enabled": false
+            "enabled": true
           }
         }
       }

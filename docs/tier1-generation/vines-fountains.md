@@ -1,6 +1,6 @@
 # Vines fountains (tiers two and three)
 
-Currently disabled at user request: `flower.params.enabled` and `water.enabled` are both false. Neither fountains nor water connections render or run continuous animation.
+Fountains are no longer selected: the live tier-two provider now draws butterflies. `water.enabled` remains false, so no water connections render or run continuous animation. See `vines-butterflies.md` for the current assembly.
 
 Tier two places one supplied fountain sprite at each completed 2×2 formation center. This replaces the six-layer post assembly and its sequential opening animation; those layers are removed from the live artwork directory. The two unrelated flower images included in the archive are not part of this fountain assembly.
 

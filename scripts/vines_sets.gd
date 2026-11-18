@@ -20,6 +20,7 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.wash", Art.wash)
 	Components.register_draw_part_provider("vines.flower", Art.flower)
 	Components.register_draw_part_provider("vines.fountain", Art.fountain)
+	Components.register_draw_part_provider("vines.sprite_formation", Art.sprite_formation)
 	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
 	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))

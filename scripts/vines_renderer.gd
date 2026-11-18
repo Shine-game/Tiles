@@ -119,7 +119,8 @@ static func fountain_geometry(params: Dictionary, color: int, center: Vector2, p
 	var size := Vector2(params.size_cells[0],params.size_cells[1])*pitch*float(meta.scale)
 	var ratio := size/canvas
 	var origin := center-Vector2(meta.center_px[0],meta.center_px[1])*ratio
-	return {"rect": Rect2(origin,size), "water_origin": origin+Vector2(meta.water_origin_px[0],meta.water_origin_px[1])*ratio,"image":meta.image}
+	var water: Array = meta.get("water_origin_px",meta.center_px)
+	return {"rect": Rect2(origin,size), "water_origin": origin+Vector2(water[0],water[1])*ratio,"image":meta.image}
 
 static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
 	if not spec.params.get("enabled", true): return
@@ -128,3 +129,7 @@ static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
 	if progress <= 0.0: return
 	var geometry := fountain_geometry(spec.params,event.color,view._point(Vector2(context.corner)),view.pitch)
 	view.draw_texture_rect(FountainAssets.texture(geometry.image),geometry.rect,false,Color(1,1,1,progress))
+
+# Shared aligned sprite placement for tier-two artwork, without palette treatment.
+static func sprite_formation(view, spec: Dictionary, context: Dictionary) -> void:
+	fountain(view,spec,context)
