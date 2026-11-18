@@ -1,0 +1,198 @@
+{
+  "source_designs_per_color": 22,
+  "original_pngs": [
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_1.png",
+      "sha256": "353c651b2f410e4d3af374405da105643ed59a407cdc3a4c15c847145f130e2d"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_10.png",
+      "sha256": "b6cf342fa40c1cf9742732b6cc04126a74f269936d8e9db36d58ffec06b86a4e"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_11.png",
+      "sha256": "afd9d86b5ace58b535aaeed83ef1490318574b268169b5b59ef0761fa0419fcb"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_12.png",
+      "sha256": "9048244e941c526c279a320b06b5652c7df64e0d8d8837055a8c3e0aeb5112f7"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_13.png",
+      "sha256": "abb7ffa113948bd70c23dae1159b4f7869ec70f8af1a132a311f9afede19daab"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_14.png",
+      "sha256": "48e970d8e78180b525b6e41e7d8f455b689fc1429abe142afa902943bf50f760"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_15.png",
+      "sha256": "d5688e0661342305b84fc846241fa52a7df1ad99b871786c87e4117e52048256"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_16.png",
+      "sha256": "57231c4c61ef93b05cb2b940b1ff952d91281fb7a1338ac21b762463218cd2d1"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_17.png",
+      "sha256": "a752551ff7bb013cb250398da3e7e6ef4f5af5ef155b9d468cbcdf95db7f8ef9"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_18.png",
+      "sha256": "1ce8b615978f61c55aa685bf1e49f129060f4a5f631150666982469003822c1c"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_19.png",
+      "sha256": "8e156b8bce0a84842af80805e6649a09cd1779047daea299aa8796afc776f0bf"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_2.png",
+      "sha256": "56acf279c3e5141b87a35a6be4db621da2b0fe37b9bbdb4d0a4608d6e346120c"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_20.png",
+      "sha256": "5bcb89423e2f2f6c008ee3233c74b4f4da086fb506c5360da4b556476d705509"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_21.png",
+      "sha256": "069e7d1b1b0c8d2ee8f72f4dac98a27968386a1e101fca790fdf627171d7875e"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_22.png",
+      "sha256": "6eeaae02724d889db5faa360ae1b459a270b701aa218e9882687fb8fe9b06d8d"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_3.png",
+      "sha256": "d110909d2433aabbfb4c93f5963df2e625bde01ad7bbffaff3b658a881002026"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_4.png",
+      "sha256": "21d9bae72303a7ca14a9e73d2afba00b69674516d533431a02b6a87f5126ee3e"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_5.png",
+      "sha256": "804a1b39e7426aa1a15996c9350c5eeb47f25144d9d4db39e1042b2f88dae53d"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_6.png",
+      "sha256": "d76eedf204a6c8d322f1361359be9d79fbd531c3607edaf4ba22a2eaad988eb8"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_7.png",
+      "sha256": "d8be5de96f90f0c911183c6dcb81bf669cd1df70d1345991e7fda3011b0831ba"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_8.png",
+      "sha256": "177a2eaec71e0692ebeeedf13944cd3559cffb8d80e282de46597e58b4b5584f"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_9.png",
+      "sha256": "159848b5b106bb26061ca889707e24e14f113487935e5f8472df9ea040356e0d"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_1.png",
+      "sha256": "f2dc1af000af2b4a4677a7554ee146c8bce99aceb265dea2e98c4640a0deede0"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_10.png",
+      "sha256": "8766a18fccf837e881b83d166c4b446f722184725982a42aac22bc426dbcbb31"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_11.png",
+      "sha256": "b9028992548b8fd5ce465d7192b80b55b243fa34bbcf3cfce10207559d5efbaf"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_12.png",
+      "sha256": "3fe5612a696407b52df6d5132a828bd548e933871b2549c0c5abaeb705be4248"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_13.png",
+      "sha256": "1099ab6051585f59aa1791747e1cdc9427a6ecd5526c3836b7779924eb2969d4"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_14.png",
+      "sha256": "6f5beadb4531061eadb41524d9098e34a6b69654c7027e0b3d9570dd6341192f"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_15.png",
+      "sha256": "3dc0e7438bb48e88a6c2f68428f4a9152d911ea2d946f9d1b566a8bd0c55204c"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_16.png",
+      "sha256": "b5d39a133a74035d14b212eb8245f4c22f8bfa80a89e4ec03a6d87b9bce8187b"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_17.png",
+      "sha256": "1328af796633fe311d7d24a0fa092681a0cb54dccde153e8aeb1a1f9c5598965"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_18.png",
+      "sha256": "37c2c94b3593ae6b8c15a451349964ddb3d269e688de71aed4f0286c83ec21fc"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_19.png",
+      "sha256": "044b55b02baf2208467a28e14c3e80536adfd0c8f7b881b354bd3e1aa5588227"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_2.png",
+      "sha256": "de6f8e336ba131780a939a989d02dd9e6d66597dcb3f85fd744d9ca99c6aeec8"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_20.png",
+      "sha256": "2d30f76baa144cdf4c5ea36b6289e3dec1355464a39672f61ad41599fbb6bca8"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_21.png",
+      "sha256": "1e1bc6b63f95f739cc1638e678529f6d578ba15619604e6aa5d3a71b40876e94"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_22.png",
+      "sha256": "15e45ad821a5f461e468a137917af26c49c11be6faf1f3e4a40d4724a636c65b"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_3.png",
+      "sha256": "571b4dea37150b410254bf0af0517faba57acc2b4a660092ca90641172c46300"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_4.png",
+      "sha256": "64dd22684b0aa0168ccd2194ddea90f35c3e5d20252fc64872760e10b3d740af"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_5.png",
+      "sha256": "7b1ec1ad32892a8b98337c6b86318f817690204c025a6fde7b8a0092fab6db27"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_6.png",
+      "sha256": "85a0bb51aecc890887979547d68f37f539dcb5ee2522eaad7fe754d75d67c160"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_7.png",
+      "sha256": "d750effc9e388aaf23417e41b24fb980524303a22995b58cb79a0ea5a0fd953b"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_8.png",
+      "sha256": "ea9aa3210d5f82846b0702b2051aa8a55123ed20b1f859414c359711395ef153"
+    },
+    {
+      "image": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_9.png",
+      "sha256": "ca91683c2be69f49ce0dad98affef7c901a4323e41d13768ed5a536df64e441f"
+    }
+  ],
+  "selected_per_formation": 8,
+  "selection": "distinct sources plus random reflected forms",
+  "spacing_deg": 45,
+  "phase": "seeded random 0\u2013360",
+  "scale": 1,
+  "attachment": "all marked source origins at plate center",
+  "sequence": "existing plate completes before petal growth starts",
+  "tests": {
+    "source_and_exported_pack": "exact axes/origins, reflections, eight unique choices, phase stability, angle spacing and plate-first timing pass",
+    "colony_visibility_checks": 58,
+    "coral_junction_checks": 213,
+    "integration_checks": 333,
+    "registry_checks": 82,
+    "rendered": "both colors verified with real OpenGL"
+  },
+  "failures": 0,
+  "apk_or_device_tested": false
+}

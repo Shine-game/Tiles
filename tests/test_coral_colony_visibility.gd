@@ -24,7 +24,7 @@ func run():
   var parts=[]
   for key in view.pattern.components:
    if view.pattern.components[key].id.begins_with("colony_"):parts.append(key)
-  check(parts.size()==5,"Plate, two folds and two fingers remain in the model")
+  check(parts.size()==9,"Plate and eight petals are emitted")
   for key in parts:check(view.coral_visuals.registry.has(key),"Formation artwork is not removed by tier-one junction replacement: "+key)
   view.show_settled(empty)
   view.animate_growth(empty,block)

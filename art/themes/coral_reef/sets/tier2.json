@@ -61,44 +61,43 @@
             }
           }
         },
-        "colony_fold_ne": {
+        "colony_petal_0": {
           "asset": {
             "provider": "variants",
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/colony_fold_ne.png"
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/colony_fold_ne.png"
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
               }
             }
           },
           "pivot_px": [
-            256,
-            256
+            121,
+            288
           ],
           "size_px": [
-            512,
-            512
+            283,
+            289
           ],
           "layer": 41,
-          "z_index": 0,
+          "z_index": 1,
           "group_z_index": 4,
           "texture_filter": 2,
-          "quarter_turns": 0,
           "animation": {
-            "duration_seconds": 0.22,
+            "duration_seconds": 0.35,
             "dependencies": [
               {
                 "component": "colony_body",
                 "at_px": [
-                  339.5,
-                  149.5
+                  256,
+                  256
                 ],
-                "at_mask_u": 0.0,
-                "delay_seconds": 0.06
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
               }
             ],
             "soft_front_seconds": 0.035
@@ -108,60 +107,45 @@
             "params": {
               "soft_front_seconds": 0.035
             }
-          },
-          "masks": {
-            "reveal": {
-              "asset": {
-                "provider": "texture",
-                "path": "../masks/colony_fold_ne.png"
-              },
-              "purpose": "reveal",
-              "channel": "r",
-              "encoding": "linear",
-              "zero": "invisible; ground remains visible",
-              "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 0
-            }
           }
         },
-        "colony_fold_sw": {
+        "colony_petal_1": {
           "asset": {
             "provider": "variants",
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/colony_fold_sw.png"
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/colony_fold_sw.png"
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
               }
             }
           },
           "pivot_px": [
-            256,
-            256
+            121,
+            288
           ],
           "size_px": [
-            512,
-            512
+            283,
+            289
           ],
-          "layer": 42,
-          "z_index": 0,
+          "layer": 41,
+          "z_index": 1,
           "group_z_index": 4,
           "texture_filter": 2,
-          "quarter_turns": 0,
           "animation": {
-            "duration_seconds": 0.22,
+            "duration_seconds": 0.35,
             "dependencies": [
               {
                 "component": "colony_body",
                 "at_px": [
-                  149.5,
-                  364.5
+                  256,
+                  256
                 ],
-                "at_mask_u": 0.0,
-                "delay_seconds": 0.06
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
               }
             ],
             "soft_front_seconds": 0.035
@@ -171,60 +155,45 @@
             "params": {
               "soft_front_seconds": 0.035
             }
-          },
-          "masks": {
-            "reveal": {
-              "asset": {
-                "provider": "texture",
-                "path": "../masks/colony_fold_sw.png"
-              },
-              "purpose": "reveal",
-              "channel": "r",
-              "encoding": "linear",
-              "zero": "invisible; ground remains visible",
-              "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 0
-            }
           }
         },
-        "colony_fingers_nw": {
+        "colony_petal_2": {
           "asset": {
             "provider": "variants",
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/colony_fingers_nw.png"
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/colony_fingers_nw.png"
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
               }
             }
           },
           "pivot_px": [
-            256,
-            256
+            121,
+            288
           ],
           "size_px": [
-            512,
-            512
+            283,
+            289
           ],
-          "layer": 43,
-          "z_index": 0,
+          "layer": 41,
+          "z_index": 1,
           "group_z_index": 4,
           "texture_filter": 2,
-          "quarter_turns": 0,
           "animation": {
-            "duration_seconds": 0.18,
+            "duration_seconds": 0.35,
             "dependencies": [
               {
                 "component": "colony_body",
                 "at_px": [
-                  93.5,
-                  129.5
+                  256,
+                  256
                 ],
-                "at_mask_u": 0.0,
-                "delay_seconds": 0.06
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
               }
             ],
             "soft_front_seconds": 0.035
@@ -234,60 +203,45 @@
             "params": {
               "soft_front_seconds": 0.035
             }
-          },
-          "masks": {
-            "reveal": {
-              "asset": {
-                "provider": "texture",
-                "path": "../masks/colony_fingers_nw.png"
-              },
-              "purpose": "reveal",
-              "channel": "r",
-              "encoding": "linear",
-              "zero": "invisible; ground remains visible",
-              "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 0
-            }
           }
         },
-        "colony_fingers_se": {
+        "colony_petal_3": {
           "asset": {
             "provider": "variants",
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/colony_fingers_se.png"
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/colony_fingers_se.png"
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
               }
             }
           },
           "pivot_px": [
-            256,
-            256
+            121,
+            288
           ],
           "size_px": [
-            512,
-            512
+            283,
+            289
           ],
-          "layer": 44,
-          "z_index": 0,
+          "layer": 41,
+          "z_index": 1,
           "group_z_index": 4,
           "texture_filter": 2,
-          "quarter_turns": 0,
           "animation": {
-            "duration_seconds": 0.18,
+            "duration_seconds": 0.35,
             "dependencies": [
               {
                 "component": "colony_body",
                 "at_px": [
-                  419.5,
-                  374.5
+                  256,
+                  256
                 ],
-                "at_mask_u": 0.0,
-                "delay_seconds": 0.06
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
               }
             ],
             "soft_front_seconds": 0.035
@@ -297,19 +251,197 @@
             "params": {
               "soft_front_seconds": 0.035
             }
-          },
-          "masks": {
-            "reveal": {
-              "asset": {
+          }
+        },
+        "colony_petal_4": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
                 "provider": "texture",
-                "path": "../masks/colony_fingers_se.png"
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
               },
-              "purpose": "reveal",
-              "channel": "r",
-              "encoding": "linear",
-              "zero": "invisible; ground remains visible",
-              "one": "exact original component RGBA, retained permanently",
-              "rotation_degrees": 0
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
+              }
+            }
+          },
+          "pivot_px": [
+            121,
+            288
+          ],
+          "size_px": [
+            283,
+            289
+          ],
+          "layer": 41,
+          "z_index": 1,
+          "group_z_index": 4,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.35,
+            "dependencies": [
+              {
+                "component": "colony_body",
+                "at_px": [
+                  256,
+                  256
+                ],
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          }
+        },
+        "colony_petal_5": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
+              }
+            }
+          },
+          "pivot_px": [
+            121,
+            288
+          ],
+          "size_px": [
+            283,
+            289
+          ],
+          "layer": 41,
+          "z_index": 1,
+          "group_z_index": 4,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.35,
+            "dependencies": [
+              {
+                "component": "colony_body",
+                "at_px": [
+                  256,
+                  256
+                ],
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          }
+        },
+        "colony_petal_6": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
+              }
+            }
+          },
+          "pivot_px": [
+            121,
+            288
+          ],
+          "size_px": [
+            283,
+            289
+          ],
+          "layer": 41,
+          "z_index": 1,
+          "group_z_index": 4,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.35,
+            "dependencies": [
+              {
+                "component": "colony_body",
+                "at_px": [
+                  256,
+                  256
+                ],
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          }
+        },
+        "colony_petal_7": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color1_1.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../artwork/petals/coral_tier2_petal_color2_1.png"
+              }
+            }
+          },
+          "pivot_px": [
+            121,
+            288
+          ],
+          "size_px": [
+            283,
+            289
+          ],
+          "layer": 41,
+          "z_index": 1,
+          "group_z_index": 4,
+          "texture_filter": 2,
+          "animation": {
+            "duration_seconds": 0.35,
+            "dependencies": [
+              {
+                "component": "colony_body",
+                "at_px": [
+                  256,
+                  256
+                ],
+                "at_mask_u": 1.0,
+                "delay_seconds": 0.035
+              }
+            ],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
             }
           }
         }
@@ -330,5 +462,6 @@
   },
   "lower_layers": {
     "retain_pattern": true
-  }
+  },
+  "radial_petals": "res://art/themes/coral_reef/artwork/petals/radial.json"
 }

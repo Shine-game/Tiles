@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "coral_tier2_petal_color1_16.png",
+    "color2": "coral_tier2_petal_color2_16.png"
+  },
+  "canvas_px": [
+    261,
+    463
+  ],
+  "attachment": [
+    101.5,
+    457.0
+  ],
+  "direction": [
+    110.08,
+    180.52
+  ],
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  },
+  "spawn": {
+    "mode": "progressive",
+    "duration_sec": 0.35
+  },
+  "authoring": {
+    "source": "petal_16.json",
+    "notes": [
+      "Attachment and axis endpoints copied exactly from supplied JSON. Source describes these as silhouette estimates. Original PNG bytes retained."
+    ]
+  }
+}

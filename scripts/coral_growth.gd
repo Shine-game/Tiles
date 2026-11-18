@@ -1,6 +1,7 @@
 class_name CoralGrowth
 extends "res://scripts/growth.gd"
 
+const RadialPetals = preload("res://scripts/pattern/radial_petals.gd")
 const Ordinary = preload("res://scripts/coral_sets.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const ROOT := "res://art/themes/coral_reef/"
@@ -174,7 +175,10 @@ func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	return super.grid_visibility(a, b, time)
 
 func _emit_formation(id: String, _spec: Dictionary, formation: Dictionary, at: float, seconds: float) -> Dictionary:
-	return _add(id, formation.color, formation.origin, formation.center, formation.old, at, seconds)
+	var event := _add(id, formation.color, formation.origin, formation.center, formation.old, at, seconds)
+	if id.begins_with("colony_petal_"):
+		event.radial_petal = RadialPetals.choices(Ordinary.tier2.definition.radial_petals, formation.color, formation.origin)[int(id.get_slice("_", 2))]
+	return event
 
 func tier2_records() -> Dictionary:
 	return Formations.bind_records(board, colonies, "ready")

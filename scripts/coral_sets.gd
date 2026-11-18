@@ -1,4 +1,5 @@
 extends RefCounted
+const RadialPetals = preload("res://scripts/pattern/radial_petals.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 # All Coral artwork catalogs use shared sets; specialized growth stays theme-owned.
 const Assembly = preload("res://scripts/pattern/assembly.gd")
@@ -62,6 +63,7 @@ static func propagation() -> Dictionary:
 
 static func render_spec(event: Dictionary, settled: bool) -> Dictionary:
 	var spec: Dictionary = part(event.id).duplicate(true)
+	if event.has("radial_petal"): return RadialPetals.render_spec(event, spec, settled)
 	if event.id == "core":
 		spec = Cells.parts_for_role(tier0, "isolated")[event.id].duplicate(true)
 		spec.asset_root = tier0.root
