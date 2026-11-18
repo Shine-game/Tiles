@@ -1,0 +1,22 @@
+{
+  "formation": "Plate + two folds + two fingers; internally colony in art/themes/coral_reef/sets/tier2.json",
+  "cause": "The tier-one junction suppression condition matched all ordinary catalog components except arms, unintentionally removing all colony formation parts.",
+  "fix": "Only suppress event IDs belonging to the selected single-cell center composition.",
+  "before": {
+    "checks": 34,
+    "failures": 30
+  },
+  "after_source_and_exported_pack": {
+    "checks": 34,
+    "failures": 0
+  },
+  "regressions": {
+    "coral_junctions": 213,
+    "shared_junctions": 231,
+    "integration": 333,
+    "failures": 0
+  },
+  "rendered": "Both colors checked in a real OpenGL render.",
+  "artwork": "Existing plate, folds and fingers retained pending replacement petal artwork.",
+  "apk_or_device_tested": false
+}

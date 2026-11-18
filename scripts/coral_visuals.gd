@@ -71,7 +71,7 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			continue
 		var ordinary: bool = Ordinary.owns(event.id)
 		var cell := Vector2i(event.center - Vector2.ONE * 0.5)
-		if ordinary and not event.id.begins_with("arm_") and Junctions.handles("coral_reef", Topology.shape(Topology.neighbor_mask(model.board, cell))):
+		if ordinary and Ordinary.centers(Topology.neighbor_mask(model.board, cell)).has(event.id) and Junctions.handles("coral_reef", Topology.shape(Topology.neighbor_mask(model.board, cell))):
 			components.remove(identity)
 			continue
 		var placement: Dictionary
