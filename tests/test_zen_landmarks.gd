@@ -182,7 +182,7 @@ func check_game() -> void:
 		scene._undo()
 		check(scene.board_view.zen_visuals.landmarks.is_empty() and scene.game.board[3][5] == 0, "Actual Undo restores ordinary tiles")
 		if color == 1:
-			check(scene.board_view.zen_visuals.centerpieces[Vector2i(4, 4)].stage == 1, "Undo restores the bend's single stone")
+			check(scene.board_view.junction_layer.renderer.nodes.has("junction/zen_garden/1/4/4/bend"), "Undo restores the bend's single stone")
 		else:
 			check(not scene.board_view.tier1_layer.plans.is_empty(), "Undo restores ordinary stepping-stone paths")
 		board[3][5] = color

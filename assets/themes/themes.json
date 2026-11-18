@@ -63,7 +63,7 @@
   "themes": {
     "zen_garden": {
       "name": "Zen Garden",
-      "version": "0.12",
+      "version": "0.13",
       "colors": [
         "ab946b",
         "687567"
@@ -115,6 +115,28 @@
         "duration_sec": 0.48,
         "layer_z_index": 1,
         "progression_scale": 2.0
+      },
+      "junctions": {
+        "enabled": true,
+        "z_index": 4,
+        "shapes": {
+          "bend": {
+            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color1_basic.json",
+            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.json"
+          },
+          "t": {
+            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color1_basic.json",
+            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color2_basic.json"
+          },
+          "cross": {
+            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.json",
+            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color2_basic.json"
+          },
+          "core": {
+            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.json",
+            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.json"
+          }
+        }
       }
     },
     "clockwork": {

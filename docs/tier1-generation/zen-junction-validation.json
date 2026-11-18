@@ -1,0 +1,58 @@
+{
+  "engine": "Godot 4.6.3",
+  "artwork": [
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color1_basic.png",
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color2_basic.png",
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color1_basic.png",
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.png",
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.png",
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.png",
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.png",
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    },
+    {
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color2_basic.png",
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    }
+  ],
+  "sizes": {
+    "core": 1,
+    "bend": 1,
+    "t": 1,
+    "cross": 1
+  },
+  "rotation_deg": 0,
+  "paths": "Both rakes and stones",
+  "checks": {
+    "shared_junctions": 231,
+    "integration": 358,
+    "registry": 82,
+    "zen_landmarks": 198,
+    "zen_ponds": 170,
+    "zen_trees": 78
+  },
+  "source_and_pack": "All 16 topologies, both paths, core replacement without duplicate base, pivot, scale, rotation, arrival and undo pass.",
+  "notes": [
+    "Zen-only rendered check passes; all-theme visual harness retains a Clockwork early-growth pixel-threshold failure after its earlier single-core change."
+  ],
+  "apk_or_device_tested": false
+}
