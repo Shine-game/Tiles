@@ -21,12 +21,12 @@ func run():
   assert(center.is_equal_approx(Vector2(floor(center.x)+0.5,floor(center.y)+0.5)))
   assert(is_equal_approx(plan.base.transform.x.length(),1.0/255.0))
   assert(not plan.decorations.is_empty())
-  for deco in plan.decorations:assert(is_equal_approx(deco.scale,1.4))
+  for deco in plan.decorations:assert(is_equal_approx(deco.scale,2.8))
  for group in view.zen_visuals.registry.values():assert(group.get_child_count()==1)
  for c in [Vector2i(1,1),Vector2i(2,2),Vector2i(4,4)]:
   var id="junction/zen_garden/2/%d/%d/core"%[c.y,c.x]
   assert(view.junction_layer.renderer.nodes.has(id))
   assert(not view.tier1_layer.plans.has("zen_garden/stone/%d/%d"%[c.y,c.x]))
  view.queue_free()
- print("Zen cell stones: one full-canvas stone per occupied stone cell including isolated/endpoints, no legacy duplicate, decoration world size doubled")
+ print("Zen cell stones: one full-canvas stone per occupied stone cell including isolated/endpoints, no legacy duplicate, decoration world size doubled again")
  quit()
