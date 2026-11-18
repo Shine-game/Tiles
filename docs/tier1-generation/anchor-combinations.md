@@ -10,4 +10,4 @@ Vines has 20 anchors, 10 per side. Each side reserves exactly two leaves. Its
 options choose one anchor from 2,3,4 and one from 7,8,9, excluding (4,7).
 That gives eight possible pairs per side, each with at least three empty anchors
 between leaves. The two sides select independently. Existing native scale,
-perpendicular direction, mirroring and progressive reveal remain unchanged.
+fixed 30-degree forward inclination, mirroring and progressive reveal remain unchanged.
