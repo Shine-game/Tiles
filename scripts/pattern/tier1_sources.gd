@@ -45,8 +45,6 @@ static func descriptors(model, theme: String, before: Array) -> Array:
 		var seconds := float(config.get("duration_sec", 0.24))
 		for cell: Vector2i in model.arrivals:
 			if Topology.value(model.board, cell) != color: continue
-			var junctions: Dictionary = Themes.profile(theme).get("junctions", {})
-			if junctions.get("enabled", false) and junctions.get("shapes", {}).get("core", {}).has(str(color)) and Topology.shape(Topology.neighbor_mask(model.board, cell)) in ["isolated", "endpoint"]: continue
 			var old := Topology.value(before, cell) == color
 			var start := maxf(0.0, model.arrivals[cell])
 			result.append({"id": theme + "/stone/%d/%d" % [cell.y, cell.x], "family": config.get("family", "default"), "color": color, "context": {"origin_cells": Vector2(cell) + Vector2.ONE * 0.5, "size_cells": _size(config)}, "binding": {"event": {"old": old, "start": start, "end": start + seconds}}})

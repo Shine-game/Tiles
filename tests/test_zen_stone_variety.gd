@@ -34,14 +34,10 @@ func run():
  for x in range(1,6):
   var item=Choices.choice("zen_garden",Vector2i(x,3),2)
   var transform:Transform2D
-  if x in [1,5]:
-   var spec=view.junction_layer.specs["junction/zen_garden/2/3/%d/core"%x]
-   assert(spec.asset==item.texture)
-   transform=spec.source_transform
-  else:
-   var base=view.tier1_layer.plans["zen_garden/stone/3/%d"%x].base
-   assert(base.metadata_path==item.base_path)
-   transform=base.transform
+  var base=view.tier1_layer.plans["zen_garden/stone/3/%d"%x].base
+  assert(base.metadata_path==item.base_path)
+  assert(not view.tier1_layer.plans["zen_garden/stone/3/%d"%x].decorations.is_empty())
+  transform=base.transform
   assert((transform*item.center).is_equal_approx(Vector2(x+0.5,3.5)))
   assert((transform.determinant()<0)==item.flip_x)
  view.queue_free()

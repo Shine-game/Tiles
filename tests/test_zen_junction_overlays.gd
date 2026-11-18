@@ -21,7 +21,7 @@ func run():
    var shape=Topology.shape(mask)
    var role="core" if shape in ["isolated","endpoint"] else shape
    var id="junction/zen_garden/%d/2/2/%s"%[color,role]
-   var eligible=role in ["core","bend","t","cross"]
+   var eligible=role in ["core","bend","t","cross"] and not (role=="core" and color==2)
    assert(view.junction_layer.events.has(id)==eligible)
    assert(not view.zen_visuals.centerpieces.has(Vector2i(2,2)))
    if eligible:
@@ -32,7 +32,7 @@ func run():
     assert((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)))
     assert(view.junction_layer.renderer.nodes[id].visible and spec.material==null)
    if color==2:
-    assert(view.tier1_layer.plans.has("zen_garden/stone/2/2")==(role!="core"))
+    assert(view.tier1_layer.plans.has("zen_garden/stone/2/2"))
  var before=Rules.empty_board(7)
  before[3][1]=2
  var after=before.duplicate(true)
@@ -46,7 +46,7 @@ func run():
  view.advance_growth(at)
  assert(view.junction_layer.renderer.nodes[id].visible)
  view.show_settled(before,true)
- assert(view.junction_layer.renderer.nodes.has("junction/zen_garden/2/3/1/core"))
+ assert(view.tier1_layer.plans.has("zen_garden/stone/3/1"))
  view.queue_free()
  print("Zen junctions: both paths, all 16 masks, centered unrotated 250 percent junctions and 100 percent cores, single basic-stone cores, arrival and undo pass")
  quit()

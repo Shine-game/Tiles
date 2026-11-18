@@ -101,6 +101,9 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		var shape := role(Topology.shape(Topology.neighbor_mask(model.board, cell)), config)
 		if not loaded.has(shape): continue
 		var color := Topology.value(model.board, cell)
+		var artwork: Dictionary = Themes.profile(theme).get("tier1_artwork", {})
+		# Cell-centered paths already provide the entire core stone plus its deco.
+		if shape == "core" and artwork.get("status") == "active" and artwork.get("source_layout") == "cell_centers" and color == int(artwork.get("logical_color", 2)): continue
 		var record: Dictionary = loaded[shape][str(color)].duplicate(true)
 		var variation := CellVariation.choice(theme, cell, color) if shape == "core" else {}
 		if not variation.is_empty():

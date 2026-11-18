@@ -21,3 +21,8 @@ lighting-based preference for these freely oriented stones.
 Verified on a 17x17 coordinate area: all twelve sources, all four quarter turns,
 both reflection states and both jitter signs occur; no eight-neighbor repeats.
 Source and exported-pack tests also verify matching core/interior assembly.
+
+All stone-path cells, including isolated starting cores and open endpoints, now
+use the complete generated stone-and-decoration plan. The separate core overlay
+is suppressed for this cell-centered path color, avoiding a duplicate stone and
+preserving decorated-cell identities when an endpoint becomes a straight interior.
