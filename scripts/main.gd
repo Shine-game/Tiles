@@ -1,5 +1,6 @@
 extends Control
 
+const ThemeAssets = preload("res://scripts/pattern/asset_library.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
@@ -591,6 +592,11 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
 	if Palette.clockwork:
 		var paper := ClockworkVisuals.texture(Themes.profile(Palette.theme_id()).environment.background)
+		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
+		var extent: Vector2 = paper.get_size() * factor
+		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
+	elif Palette.theme_id() == "vines":
+		var paper := ThemeAssets.texture(Themes.profile("vines").environment.background)
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)

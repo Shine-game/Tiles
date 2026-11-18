@@ -75,7 +75,7 @@ static func muted() -> Color:
 	return _ui("muted", Color.GRAY)
 
 static func grid() -> Color:
-	return Color("bbc9e4") if dark() else Color("947c9c")
+	return _ui("seams", Color("bbc9e4") if dark() else Color("947c9c"))
 
 static func garden() -> Color:
 	return _ui("garden", floor_color().lightened(0.09) if dark() else floor_color().darkened(0.035))

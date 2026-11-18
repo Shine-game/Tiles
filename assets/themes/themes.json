@@ -228,23 +228,26 @@
       "ui": {
         "controls": "eeedf3",
         "text": "40334d",
-        "muted": "9b8ca6"
+        "muted": "9b8ca6",
+        "platform": "FFF9F3",
+        "floor": "F1E7EB",
+        "seams": "DCCBD5"
       },
       "frame": {
         "enabled": true,
         "texture": "res://art/themes/vines/artwork/vines_frame.png",
-        "appearance": "vines-frame-1",
+        "appearance": "vines-porcelain-frame-2",
         "source_rect": [
-          58,
-          58,
-          1138,
-          1138
+          0,
+          0,
+          1024,
+          1024
         ],
         "opening_rect": [
-          108,
-          108,
-          1038,
-          1038
+          43,
+          43,
+          938,
+          938
         ]
       },
       "sets": {
@@ -258,7 +261,9 @@
         "growth": "vines",
         "environment": "vines"
       },
-      "environment": {},
+      "environment": {
+        "background": "res://art/themes/vines/artwork/vines_ui_background.png"
+      },
       "preview": {
         "ground": "fff5fb",
         "core": ""

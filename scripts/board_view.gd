@@ -33,6 +33,7 @@ const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Zen = preload("res://scripts/zen_growth.gd")
 const ZenLayer = preload("res://scripts/zen_visuals.gd")
+var tile_floor: ColorRect
 var fountain_water: Node2D
 var zen_garden := false
 var zen_visuals: ZenVisuals
@@ -112,6 +113,16 @@ func sync_board(grid: Array) -> void:
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
+	if Palette.theme_id() == "vines":
+		Vines.install()
+		if tile_floor == null:
+			tile_floor = ColorRect.new()
+			tile_floor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tile_floor.z_index = -2
+			add_child(tile_floor)
+	if tile_floor != null:
+		tile_floor.visible = Palette.theme_id() == "vines"
+		tile_floor.color = Palette.floor_color()
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	zen_garden = Palette.zen_garden
@@ -353,6 +364,9 @@ func update_geometry() -> void:
 		field = Frame.fit(Rect2(Vector2.ZERO, size), Palette.theme_id())
 		side = field.size.x
 		board_frame.surround(field)
+	if tile_floor != null and tile_floor.visible:
+		tile_floor.position = field.position
+		tile_floor.size = field.size
 	# Keep the raised north edge and its shadow inside the field, including
 	# high-resolution gallery captures. The logical board remains square.
 	var edge_allowance: float = 3.0 * Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.02
@@ -446,7 +460,7 @@ func _draw() -> void:
 
 func _draw_guides() -> void:
 	var n: int = board.size()
-	var ink := Color("9b95a3", 0.20)
+	var ink := Palette.grid() if Palette.theme_id() == "vines" else Color("9b95a3", 0.20)
 	var width: float = maxf(0.75, pitch * 0.012)
 	for y in range(n):
 		for x in range(n + 1):
