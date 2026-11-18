@@ -41,10 +41,10 @@
   "constraints": {
     "inside_canvas": true,
     "edge_margin_px": 1,
-    "base_overlap": "avoid",
+    "base_overlap": "allow",
     "base_gap_px": 3,
     "avoid_deco_overlap": true,
-    "max_radius_px": 11.2
+    "max_radius_px": 22.4
   },
   "anchors": [
     {

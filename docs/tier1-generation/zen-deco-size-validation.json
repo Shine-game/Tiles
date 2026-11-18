@@ -1,0 +1,14 @@
+{
+  "decoration_scale_before": 1.4,
+  "decoration_scale_after": 2.8,
+  "radius_limit_before_px": 11.2,
+  "radius_limit_after_px": 22.4,
+  "base_overlap": "allow: enlarged pebble/moss artwork may overlap its supporting stone; tile bounds and mutual decoration collision remain enforced.",
+  "checks": {
+    "source_and_exported_pack": "Stone decorations exist at scale 2.8; base stones remain one square, no duplicate core stones.",
+    "artwork": 779,
+    "registry": 82,
+    "integration": 323
+  },
+  "failures": 0
+}
