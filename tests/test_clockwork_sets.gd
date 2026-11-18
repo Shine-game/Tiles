@@ -83,7 +83,7 @@ func _run() -> void:
 	model.build(straight, endpoint)
 	visuals.reconcile(model, true, true, true)
 	check(visuals.ordinary_components.nodes.has(Clock.key("C02", 1, Vector2i(4, 4))), "Helper restoration rebuilds the endpoint centerpiece through the same set")
-	for id: String in ["L01", "L02", "L03"]: check(Sets.owns(id), "Tier 2 parts also use live sets")
+	for id: String in ["L01", "H00_plain_hatch"]: check(Sets.owns(id), "Tier 2 parts also use live sets")
 	for id: String in ["CH01_link", "H03_exhaust"]: check(not Sets.owns(id), "Tier 3 artwork remains outside this migration")
 	check(FileAccess.get_file_as_string("res://export_presets.cfg").contains("art/themes/clockwork_workshop/sets/*.json"), "Production set definitions are included in the Android export filter")
 	renderer.clear()

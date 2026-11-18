@@ -16,7 +16,6 @@ const GROUND = preload("res://shaders/ground_surface.gdshader")
 const CHAIN_LINK_SCALE := 2.0
 const CHAIN_PITCH := 29.0 * CHAIN_LINK_SCALE
 const CHAIN_CANVAS := 64.0 * CHAIN_LINK_SCALE
-const CHAIN_RUN_OFFSET := 28.0
 const CHAIN_HOUSING_SCALE := 1.2
 const OMEGA := TAU / 6.0
 static var textures: Dictionary = {}
@@ -58,9 +57,9 @@ class FXLayer extends Node2D:
 				draw_circle(item.center, item.radius, Color(0.10, 0.08, 0.05, item.alpha), true, -1, true)
 
 # Artwork choice is independent of logical color, connectivity and motion.
-# Alternate the stacked driving layers so their silhouettes remain readable.
-static func art_variant(id: String, logical_color: int) -> String:
-	var artwork_color: int = 3 - logical_color if id == "L03" else logical_color
+# The single driving wheel and its cap retain their logical metal.
+static func art_variant(_id: String, logical_color: int) -> String:
+	var artwork_color: int = logical_color
 	return "copper" if artwork_color == 1 else "gunmetal"
 
 static func texture(path: String) -> Texture2D:
@@ -266,7 +265,7 @@ func reconcile(next: ClockworkGrowth, settled: bool, preserve: bool, reverse: bo
 			for run in range(2):
 				var strip := ColorRect.new()
 				strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				strip.position = Vector2(0, (-CHAIN_RUN_OFFSET if run == 0 else CHAIN_RUN_OFFSET) - CHAIN_CANVAS * 0.5)
+				strip.position = Vector2(0, (-float(Ordinary.tier2.definition.chain_run_offset_px) if run == 0 else float(Ordinary.tier2.definition.chain_run_offset_px)) - CHAIN_CANVAS * 0.5)
 				strip.size = Vector2(256, CHAIN_CANVAS)
 				var ink := Components.material(CHAIN)
 				ink.set_shader_parameter("link_art", Assets.part_texture(Ordinary.special_part("CH01_link"), art_variant("CH01_link", event.color)))
@@ -336,7 +335,7 @@ func advance(clock: float) -> void:
 					sprite.material = null
 				else:
 					sprite.material.set_shader_parameter("visual_clock", clock)
-		elif event.id in ["C01", "C02", "L01", "L02", "L03"]:
+		elif event.id in ["C01", "C02", "L01"]:
 			sprite.material.set_shader_parameter("rise", progress)
 			if event.id == "C02":
 				var lift := 0.0
@@ -347,8 +346,8 @@ func advance(clock: float) -> void:
 				sprite.material.set_shader_parameter("height_source", 6.0 + 12.0 * lift)
 		elif not event.id.begins_with("plate_"):
 			sprite.modulate.a = progress
-		if event.id in ["C02", "L01", "L03", "L02"] and progress > 0:
-			var radius: float = {"C02": 80.0, "L01": 112.0, "L03": 118.0, "L02": 28.0}[event.id]
+		if event.id in ["C02", "L01"] and progress > 0:
+			var radius: float = {"C02": 80.0, "L01": 112.0}[event.id]
 			disks.append({"center": sprite.position + Vector2(3, 6 + 8 * progress), "radius": radius, "alpha": 0.10 * progress})
 		if event.id == "H00_plain_hatch" and not event.get("terminal", false) and model.mechanisms.has(event.cell) and model.mechanisms[event.cell].has("cap"):
 			var cap: Dictionary = model.components[Model.key("terminal_" + model.mechanisms[event.cell].cap, event.color, event.cell)]
@@ -364,7 +363,7 @@ func advance(clock: float) -> void:
 			if (event.id in ["T03", "H00_plain_hatch"] or event.get("terminal", false)) and fx_clock - last_click > 0.075:
 				last_click = fx_clock
 				cue.emit("click")
-			if event.id in ["L01", "L03"] and fx_clock - last_clunk > 0.10:
+			if event.id == "L01" and fx_clock - last_clunk > 0.10:
 				last_clunk = fx_clock
 				cue.emit("clunk")
 	for entry: Dictionary in chain_nodes.values():
@@ -377,7 +376,7 @@ func advance(clock: float) -> void:
 	for entry: Dictionary in retiring:
 		var amount: float = 1.0 - smoothstep(entry.retire_at, entry.retire_end, clock)
 		entry.node.modulate.a = entry.initial_alpha * amount
-		if entry.event.id in ["C01", "C02", "L01", "L02", "L03"]:
+		if entry.event.id in ["C01", "C02", "L01"]:
 			entry.node.material.set_shader_parameter("rise", entry.initial_rise * amount)
 		if entry.event.id == "T01":
 			entry.node.material.set_shader_parameter("visual_clock", amount * 0.235)
@@ -400,7 +399,7 @@ func _update_angles(delta: float) -> void:
 		if not gear_angles.has(cell): gear_angles[cell] = 0.0
 		gear_speed[cell] = move_toward(float(gear_speed.get(cell, 0)), 1.0 if awake and operating else 0.0, delta * 3.0)
 		gear_angles[cell] += OMEGA * delta * gear_speed[cell]
-		for id: String in ["L01", "L03"]:
+		for id: String in ["L01"]:
 			var identity := Model.key(id, mechanism.color, cell)
 			if registry.has(identity):
 				registry[identity].node.rotation = gear_angles[cell]

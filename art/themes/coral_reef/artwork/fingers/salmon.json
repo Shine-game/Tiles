@@ -2,7 +2,7 @@
   "schema": "tiles.animated-fingers.v1",
   "color": 1,
   "seed": 18361,
-  "count": 8,
+  "count": 16,
   "origin_px": [
     61,
     153
@@ -13,8 +13,8 @@
   ],
   "scale": 1.0,
   "cycle_seconds": [
-    0.8,
-    1.2
+    0.7,
+    0.9
   ],
   "frame_sequence": [
     1,

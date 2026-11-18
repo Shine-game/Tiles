@@ -30,11 +30,11 @@ func run():
 			for x in range(2 if vertical else 3): board[y+2][x+2] = 1
 		view.show_settled(board)
 		check(view.pattern.unions.size() == 1, "One linked formation")
-		check(view.coral_visuals.finger_events.size() == 8, "Eight rays replace old tier-three artwork")
+		check(view.coral_visuals.finger_events.size() == 16, "Sixteen rays replace old tier-three artwork")
 		for id in view.coral_visuals.finger_events:
 			var event: Dictionary = view.coral_visuals.finger_events[id]
 			var choice: Dictionary = event.animated_finger
-			check(choice.period >= 0.8 and choice.period <= 1.2, "Cycle duration range")
+			check(choice.period >= 0.7 and choice.period <= 0.9, "Cycle duration range")
 			var spec := Fingers.render_spec(event)
 			check((spec.source_transform * Vector2(61,153)).distance_to(choice.origin_cells*256) < 0.001, "Anchor remains fixed under mirroring and rotation")
 			check(view.coral_visuals.registry[id].visible, "Settled fingers visible")

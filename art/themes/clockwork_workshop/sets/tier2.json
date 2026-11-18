@@ -41,73 +41,6 @@
             }
           }
         },
-        "L02": {
-          "asset": {
-            "provider": "variants",
-            "variants": {
-              "copper": {
-                "provider": "texture",
-                "path": "../artwork/copper/L02.png"
-              },
-              "gunmetal": {
-                "provider": "texture",
-                "path": "../artwork/gunmetal/L02.png"
-              }
-            }
-          },
-          "pivot_px": [
-            256.0,
-            256.0
-          ],
-          "layer": 40,
-          "z_index": 5,
-          "texture_filter": 2,
-          "animation": {
-            "offset_seconds": 0.85,
-            "duration_seconds": 0.35
-          },
-          "identity_kind": "L02",
-          "material": {
-            "provider": "clockwork.rise",
-            "params": {
-              "height_source": 18.0
-            }
-          }
-        },
-        "L03": {
-          "asset": {
-            "provider": "variants",
-            "variants": {
-              "copper": {
-                "provider": "texture",
-                "path": "../artwork/copper/L03.png"
-              },
-              "gunmetal": {
-                "provider": "texture",
-                "path": "../artwork/gunmetal/L03.png"
-              }
-            }
-          },
-          "pivot_px": [
-            256.0,
-            256.0
-          ],
-          "layer": 45,
-          "z_index": 6,
-          "texture_filter": 2,
-          "animation": {
-            "offset_seconds": 1.2,
-            "duration_seconds": 0.5
-          },
-          "identity_kind": "L03",
-          "swap_treatment": true,
-          "material": {
-            "provider": "clockwork.rise",
-            "params": {
-              "height_source": 12.0
-            }
-          }
-        },
         "H00_plain_hatch": {
           "asset": {
             "provider": "variants",
@@ -130,16 +63,20 @@
           "z_index": 9,
           "texture_filter": 2,
           "animation": {
-            "offset_seconds": 1.7,
+            "offset_seconds": 0.4,
             "duration_seconds": 0.25
           },
-          "identity_kind": "hatch"
+          "identity_kind": "hatch",
+          "scale": [
+            1.5,
+            1.5
+          ]
         }
       }
     }
   },
   "schedule": {
-    "completion_offset_seconds": 1.95,
+    "completion_offset_seconds": 0.65,
     "prerequisite": "supporting_wheels_and_internal_tubes",
     "support_parts": [
       "C02"
@@ -156,5 +93,6 @@
   "lower_layers": {
     "retain_pattern": true,
     "power_supporting_wheels": true
-  }
+  },
+  "chain_run_offset_px": 45.0
 }
