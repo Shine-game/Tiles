@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dry7yyfujfhqh"
-path="res://.godot/imported/vines_tier2_flower_1.png-a1e491c007dc3380717df8f6e082127d.ctex"
+uid="uid://cdctpwo3k3wni"
+path="res://.godot/imported/vines_tier2_fountain_color2_basic.png-e1b2e0a4e93c5798b53981da077a7090.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/themes/vines/artwork/tier2/vines_tier2_flower_1.png"
-dest_files=["res://.godot/imported/vines_tier2_flower_1.png-a1e491c007dc3380717df8f6e082127d.ctex"]
+source_file="res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.png"
+dest_files=["res://.godot/imported/vines_tier2_fountain_color2_basic.png-e1b2e0a4e93c5798b53981da077a7090.ctex"]
 
 [params]
 

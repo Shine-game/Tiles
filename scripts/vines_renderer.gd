@@ -1,8 +1,7 @@
 extends RefCounted
 # Procedural art providers. The board supplies its existing curves, brush, clock
 # and palette; configuration supplies ordinary motif and foliage proportions.
-const PostAssets = preload("res://scripts/pattern/asset_library.gd")
-const ROOT_POST := "res://art/themes/vines/sets/"
+const FountainAssets = preload("res://scripts/pattern/asset_library.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Assembly = preload("res://scripts/pattern/assembly.gd")
@@ -105,30 +104,26 @@ static func flower(view, spec: Dictionary, context: Dictionary) -> void:
 		var offset := Vector2.from_angle(i * TAU / int(p.stamens)) * radius * float(p.stamen_distance)
 		view.draw_circle(center + offset, maxf(0.35, radius * float(p.stamen_radius)), Color(stem, float(p.stamen_alpha)), true, -1, true)
 
-# Aligned source layers share one canvas transform, including cropped reveals.
-static func layer_progress(layer: Dictionary, elapsed: float) -> float:
-	return clampf((elapsed - float(layer.animation.start_seconds)) / float(layer.animation.duration_seconds), 0.0, 1.0)
+# Fountain coordinates are source pixels; the marked outlet lands at the 2x2 center.
+static var fountains: Dictionary = {}
+static func fountain_metadata(path: String) -> Dictionary:
+	if not fountains.has(path):
+		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+		data.image = path.get_base_dir().path_join(data.image)
+		fountains[path] = data
+	return fountains[path]
 
-static func layered_post(view, spec: Dictionary, context: Dictionary) -> void:
-	var params: Dictionary = spec.params
+static func fountain_geometry(params: Dictionary, color: int, center: Vector2, pitch: float) -> Dictionary:
+	var meta := fountain_metadata(params.sprites[str(color)])
+	var canvas := Vector2(meta.canvas_px[0],meta.canvas_px[1])
+	var size := Vector2(params.size_cells[0],params.size_cells[1])*pitch*float(meta.scale)
+	var ratio := size/canvas
+	var origin := center-Vector2(meta.center_px[0],meta.center_px[1])*ratio
+	return {"rect": Rect2(origin,size), "water_origin": origin+Vector2(meta.water_origin_px[0],meta.water_origin_px[1])*ratio,"image":meta.image}
+
+static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
 	var event: Dictionary = context.event
-	var elapsed: float = float(spec.animation.duration_seconds) if event.old else view.clock - event.start
-	var canvas := Vector2(params.canvas_px[0], params.canvas_px[1])
-	var center_px := Vector2(params.center_px[0], params.center_px[1])
-	var extent: Vector2 = Vector2(params.size_cells[0], params.size_cells[1]) * view.pitch
-	var ratio: Vector2 = extent / canvas
-	var center: Vector2 = view._point(Vector2(context.corner))
-	var origin: Vector2 = center - center_px * ratio
-	for layer: Dictionary in params.layers:
-		var progress := layer_progress(layer, elapsed)
-		if progress <= 0.0: continue
-		var image: Texture2D = PostAssets.texture(layer.image, ROOT_POST)
-		if layer.animation.mode == "bottom_up":
-			var start_y := canvas.y * (1.0-progress)
-			var source := Rect2(Vector2(0,start_y), Vector2(canvas.x,canvas.y-start_y))
-			view.draw_texture_rect_region(image, Rect2(origin + source.position*ratio, source.size*ratio), source)
-		else:
-			var pivot := Vector2(layer.origin_px[0],layer.origin_px[1])
-			var amount := smoothstep(0.0,1.0,progress)
-			var top_left: Vector2 = origin + pivot*ratio*(1.0-amount)
-			view.draw_texture_rect(image, Rect2(top_left,extent*amount), false)
+	var progress: float = 1.0 if event.old else clampf((view.clock-event.start)/float(spec.animation.duration_seconds),0.0,1.0)
+	if progress <= 0.0: return
+	var geometry := fountain_geometry(spec.params,event.color,view._point(Vector2(context.corner)),view.pitch)
+	view.draw_texture_rect(FountainAssets.texture(geometry.image),geometry.rect,false,Color(1,1,1,progress))

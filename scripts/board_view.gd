@@ -11,6 +11,7 @@ signal visual_clock_advanced(clock: float)
 const JunctionLayer = preload("res://scripts/pattern/junction_layer.gd")
 const Tier1Layer = preload("res://scripts/pattern/tier1_layer.gd")
 const Tier1Sources = preload("res://scripts/pattern/tier1_sources.gd")
+const FountainWater = preload("res://scripts/vines_fountain_water.gd")
 const VineModel = preload("res://scripts/vines_growth.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
 const ComponentState = preload("res://scripts/pattern/component_state.gd")
@@ -32,6 +33,7 @@ const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Zen = preload("res://scripts/zen_growth.gd")
 const ZenLayer = preload("res://scripts/zen_visuals.gd")
+var fountain_water: Node2D
 var zen_garden := false
 var zen_visuals: ZenVisuals
 var zen_floor: ColorRect
@@ -116,6 +118,14 @@ func _build_pattern(before: Array, after: Array) -> void:
 	var model_hooks := {"zen_garden": Zen, "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
 	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
 	pattern.build(before, after)
+	if fountain_water == null and Palette.theme_id() == "vines":
+		fountain_water = FountainWater.new()
+		fountain_water.view = self
+		add_child(fountain_water)
+	if fountain_water != null:
+		fountain_water.visible = Palette.theme_id() == "vines"
+		fountain_water.set_process(fountain_water.visible and not pattern.links.is_empty())
+		fountain_water.queue_redraw()
 	if board_frame == null:
 		board_frame = Frame.new()
 		add_child(board_frame)

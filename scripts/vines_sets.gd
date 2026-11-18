@@ -19,7 +19,7 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.connection", Art.connection)
 	Components.register_draw_part_provider("vines.wash", Art.wash)
 	Components.register_draw_part_provider("vines.flower", Art.flower)
-	Components.register_draw_part_provider("vines.layered_post", Art.layered_post)
+	Components.register_draw_part_provider("vines.fountain", Art.fountain)
 	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
 	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
@@ -60,7 +60,7 @@ static func draw(view) -> void:
 	for edge: Dictionary in ([] if view.generative_tier1 else view.pattern.edges):
 		renderer.draw_parts(Cells.parts_for_role(tier1, "vine"), view, {"edge": edge})
 	# Higher-tier art stays in its existing providers and painter order.
-	for link: Dictionary in view.pattern.links: view._draw_link(link)
+	 # Water links are drawn by the independent animated fountain layer.
 	for cell: Vector2i in view.pattern.arrivals:
 		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(view.board, cell))): continue
 		var selected := centers(Topology.neighbor_mask(view.board, cell))

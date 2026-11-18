@@ -9,112 +9,19 @@
     "flower": {
       "parts": {
         "flower": {
-          "provider": "vines.layered_post",
+          "provider": "vines.fountain",
           "animation": {
-            "duration_seconds": 1.8
+            "duration_seconds": 0.25
           },
           "params": {
-            "canvas_px": [
-              255,
-              255
-            ],
-            "center_px": [
-              126.5,
-              124.5
-            ],
-            "post_center_px": [
-              126.5,
-              124.5
-            ],
-            "post_foot_px": [
-              127.297,
-              243.409
-            ],
             "size_cells": [
               2,
               2
             ],
-            "shared_artwork_for_both_colors": true,
-            "layers": [
-              {
-                "id": "post",
-                "image": "../artwork/tier2/vines_tier2_post_basic.png",
-                "origin_px": [
-                  127.297,
-                  243.409
-                ],
-                "animation": {
-                  "start_seconds": 0,
-                  "duration_seconds": 0.35,
-                  "mode": "bottom_up"
-                }
-              },
-              {
-                "id": "vine",
-                "image": "../artwork/tier2/vines_tier2_vine_basic.png",
-                "origin_px": [
-                  127.297,
-                  243.409
-                ],
-                "animation": {
-                  "start_seconds": 0.35,
-                  "duration_seconds": 0.65,
-                  "mode": "bottom_up"
-                }
-              },
-              {
-                "id": "flower_1",
-                "image": "../artwork/tier2/vines_tier2_flower_1.png",
-                "origin_px": [
-                  142.955,
-                  79.103
-                ],
-                "animation": {
-                  "start_seconds": 1.0,
-                  "duration_seconds": 0.2,
-                  "mode": "open_from_origin"
-                }
-              },
-              {
-                "id": "flower_2",
-                "image": "../artwork/tier2/vines_tier2_flower_2.png",
-                "origin_px": [
-                  109.809,
-                  114.892
-                ],
-                "animation": {
-                  "start_seconds": 1.2,
-                  "duration_seconds": 0.2,
-                  "mode": "open_from_origin"
-                }
-              },
-              {
-                "id": "flower_3",
-                "image": "../artwork/tier2/vines_tier2_flower_3.png",
-                "origin_px": [
-                  140.311,
-                  162.069
-                ],
-                "animation": {
-                  "start_seconds": 1.4,
-                  "duration_seconds": 0.2,
-                  "mode": "open_from_origin"
-                }
-              },
-              {
-                "id": "flower_4",
-                "image": "../artwork/tier2/vines_tier2_flower_4.png",
-                "origin_px": [
-                  107.978,
-                  60.395
-                ],
-                "animation": {
-                  "start_seconds": 1.6,
-                  "duration_seconds": 0.2,
-                  "mode": "open_from_origin"
-                }
-              }
-            ]
+            "sprites": {
+              "1": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.json",
+              "2": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.json"
+            }
           }
         }
       }
@@ -125,6 +32,13 @@
   },
   "schedule": {
     "prerequisite": "perimeter_edges_meet",
-    "link_overlap_fraction": 0.45
+    "link_overlap_fraction": 1.0
+  },
+  "water": {
+    "arc_height_cells": 0.45,
+    "travel_seconds": 0.8,
+    "droplets_per_arc": 7,
+    "color": "#9ce9ff",
+    "width_cells": 0.035
   }
 }
