@@ -138,6 +138,16 @@
             "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.json",
             "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.json"
           }
+        },
+        "disabled_shapes_by_color": {
+          "1": [
+            "core"
+          ],
+          "2": [
+            "bend",
+            "t",
+            "cross"
+          ]
         }
       }
     },

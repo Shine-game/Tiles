@@ -21,32 +21,32 @@ func run():
    var shape=Topology.shape(mask)
    var role="core" if shape in ["isolated","endpoint"] else shape
    var id="junction/zen_garden/%d/2/2/%s"%[color,role]
-   var eligible=role in ["core","bend","t","cross"] and not (role=="core" and color==2)
+   var eligible=color==1 and role in ["bend","t","cross"]
    assert(view.junction_layer.events.has(id)==eligible)
    assert(not view.zen_visuals.centerpieces.has(Vector2i(2,2)))
    if eligible:
     var config=view.junction_layer.configuration("zen_garden")
     var record=view.junction_layer.load_sprite(config.shapes[role][str(color)])
     var spec=view.junction_layer.specs[id]
-    assert(is_equal_approx(record.scale,1.0 if role=="core" else 2.5) and record.rotation.is_empty())
+    assert(is_equal_approx(record.scale,1.0) and record.rotation.is_empty())
     assert((spec.source_transform*record.center).is_equal_approx(Vector2(2.5,2.5)))
     assert(view.junction_layer.renderer.nodes[id].visible and spec.material==null)
    if color==2:
     assert(view.tier1_layer.plans.has("zen_garden/stone/2/2"))
  var before=Rules.empty_board(7)
- before[3][1]=2
+ before[3][1]=1
  var after=before.duplicate(true)
- for p in [Vector2i(2,3),Vector2i(3,3),Vector2i(3,4)]:after[p.y][p.x]=2
+ for p in [Vector2i(2,3),Vector2i(3,3),Vector2i(3,4)]:after[p.y][p.x]=1
  view.show_settled(before)
  view.animate_growth(before,after)
  view.set_process(false)
- var id="junction/zen_garden/2/3/3/bend"
+ var id="junction/zen_garden/1/3/3/bend"
  var at=view.junction_layer.events[id].start
  assert(at>0 and not view.junction_layer.renderer.nodes[id].visible)
  view.advance_growth(at)
  assert(view.junction_layer.renderer.nodes[id].visible)
  view.show_settled(before,true)
- assert(view.tier1_layer.plans.has("zen_garden/stone/3/1"))
+ assert(not view.junction_layer.events.has(id) and view.zen_visuals.centerpieces.is_empty())
  view.queue_free()
- print("Zen junctions: both paths, all 16 masks, centered unrotated 250 percent junctions and 100 percent cores, single basic-stone cores, arrival and undo pass")
+ print("Zen junctions: both paths, all 16 masks, native-size rake junctions, no rake cores or stone junction overlays, arrival and undo pass")
  quit()
