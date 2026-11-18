@@ -80,5 +80,14 @@ func run() -> void:
 	check(unmet.ok and unmet.group_counts.spine == 0 and not unmet.warnings.is_empty(), "Infeasible quota reports a shortfall without relaxing constraints")
 	var rules := Metadata.rules(raw(), catalog.families.default.decorations[0].definition, {}, catalog.settings)
 	check(rules.ok and not rules.animation.has("group_counts"), "Layout quotas do not leak into animation rules")
+	var vine_path := "res://art/themes/vines/artwork/tier1/vines_tier1_vine_color1_basic.json"
+	var vine: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(vine_path))
+	for option: Array in [[], ["upper_02", "upper_02"], ["upper_02", "lower_07"], ["upper_02", "missing"], ["upper_02"]]:
+		var malformed := vine.duplicate(true)
+		malformed.spawn.group_anchor_sets.upper = [option]
+		check(not Metadata.load_sprite(malformed, vine_path.get_base_dir()).ok, "Invalid authored anchor combination rejected")
+	var unreserved := vine.duplicate(true)
+	unreserved.spawn.group_counts.erase("upper")
+	check(not Metadata.load_sprite(unreserved, vine_path.get_base_dir()).ok, "Authored combinations require matching fixed group quotas")
 	print("Sprite anchor groups: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

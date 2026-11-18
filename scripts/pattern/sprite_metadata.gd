@@ -128,7 +128,7 @@ static func _semantic(data: Dictionary) -> Array:
 	if data.kind == "decoration":
 		for field: String in ["frame", "anchors", "connections", "orientation"]:
 			if data.has(field): errors.append(field + ": belongs on a base or anchor, not a decoration")
-		for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]:
+		for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]:
 			if data.get("spawn", {}).has(field): errors.append("spawn." + field + ": belongs on a base")
 		if data.get("spawn", {}).get("mode") == "progressive" and not data.has("direction"): errors.append("Progressive decoration requires an explicit direction marker")
 	else:
@@ -146,6 +146,15 @@ static func _semantic(data: Dictionary) -> Array:
 			for anchor: Dictionary in data.get("anchors", []):
 				if anchor.get("group", "") == group: capacity += 1
 			if quotas[group] > capacity: errors.append("spawn.group_counts." + group + ": exceeds available anchors")
+		for group: String in data.get("spawn", {}).get("group_anchor_sets", {}):
+			if not data.spawn.get("group_counts", {}).has(group): errors.append("Anchor sets need a fixed group count: " + group)
+			for option: Array in data.spawn.group_anchor_sets[group]:
+				if option.size() != int(data.spawn.get("group_counts", {}).get(group, -1)): errors.append("Anchor set size differs from group count: " + group)
+				var seen: Dictionary = {}
+				for id: String in option:
+					if seen.has(id): errors.append("Duplicate anchor in set: " + id)
+					seen[id] = true
+					if not data.get("anchors", []).any(func(a): return a.id == id and a.get("group", "") == group): errors.append("Anchor set references wrong or missing group anchor: " + id)
 		for field: String in ["attachment", "direction", "tags"]:
 			if data.has(field): errors.append(field + ": belongs on a decoration")
 		if data.get("variation", {}).has("weight"): errors.append("variation.weight belongs on a decoration")
@@ -159,7 +168,7 @@ static func _semantic(data: Dictionary) -> Array:
 				if item.has("forward") and _vector(item.forward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero forward vector")
 				if item.has("toward") and _vector(item.toward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero connection vector")
 				for field: String in ["spawn", "orientation"]: _ordered_ranges(item.get(field, {}), collection + "/" + item.id + "." + field, errors)
-				for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]:
+				for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]:
 					if item.get("spawn", {}).has(field): errors.append(collection + "/" + item.id + ": " + field + " belongs on the base")
 	if data.status == "ready" and not data.get("authoring", {}).get("pending", []).is_empty(): errors.append("Ready artwork has unresolved authoring.pending entries")
 	return errors
@@ -325,7 +334,7 @@ static func rules(base: Dictionary, decoration: Dictionary, anchor: Dictionary, 
 	var defaults: Dictionary = settings.defaults
 	var animation: Dictionary = defaults.spawn.duplicate(true)
 	for item: Dictionary in [decoration, base, anchor]: animation.merge(item.get("spawn", {}), true)
-	for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges"]: animation.erase(field)
+	for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]: animation.erase(field)
 	if animation.mode == "progressive" and not decoration.has("direction"): return _failure("spawn", ["Progressive override requires an explicit decoration direction"])
 	var orientation := _merge(_merge(defaults.orientation, base.get("orientation", {})), anchor.get("orientation", {}))
 	var variation := _merge(_merge(defaults.variation, base.get("variation", {})), decoration.get("variation", {}))

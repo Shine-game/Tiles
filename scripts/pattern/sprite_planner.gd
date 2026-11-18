@@ -217,6 +217,12 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 	var anchors: Array = [] if context.get("suppress_decorations", false) else base.anchors.duplicate()
 	anchors.sort_custom(func(a, b): return a.id < b.id)
 	anchors = _shuffle(anchors, _rng(seed, component_id, "anchors"))
+	# Choose one valid authored combination per group before decoration placement.
+	# This keeps spacing/distribution rules generic and independent of theme names.
+	for group: String in base.resolved.spawn.get("group_anchor_sets", {}):
+		var options: Array = base.resolved.spawn.group_anchor_sets[group]
+		var selected: Array = options[_rng(seed, component_id, "anchor-set/" + group).randi_range(0, options.size() - 1)]
+		anchors = anchors.filter(func(a): return a.get("group", "") != group or a.id in selected)
 	var catalog_decorations: Array = family.decorations.duplicate()
 	if context.has("decoration_path"): catalog_decorations = catalog_decorations.filter(func(record): return record.path == context.decoration_path)
 	catalog_decorations.sort_custom(func(a, b): return a.path < b.path)

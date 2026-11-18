@@ -91,6 +91,6 @@
     "removed_variant_references": 0,
     "failures": 0
   },
-  "current_rules": "Native scale (1x), no random size variation or enlargement, exactly perpendicular to stem; density remains 3\u20134 per half-side and mirrored forms remain enabled.",
+  "current_rules": "Exactly 2 leaves per half-side: first anchor 2\u20134, second 7\u20139, with >=3 empty anchors between. Native scale, exactly perpendicular, mirrored variants enabled.",
   "current_tuning_verification": "Source checks: both colors/four stem rotations, density, scale=1 and perpendicular direction; artwork 779, registry 82 and Vines sets 500 checks pass."
 }

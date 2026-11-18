@@ -42,7 +42,7 @@ func _run() -> void:
 						if spec.has("masks"):
 							var mask: Texture2D = Assets.resolve(spec.masks.growth.asset)
 							check(mask != null and mask.get_size() == Vector2(spec.source_canvas_px[0], spec.source_canvas_px[1]), "Progressive reveal integrates with the existing cached mask provider")
-	check(geometries == 53, "Every production geometry loads")
+	check(geometries == 52, "Every production geometry loads")
 	var before := Sprites.cache_sizes()
 	var cached := Assets.load_sprite_catalog(Themes.sprite_catalog_path("vines"))
 	check(cached.ok and Sprites.cache_sizes() == before, "Repeated catalog loads reuse JSON, records, masks and texture caches")

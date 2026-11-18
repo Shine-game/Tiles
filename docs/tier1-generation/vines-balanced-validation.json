@@ -1,0 +1,16 @@
+{
+  "rule": "Exactly two leaves per side per half-stem; one at anchor 2/3/4 and one at 7/8/9; second-first >=4, ensuring >=3 empty anchors.",
+  "valid_pairs_per_side": 8,
+  "tests": {
+    "source_and_exported_pack": "64 seeds, both colors, all four rotations: exact counts, allowed bands, gap, native scale, perpendicular direction and no warnings.",
+    "anchor_group_checks": 1047,
+    "metadata_checks": 254,
+    "planner_checks": 681,
+    "artwork_checks": 779,
+    "vines_sets_checks": 500,
+    "registry_checks": 82,
+    "integration_checks": 323
+  },
+  "failures": 0,
+  "apk_or_device_tested": false
+}

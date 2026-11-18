@@ -31,18 +31,82 @@
   },
   "spawn": {
     "count": [
-      6,
-      8
+      4,
+      4
     ],
     "minimum_spacing_px": 0,
-    "group_count_ranges": {
+    "group_counts": {
+      "upper": 2,
+      "lower": 2
+    },
+    "group_anchor_sets": {
       "upper": [
-        3,
-        4
+        [
+          "upper_02",
+          "upper_07"
+        ],
+        [
+          "upper_02",
+          "upper_08"
+        ],
+        [
+          "upper_02",
+          "upper_09"
+        ],
+        [
+          "upper_03",
+          "upper_07"
+        ],
+        [
+          "upper_03",
+          "upper_08"
+        ],
+        [
+          "upper_03",
+          "upper_09"
+        ],
+        [
+          "upper_04",
+          "upper_08"
+        ],
+        [
+          "upper_04",
+          "upper_09"
+        ]
       ],
       "lower": [
-        3,
-        4
+        [
+          "lower_02",
+          "lower_07"
+        ],
+        [
+          "lower_02",
+          "lower_08"
+        ],
+        [
+          "lower_02",
+          "lower_09"
+        ],
+        [
+          "lower_03",
+          "lower_07"
+        ],
+        [
+          "lower_03",
+          "lower_08"
+        ],
+        [
+          "lower_03",
+          "lower_09"
+        ],
+        [
+          "lower_04",
+          "lower_08"
+        ],
+        [
+          "lower_04",
+          "lower_09"
+        ]
       ]
     }
   },
