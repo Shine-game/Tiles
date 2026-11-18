@@ -2,7 +2,7 @@
   "schema": "tiles.radial-petals.v1",
   "count": 8,
   "seed": 10973,
-  "scale": 1.0,
+  "scale": 0.9,
   "petals": [
     "res://art/themes/coral_reef/artwork/petals/coral_tier2_petal_1.json",
     "res://art/themes/coral_reef/artwork/petals/coral_tier2_petal_2.json",
@@ -16,5 +16,7 @@
     "res://art/themes/coral_reef/artwork/petals/coral_tier2_petal_10.json",
     "res://art/themes/coral_reef/artwork/petals/coral_tier2_petal_11.json",
     "res://art/themes/coral_reef/artwork/petals/coral_tier2_petal_12.json"
-  ]
+  ],
+  "stagger_sec": 0.05,
+  "balanced_reflections": true
 }

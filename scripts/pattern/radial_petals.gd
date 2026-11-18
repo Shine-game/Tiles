@@ -25,8 +25,20 @@ static func choices(path:String,color:int,origin:Vector2i)->Array:
   refs[i]=refs[j]
   refs[j]=temp
  var phase=rng.randf_range(0,TAU)
+ var slots:Array=range(int(data.count))
+ var flips:Array=[]
+ for i in range(int(data.count)):flips.append(i<int(data.count)/2)
+ for i in range(slots.size()-1,0,-1):
+  var j=rng.randi_range(0,i)
+  var slot=slots[i]
+  slots[i]=slots[j]
+  slots[j]=slot
+  j=rng.randi_range(0,i)
+  var flip=flips[i]
+  flips[i]=flips[j]
+  flips[j]=flip
  var result:Array=[]
- for i in range(data.count):result.append({"path":refs[i],"variant":"color%d"%color,"angle":phase+i*TAU/data.count,"flip_x":rng.randf()<0.5,"scale":float(data.get("scale",1.0))})
+ for i in range(int(data.count)):result.append({"path":refs[i],"variant":"color%d"%color,"angle":phase+slots[i]*TAU/data.count,"flip_x":flips[i] if data.get("balanced_reflections",false) else rng.randf()<0.5,"scale":float(data.get("scale",1.0)),"delay":i*float(data.get("stagger_sec",0.0))})
  return result
 static func render_spec(event:Dictionary,template:Dictionary,settled:bool)->Dictionary:
  var chosen:Dictionary=event.radial_petal

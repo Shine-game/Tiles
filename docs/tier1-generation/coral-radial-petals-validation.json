@@ -182,11 +182,11 @@
   "selection": "distinct sources plus random reflected forms",
   "spacing_deg": 45,
   "phase": "seeded random 0\u2013360",
-  "scale": 1,
+  "scale": 0.9,
   "attachment": "all marked source origins at plate center",
   "sequence": "existing plate completes before petal growth starts",
   "tests": {
-    "source_and_exported_pack": "exact axes/origins, reflections, eight unique choices, phase stability, angle spacing and plate-first timing pass",
+    "source_and_exported_pack": "Eight unique designs from 1\u201312, shuffled angular order covering every slot once, four flipped/four original, 0.9x transforms, exact markers and 0.05s start intervals after plate completion pass.",
     "colony_visibility_checks": 58,
     "coral_junction_checks": 213,
     "integration_checks": 333,
@@ -194,5 +194,9 @@
     "rendered": "both colors verified with real OpenGL"
   },
   "failures": 0,
-  "apk_or_device_tested": false
+  "apk_or_device_tested": false,
+  "active_designs_per_color": 12,
+  "angular_order": "Seeded shuffled permutation of all eight 45-degree slots",
+  "reflection_ratio": "Exactly 4 reflected / 4 original per plate, randomly assigned",
+  "petal_start_stagger_sec": 0.05
 }

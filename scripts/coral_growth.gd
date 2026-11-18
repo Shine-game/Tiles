@@ -175,9 +175,12 @@ func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	return super.grid_visibility(a, b, time)
 
 func _emit_formation(id: String, _spec: Dictionary, formation: Dictionary, at: float, seconds: float) -> Dictionary:
-	var event := _add(id, formation.color, formation.origin, formation.center, formation.old, at, seconds)
+	var petal := {}
 	if id.begins_with("colony_petal_"):
-		event.radial_petal = RadialPetals.choices(Ordinary.tier2.definition.radial_petals, formation.color, formation.origin)[int(id.get_slice("_", 2))]
+		petal = RadialPetals.choices(Ordinary.tier2.definition.radial_petals, formation.color, formation.origin)[int(id.get_slice("_", 2))]
+		at += float(petal.get("delay", 0.0))
+	var event := _add(id, formation.color, formation.origin, formation.center, formation.old, at, seconds)
+	if not petal.is_empty(): event.radial_petal = petal
 	return event
 
 func tier2_records() -> Dictionary:

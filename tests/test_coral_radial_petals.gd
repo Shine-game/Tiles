@@ -17,6 +17,8 @@ func _initialize():
    var choices=Petals.choices(PATH,color,origin)
    assert(choices.size()==8 and choices==Petals.choices(PATH,color,origin))
    var used={}
+   var angles=[]
+   var flipped=0
    phases[choices[0].angle]=true
    for i in range(8):
     var chosen=choices[i]
@@ -25,7 +27,9 @@ func _initialize():
     used[chosen.path]=true
     selected[chosen.path]=true
     mirrors[chosen.flip_x]=true
-    assert(is_equal_approx(chosen.angle-choices[0].angle,i*PI/4))
+    angles.append(chosen.angle)
+    if chosen.flip_x:flipped+=1
+    assert(is_equal_approx(chosen.scale,0.9) and is_equal_approx(chosen.delay,i*0.05))
     var meta=Metadata.load_sprite(chosen.path)
     var event={"radial_petal":chosen,"center":Vector2(3,3),"old":true}
     var spec=Petals.render_spec(event,{},true)
@@ -34,6 +38,12 @@ func _initialize():
     assert((spec.source_transform*attachment).is_equal_approx(Vector2(768,768)))
     assert(spec.source_transform.basis_xform(forward).normalized().is_equal_approx(Vector2.from_angle(chosen.angle)))
     assert((spec.source_transform.determinant()<0)==chosen.flip_x)
+    assert(is_equal_approx(spec.source_transform.x.length(),0.9) and is_equal_approx(spec.source_transform.y.length(),0.9))
+   assert(flipped==4)
+   var sorted_angles=angles.duplicate()
+   sorted_angles.sort()
+   assert(angles!=sorted_angles)
+   for i in range(8):assert(is_equal_approx(sorted_angles[i]-sorted_angles[0],i*PI/4))
   var grid=Rules.empty_board(7)
   for p in [Vector2i(2,2),Vector2i(3,2),Vector2i(2,3),Vector2i(3,3)]:grid[p.y][p.x]=color
   var model=Growth.new()
@@ -41,7 +51,7 @@ func _initialize():
   var body=model.components[Growth.key("colony_body",color,Vector2i(2,2))]
   for i in range(8):
    var petal=model.components[Growth.key("colony_petal_%d"%i,color,Vector2i(2,2))]
-   assert(petal.start>=body.end-0.00001)
+   assert(is_equal_approx(petal.start,body.end+i*0.05))
    assert(petal.radial_petal.variant=="color%d"%color)
   assert(not model.components.values().any(func(e):return e.id.begins_with("colony_fold_") or e.id.begins_with("colony_fingers_")))
  assert(mirrors.size()==2 and phases.size()>1 and selected.size()>8)
