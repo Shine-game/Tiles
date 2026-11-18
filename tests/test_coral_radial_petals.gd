@@ -10,7 +10,7 @@ func _initialize():
  var mirrors={}
  var phases={}
  var selected={}
- assert(Petals.catalog(PATH).petals.size()==22)
+ assert(Petals.catalog(PATH).petals.size()==12)
  for color in [1,2]:
   for x in range(4):
    var origin=Vector2i(x,2)
@@ -20,6 +20,7 @@ func _initialize():
    phases[choices[0].angle]=true
    for i in range(8):
     var chosen=choices[i]
+    assert(int(chosen.path.get_file().get_basename().get_slice("_",3)) in range(1,13))
     assert(not used.has(chosen.path))
     used[chosen.path]=true
     selected[chosen.path]=true
@@ -44,5 +45,5 @@ func _initialize():
    assert(petal.radial_petal.variant=="color%d"%color)
   assert(not model.components.values().any(func(e):return e.id.begins_with("colony_fold_") or e.id.begins_with("colony_fingers_")))
  assert(mirrors.size()==2 and phases.size()>1 and selected.size()>8)
- print("Coral radial petals: 22 designs/both colors, eight distinct choices, reflected forms, 45-degree spacing, exact marked origins/axes and plate-first schedule pass")
+ print("Coral radial petals: 12 designs/both colors, eight distinct choices, reflected forms, 45-degree spacing, exact marked origins/axes and plate-first schedule pass")
  quit()

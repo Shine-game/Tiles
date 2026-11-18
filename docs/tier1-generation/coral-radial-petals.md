@@ -6,7 +6,7 @@ replaced by eight radial petal slots. Petals begin after the plate is fully
 revealed, then grow simultaneously along their authored axes.
 
 Both uploaded archives contain 22 actual petal PNG/JSON pairs, although their
-source manifests list only 12. All 22 were inspected and retained. Color1 is
+source manifests list only 12. Only sprites 1–12 are enabled in the selection catalog; 13–22 are unused. Color1 is
 salmon, color2 teal. Matching dimensions and marker geometry were checked across
 colors; transparent original PNG bytes are preserved.
 
@@ -16,7 +16,7 @@ The supplied confidence label describes these points as raster estimates. No
 pixel-derived replacement markers were invented.
 
 `artwork/petals/radial.json` defines count 8, seed 10973, scale 1. Each formation
-selects eight distinct source designs without replacement, randomly chooses
+selects eight distinct source designs from sprites 1–12 without replacement, randomly chooses
 original/X-reflected forms, and chooses a seeded starting angle in [0,360).
 The desired growth directions are phase + slot*45 degrees. Rotation compensates
 for the reflected source direction. Every source attachment maps to the plate
