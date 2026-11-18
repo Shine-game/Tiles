@@ -26,22 +26,14 @@
     "duration_sec": 0.35
   },
   "variation": {
-    "weight": 1,
-    "scale": [
-      0.5,
-      0.75
-    ],
-    "growth_scale": [
-      1.5,
-      1.5
-    ]
+    "weight": 1
   },
   "authoring": {
     "source": "leaf_variants_5x2_128px.rar",
     "notes": [
       "Violet=color1; pink=color2. Original 128px PNG bytes preserved.",
       "No marker JSON was supplied. Attachment and direction estimated from opaque silhouette endpoints along the native diagonal.",
-      "Retains progressive 0.35s growth, mirrored variants, scale variation and 1.5x growth scale."
+      "Native scale only: omitted scale and growth_scale use identity defaults."
     ]
   },
   "transforms": {

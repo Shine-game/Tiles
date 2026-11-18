@@ -90,5 +90,7 @@
     "source_and_exported_pack": "Both colors/four stem rotations: 3\u20134 leaves per side, full placement count, 0\u201330 degree forward angle, 1.5x uniform growth scale.",
     "removed_variant_references": 0,
     "failures": 0
-  }
+  },
+  "current_rules": "Native scale (1x), no random size variation or enlargement, exactly perpendicular to stem; density remains 3\u20134 per half-side and mirrored forms remain enabled.",
+  "current_tuning_verification": "Source checks: both colors/four stem rotations, density, scale=1 and perpendicular direction; artwork 779, registry 82 and Vines sets 500 checks pass."
 }
