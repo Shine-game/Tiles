@@ -13,7 +13,9 @@ func run():
   for mask in [1,2,4,8]:
    var parts=Leaf.placements(config,Vector2i(3,3),color,mask)
    assert(parts.size()==8)
-   for part in parts:assert(part.asset!=null)
+   for part in parts:
+    assert(part.asset!=null)
+    assert(part.material==null)
   var board=Rules.empty_board(7)
   board[3][3]=color
   var view=Board.new()

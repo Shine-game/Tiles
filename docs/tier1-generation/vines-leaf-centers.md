@@ -7,3 +7,5 @@ The live `leaf_centers` object in the vines junction configuration (`assets/them
 Straight endpoints use the same eight-leaf circle, with identical attachments and orientations. Connecting an isolated core no longer changes its geometry or removes it. Existing leaf cores are retained when later connections and junction artwork arrive while their cells remain occupied in the live board; deleting those cells removes the cores. Leaf cores draw above growing stems and stem decorations. Existing stem leaves are retained.
 
 These placements use the existing junction lifecycle for growth, undo and gallery rendering. Counts, spacing, scale and decoration references can be edited in `leaf_centers`. No image compositing, footprint rasterization or collision search is needed.
+
+All supplied vines sprites retain their original RGB and alpha: stems, stem leaves, radial core leaves, bend/T/X flowers and fountains. The sprite catalog uses `runtime_palette_policy: original`; junction flowers use `color_role: original`. Growth shaders only control reveal, without palette recoloring.

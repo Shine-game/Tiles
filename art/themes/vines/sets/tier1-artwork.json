@@ -34,7 +34,7 @@
   },
   "palette": {
     "source_palette": "Rose / Violet",
-    "runtime_palette_policy": "hsv_relative_to_source_palette",
+    "runtime_palette_policy": "original",
     "source_colors": {
       "1": "#ee83ac",
       "2": "#854edb"
