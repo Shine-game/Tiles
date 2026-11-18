@@ -118,12 +118,12 @@ func _build_pattern(before: Array, after: Array) -> void:
 	var model_hooks := {"zen_garden": Zen, "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
 	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
 	pattern.build(before, after)
-	if fountain_water == null and Palette.theme_id() == "vines":
+	if fountain_water == null and Palette.theme_id() == "vines" and Vines.tier2.definition.water.get("enabled", true):
 		fountain_water = FountainWater.new()
 		fountain_water.view = self
 		add_child(fountain_water)
 	if fountain_water != null:
-		fountain_water.visible = Palette.theme_id() == "vines"
+		fountain_water.visible = Palette.theme_id() == "vines" and Vines.tier2.definition.water.get("enabled", true)
 		fountain_water.set_process(fountain_water.visible and not pattern.links.is_empty())
 		fountain_water.queue_redraw()
 	if board_frame == null:

@@ -21,7 +21,8 @@
             "sprites": {
               "1": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.json",
               "2": "res://art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.json"
-            }
+            },
+            "enabled": false
           }
         }
       }
@@ -39,6 +40,7 @@
     "travel_seconds": 0.8,
     "droplets_per_arc": 7,
     "color": "#9ce9ff",
-    "width_cells": 0.035
+    "width_cells": 0.035,
+    "enabled": false
   }
 }

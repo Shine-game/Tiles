@@ -1,5 +1,7 @@
 # Vines fountains (tiers two and three)
 
+Currently disabled at user request: `flower.params.enabled` and `water.enabled` are both false. Neither fountains nor water connections render or run continuous animation.
+
 Tier two places one supplied fountain sprite at each completed 2×2 formation center. This replaces the six-layer post assembly and its sequential opening animation; those layers are removed from the live artwork directory. The two unrelated flower images included in the archive are not part of this fountain assembly.
 
 The assembly is `art/themes/vines/sets/tier2.json`. It chooses pink artwork for logical color 1 and violet artwork for logical color 2, following the existing vines color mapping. `size_cells` specifies a 2×2 canvas. The original 255×255 PNGs are preserved, without recoloring or resizing. Each fountain fades in over 0.25 seconds and retains its authored orientation.

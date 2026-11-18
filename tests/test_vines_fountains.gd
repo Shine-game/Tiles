@@ -14,6 +14,22 @@ func run():
  Palette.select_theme("vines")
  Sets.install()
  var spec := Sets.flower()
+ if not spec.params.get("enabled",true):
+  Art.fountain(null,spec,{})
+  check(not Sets.tier2.definition.water.enabled,"Water disabled along with fountains")
+  for color in [1,2]:
+   var view=Board.new()
+   root.add_child(view)
+   view.size=Vector2(500,500)
+   var grid=Rules.empty_board(7)
+   for y in range(2,4):
+    for x in range(2,5):grid[y][x]=color
+   view.show_settled(grid)
+   check(view.fountain_water==null,"Disabled fountains create no continuous water layer")
+   view.queue_free()
+  print("Vines fountains: disabled artwork and animation checks pass")
+  quit()
+  return
  check(spec.provider=="vines.fountain","Fountain replaces layered post")
  for color in [1,2]:
   var meta := Art.fountain_metadata(spec.params.sprites[str(color)])

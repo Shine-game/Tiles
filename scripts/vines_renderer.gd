@@ -122,6 +122,7 @@ static func fountain_geometry(params: Dictionary, color: int, center: Vector2, p
 	return {"rect": Rect2(origin,size), "water_origin": origin+Vector2(meta.water_origin_px[0],meta.water_origin_px[1])*ratio,"image":meta.image}
 
 static func fountain(view, spec: Dictionary, context: Dictionary) -> void:
+	if not spec.params.get("enabled", true): return
 	var event: Dictionary = context.event
 	var progress: float = 1.0 if event.old else clampf((view.clock-event.start)/float(spec.animation.duration_seconds),0.0,1.0)
 	if progress <= 0.0: return

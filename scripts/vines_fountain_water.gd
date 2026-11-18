@@ -14,6 +14,7 @@ static func arc_point(a: Vector2,b: Vector2,u: float,height: float) -> Vector2:
 func _draw():
  if view == null or view.board.is_empty():return
  var config: Dictionary = Sets.tier2.definition.water
+ if not config.get("enabled", true):return
  for link: Dictionary in view.pattern.links:
   var progress: float = 1.0 if link.old else clampf((view.clock-link.start)/Growth.LINK_GROW,0.0,1.0)
   if progress<=0.0:continue
