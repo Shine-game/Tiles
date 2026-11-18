@@ -27,9 +27,10 @@
   },
   "spawn": {
     "count": [
-      5,
-      9
-    ]
+      1,
+      2
+    ],
+    "max_per_group": 1
   },
   "orientation": {
     "mode": "random",
@@ -39,12 +40,9 @@
     ]
   },
   "constraints": {
-    "inside_canvas": true,
-    "edge_margin_px": 1,
+    "inside_canvas": false,
     "base_overlap": "allow",
-    "base_gap_px": 3,
-    "avoid_deco_overlap": true,
-    "max_radius_px": 22.4
+    "avoid_deco_overlap": false
   },
   "anchors": [
     {
@@ -56,7 +54,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P02",
@@ -67,7 +66,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P03",
@@ -78,7 +78,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P04",
@@ -89,7 +90,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P05",
@@ -100,7 +102,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P06",
@@ -111,7 +114,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P07",
@@ -122,7 +126,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P08",
@@ -133,7 +138,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_right"
     },
     {
       "id": "P09",
@@ -144,7 +150,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P10",
@@ -155,7 +162,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P11",
@@ -166,7 +174,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P12",
@@ -177,7 +186,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P13",
@@ -188,7 +198,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P14",
@@ -199,7 +210,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P15",
@@ -210,7 +222,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "bottom_left"
     },
     {
       "id": "P16",
@@ -221,7 +234,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P17",
@@ -232,7 +246,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P18",
@@ -243,7 +258,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P19",
@@ -254,7 +270,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P20",
@@ -265,7 +282,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P21",
@@ -276,7 +294,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P22",
@@ -287,7 +306,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P23",
@@ -298,7 +318,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_left"
     },
     {
       "id": "P24",
@@ -309,7 +330,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P25",
@@ -320,7 +342,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P26",
@@ -331,7 +354,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P27",
@@ -342,7 +366,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P28",
@@ -353,7 +378,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P29",
@@ -364,7 +390,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     },
     {
       "id": "P30",
@@ -375,7 +402,8 @@
       "accepts": [
         "pebble",
         "moss"
-      ]
+      ],
+      "group": "top_right"
     }
   ],
   "authoring": {

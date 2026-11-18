@@ -51,7 +51,7 @@ func _run() -> void:
 					check(lean.ok and lean.fingerprint == plan.fingerprint and lean.rejections == plan.rejections, "Live footprint optimization preserves choices and all constraints")
 					for i in range(plan.decorations.size()):
 						check(is_equal_approx(lean.decorations[i].visible_radius_px, plan.decorations[i].visible_radius_px), "Optimized radius matches occupied pixel-square geometry")
-						if theme == "zen_garden": check(lean.decorations[i].footprint_computed and lean.decorations[i].footprint == plan.decorations[i].footprint, "Protected spatial rules retain complete footprints")
+						if lean.decorations[i].footprint_computed: check(lean.decorations[i].footprint == plan.decorations[i].footprint, "Protected spatial rules retain complete footprints")
 				var record: Dictionary
 				for base: Dictionary in catalog.families[family_id].bases:
 					if base.path == plan.base.metadata_path: record = base; break
@@ -70,14 +70,8 @@ func _run() -> void:
 					check((deco.transform * attachment).is_equal_approx(plan.base.transform * anchor), "Attachment follows the whole base rotation/reflection")
 					check(deco.id == "actual/" + theme + "/anchor/" + deco.anchor_id, "Decoration identity is stable across redraws")
 					if theme == "zen_garden":
-						check(deco.visible_radius_px <= 22.4001, "Zen visible footprint obeys its radius limit")
-						var inside := true
-						var disjoint := true
-						for cell: Vector2i in deco.footprint:
-							inside = inside and cell.x >= 1 and cell.y >= 1 and cell.x <= 253 and cell.y <= 253
-							disjoint = disjoint and not occupied.has(cell)
-							occupied[cell] = true
-						check(inside and disjoint, "Zen footprint respects tile bounds and other decorations")
+						check(deco.scale == 4.0, "Zen uses fixed 4x decoration scale")
+						check(not deco.rules.constraints.inside_canvas and not deco.rules.constraints.avoid_deco_overlap and deco.rules.constraints.base_overlap_checks.is_empty(), "Zen placement has no spatial rejection rules")
 				check(plan.decorations.size() <= plan.target_count and plan.decorations.size() > 0, "Production layout places a constrained subset")
 				check(var_to_bytes(plan) == var_to_bytes(planner.plan(catalog, family_id, int(color), "actual/" + theme, 42, context)), "Same identity, settings and seed reproduce the entire plan")
 	var base := simple_base()

@@ -63,7 +63,7 @@
   "themes": {
     "zen_garden": {
       "name": "Zen Garden",
-      "version": "0.17",
+      "version": "0.18",
       "colors": [
         "ab946b",
         "687567"
@@ -113,9 +113,10 @@
           1
         ],
         "duration_sec": 0.48,
-        "layer_z_index": 1,
+        "layer_z_index": 2,
         "progression_scale": 2.0,
-        "cell_variation": true
+        "cell_variation": true,
+        "decoration_z_index": -1
       },
       "junctions": {
         "enabled": true,

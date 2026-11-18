@@ -128,7 +128,7 @@ static func _semantic(data: Dictionary) -> Array:
 	if data.kind == "decoration":
 		for field: String in ["frame", "anchors", "connections", "orientation"]:
 			if data.has(field): errors.append(field + ": belongs on a base or anchor, not a decoration")
-		for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]:
+		for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets", "max_per_group"]:
 			if data.get("spawn", {}).has(field): errors.append("spawn." + field + ": belongs on a base")
 		if data.get("spawn", {}).get("mode") == "progressive" and not data.has("direction"): errors.append("Progressive decoration requires an explicit direction marker")
 	else:
@@ -168,7 +168,7 @@ static func _semantic(data: Dictionary) -> Array:
 				if item.has("forward") and _vector(item.forward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero forward vector")
 				if item.has("toward") and _vector(item.toward).is_equal_approx(_vector(item.position)): errors.append(collection + "/" + item.id + ": zero connection vector")
 				for field: String in ["spawn", "orientation"]: _ordered_ranges(item.get(field, {}), collection + "/" + item.id + "." + field, errors)
-				for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]:
+				for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets", "max_per_group"]:
 					if item.get("spawn", {}).has(field): errors.append(collection + "/" + item.id + ": " + field + " belongs on the base")
 	if data.status == "ready" and not data.get("authoring", {}).get("pending", []).is_empty(): errors.append("Ready artwork has unresolved authoring.pending entries")
 	return errors
@@ -334,7 +334,7 @@ static func rules(base: Dictionary, decoration: Dictionary, anchor: Dictionary, 
 	var defaults: Dictionary = settings.defaults
 	var animation: Dictionary = defaults.spawn.duplicate(true)
 	for item: Dictionary in [decoration, base, anchor]: animation.merge(item.get("spawn", {}), true)
-	for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets"]: animation.erase(field)
+	for field: String in ["count", "minimum_spacing_px", "group_counts", "group_count_ranges", "group_anchor_sets", "max_per_group"]: animation.erase(field)
 	if animation.mode == "progressive" and not decoration.has("direction"): return _failure("spawn", ["Progressive override requires an explicit decoration direction"])
 	var orientation := _merge(_merge(defaults.orientation, base.get("orientation", {})), anchor.get("orientation", {}))
 	var variation := _merge(_merge(defaults.variation, base.get("variation", {})), decoration.get("variation", {}))

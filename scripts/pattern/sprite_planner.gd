@@ -280,10 +280,13 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 		requests.append({"group": group, "count": int(quotas[group]), "anchors": anchors.filter(func(anchor): return anchor.get("group", "") == group)})
 	requests.append({"group": null, "count": target, "anchors": anchors.filter(func(anchor): return not quotas.has(anchor.get("group", "")))})
 	var group_counts: Dictionary = {}
+	var selected_groups: Dictionary = {}
 	for request: Dictionary in requests:
 		var placed := 0
 		for anchor: Dictionary in request.anchors:
 			if decorations.size() >= target or placed >= request.count: break
+			var anchor_group: String = anchor.get("group", "")
+			if not anchor_group.is_empty() and selected_groups.get(anchor_group, 0) >= int(base.resolved.spawn.get("max_per_group", 2147483647)): continue
 			var position := _vector(anchor.position)
 			if positions.any(func(previous): return position.distance_to(previous) < float(base.resolved.spawn.minimum_spacing_px) - EPSILON):
 				rejections.spacing = int(rejections.get("spacing", 0)) + 1
@@ -297,6 +300,7 @@ func plan(catalog: Dictionary, family_id: String, logical_color: int, component_
 					continue
 				decorations.append(candidate)
 				placed += 1
+				if not anchor_group.is_empty(): selected_groups[anchor_group] = int(selected_groups.get(anchor_group, 0)) + 1
 				if anchor.has("group"): candidate.anchor_group = anchor.group
 				positions.append(position)
 				for cell: Vector2i in candidate.footprint: occupied[cell] = occupied.get(cell, false) or candidate.rules.constraints.avoid_deco_overlap

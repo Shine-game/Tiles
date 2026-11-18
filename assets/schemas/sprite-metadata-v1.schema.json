@@ -173,6 +173,10 @@
               }
             }
           }
+        },
+        "max_per_group": {
+          "type": "integer",
+          "minimum": 1
         }
       },
       "required": [],
