@@ -1,6 +1,7 @@
 class_name PatternJunctionLayer
 extends Node2D
 
+const CellVariation = preload("res://scripts/pattern/cell_variation.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
@@ -100,15 +101,22 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		var shape := role(Topology.shape(Topology.neighbor_mask(model.board, cell)), config)
 		if not loaded.has(shape): continue
 		var color := Topology.value(model.board, cell)
-		var record: Dictionary = loaded[shape][str(color)]
+		var record: Dictionary = loaded[shape][str(color)].duplicate(true)
+		var variation := CellVariation.choice(theme, cell, color) if shape == "core" else {}
+		if not variation.is_empty():
+			record.texture = variation.texture
+			record.size = variation.texture.get_size()
+			record.center = variation.center
+			record.revision += "/" + variation.base_path
 		var id := "junction/%s/%d/%d/%d/%s" % [theme, color, cell.y, cell.x, shape]
 		var rng := RandomNumberGenerator.new()
 		rng.seed = JSON.stringify([config.get("seed", 10973), id]).sha256_text().substr(0, 15).hex_to_int()
 		var degrees := 0.0
 		if record.rotation.has("allowed_deg"): degrees = record.rotation.allowed_deg[rng.randi_range(0, record.rotation.allowed_deg.size() - 1)]
 		elif record.rotation.has("range_deg"): degrees = rng.randf_range(record.rotation.range_deg[0], record.rotation.range_deg[1])
+		if not variation.is_empty(): degrees = variation.rotation_deg
 		# 100% uses one square of source canvas. No raster or artwork resampling.
-		var transform := Transform2D(deg_to_rad(degrees), Vector2.ONE * record.scale / maxf(record.size.x, record.size.y), 0.0, Vector2.ZERO)
+		var transform := Transform2D(deg_to_rad(degrees), Vector2(-1.0 if variation.get("flip_x", false) else 1.0, 1.0) * record.scale / maxf(record.size.x, record.size.y), 0.0, Vector2.ZERO)
 		transform.origin = Vector2(cell) + Vector2.ONE * 0.5 - transform.basis_xform(record.center)
 		var old := settled or (Topology.value(before, cell) == color and role(Topology.shape(Topology.neighbor_mask(before, cell)), config) == shape)
 		var start := maxf(at, float(model.arrivals[cell]))

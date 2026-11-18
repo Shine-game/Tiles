@@ -2,6 +2,7 @@ extends RefCounted
 # Adapters from the existing structural models to a common placement/source list.
 # Decoration selection, transforms and reveals stay in the universal pipeline.
 const Topology = preload("res://scripts/pattern/topology.gd")
+const CellVariation = preload("res://scripts/pattern/cell_variation.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 
@@ -60,6 +61,14 @@ static func descriptors(model, theme: String, before: Array) -> Array:
 				var old := Topology.value(before, cell) == color and Topology.value(before, other) == color
 				var start := maxf(0.0, maxf(model.arrivals[cell], model.arrivals[other]))
 				result.append({"id": theme + "/stone/%d/%d/%d/%d" % [cell.y, cell.x, other.y, other.x], "family": config.get("family", "default"), "color": color, "context": {"origin_cells": (Vector2(cell + other) + Vector2.ONE) * 0.5, "size_cells": _size(config)}, "binding": {"event": {"old": old, "start": start, "end": start + seconds}}})
+	if layout == "cell_centers":
+		for item: Dictionary in result:
+			var cell := Vector2i(item.context.origin_cells)
+			var variation := CellVariation.choice(theme, cell, item.color)
+			if not variation.is_empty():
+				item.context.base_path = variation.base_path
+				item.context.allowed_rotations_deg = [variation.rotation_deg]
+				item.context.base_flip_x = variation.flip_x
 	result.sort_custom(func(a, b): return a.id < b.id)
 	return result
 

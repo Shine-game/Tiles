@@ -63,9 +63,10 @@ static func _context_errors(context: Dictionary) -> Array:
 	if context.has("suppress_decorations") and not context.suppress_decorations is bool: errors.append("suppress_decorations must be boolean")
 	if context.has("include_footprints") and not context.include_footprints is bool: errors.append("include_footprints must be boolean")
 	for key: Variant in context:
-		if key not in ["origin_cells", "size_cells", "target_forward", "growth_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints", "suppress_decorations", "decoration_path"]: errors.append("Unknown placement field: " + str(key))
+		if key not in ["origin_cells", "size_cells", "target_forward", "growth_forward", "world_light", "required_connections", "connection_tolerance_cells", "allowed_rotations_deg", "base_path", "include_footprints", "suppress_decorations", "decoration_path", "base_flip_x"]: errors.append("Unknown placement field: " + str(key))
 	for key: String in ["origin_cells", "size_cells", "target_forward", "growth_forward", "world_light"]:
 		if context.has(key) and not _valid_vector(context[key], key == "size_cells", key in ["target_forward", "growth_forward", "world_light"]): errors.append("Invalid placement vector: " + key)
+	if context.has("base_flip_x") and not context.base_flip_x is bool: errors.append("base_flip_x must be boolean")
 	if context.has("decoration_path") and not context.decoration_path is String: errors.append("decoration_path must be a metadata path")
 	if context.has("base_path") and not context.base_path is String: errors.append("base_path must be a metadata path")
 	var tolerance: Variant = context.get("connection_tolerance_cells", 0.01)
@@ -117,6 +118,7 @@ static func _orientations(record: Dictionary, context: Dictionary, light: Vector
 	var names := {Vector2.ONE: "no_flip", Vector2(-1, 1): "flip_x", Vector2(1, -1): "flip_y", Vector2(-1, -1): "flip_xy"}
 	forms.sort_custom(func(a, b): return tie_break.find(names[a]) < tie_break.find(names[b]))
 	for form: Vector2 in forms:
+		if context.has("base_flip_x") and (form.x < 0) != context.base_flip_x: continue
 		for degrees: float in context.get("allowed_rotations_deg", [0, 90, 180, 270]):
 			var transform := _matrix(deg_to_rad(degrees), size / canvas * form, _vector(record.resolved.origin), origin)
 			if context.has("target_forward") and not transform.basis_xform(_vector(record.resolved.forward)).normalized().is_equal_approx(_vector(context.target_forward).normalized()): continue

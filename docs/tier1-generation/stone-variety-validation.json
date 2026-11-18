@@ -1,0 +1,14 @@
+{
+  "variety": "12 sources, four quarter turns, random X reflection and +/-4 degree jitter",
+  "adjacency": "No equal source sprites in all eight neighboring cells, including cores",
+  "stable": "Per-coordinate seeded choices; redraw/undo/gallery stable",
+  "checks": {
+    "variety_source_and_exported_pack": "17x17 coordinate area and actual core/interior assembly pass",
+    "planner": 681,
+    "integration": 323,
+    "registry": 82,
+    "zen_junctions": "both paths/all 16 masks pass"
+  },
+  "failures": 0,
+  "apk_or_device_tested": false
+}

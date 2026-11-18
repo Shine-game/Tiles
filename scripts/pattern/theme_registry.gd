@@ -95,6 +95,7 @@ static func validate(data: Variant) -> Array:
 					else:
 						for port: Variant in ports.values():
 							if not (port is String and not port.is_empty()) and not ((port is int or port is float) and port == floorf(port) and port >= 0 and port <= 3): errors.append(id + ": invalid component port")
+				if artwork.has("cell_variation") and not artwork.cell_variation is bool: errors.append(id + ": cell_variation must be boolean")
 				if artwork.has("size_cells"):
 					var size: Variant = artwork.size_cells
 					if not size is Array or size.size() != 2 or not size.all(func(n): return (n is int or n is float) and is_finite(n) and n > 0): errors.append(id + ": invalid sprite size_cells")
