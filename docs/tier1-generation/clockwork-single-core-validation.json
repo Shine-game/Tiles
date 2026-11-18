@@ -4,14 +4,14 @@
       "source": "copper_core.png",
       "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.png",
       "sha256": "3a90e3fe2c17c6f5b5858444aa1ca76e0ca250333026f2d279d1cdb5586da025",
-      "scale": 1.0,
+      "scale": 0.8,
       "rotation_deg": 0
     },
     {
       "source": "gunmetal_core.png",
       "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color2_basic.png",
-      "sha256": "044fc63fa20c3ca965d7b7ad401d3e2ca6aa15da37cba6c1f42b78ee009aaf42",
-      "scale": 1.0,
+      "sha256": "084dfc7d773516c961c019d40a2aaaee356d9bcd60385395bd31eca540073e23",
+      "scale": 0.8,
       "rotation_deg": 0
     }
   ],
