@@ -7,15 +7,17 @@
   ],
   "center_px": [
     127,
-    119
+    134
   ],
   "water_origin_px": [
     127,
-    119
+    77
   ],
   "rotation_degrees": 0,
   "scale": 1.0,
   "authoring": {
-    "center": "Central outlet marked from supplied artwork; aligns with formation center."
+    "source": "vines_tier2_rosa_basic.png",
+    "center": "Center of main basin, excluding raised nozzle and peripheral decorations; marked visually.",
+    "water_origin": "Upper basin outlet; separate from structure placement center."
   }
 }

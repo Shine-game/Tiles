@@ -1,17 +1,10 @@
 {
   "schema": "tiles.junction-sprite.v1",
-  "image": "vines_tier1_bend_color1_basic.png",
+  "image": "vines_tier1_core_color1_basic.png",
   "center": [
-    624.89,
-    631.63
+    127,
+    127
   ],
   "scale": 1.0,
-  "rotation": {
-    "range_deg": [
-      0,
-      360
-    ]
-  },
-  "color_role": "opposite",
-  "source_color": "#a758ef"
+  "color_role": "original"
 }

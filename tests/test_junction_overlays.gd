@@ -64,7 +64,7 @@ func run():
   var initial_spec=view.junction_layer.specs[core_id]
   var core_record=view.junction_layer.load_sprite(original_config.shapes.core[str(color)])
   var bend_record=view.junction_layer.load_sprite(original_config.shapes.bend[str(color)])
-  check(core_record.texture==bend_record.texture and core_record.scale==1.0,"Starting core reuses bend artwork at 100 percent")
+  check(core_record.texture!=bend_record.texture and core_record.scale==1.0 and core_record.color_role=="original" and core_record.rotation.is_empty(),"Starting core uses new fixed-orientation original artwork at 100 percent")
   for direction in Topology.DIRECTIONS:
    view.show_settled(initial)
    var pair=initial.duplicate(true)

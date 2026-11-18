@@ -109,7 +109,7 @@ canvas size, independently of the shape-specific junction assembly scale. Open e
 isolated and endpoint cores draw above the growing stems and decorations.
 
 Vines assembly sizes: core, bend, T and X all 100%. Opposite-color
-artwork and unrestricted stable rotation apply to all these Vines overlays.
+artwork and unrestricted stable rotation apply to bend/T/X overlays. The new starting and endpoint core sprites retain their original colors and fixed orientation, with separately marked structure centers.
 
 Clockwork binds copper color1 and gunmetal color2: H01 valve = bend, H02 rotating
 = T, H03 exhaust = X. All use canvas-center pivots, 500% scale and free stable

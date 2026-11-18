@@ -9,7 +9,7 @@ func _process(delta: float):
  elapsed += delta
  queue_redraw()
 static func arc_point(a: Vector2,b: Vector2,u: float,height: float) -> Vector2:
- var lift := Vector2.UP if absf(b.x-a.x)>=absf(b.y-a.y) else Vector2.LEFT
+ var lift := Vector2.UP if absf(b.x-a.x)>=absf(b.y-a.y) else Vector2.ZERO
  return a.lerp(b,u)+lift*4.0*height*u*(1.0-u)
 func _draw():
  if view == null or view.board.is_empty():return

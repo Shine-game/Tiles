@@ -21,7 +21,8 @@ func run():
   for pitch in [32.0,64.0,100.0]:
    var center := Vector2(150,170)
    var geometry := Art.fountain_geometry(spec.params,color,center,pitch)
-   check(geometry.water_origin.is_equal_approx(center),"Marked outlet centers the fountain")
+   check((geometry.rect.position+Vector2(meta.center_px[0],meta.center_px[1])*geometry.rect.size/255.0).is_equal_approx(center),"Marked basin center lands on formation center")
+   check(geometry.water_origin.is_equal_approx(geometry.rect.position+Vector2(meta.water_origin_px[0],meta.water_origin_px[1])*geometry.rect.size/255.0),"Water uses separate outlet marker")
    check(geometry.rect.size==Vector2.ONE*pitch*2,"Fountain fills a two-square canvas")
   for vertical in [false,true]:
    var empty = Rules.empty_board(7)
@@ -38,7 +39,7 @@ func run():
    var a:=Vector2(link.a)
    var b:=Vector2(link.b)
    check(Water.arc_point(a,b,0,0.5)==a and Water.arc_point(a,b,1,0.5)==b,"Water lands at both fountain centers")
-   check(absf((b-a).cross(Water.arc_point(a,b,0.5,0.5)-a))>0.0,"Horizontal and vertical water paths both arc off the connecting line")
+   check(is_zero_approx((b-a).cross(Water.arc_point(a,b,0.5,0.5)-a)) if vertical else absf((b-a).cross(Water.arc_point(a,b,0.5,0.5)-a))>0.0,"Vertical water is straight; horizontal water arcs")
    var elapsed: float = view.fountain_water.elapsed
    view.fountain_water._process(0.2)
    check(view.fountain_water.elapsed>elapsed,"Visual flow has its own clock")
