@@ -98,6 +98,17 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 				diagnostics.append_array(record.errors)
 				return false
 			loaded[shape][color] = record
+	# Preserve existing leaf cores when new connections and junction artwork arrive.
+	if config.get("leaf_centers", {}).get("retain_when_connected", false) and preserve:
+		for previous_id: String in events:
+			if not "/core/leaf_" in previous_id: continue
+			var previous: Dictionary = events[previous_id]
+			var cell: Vector2i = previous.owner
+			var color := int(previous_id.get_slice("/", 2))
+			if Topology.value(model.board, cell) != color or Topology.value(before, cell) != color: continue
+			next_events[previous_id] = previous.duplicate(true)
+			next_events[previous_id].old = true
+			next_specs[previous_id] = specs[previous_id]
 	for cell: Vector2i in model.arrivals:
 		var shape := role(Topology.shape(Topology.neighbor_mask(model.board, cell)), config)
 		if not loaded.has(shape): continue

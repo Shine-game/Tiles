@@ -303,11 +303,10 @@
             "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.json"
           ],
           "core_count": 8,
-          "endpoint_count": 2,
+          "endpoint_count": 8,
           "scale": 0.8,
           "core_radius_cells": 0.02,
-          "endpoint_offset_cells": 0.15,
-          "endpoint_spacing_cells": 0.06
+          "retain_when_connected": true
         }
       }
     },

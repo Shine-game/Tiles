@@ -12,7 +12,7 @@ func run():
   assert(Leaf.placements(config,Vector2i(3,3),color,0).size()==8)
   for mask in [1,2,4,8]:
    var parts=Leaf.placements(config,Vector2i(3,3),color,mask)
-   assert(parts.size()==2)
+   assert(parts.size()==8)
    for part in parts:assert(part.asset!=null)
   var board=Rules.empty_board(7)
   board[3][3]=color
@@ -29,7 +29,15 @@ func run():
   count=0
   for id in view.junction_layer.specs:
    if "/leaf_" in id:count+=1
-  assert(count==4)
+  assert(count==16)
+  var ids=view.junction_layer.specs.keys()
+  var original=view.junction_layer.specs["junction/vines/%d/3/3/core/leaf_0"%color].source_transform
+  var before=board.duplicate(true)
+  board[3][2]=color
+  view.animate_growth(before,board)
+  assert(view.junction_layer.specs["junction/vines/%d/3/3/core/leaf_0"%color].source_transform==original)
+  view.set_process(false)
+  view.advance_growth(100)
   view.queue_free()
- print("Vines leaf centers: both colors, eight radial core leaves and two leaves per endpoint pass")
+ print("Vines leaf centers: both colors, eight radial core leaves and eight radial leaves per endpoint pass")
  quit()

@@ -71,7 +71,7 @@ func run():
    view.set_process(false)
    view.advance_growth(100)
    var tip_id="junction/vines/%d/%d/%d/core"%[color,tip.y,tip.x]
-   for i in range(2):check(view.junction_layer.renderer.nodes[tip_id+"/leaf_%d"%i].visible,"Straight endpoint has two visible forward leaves")
+   for i in range(8):check(view.junction_layer.renderer.nodes[tip_id+"/leaf_%d"%i].visible,"Straight endpoint has eight visible radial leaves")
  # The same class also replaces configured centers in every other model.
  for theme in ["coral_reef","clockwork","zen_garden"]:
   var saved_junctions=Themes.definition.themes[theme].get("junctions", {}).duplicate(true)
