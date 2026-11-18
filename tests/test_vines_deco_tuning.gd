@@ -23,7 +23,7 @@ func _initialize():
     indices.sort()
     assert(indices[0] in [2,3,4] and indices[1] in [7,8,9] and indices[1]-indices[0]>=4)
    for d in plan.decorations:
-    assert(is_equal_approx(d.scale,1.0))
+    assert(is_equal_approx(d.scale,0.8))
     var meta=M.load_sprite(d.metadata_path)
     var f=Vector2(meta.resolved.forward[0],meta.resolved.forward[1])
     var n=Vector2(-f.y,f.x)
@@ -51,5 +51,5 @@ func _initialize():
      var f=Vector2(meta.resolved.forward[0],meta.resolved.forward[1])
      var world=d.transform.basis_xform(f).normalized()
      assert(is_equal_approx(world.dot(Vector2(direction)),0.5))
- print("Vines: both colors/four rotations; exactly 2 per side, exactly 30 degrees toward growth, native size on both axes verified")
+ print("Vines: both colors/four rotations; exactly 2 per side, exactly 30 degrees toward growth, 80% size on both axes verified")
  quit()

@@ -1,6 +1,7 @@
 class_name CoralGrowth
 extends "res://scripts/growth.gd"
 
+const Fingers = preload("res://scripts/pattern/animated_fingers.gd")
 const RadialPetals = preload("res://scripts/pattern/radial_petals.gd")
 const Ordinary = preload("res://scripts/coral_sets.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
@@ -151,6 +152,16 @@ func build(before: Array, after: Array) -> void:
 		var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
 		var old: bool = pair.old
 		var ready: float = Connections.ready(pair, colonies)
+		if colonies[a].color == 1:
+			var finish := ready
+			var choices := Fingers.choices(a, b)
+			for i in range(choices.size()):
+				var event := _add("anemone_foot", 1, a, center, old, ready, Fingers.definition().growth_seconds, 0, false, layout.rotation, identity + "/finger_%d" % i)
+				event.feature = identity
+				event.animated_finger = choices[i]
+				finish = maxf(finish, event.end)
+			unions[identity] = {"a": a, "b": b, "color": 1, "start": ready, "end": finish, "rotation": layout.rotation, "feature": identity}
+			continue
 		var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
 		foot.feature = identity
 		var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})

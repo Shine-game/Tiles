@@ -1,6 +1,7 @@
 class_name CoralVisuals
 extends Node2D
 
+const Fingers = preload("res://scripts/pattern/animated_fingers.gd")
 const Junctions = preload("res://scripts/pattern/junction_layer.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
@@ -9,6 +10,8 @@ const Ordinary = preload("res://scripts/coral_sets.gd")
 const Model = preload("res://scripts/coral_growth.gd")
 const GROUND_SURFACE = preload("res://shaders/ground_surface.gdshader")
 static var textures: Dictionary = {}
+var finger_events: Dictionary = {}
+var animation_seconds := 0.0
 var generative_tier1 := false
 var components := Components.new()
 var registry: Dictionary = components.nodes
@@ -26,6 +29,8 @@ static func texture(path: Variant) -> Texture2D:
 	return textures[path]
 
 func clear() -> void:
+	finger_events.clear()
+	set_process(false)
 	components.clear()
 	for child: Node in get_children():
 		remove_child(child)
@@ -59,6 +64,7 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 func reconcile(model, settled: bool, preserve: bool = true) -> void:
 	if not preserve:
 		clear()
+	finger_events.clear()
 	components.remove_missing(model.components.keys())
 	active.clear()
 	components.reveal_bindings.clear()
@@ -75,9 +81,14 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			components.remove(identity)
 			continue
 		var placement: Dictionary
-		placement = Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)
+		placement = Fingers.render_spec(event) if event.has("animated_finger") else Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)
 		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))
-		if ordinary:
+		if event.has("animated_finger"):
+			finger_events[identity] = event
+			sprite.visible = settled or event.old
+			sprite.set_meta("finger_settled", settled or event.old)
+			if settled or event.old: sprite.modulate.a = 1.0
+		elif ordinary:
 			if not (settled or event.old): components.reveal(identity, event, "clock_seconds")
 		elif event.id.begins_with("ground_"):
 			ground_sprites.append(sprite)
@@ -94,6 +105,7 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			remove_child(group)
 			group.queue_free()
 			groups.erase(identity)
+	set_process(not finger_events.is_empty())
 	_sort_groups()
 
 func _sort_groups() -> void:
@@ -109,6 +121,20 @@ func copy_order(source: CoralVisuals) -> void:
 
 func advance(clock: float) -> void:
 	components.advance(clock)
+	for identity: String in finger_events:
+		var event: Dictionary = finger_events[identity]
+		var sprite: Sprite2D = registry[identity]
+		if not sprite.get_meta("finger_settled", false):
+			sprite.visible = clock >= event.start
+			sprite.modulate.a = clampf((clock - event.start) / event.stroke, 0.0, 1.0)
+
+func _process(delta: float) -> void:
+	animation_seconds += delta
+	for identity: String in finger_events:
+		var sprite: Sprite2D = registry[identity]
+		if sprite.visible:
+			var chosen: Dictionary = finger_events[identity].animated_finger
+			sprite.texture = Fingers.frame_texture(chosen, animation_seconds)
 
 func configure_surface(platform) -> void:
 	var signature: Array = [platform.mask_texture, platform.mask_revision, platform.grid_size, platform.cell_pixels]

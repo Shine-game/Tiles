@@ -91,6 +91,6 @@
     "removed_variant_references": 0,
     "failures": 0
   },
-  "current_rules": "Exactly 2 leaves per half-side: first anchor 2\u20134, second 7\u20139, with >=3 empty anchors between. Native scale, exactly 30 degrees from perpendicular toward growth, mirrored variants enabled.",
+  "current_rules": "Exactly 2 leaves per half-side: first anchor 2\u20134, second 7\u20139, with >=3 empty anchors between. Uniform 80% native scale, exactly 30 degrees from perpendicular toward growth, mirrored variants enabled.",
   "current_tuning_verification": "Source checks: both colors/four stem rotations, density, scale=1 and fixed 30-degree forward inclination; artwork 779, registry 82 and Vines sets 500 checks pass."
 }
