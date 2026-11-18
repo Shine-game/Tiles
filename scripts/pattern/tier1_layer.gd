@@ -12,6 +12,7 @@ var planner := Planner.new()
 var timeline := Timing.new()
 var presenter := Presenter.new()
 var plans: Dictionary = {}
+var _placement_keys: Dictionary = {}
 var diagnostics: Array = []
 var theme_id := ""
 var retirements: Dictionary = {}
@@ -23,6 +24,7 @@ func clear() -> void:
 	planner.clear()
 	timeline.reset()
 	plans.clear()
+	_placement_keys.clear()
 	_treatments.clear()
 	_clear_retirements()
 
@@ -64,11 +66,19 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		diagnostics.append_array(catalog.errors)
 		return false
 	var next_plans: Dictionary = {}
+	var next_keys: Dictionary = {}
 	var bindings: Dictionary = {}
 	var treatments: Dictionary = {}
 	for item: Dictionary in Sources.descriptors(model, theme, before):
 		item.context.include_footprints = false
-		var plan := planner.plan(catalog, item.family, item.color, item.id, int(Themes.profile(theme).tier1_artwork.get("seed", 10973)), item.context)
+		var seed_value := int(Themes.profile(theme).tier1_artwork.get("seed", 10973))
+		var placement_key := var_to_bytes([catalog.path, item.family, item.color, seed_value, item.context]).hex_encode()
+		var plan: Dictionary
+		if plans.has(item.id) and _placement_keys.get(item.id) == placement_key:
+			plan = plans[item.id]
+		else:
+			plan = planner.plan(catalog, item.family, item.color, item.id, seed_value, item.context)
+		next_keys[item.id] = placement_key
 		if not plan.ok:
 			diagnostics.append_array(plan.errors)
 			return false
@@ -88,6 +98,7 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 	if restart: _clear_retirements()
 	if reverse: _retire_removed(next_plans)
 	plans = next_plans
+	_placement_keys = next_keys
 	_treatments = treatments
 	model.sprite_growth_events = result.events
 	model.sprite_visual_duration = result.visual_duration

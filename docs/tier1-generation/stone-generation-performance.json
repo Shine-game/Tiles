@@ -1,0 +1,32 @@
+{
+  "engine": "Godot 4.6.3 headless; local CPU timings, not Android measurements",
+  "scenario": "Seven stone cells, then append one stone",
+  "before_ms": {
+    "planning_seven_stones": 2604.729,
+    "cold_board": 2973.572,
+    "add_stone": 664.507,
+    "ten_growth_updates": 2.012
+  },
+  "after_ms": {
+    "planning_seven_stones": 218.369,
+    "cold_board": 333.079,
+    "add_stone": 144.963,
+    "ten_growth_updates": 1.419
+  },
+  "cause": "Large decoration candidates were fully rasterized before rejecting them for radius or tile bounds.",
+  "changes": [
+    "Reject oversized uniform candidates using exact cached source radius.",
+    "Reject outside-canvas candidates using exact convex-hull raster bounds.",
+    "Reuse unchanged placement plans without repeatedly serializing their entire catalog for cache lookups."
+  ],
+  "validation": {
+    "prior_placement_fingerprints": "All seven profiled stone plans match the previous implementation.",
+    "bounds": "60 arbitrary rotated/reflected cases match full raster bounds and radius, source and exported pack.",
+    "planner": 681,
+    "integration": 351,
+    "stone_variety": "pass",
+    "core_and_endpoint_decorations": "pass"
+  },
+  "failures": 0,
+  "android_device_tested": false
+}

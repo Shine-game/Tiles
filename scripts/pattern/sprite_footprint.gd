@@ -8,12 +8,14 @@ var _pixels: Dictionary = {}
 var _bounds: Dictionary = {}
 var _footprints: Dictionary = {}
 var _radii: Dictionary = {}
+var _hulls: Dictionary = {}
 
 func clear() -> void:
 	_pixels.clear()
 	_bounds.clear()
 	_footprints.clear()
 	_radii.clear()
+	_hulls.clear()
 
 func cache_sizes() -> Dictionary:
 	return {"images": _pixels.size(), "footprints": _footprints.size()}
@@ -56,6 +58,27 @@ func summary(path: String, transform: Transform2D, attachment: Vector2) -> Dicti
 		if _radii.size() >= MAX_FOOTPRINTS: _radii.erase(_radii.keys()[0])
 		_radii[key] = sqrt(squared)
 	return {"ok": true, "cells": {}, "radius": _radii[key] * transform.x.length()}
+
+func raster_bounds(path: String, transform: Transform2D) -> Dictionary:
+	# Linear extrema occur on the occupied silhouette's convex hull. This gives
+	# exactly the same outer cell bounds as raster(), without filling any cells.
+	var source := _source(path)
+	if not source.ok: return source
+	if not transform.is_finite(): return {"ok": false, "reason": "invalid_transform"}
+	var region := transform * Rect2(Vector2(source.bounds.position) - Vector2.ONE * 0.5, Vector2(source.bounds.size))
+	if (ceilf(region.size.x)+1)*(ceilf(region.size.y)+1)>1048576: return {"ok": false, "reason": "footprint_budget"}
+	if not _hulls.has(path):
+		var points := PackedVector2Array()
+		for pixel: Vector2i in source.pixels: points.append(Vector2(pixel))
+		_hulls[path] = Geometry2D.convex_hull(points)
+	var low := Vector2(INF, INF)
+	var high := Vector2(-INF, -INF)
+	for point: Vector2 in _hulls[path]:
+		var center := transform * point
+		low = low.min(center)
+		high = high.max(center)
+	var half := Vector2(absf(transform.x.x) + absf(transform.y.x), absf(transform.x.y) + absf(transform.y.y)) * 0.5
+	return {"ok": true, "min": Vector2i(floori(low.x-half.x+0.5+EPSILON), floori(low.y-half.y+0.5+EPSILON)), "max": Vector2i(ceili(high.x+half.x+0.5-EPSILON)-1, ceili(high.y+half.y+0.5-EPSILON)-1)}
 
 func raster(path: String, transform: Transform2D, attachment: Vector2) -> Dictionary:
 	var key := var_to_bytes([path, transform, attachment]).hex_encode()

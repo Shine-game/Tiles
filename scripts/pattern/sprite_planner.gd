@@ -177,6 +177,24 @@ func _decoration(base: Dictionary, base_transform: Transform2D, variant: String,
 			local = local * stretch
 			local.origin = _vector(anchor.position) - local.basis_xform(_vector(decoration.resolved.origin))
 		var needs_raster: bool = include_footprints or rules.constraints.get("inside_canvas", false) or "avoid" in rules.constraints.get("base_overlap_checks", [])
+		# Uniform transforms have an exact cached radius; reject oversized artwork
+		# before constructing thousands of occupied cells for a doomed candidate.
+		if needs_raster and is_finite(float(rules.constraints.get("max_radius_px", INF))):
+			var summary := _footprint.summary(decoration.images[variant], local, _vector(decoration.resolved.origin))
+			if not summary.get("ok", false):
+				reason = summary.get("reason", "unreadable_texture")
+				continue
+			if summary.radius > float(rules.constraints.max_radius_px) + EPSILON:
+				reason = "radius"
+				continue
+		if needs_raster and rules.constraints.get("inside_canvas", false):
+			var bounds := _footprint.raster_bounds(decoration.images[variant], local)
+			if bounds.get("ok", false):
+				var margin := float(rules.constraints.get("edge_margin_px", 0.0))
+				var canvas := _vector(base.canvas_px)
+				if bounds.min.x < margin or bounds.min.y < margin or bounds.max.x > canvas.x-1-margin or bounds.max.y > canvas.y-1-margin:
+					reason = "canvas_boundary"
+					continue
 		var footprint := _footprint.raster(decoration.images[variant], local, _vector(decoration.resolved.origin)) if needs_raster else _footprint.summary(decoration.images[variant], local, _vector(decoration.resolved.origin))
 		reason = _footprint.rejection(footprint, base.images[variant], Vector2i(_vector(base.canvas_px)), _vector(anchor.position), rules.constraints, occupied)
 		if not reason.is_empty(): continue
