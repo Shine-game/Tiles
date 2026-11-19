@@ -13,7 +13,7 @@ var cue_count := 0
 
 func _ready() -> void:
 	for id: String in ["tick", "click", "clunk", "steam"]:
-		clips[id] = load(ROOT + id + ".wav")
+		clips[id] = load(ROOT + {"tick":"clockwork_ambient_legacy.wav","click":"clockwork_tier_1_legacy.wav","clunk":"clockwork_tier_2_legacy.wav","steam":"clockwork_tier_3_legacy.wav"}[id])
 	ticking = AudioStreamPlayer.new()
 	var loop: AudioStreamWAV = clips.tick.duplicate()
 	loop.loop_mode = AudioStreamWAV.LOOP_FORWARD

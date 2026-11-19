@@ -11,7 +11,7 @@ The native worker performs image copies away from the game/render thread. Androi
 
 ## Android build
 
-The editor addon `addons/tiles_gallery` is enabled in project.godot and packages its small v2 Android AAR. The Android preset has Gradle builds enabled. Install the Android build template matching Godot 4.7.2 using Project → Install Android Build Template, then export with the Android SDK/JDK settings described in the README. A precompiled APK export without Gradle cannot include this native plugin.
+The editor addon `addons/tiles_gallery` is enabled in project.godot and packages its small v2 Android AAR. The Android preset has Gradle builds enabled, and the addon forces that option while it is active. Install the Android build template matching Godot 4.7.2 using Project → Install Android Build Template, then export with the Android SDK/JDK settings described in the README. A precompiled APK export without Gradle cannot include this native plugin.
 
 The Java source and manifest are in `native/android/gallery`. To rebuild the included AAR with JDK 17+:
 
@@ -32,3 +32,17 @@ A physical Android run is still required to check Photos visibility, the legacy 
 Game-state persistence is independent of Gallery image export. `scripts/game_session.gd` validates and atomically replaces `user://game_state.json`, retaining the prior valid snapshot as `.bak`. It encodes RNG state as text to avoid JSON integer precision loss and restores Undo records as integer cell vectors. A corrupt primary uses the backup; invalid snapshots never become game objects.
 
 `tests/test_game_session.gd` exercises close/background snapshots and a fresh scene reopening, including a moved/rotated offer, active versus future presets, exact queue/RNG continuation, working Undo, retained leaf cores and edge flow, plus corruption recovery. Board construction resumes visually settled rather than replaying interrupted animations or sounds.
+
+## Verifying an installed/exported APK
+
+After pulling plugin changes, restart Godot and confirm **Project Settings → Plugins → Tiles Gallery** is enabled. Install the matching Android build template if needed, export using Gradle, and update the existing app with the newly built APK. The export addon reports whether the final APK includes the native classes and manifest registration. An error here means Photos/Share is not packaged even if the export produced an APK.
+
+The same inspection can be run independently:
+
+```sh
+godot --headless --path . --script tools/check_gallery_apk.gd -- /path/to/game.apk
+```
+
+This check reads the manifest strings and actual DEX class-definition tables; mere string references to a missing class do not pass. It supports UTF-8/UTF-16 Android manifest string pools and multiple DEX files. `tests/test_gallery_apk_check.gd` covers complete and missing components and malformed DEX headers.
+
+The supplied `tiles3.apk` diagnostic components (manifest plus all 13 DEX files) contained neither TilesGallery's registration/provider nor either compiled plugin class. This establishes omission from that APK, rather than an Instagram or Photos permission issue. The source/AAR packaging path is valid; the addon must be active during a Gradle rebuild. Without the addon, the independent APK check still detects the missing components. Gallery shows a build-unavailable message rather than implying Android sharing support is present.

@@ -232,22 +232,22 @@
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/clockwork_asmr/clockwork_asmr_ambience_loop.wav",
+          "path": "res://assets/audio/clockwork/clockwork_ambient.wav",
           "gain_db": 0
         },
         "tiers": {
           "1": {
-            "path": "res://assets/audio/clockwork_asmr/clockwork_tier1_pipe_clicks.wav",
+            "path": "res://assets/audio/clockwork/clockwork_tier_1.wav",
             "gain_db": 0,
             "coalesce_seconds": 1.0
           },
           "2": {
-            "path": "res://assets/audio/clockwork_asmr/clockwork_tier2_gear_start.wav",
+            "path": "res://assets/audio/clockwork/clockwork_tier_2.wav",
             "gain_db": 0,
             "coalesce_seconds": 0.35
           },
           "3": {
-            "path": "res://assets/audio/clockwork_asmr/clockwork_tier3_chain_run.wav",
+            "path": "res://assets/audio/clockwork/clockwork_tier_3.wav",
             "gain_db": 0,
             "coalesce_seconds": 0.35,
             "loop_while_exists": true
@@ -353,12 +353,12 @@
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/vines_effects/Vines_Ambience.ogg",
+          "path": "res://assets/audio/vines/vines_ambient.ogg",
           "gain_db": -9.52
         },
         "tiers": {
           "1": {
-            "path": "res://assets/audio/vines_effects/Vines_Growth_Rustle.ogg",
+            "path": "res://assets/audio/vines/vines_tier_1.ogg",
             "gain_db": 3.76,
             "coalesce_seconds": 1.0,
             "offset_seconds": 0.0,
@@ -367,14 +367,14 @@
             "fade_out_seconds": 0.04
           },
           "2": {
-            "path": "res://assets/audio/vines_effects/Vines_Bloom.ogg",
+            "path": "res://assets/audio/vines/vines_tier_2.ogg",
             "gain_db": -0.01,
             "coalesce_seconds": 0.35,
             "offset_seconds": 0.0,
             "seek_seconds": 0.0
           },
           "3": {
-            "path": "res://assets/audio/vines_effects/Vines_Butterfly_Chime.ogg",
+            "path": "res://assets/audio/vines/vines_tier_3.ogg",
             "gain_db": 14.27,
             "coalesce_seconds": 0.35,
             "offset_seconds": 0.0,
@@ -386,7 +386,7 @@
           1
         ],
         "combined": {
-          "path": "res://assets/audio/vines_effects/Vines_Bloom_Butterflies_aligned.wav",
+          "path": "res://assets/audio/vines/vines_tier_2_3.wav",
           "gain_db": -2.44,
           "tier3_offset_seconds": 0.25,
           "tolerance_seconds": 0.05,
@@ -446,7 +446,7 @@
         "assets": [
           {
             "id": "reef_ambience",
-            "path": "res://assets/audio/coral_reef/reef_ambience.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_ambient.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 8.687791666666667,
@@ -474,7 +474,7 @@
           },
           {
             "id": "growth_01",
-            "path": "res://assets/audio/coral_reef/growth_01.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_1_01.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.87,
@@ -502,7 +502,7 @@
           },
           {
             "id": "growth_02",
-            "path": "res://assets/audio/coral_reef/growth_02.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_1_02.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.87,
@@ -530,7 +530,7 @@
           },
           {
             "id": "growth_03",
-            "path": "res://assets/audio/coral_reef/growth_03.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_1_03.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.87,
@@ -558,7 +558,7 @@
           },
           {
             "id": "bubble_short_01",
-            "path": "res://assets/audio/coral_reef/bubble_short_01.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_2_01.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.57,
@@ -579,7 +579,7 @@
           },
           {
             "id": "bubble_short_02",
-            "path": "res://assets/audio/coral_reef/bubble_short_02.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_2_02.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.57,
@@ -600,7 +600,7 @@
           },
           {
             "id": "bubble_short_03",
-            "path": "res://assets/audio/coral_reef/bubble_short_03.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_2_03.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 0.57,
@@ -621,7 +621,7 @@
           },
           {
             "id": "bubble_long_01",
-            "path": "res://assets/audio/coral_reef/bubble_long_01.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_3_legacy.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 1.58,
@@ -642,7 +642,7 @@
           },
           {
             "id": "bubble_long_02",
-            "path": "res://assets/audio/coral_reef/bubble_long_02.ogg",
+            "path": "res://assets/audio/coral_reef/coral_reef_tier_3.ogg",
             "sample_rate_hz": 48000,
             "channels": 2,
             "duration_seconds": 1.58,

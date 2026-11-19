@@ -6,8 +6,8 @@ const Soundscape = preload("res://scripts/theme_soundscape.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Workshop = preload("res://scripts/clockwork_audio.gd")
 const Reef = preload("res://scripts/coral_audio.gd")
-const FOLIAGE = preload("res://assets/audio/foliage.wav")
-const BELL = preload("res://assets/audio/flower_bell.wav")
+const FOLIAGE = preload("res://assets/audio/shared/shared_tier_1.wav")
+const BELL = preload("res://assets/audio/shared/shared_tier_2.wav")
 # C, D, E, G, A: overlapping blossoms remain in one gentle pentatonic palette.
 const PITCHES := [1.0, 1.122462, 1.259921, 1.498307, 1.681793]
 const WHISPER_DB := -18.0

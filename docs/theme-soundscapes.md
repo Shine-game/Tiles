@@ -49,3 +49,7 @@ Clockwork's tier-three soundscape entry and Coral's anemone event now set `loop_
 A single loop represents all tier-three structures, avoiding multiplied volume. Clockwork uses its chain-run recording; Coral uses only `bubble_long_02`. The former one-shot dispatch is suppressed for these events, so it cannot double the loop. The player follows the effects bus (through Coral's existing limiter where applicable), including its volume/mute controls. Normal scene-tree pause pauses it. Growth cancellation only clears transient effects; the subsequent board reconciliation decides whether the structure loop survives.
 
 `tests/test_tier3_sound_persistence.gd` covers both themes, construction completion, continuous looping, partial and complete removal, stable redraw, settled restoration, effects routing and theme switching. Existing Coral burst and shared soundscape regression tests remain in place.
+
+## Audio filenames
+
+Recordings live in `assets/audio/vines/`, `assets/audio/coral_reef/` and `assets/audio/clockwork/`. Active files use `<theme>_ambient` and `<theme>_tier_1`, `_tier_2`, `_tier_3`; combined Vines audio uses `vines_tier_2_3`. Coral recordings used in a mix have numbered suffixes. Older alternative recordings have `_legacy` suffixes; the unaligned combined source is `_original`. Existing shared fallback sounds are in `assets/audio/shared/`. `assets/audio/catalog.json` records the rename mapping and SHA-256 hashes. Audio bytes, gains, cue timing and mix selection are unchanged.

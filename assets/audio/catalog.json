@@ -1,0 +1,150 @@
+{
+  "naming": "theme_ambient / theme_tier_N; numbered variants and legacy suffixes preserve alternative recordings",
+  "files": [
+    {
+      "old": "assets/audio/vines_effects/Vines_Ambience.ogg",
+      "path": "assets/audio/vines/vines_ambient.ogg",
+      "sha256": "d41a6397b182e251fdb32f301c0338710628e29cd8e4e0c7b545bfbd9a4605fe"
+    },
+    {
+      "old": "assets/audio/vines_effects/Vines_Growth_Rustle.ogg",
+      "path": "assets/audio/vines/vines_tier_1.ogg",
+      "sha256": "b642270e7da451effc308066709b064fc87e62125da912c938ea724748318648"
+    },
+    {
+      "old": "assets/audio/vines_effects/Vines_Bloom.ogg",
+      "path": "assets/audio/vines/vines_tier_2.ogg",
+      "sha256": "eb67069e334328ae5a4ea934e88bec4842b62b16fc338e5bd0cdd5d2d5ef2bc4"
+    },
+    {
+      "old": "assets/audio/vines_effects/Vines_Butterfly_Chime.ogg",
+      "path": "assets/audio/vines/vines_tier_3.ogg",
+      "sha256": "41f0d69770279b68855c4fcc4e8187f76327f54bb232e9bef110714de3e01874"
+    },
+    {
+      "old": "assets/audio/vines_effects/Vines_Bloom_Butterflies.ogg",
+      "path": "assets/audio/vines/vines_tier_2_3_original.ogg",
+      "sha256": "26477d048bc944d37dcde1222a01ba5d640d065dd6223c427bb625f8761b00a3"
+    },
+    {
+      "old": "assets/audio/vines_effects/Vines_Bloom_Butterflies_aligned.wav",
+      "path": "assets/audio/vines/vines_tier_2_3.wav",
+      "sha256": "cd0e405b29ee7d58ebfdc4d2dffcd91ccfbf604616e638dd7d67fa7764892e92"
+    },
+    {
+      "old": "assets/audio/clockwork_asmr/clockwork_asmr_ambience_loop.wav",
+      "path": "assets/audio/clockwork/clockwork_ambient.wav",
+      "sha256": "8ac5213c12ea5097b8359db2e5e55b08ae6b0b0af4057ad276473d181c04517a"
+    },
+    {
+      "old": "assets/audio/clockwork_asmr/clockwork_tier1_pipe_clicks.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_1.wav",
+      "sha256": "16ee44e83caec4495cab9a53cde441321ae30aef7b5c80d0ca6fab693cd19361"
+    },
+    {
+      "old": "assets/audio/clockwork_asmr/clockwork_tier2_gear_start.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_2.wav",
+      "sha256": "ffd69ac6842b24da2070075c8e6996bc86880b49ecbcfd158b8fecafa1dc654d"
+    },
+    {
+      "old": "assets/audio/clockwork_asmr/clockwork_tier3_chain_run.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_3.wav",
+      "sha256": "fa49eb95f064f0a24b9cad322f1538595d5b229ebdb7fa1f08315bd340b4e0a3"
+    },
+    {
+      "old": "assets/audio/vines_asmr/vines_quiet_garden_loop.wav",
+      "path": "assets/audio/vines/vines_ambient_legacy.wav",
+      "sha256": "9622779407205f0117b0f8bb8f62aa86c0f638613215c2c5d001831b4e82bbdb"
+    },
+    {
+      "old": "assets/audio/vines_asmr/vines_tier1_leaf_rustle.wav",
+      "path": "assets/audio/vines/vines_tier_1_legacy.wav",
+      "sha256": "49904fa6daa2ff6c63e084566c96024266c65591d3d684a0d299fa2b01e6f1d4"
+    },
+    {
+      "old": "assets/audio/vines_asmr/vines_tier2_bloom.wav",
+      "path": "assets/audio/vines/vines_tier_2_legacy.wav",
+      "sha256": "690061ce06db87edeef5fbb533a4d570c68f168b80b2757db37489a63a705101"
+    },
+    {
+      "old": "assets/audio/vines_asmr/vines_tier3_butterflies.wav",
+      "path": "assets/audio/vines/vines_tier_3_legacy.wav",
+      "sha256": "810f9850fc4c3c596e513388627733a31f5b711e0536be51818c7266ee2fefc9"
+    },
+    {
+      "old": "assets/audio/coral_reef/reef_ambience.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_ambient.ogg",
+      "sha256": "51694146eed47828bfdd3e204b5e5d811c63439e0ab25e05f1785c49d4a7b8b4"
+    },
+    {
+      "old": "assets/audio/coral_reef/growth_01.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_1_01.ogg",
+      "sha256": "3d9db10f92f3e10845b0e7c45056f54a22179b0ad462d8e94605f59c668321dd"
+    },
+    {
+      "old": "assets/audio/coral_reef/growth_02.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_1_02.ogg",
+      "sha256": "7f6436120ea919c858772db5d8d5e2cedf7be4b1da9a5ede05c32d75006b5196"
+    },
+    {
+      "old": "assets/audio/coral_reef/growth_03.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_1_03.ogg",
+      "sha256": "65b7dc66c9983522f05923ed09ae2356b3ce61c71fe025d92d3e20799e6a16d6"
+    },
+    {
+      "old": "assets/audio/coral_reef/bubble_short_01.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_2_01.ogg",
+      "sha256": "9776279e959c42e518a26ed14ff0ad3f7898691d28c9d4d7d4d0f33db907e7f3"
+    },
+    {
+      "old": "assets/audio/coral_reef/bubble_short_02.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_2_02.ogg",
+      "sha256": "915fc46c6d1dc4fe45c847c642a855d1a4f3df304e6ee73c02da2c97dc982c91"
+    },
+    {
+      "old": "assets/audio/coral_reef/bubble_short_03.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_2_03.ogg",
+      "sha256": "b065adee23d63b4009dd86ff827a112abe378fad1125ec6a4503a68fe0374b26"
+    },
+    {
+      "old": "assets/audio/coral_reef/bubble_long_02.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_3.ogg",
+      "sha256": "b309ef56c17875d3ad6df5c8cea02f2d704b444b808fecd704f34484ca10be2e"
+    },
+    {
+      "old": "assets/audio/coral_reef/bubble_long_01.ogg",
+      "path": "assets/audio/coral_reef/coral_reef_tier_3_legacy.ogg",
+      "sha256": "d0fe739a6e4a21812065e2a376aed5b69fb36cdf8edbfa5c7efed4cebfdc538d"
+    },
+    {
+      "old": "assets/audio/clockwork/tick.wav",
+      "path": "assets/audio/clockwork/clockwork_ambient_legacy.wav",
+      "sha256": "50acb04bb9508ff06c92aba4165d69650677a7639ac78ba4049a9dcce05401a9"
+    },
+    {
+      "old": "assets/audio/clockwork/click.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_1_legacy.wav",
+      "sha256": "f5dcb29dbedea3bf87cd9c218b1c0f051322e0838d482cd98cf98202860f0b8a"
+    },
+    {
+      "old": "assets/audio/clockwork/clunk.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_2_legacy.wav",
+      "sha256": "b9536bc0a08496dc39f8a6e7a266d564d74ffdb4b0f507b47581bad7e18404a3"
+    },
+    {
+      "old": "assets/audio/clockwork/steam.wav",
+      "path": "assets/audio/clockwork/clockwork_tier_3_legacy.wav",
+      "sha256": "efb298eb5b658f4554b8176d325d3b48ec7c1bbd61bb820555e11d46540e9567"
+    },
+    {
+      "old": "assets/audio/foliage.wav",
+      "path": "assets/audio/shared/shared_tier_1.wav",
+      "sha256": "a2d7a89ebb446789f443a6a0691c1062559341234fc5d8ea8ab7d0d7e2f6adb7"
+    },
+    {
+      "old": "assets/audio/flower_bell.wav",
+      "path": "assets/audio/shared/shared_tier_2.wav",
+      "sha256": "647d7440c0e1297e279cf86688f0d3ba2618cf553efe30266903bfb945dae922"
+    }
+  ]
+}

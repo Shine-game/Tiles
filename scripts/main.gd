@@ -1079,7 +1079,7 @@ func _build_gallery() -> void:
 	gallery_page = _button("0 / 0", func(): pass)
 	gallery_save = _button("Save to Photos" if OS.has_feature("android") else "Save Image", _export_gallery_image.bind(false))
 	gallery_share = _button("Share", _export_gallery_image.bind(true))
-	gallery_share.tooltip_text = "Open the phone's sharing menu" if gallery_exporter.can_share() else "Sharing is available in the Android app"
+	gallery_share.tooltip_text = "Open the phone's sharing menu" if gallery_exporter.can_share() else gallery_exporter.unavailable_message()
 	gallery_status = Label.new()
 	gallery_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	gallery_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1125,12 +1125,12 @@ func _show_gallery_page() -> void:
 	gallery_image.texture = null if gallery_entries.is_empty() else gallery.picture(gallery_entries[gallery_index])
 	gallery_page.text = "%d / %d" % [0 if gallery_entries.is_empty() else gallery_index + 1, gallery_entries.size()]
 	if not gallery_export_busy:
-		gallery_status.text = "Your saved designs will appear here." if gallery_entries.is_empty() else ""
+		gallery_status.text = "Your saved designs will appear here." if gallery_entries.is_empty() else (gallery_exporter.unavailable_message() if OS.has_feature("android") and not gallery_exporter.can_share() else "")
 	_refresh_gallery_actions()
 
 func _refresh_gallery_actions() -> void:
 	var empty := gallery_entries.is_empty()
-	gallery_save.disabled = empty or gallery_export_busy
+	gallery_save.disabled = empty or gallery_export_busy or (OS.has_feature("android") and not gallery_exporter.can_share())
 	gallery_share.disabled = empty or gallery_export_busy or not gallery_exporter.can_share()
 	gallery_previous.disabled = gallery_export_busy or gallery_index <= 0
 	gallery_next.disabled = gallery_export_busy or gallery_index >= gallery_entries.size()-1

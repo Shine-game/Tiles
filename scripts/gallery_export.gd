@@ -14,6 +14,9 @@ func _ready() -> void:
 func can_share() -> bool:
 	return backend != null
 
+func unavailable_message() -> String:
+	return "Sharing is unavailable in this app build." if OS.has_feature("android") else "Sharing is available in the Android app."
+
 func save_image(path: String, id: String) -> void:
 	_start("save", path, id)
 

@@ -20,8 +20,8 @@ def load(name):
 
 
 mix = [[0.0, 0.0] for _ in range(round(events['duration'] * RATE))]
-whisper = load('foliage.wav')
-bell = load('flower_bell.wav')
+whisper = load('shared/shared_tier_1.wav')
+bell = load('shared/shared_tier_2.wav')
 for i, output in enumerate(mix):
     time = i / RATE
     t = time - events['whisper_start']

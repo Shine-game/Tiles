@@ -58,6 +58,6 @@ def bell():
 
 
 if __name__ == '__main__':
-    save(ROOT / 'assets/audio/foliage.wav', whisper())
-    save(ROOT / 'assets/audio/flower_bell.wav', bell())
+    save(ROOT / 'assets/audio/shared/shared_tier_1.wav', whisper())
+    save(ROOT / 'assets/audio/shared/shared_tier_2.wav', bell())
     print('Generated original stereo foliage and bell sounds at 32 kHz.')
