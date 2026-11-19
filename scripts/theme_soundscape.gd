@@ -10,6 +10,7 @@ var placement:=-1
 var background_bus:="Master"
 var effects_bus:="Master"
 var event_log:Array=[]
+var active_stops:Dictionary={}
 func _ready():
  add_child(ambience)
  for tier in [1,2,3,23]:
@@ -22,6 +23,7 @@ func route(background:String,effects:String):
  ambience.bus=background
  for voice in voices.values():voice.bus=effects
 func cancel_effects():
+ active_stops.clear()
  pending.clear()
  for voice in voices.values():voice.stop()
 func deactivate():
@@ -48,6 +50,15 @@ func activate(next:String):
   var clip:Dictionary=config.get("combined",{}) if tier==23 else config.tiers[str(tier)]
   voices[tier].stream=load(clip.path) if clip.has("path") else null
   voices[tier].volume_db=clip.get("gain_db",0.0)
+static func tier1_end(model)->float:
+ var end:=0.0
+ for event in model.sprite_growth_events.values():
+  if not event.old:end=maxf(end,float(event.end))
+ for edge in model.edges:
+  if not edge.old:end=maxf(end,float(edge.finish))
+ for at in model.arrivals.values():
+  if at>=0:end=maxf(end,float(at))
+ return end
 static func plan(model,settings:Dictionary)->Array:
  var cues:Array=[]
  if settings.get("tier1_component_ids",[]).is_empty():
@@ -67,7 +78,9 @@ static func plan(model,settings:Dictionary)->Array:
    var offset:Array=settings.get("connection_origin_offset",[0,0])
    var delta:=Vector2i(offset[0],offset[1])
    cues.append({"id":"connection/"+str(record.a)+"/"+str(record.b),"tier":3,"time":record.start,"members":[str(record.a-delta),str(record.b-delta)]})
+ var growth_end:=tier1_end(model) if settings.tiers["1"].get("stop_at_tier_end",false) else INF
  for cue in cues:
+  if cue.tier==1 and growth_end!=INF:cue.stop_at=growth_end
   cue.time+=float(settings.tiers[str(cue.tier)].get("offset_seconds",0.0))
   cue.seek_seconds=float(settings.tiers[str(cue.tier)].get("seek_seconds",0.0))
  cues.sort_custom(func(a,b):return a.time<b.time if a.time!=b.time else a.id<b.id)
@@ -113,6 +126,7 @@ func reconcile(model,next:String,animating:bool,clock:float,placement_id:int):
  advance(clock)
 func advance(clock:float):
  if not is_inside_tree() or get_tree().paused:return
+ _apply_stops(clock)
  while not pending.is_empty() and pending[0].time<=clock:
   var cue:Dictionary=pending.pop_front()
   if played.has(cue.id):continue
@@ -120,9 +134,27 @@ func advance(clock:float):
   var voice:AudioStreamPlayer=voices[cue.tier]
   # Let each one-shot finish; separate tiers can overlap without restarting it.
   if voice.playing:continue
+  if cue.has("stop_at") and clock>=float(cue.stop_at):continue
+  var clip:Dictionary=config.combined if cue.tier==23 else config.tiers[str(cue.tier)]
+  voice.volume_db=clip.gain_db
   voice.play(float(cue.get("seek_seconds",0.0)))
+  if cue.has("stop_at"):
+   active_stops[cue.tier]={"end":cue.stop_at,"gain_db":clip.gain_db,"fade":clip.get("fade_out_seconds",0.04)}
   event_log.append({"tier":cue.tier,"scheduled":cue.time,"clock":clock,"placement":placement})
   if event_log.size()>256:event_log.pop_front()
+
+func _apply_stops(clock:float):
+ for tier in active_stops.keys():
+  var envelope:Dictionary=active_stops[tier]
+  var voice:AudioStreamPlayer=voices[tier]
+  var remaining:float=envelope.end-clock
+  if remaining<=0.0 or not voice.playing:
+   voice.stop()
+   voice.volume_db=envelope.gain_db
+   active_stops.erase(tier)
+  else:
+   var fade:float=maxf(0.000001,float(envelope.fade))
+   voice.volume_db=float(envelope.gain_db)+linear_to_db(clampf(remaining/fade,0.000001,1.0))
 
 func _exit_tree():
  ambience.stop()

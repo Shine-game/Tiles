@@ -11,7 +11,7 @@
         "flower": {
           "provider": "vines.sprite_formation",
           "animation": {
-            "duration_seconds": 0.25
+            "duration_seconds": 3.0
           },
           "params": {
             "size_cells": [
@@ -27,7 +27,8 @@
             "rotation_range_degrees": [
               0,
               360
-            ]
+            ],
+            "duration_from_sound_tier": 2
           }
         }
       }
@@ -38,7 +39,8 @@
   },
   "schedule": {
     "prerequisite": "perimeter_edges_meet",
-    "link_overlap_fraction": 1.0
+    "link_overlap_fraction": 1.0,
+    "after_tier1_seconds": 1.0
   },
   "water": {
     "arc_height_cells": 0.45,

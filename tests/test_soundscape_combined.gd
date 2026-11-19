@@ -29,9 +29,11 @@ func run():
   if cue.tier==23:
    combo=true
    assert(is_equal_approx(cue.time+config.combined.tier3_offset_seconds,model.links[0].start))
- assert(combo)
+ assert(not combo)
+ assert(plan.any(func(c):return c.tier==2))
+ assert(plan.any(func(c):return c.tier==3 and is_equal_approx(c.time,model.links[0].start)))
  for key in ["1","2","3"]:
   var stream=load(config.tiers[key].path)
   assert(stream!=null and stream.get_length()>0)
- print("Combined audio: matching timings merge once, incompatible timings stay separate; actual butterfly onset matches visual tier three")
+ print("Combined audio: matching timings merge once, incompatible timings stay separate; long reveal uses separate sounds with exact tier-three onset")
  quit()

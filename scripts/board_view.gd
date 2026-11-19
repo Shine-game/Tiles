@@ -11,6 +11,7 @@ signal visual_clock_advanced(clock: float)
 const JunctionLayer = preload("res://scripts/pattern/junction_layer.gd")
 const Tier1Layer = preload("res://scripts/pattern/tier1_layer.gd")
 const Tier1Sources = preload("res://scripts/pattern/tier1_sources.gd")
+const VinesFormationLayer = preload("res://scripts/vines_formation_layer.gd")
 const FountainWater = preload("res://scripts/vines_fountain_water.gd")
 const VineModel = preload("res://scripts/vines_growth.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
@@ -34,6 +35,7 @@ const Growth = preload("res://scripts/growth.gd")
 const Zen = preload("res://scripts/zen_growth.gd")
 const ZenLayer = preload("res://scripts/zen_visuals.gd")
 var tile_floor: ColorRect
+var vines_formations: Node2D
 var fountain_water: Node2D
 var zen_garden := false
 var zen_visuals: ZenVisuals
@@ -313,6 +315,7 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 		add_child(tier1_layer)
 	var okay := tier1_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0, sprite_reverse)
 	if not okay: push_error("Tier 1 preparation failed: " + str(tier1_layer.diagnostics))
+	if Palette.theme_id() == "vines": pattern.reschedule_formations(pattern.sprite_growth_events)
 	if junction_layer == null:
 		junction_layer = JunctionLayer.new()
 		add_child(junction_layer)
@@ -326,6 +329,14 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 	growing = construction_state.schedule.running()
 	if not tier1_layer.present(construction_state, _sprite_view_transform()): push_error("Tier 1 presentation failed: " + str(tier1_layer.diagnostics))
 	if not junction_layer.present(construction_state, _sprite_view_transform()): push_error(str(junction_layer.diagnostics))
+	if Palette.theme_id() == "vines":
+		if vines_formations==null:
+			vines_formations=VinesFormationLayer.new()
+			add_child(vines_formations)
+		vines_formations.show()
+		vines_formations.transform=_sprite_view_transform()
+		vines_formations.sync(self,settled)
+	elif vines_formations!=null:vines_formations.hide()
 	sprite_elapsed = 0.0
 	sprite_reverse = false
 
@@ -340,6 +351,7 @@ func advance_growth(delta: float) -> void:
 	if zen_garden: zen_visuals.advance(clock)
 	if clockwork and clockwork_visuals != null:
 		clockwork_visuals.advance(clock)
+	if vines_formations!=null and vines_formations.visible:vines_formations.advance(clock)
 	visual_clock_advanced.emit(clock)
 	for corner: Vector2i in pattern.flowers:
 		var flower: Dictionary = pattern.flowers[corner]
@@ -372,6 +384,7 @@ func update_geometry() -> void:
 	var edge_allowance: float = 3.0 * Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.02
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
+	if vines_formations!=null and vines_formations.visible:vines_formations.transform=_sprite_view_transform()
 	if occupied_platform != null:
 		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork or zen_garden else -1.0, not zen_garden)
 	if zen_garden and zen_visuals != null:

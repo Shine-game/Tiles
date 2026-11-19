@@ -31,5 +31,8 @@
         }
       }
     }
+  },
+  "schedule": {
+    "after_tier2_seconds": 1.0
   }
 }

@@ -35,3 +35,9 @@ Levels and mute flags persist in `user://sound_settings.cfg`. The volume APIs ac
 Tier three now selects only `bubble_long_02`. Tier two retains the three short-bubble source variants but plays a seeded 5–6-shot asynchronous mix over the colony animation. Each burst starts with the first visible colony pixels, avoids consecutive identical clips, distributes irregular onsets across the animation window, and fades out over 40 ms at its visual end. Simultaneous nearby colonies retain the existing coalescing policy and share a burst spanning their combined visual window.
 
 Each existing feature voice can mix up to six overlapping shots through `AudioStreamPolyphonic`, at a −6 dB mix gain plus the source clip gain. It retains the Coral limiter and routes through the effects volume/mute bus. Short clips do not restart each other, burst tails do not extend placement, and cancellation clears future shots. The timing plan uses colony completion, including the radial petals. Pause uses the visual clock and pauses the same player. Tests in `test_coral_bubble_bursts.gd` verify counts, variations, stagger, bounded timing, overlapping playback and completion for both colors.
+
+## Rustle duration follows tier-one growth
+
+Vines tier one uses `stop_at_tier_end: true` and `fade_out_seconds: 0.04`. The shared scheduler calculates tier one's actual end from new stem edges, cell arrivals and the authored sprite-decoration growth events. It fades the rustle over the last 40 ms of that visual interval and stops it at the end, even if the original recording is longer. Tier-two/three animation and ambience do not prolong it. This is a runtime trim; the supplied source recording remains unchanged. Clockwork keeps its existing one-shot behavior because the option is enabled only for Vines.
+
+`tests/test_vines_rustle_duration.gd` covers short, medium and long patterns, the fade envelope, exact cutoff, and continued later-tier animation/ambience.

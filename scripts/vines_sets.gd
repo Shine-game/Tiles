@@ -28,6 +28,10 @@ static func install() -> void:
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
 	tier3 = Assets.load_set("res://art/themes/vines/sets/tier3.json")
 	assert(tier3.ok,str(tier3.errors))
+	var sound_tier: int = int(Formations.parts(tier2).flower.params.get("duration_from_sound_tier",0))
+	if sound_tier>0:
+		var clip:Dictionary=Themes.profile("vines").soundscape.tiers[str(sound_tier)]
+		Formations.parts(tier2).flower.animation.duration_seconds=load(clip.path).get_length()-float(clip.get("seek_seconds",0))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
 
@@ -71,10 +75,7 @@ static func draw(view) -> void:
 		var selected := centers(Topology.neighbor_mask(view.board, cell))
 		for id: String in selected:
 			renderer.draw_parts({id: selected[id]}, view, {"cell": cell, "scale": center_scale(view, cell, selected[id])})
-	for corner: Vector2i in view.pattern.flowers:
-		renderer.draw_parts(Formations.parts(tier2), view, {"corner": corner, "event": view.pattern.flowers[corner]})
-	for link: Dictionary in view.pattern.links:
-		renderer.draw_parts(Cells.parts_for_role(tier3,"connection"),view,{"link":link})
+	# Higher-tier sprites are drawn by VinesFormationLayer for masked reveal.
 
 static func flower() -> Dictionary:
 	install()
