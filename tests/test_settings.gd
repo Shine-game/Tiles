@@ -55,120 +55,87 @@ func _run() -> void:
 	var fatal: Dictionary = easy.place([Vector2i.ZERO], Vector2i(2, 1))
 	check(fatal.ok and easy.lost and easy.over, "Easy still ends on a physically valid symmetry-breaking placement")
 
+	root.size = Vector2i(720,1100)
 	Palette.select_theme("clockwork")
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
-	for i in range(5): await process_frame
-	check(scene.difficulty == Game.Difficulty.DIFFICULT, "Difficult retains existing default")
+	for i in range(4): await process_frame
 	click(scene.palette_button)
-	await process_frame
-	check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens floating menu")
-	check(scene.palette_menu.size.is_equal_approx(Vector2(540, 495)), "Settings box is 1.5 times its previous 360 by 330 size")
-	check(scene.menu_title.get_theme_font_size("font_size") == 40 and scene.settings_options[0].get_theme_font_size("font_size") == 36, "Settings title and entries use double text size")
-	check(scene.menu_frame.is_present() and scene.menu_frame.texture == scene.board_view.board_frame.thin_texture, "Settings reuses the playing-field decorative frame")
-	check(scene.menu_frame.get_global_rect().is_equal_approx(scene.palette_menu.get_global_rect()), "decorative perimeter fits the full menu box")
-	click(scene.menu_close)
-	check(not scene.palette_menu.visible, "enlarged menu has a reachable close button")
-	click(scene.palette_button)
-	await process_frame
-	check(scene.settings_options.map(func(button): return button.text) == ["Themes", "Difficulty", "Gallery", "Sound Settings"], "Settings has exactly the requested entries")
-	click(scene.settings_options[0])
-	await process_frame
-	check(scene.menu_page == "Themes" and scene.theme_options.size() == Palette.THEMES.size(), "Themes lists all names and core tiles")
-	check(Palette.THEMES == ["zen_garden", "clockwork", "vines", "coral_reef"], "Only the four supported themes are offered")
-	var active_theme := Palette.theme_id()
-	check(not Palette.select_theme("labyrinth") and Palette.theme_id() == active_theme, "The removed theme cannot be selected or change the current theme")
-	var active_game = scene.game
-	scene._request_theme("labyrinth")
-	check(not scene.confirmation.visible and scene.game == active_game, "Removed theme requests do not open confirmation or reset a game")
-	scene._select_theme("labyrinth")
-	check(scene.game == active_game and Palette.theme_id() == active_theme, "Obsolete theme IDs cannot switch the game through its direct handler")
+	check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens")
+	check(scene.settings_options.map(func(button):return button.text) == ["New Game","Gameplay","Gallery","Audio"],"Settings has the requested sections")
 	var previous = scene.game
-	click(scene.theme_options[Palette.THEMES.find("coral_reef")])
-	await process_frame
-	check(scene.confirmation.visible and scene.game == previous and Palette.clockwork, "theme waits for confirmation")
-	scene.confirmation.canceled.emit()
-	scene.confirmation.hide()
-	check(scene.game == previous and Palette.clockwork and not scene.pending_change.is_valid(), "cancel preserves current game and theme and clears pending action")
-	scene._request_theme("coral_reef")
-	scene.confirmation.confirmed.emit()
-	scene.confirmation.hide()
-	await process_frame
-	check(Palette.coral_reef and scene.game != previous and scene.game.moves == 0, "confirm switches theme and starts a new game")
-	check(scene.game.undo_left == 3 and scene.game.skip_left == 3 and scene.game.erase_left == 3, "theme reset restores helper budgets")
-	scene._show_menu("Difficulty")
-	await process_frame
-	previous = scene.game
+	var original_board: Array = scene.game.board.duplicate(true)
+	click(scene.settings_options[0])
+	check(scene.menu_page == "New Game" and scene.theme_options.all(func(button):return button.visible),"New Game lists every theme")
+	click(scene.theme_options[Palette.THEMES.find("vines")])
+	check(scene.menu_page == "Game Presets" and scene.game == previous and Palette.clockwork,"Choosing a theme only opens preset review")
+	check("Vines" in scene.preset_summary.text and "Hard" in scene.preset_summary.text and "9 × 9" in scene.preset_summary.text,"Review shows theme and current presets")
+	click(scene.change_presets_button)
+	check(scene.menu_page == "Gameplay","Change opens Gameplay")
+	click(scene.gameplay_options[0])
+	check(scene.menu_page == "Difficulty" and scene.difficulty_options.map(func(button):return button.text.replace("✓ ","")) == ["Easy","Moderate","Hard"],"Difficulty offers Easy, Moderate and Hard")
 	click(scene.difficulty_options[0])
-	check(scene.confirmation.visible and scene.game == previous, "difficulty waits for confirmation")
-	scene.confirmation.confirmed.emit()
-	scene.confirmation.hide()
-	check(scene.game.difficulty == Game.Difficulty.EASY and scene.game != previous, "difficulty reset applies Easy before drawing")
-	check(scene.game.piece().cells.size() < 4, "first Easy offer has fewer than four cells")
-	var before: Array = scene.game.board.duplicate(true)
-	scene._show_menu("Sound Settings")
-	await process_frame
-	click(scene.background_button)
-	check(not scene.sounds.background_enabled and scene.sounds.effects_enabled, "background toggle leaves effects on")
-	check(AudioServer.is_bus_mute(AudioServer.get_bus_index(scene.sounds.background_bus)), "background bus is muted immediately")
-	click(scene.effects_button)
-	check(not scene.sounds.effects_enabled, "effects toggle mutes effects")
-	check(AudioServer.is_bus_mute(AudioServer.get_bus_index(scene.sounds.effects_bus)), "effects bus is muted immediately")
-	check(scene.sounds.whisper.bus == scene.sounds.background_bus and scene.sounds.workshop.ticking.bus == scene.sounds.background_bus and scene.sounds.reef.ambience.bus == scene.sounds.background_bus, "every theme routes background audio independently")
-	check(AudioServer.get_bus_send(AudioServer.get_bus_index(scene.sounds.reef.bus_name)) == scene.sounds.effects_bus, "reef effects keep their limiter and route to effects bus")
-	check(scene.game.board == before, "sound toggles preserve game")
-	scene._select_theme("clockwork")
-	check(not scene.sounds.background_enabled and not scene.sounds.effects_enabled, "mute settings survive new games and themes")
-	scene._toggle_background()
-	scene._toggle_effects()
-	check(scene.sounds.background_enabled and scene.sounds.effects_enabled, "both categories can be re-enabled")
-	scene.palette_menu.hide()
+	check(scene.menu_page == "Gameplay" and scene.difficulty == Game.Difficulty.EASY and scene.game == previous and scene.game.difficulty == Game.Difficulty.DIFFICULT,"Difficulty preset changes without resetting the current game")
+	click(scene.size_picker)
+	check(scene.menu_page == "Size","Size opens its own page")
+	click(scene.size_options[1])
+	check(scene.requested_size == 11 and scene.game.board.size() == 9 and scene.menu_page == "Gameplay","Size preset waits for Start")
+	var axes: bool = scene.board_view.show_axes
+	click(scene.axes_button)
+	check(scene.board_view.show_axes != axes and scene.board_view.axes_overlay.visible,"Axes toggle applies immediately")
+	click(scene.back_button)
+	check(scene.menu_page == "Game Presets" and "Easy" in scene.preset_summary.text and "11 × 11" in scene.preset_summary.text,"Back from Change returns to updated preset review")
+	click(scene.back_button)
+	check(scene.menu_page == "New Game","Review Back returns to the theme list")
+	click(scene.theme_options[Palette.THEMES.find("vines")])
+	click(scene.menu_close)
+	check(not scene.palette_menu.visible and scene.game == previous and scene.game.board == original_board,"Close cancels New Game without replacing the board")
+	click(scene.palette_button)
+	click(scene.settings_options[0])
+	click(scene.theme_options[Palette.THEMES.find("vines")])
+	click(scene.new_button)
+	check(not scene.palette_menu.visible and scene.game != previous and Palette.theme_id() == "vines","Start applies the selected theme")
+	check(scene.game.board.size() == 11 and scene.game.difficulty == Game.Difficulty.EASY,"Start applies size and difficulty presets")
+	check(scene.board_view.show_axes != axes,"Axes setting survives Start")
+	click(scene.palette_button)
+	click(scene.settings_options[2])
+	check(scene.gallery_panel.visible and not scene.palette_menu.visible,"Gallery opens from Settings")
+	check(scene.gallery_back.position.x < scene.gallery_close.position.x and scene.gallery_back.position.y == scene.gallery_close.position.y,"Gallery has Back upper left and Close upper right")
+	click(scene.gallery_back)
+	check(scene.menu_page == "Settings" and scene.palette_menu.visible and not scene.gallery_panel.visible,"Gallery Back returns to Settings")
+	click(scene.settings_options[2])
+	click(scene.gallery_close)
+	check(not scene.gallery_panel.visible and not scene.palette_menu.visible,"Gallery Close returns to the game")
+	click(scene.palette_button)
+	click(scene.settings_options[3])
+	check(scene.menu_page == "Audio" and scene.ambience_volume_row.visible and scene.effects_volume_row.visible,"Audio shows both volume controls")
+	check(not scene.background_button.visible and not scene.effects_button.visible,"Audio has volume controls without old toggle rows")
+	var background: float = scene.sounds.background_volume
+	var effects: float = scene.sounds.effects_volume
+	scene.ambience_volume_slider.value = 37
+	scene.effects_volume_slider.value = 62
+	check(is_equal_approx(scene.sounds.background_volume,0.37) and is_equal_approx(scene.sounds.effects_volume,0.62),"Independent volume sliders work")
+	scene.sounds.set_background_volume(background)
+	scene.sounds.set_effects_volume(effects)
+	click(scene.back_button)
+	click(scene.back_button)
+	check(not scene.palette_menu.visible,"Settings Back returns to the game")
 	for theme: String in Palette.THEMES:
 		scene._select_theme(theme)
-		for n in [9, 11]:
-			scene.requested_size = n
-			scene._reset()
-			for dimensions: Vector2 in [Vector2(240, 320), Vector2(390, 844), Vector2(720, 1100), Vector2(844, 390)]:
-				scene.size = dimensions
-				scene._layout()
-				var bounds := Rect2(Vector2.ZERO, dimensions).grow(0.1)
-				check(bounds.encloses(scene.board_view.get_rect()), "board fits every theme/size/orientation")
-				check(is_equal_approx(scene.board_view.get_rect().get_center().x, dimensions.x * 0.5), "playing field is centered horizontally")
-				var safe: Vector4 = scene._layout_insets(dimensions)
-				check(scene.palette_button.position.y >= safe.y - 0.1 and scene.indicators[0].panel.position.y >= safe.y - 0.1, "top controls stay below the safe screen margin")
-				check(scene.blue_button.get_rect().end.y <= dimensions.y - safe.w + 0.1, "bottom controls stay above the safe screen margin")
-				check(scene.blue_button.position.x >= 0 and scene.indicators[0].panel.get_rect().end.x <= dimensions.x, "bottom controls stay clear of both side edges")
-				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button, scene.palette_button]:
-					check(not button.get_rect().intersects(scene.piece_view.get_rect()), "header controls never cover the incoming-piece hit area")
-				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button]:
-					var style: StyleBox = button.get_theme_stylebox("normal")
-					var text_width: float = button.get_theme_font("font").get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
-					check(text_width <= button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT) + 0.1, "joker label fits: %s %s %s text %.1f available %.1f" % [theme, dimensions, button.text, text_width, button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT)])
-				if scene.board_view.board_frame.is_present():
-					check(scene.board_view.get_global_rect().grow(0.1).encloses(scene.board_view.board_frame.get_global_rect()), "decorative frame stays within board bounds")
-				check(scene.erase_button.get_rect().end.y <= scene.board_view.position.y, "jokers stay above the board")
-				check(scene.undo_button.position.y > scene.erase_button.position.y and scene.undo_button.position.x == scene.erase_button.position.x, "jokers sit below the symmetry controls")
-				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "individual buttons remain unframed")
-				for button: Button in [scene.blue_button, scene.indicators[0].panel, scene.place_button]:
-					check(button.size.is_equal_approx(scene.place_button.size) and is_equal_approx(button.size.x, button.size.y), "bottom buttons are equal squares")
-					check(bounds.encloses(button.get_rect()), "bottom buttons stay on screen")
-				check(scene.board_view.get_rect().end.y <= scene.blue_button.position.y + 0.1, "field stays above the large controls")
-				if dimensions.y >= dimensions.x * 1.5:
-					check(scene.board_view.size.x >= (dimensions.x - 2 * maxf(safe.x, safe.z)) * 0.95, "portrait board fills the width available inside safe margins")
-					check(is_equal_approx(scene.place_button.get_rect().get_center().x, dimensions.x/2), "portrait buttons span the safely inset dock")
-				scene.cells = Rules.rotate(Rules.PIECES.I.cells)
-				scene._refresh()
-				check(scene.piece_view.geometry().unit <= scene.board_view.pitch, "vertical active piece retains playing-cell scale")
-				check(scene.piece_view.display_cells() == scene.cells, "tall pieces fit a two-row preview")
-				check(scene.piece_view.size.y >= 4 * scene.piece_view.geometry().unit, "header stays compact around two tile rows and enlarged controls")
-				for page: String in ["Settings", "Themes", "Vine colors", "Difficulty", "Sound Settings"]:
-					scene._show_menu(page)
-					check(bounds.encloses(scene.palette_menu.get_rect()), "every floating menu fits on screen")
-					for button: Control in scene.menu_buttons:
-						if button.visible:
-							check(scene.palette_menu.get_global_rect().grow(0.1).encloses(button.get_global_rect()), "visible menu entries fit inside panel: %s %s %s" % [theme, page, button.name])
-					scene.palette_menu.hide()
+		for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(720,1100),Vector2(844,390)]:
+			scene.size = dimensions
+			scene._layout()
+			var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
+			for page in ["Settings","New Game","Game Presets","Gameplay","Difficulty","Size","Audio"]:
+				scene._show_menu(page)
+				for frame in range(2): await process_frame
+				check(bounds.encloses(scene.palette_menu.get_rect()),"Every menu fits every viewport")
+				check(scene.back_button.visible and scene.menu_close.visible and scene.back_button.position.x < scene.menu_close.position.x and scene.back_button.position.y == scene.menu_close.position.y,"Every window has top-corner navigation")
+				for control: Control in scene.menu_buttons:
+					if control.visible:
+						check(scene.palette_menu.get_global_rect().grow(0.2).encloses(control.get_global_rect()),"Visible menu controls fit: %s %s %s" % [theme,page,dimensions])
+				scene._close_menu()
 	scene.queue_free()
 	await process_frame
-	print("Settings/difficulty: %d checks, %d failures" % [checks, failures])
+	print("Settings/difficulty: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)

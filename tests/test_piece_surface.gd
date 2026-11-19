@@ -50,7 +50,7 @@ func _run() -> void:
 				var style: StyleBoxFlat = button.get_theme_stylebox(state)
 				check(style.border_width_left >= 2 and style.border_width_right >= 2 and style.border_width_top >= 2 and style.border_width_bottom >= 2, "every button has a visible border, including disabled and menu controls")
 				check(style.bg_color != Interface.controls() and style.bg_color.a == 1.0, "every button retains its theme tint in every state")
-		for page: String in ["Settings", "Themes", "Difficulty", "Sound Settings", "Vine colors"]:
+		for page: String in ["Settings", "New Game", "Game Presets", "Gameplay", "Difficulty", "Size", "Audio"]:
 			scene._show_menu(page)
 			for button: Control in scene.menu_buttons:
 				if button.visible and button is Button:

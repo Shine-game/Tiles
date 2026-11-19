@@ -42,10 +42,26 @@ func run() -> void:
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
 				if dimensions.y > dimensions.x*1.5:
-					check(is_equal_approx(scene.board_view.size.x,dimensions.x),"Portrait frame fills available width")
+					check(scene.board_view.size.x <= dimensions.x and scene.board_view.size.x >= dimensions.x * 0.8,"Portrait frame uses the width while allowing a full-size preview")
+				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")
+				check(scene.blue_button.position.x >= scene._layout_insets(dimensions).x + 6,"Buttons have extra edge clearance")
 	Palette.select_theme("vines")
 	scene.size = Vector2(720,1100)
 	scene._reset()
+	check(scene.get_children().all(func(child):return not child is Label),"Playing screen has no inscriptions")
+	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
+	check(is_equal_approx(scene.place_button.size.x,98.952),"Bottom buttons are 20 percent larger")
+	for piece: Dictionary in Rules.PIECES.values():
+		var shape: Array = piece.cells
+		for turn in range(4):
+			scene.cells = shape
+			scene._refresh()
+			var preview: Dictionary = scene.piece_view.geometry()
+			check(is_equal_approx(preview.unit,scene.board_view.pitch),"All orientations retain full tile size")
+			for cell: Vector2i in shape:
+				var face := Rect2(preview.origin+Vector2(cell)*preview.unit,Vector2.ONE*preview.unit)
+				check(Rect2(Vector2.ZERO,scene.piece_view.size).grow(0.1).encloses(face),"Every preview square fits without clipping")
+			shape = Rules.rotate(shape)
 	check(scene.board_view.z_index + scene.board_view.tile_floor.z_index > 0,"Tile backgrounds draw above UI background")
 	scene.cells = Rules.PIECES.J.cells.duplicate()
 	scene._refresh()

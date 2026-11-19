@@ -142,7 +142,7 @@ func _build_pattern(before: Array, after: Array) -> void:
 		fountain_water.queue_redraw()
 	if board_frame == null:
 		board_frame = Frame.new()
-		board_frame.thin_rim = 7.0 if flush_frame else 0.0
+		board_frame.thin_rim = 14.0 if flush_frame else 0.0
 		add_child(board_frame)
 	board_frame.apply_theme(Palette.theme_id())
 	if reef_water == null and coral_reef:
@@ -375,7 +375,7 @@ func update_geometry() -> void:
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
 	if flush_frame and (board_frame == null or not board_frame.is_present()):
-		field = Rect2(field.position + Vector2.ONE * 7, field.size - Vector2.ONE * 14)
+		field = Rect2(field.position + Vector2.ONE * 14, field.size - Vector2.ONE * 28)
 		side = field.size.x
 	if board_frame != null and board_frame.is_present():
 		if flush_frame:
@@ -477,7 +477,7 @@ func _draw() -> void:
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 	if flush_frame and (board_frame == null or not board_frame.is_present()):
-		draw_rect(field.grow(3.5), Color("999999") if Palette.zen_garden else Color(Palette.text(), 0.4), false, 7, true)
+		draw_rect(field.grow(7), Color("999999") if Palette.zen_garden else Color(Palette.text(), 0.4), false, 14, true)
 	if show_guides:
 		_draw_guides()
 	if coral_reef or clockwork or zen_garden:

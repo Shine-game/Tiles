@@ -41,8 +41,7 @@ func _draw() -> void:
 	if count >= 0:
 		var font := get_theme_default_font()
 		var font_size := clampi(roundi(size.x * 0.25),12,22)
-		var center := Vector2(size.x * 0.86,size.y * 0.14)
-		draw_circle(center,font_size*0.65,Palette.controls(),true,-1,true)
+		var center := Vector2(size.x * 0.82,size.y * 0.19)
 		var text := str(count)
 		var extent := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size)
 		draw_string(font,center+Vector2(-extent.x*0.5,font_size*0.35),text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Palette.text())

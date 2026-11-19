@@ -32,14 +32,14 @@ func run():
  root.add_child(scene)
  var previous_background:float=scene.sounds.background_volume
  var previous_effects:float=scene.sounds.effects_volume
- scene._show_menu("Sound Settings")
+ scene._show_menu("Audio")
  assert(scene.ambience_volume_row.visible and scene.effects_volume_row.visible)
  scene.ambience_volume_slider.value=37
  scene.effects_volume_slider.value=62
  assert(is_equal_approx(scene.sounds.background_volume,0.37) and is_equal_approx(scene.sounds.effects_volume,0.62))
  assert("37%" in scene.ambience_volume_row.get_child(0).text)
  assert("62%" in scene.effects_volume_row.get_child(0).text)
- scene._show_menu("Themes")
+ scene._show_menu("New Game")
  assert(not scene.ambience_volume_row.visible)
  scene.sounds.set_background_volume(previous_background)
  scene.sounds.set_effects_volume(previous_effects)
