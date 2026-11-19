@@ -51,11 +51,14 @@ func run() -> void:
 	check(scene.get_children().all(func(child):return not child is Label),"Playing screen has no inscriptions")
 	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
 	check(is_equal_approx(scene.place_button.size.x,98.952),"Bottom buttons are 20 percent larger")
+	var fixed_board: Rect2 = scene.board_view.get_rect()
+	var fixed_pitch: float = scene.board_view.pitch
 	for piece: Dictionary in Rules.PIECES.values():
 		var shape: Array = piece.cells
 		for turn in range(4):
 			scene.cells = shape
 			scene._refresh()
+			check(scene.board_view.get_rect().is_equal_approx(fixed_board) and is_equal_approx(scene.board_view.pitch,fixed_pitch),"Every offered shape and rotation keeps the board fixed")
 			var preview: Dictionary = scene.piece_view.geometry()
 			check(is_equal_approx(preview.unit,scene.board_view.pitch),"All orientations retain full tile size")
 			for cell: Vector2i in shape:

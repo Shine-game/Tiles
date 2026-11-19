@@ -66,10 +66,12 @@ func _run() -> void:
 	var previous = scene.game
 	var original_board: Array = scene.game.board.duplicate(true)
 	click(scene.settings_options[0])
-	check(scene.menu_page == "New Game" and scene.theme_options.all(func(button):return button.visible),"New Game lists every theme")
-	click(scene.theme_options[Palette.THEMES.find("vines")])
+	check(scene.menu_page == "New Game" and scene.theme_options.all(func(button):return button.visible),"New Game lists the available themes")
+	check(scene.theme_options.map(func(button):return button.text.replace("✓ ","")) == ["Porcelain Vines","Coral Reef","Mechanical Workshop"],"Theme menu has exactly the requested names and order")
+	check(scene.theme_options.all(func(button):return button.get_meta("theme_id") != "zen_garden"),"Zen is excluded from the theme menu")
+	click(scene.theme_options[0])
 	check(scene.menu_page == "Game Presets" and scene.game == previous and Palette.clockwork,"Choosing a theme only opens preset review")
-	check("Vines" in scene.preset_summary.text and "Hard" in scene.preset_summary.text and "9 × 9" in scene.preset_summary.text,"Review shows theme and current presets")
+	check("Porcelain Vines" in scene.preset_summary.text and "Hard" in scene.preset_summary.text and "9 × 9" in scene.preset_summary.text,"Review shows theme and current presets")
 	click(scene.change_presets_button)
 	check(scene.menu_page == "Gameplay","Change opens Gameplay")
 	click(scene.gameplay_options[0])
@@ -87,12 +89,12 @@ func _run() -> void:
 	check(scene.menu_page == "Game Presets" and "Easy" in scene.preset_summary.text and "11 × 11" in scene.preset_summary.text,"Back from Change returns to updated preset review")
 	click(scene.back_button)
 	check(scene.menu_page == "New Game","Review Back returns to the theme list")
-	click(scene.theme_options[Palette.THEMES.find("vines")])
+	click(scene.theme_options[0])
 	click(scene.menu_close)
 	check(not scene.palette_menu.visible and scene.game == previous and scene.game.board == original_board,"Close cancels New Game without replacing the board")
 	click(scene.palette_button)
 	click(scene.settings_options[0])
-	click(scene.theme_options[Palette.THEMES.find("vines")])
+	click(scene.theme_options[0])
 	click(scene.new_button)
 	check(not scene.palette_menu.visible and scene.game != previous and Palette.theme_id() == "vines","Start applies the selected theme")
 	check(scene.game.board.size() == 11 and scene.game.difficulty == Game.Difficulty.EASY,"Start applies size and difficulty presets")
@@ -135,6 +137,19 @@ func _run() -> void:
 					if control.visible:
 						check(scene.palette_menu.get_global_rect().grow(0.2).encloses(control.get_global_rect()),"Visible menu controls fit: %s %s %s" % [theme,page,dimensions])
 				scene._close_menu()
+	var active_game = scene.game
+	var active_size: int = scene.game.board.size()
+	var active_level: int = scene.game.difficulty
+	var active_theme: String = Palette.theme_id()
+	scene.requested_size = 9 if active_size == 11 else 11
+	scene.difficulty = Game.Difficulty.DIFFICULT if active_level == Game.Difficulty.EASY else Game.Difficulty.EASY
+	var preset_size: int = scene.requested_size
+	var preset_level: int = scene.difficulty
+	scene.replay_button.pressed.emit()
+	check(scene.game != active_game and scene.game.moves == 0 and scene.game.history.is_empty(),"Replay restarts the current game")
+	check(scene.game.board.size() == active_size and scene.game.difficulty == active_level and Palette.theme_id() == active_theme,"Replay keeps the active game theme, size and difficulty")
+	check(scene.requested_size == preset_size and scene.difficulty == preset_level,"Replay preserves pending New Game presets")
+	check(scene.replay_button.position.x == scene.palette_button.position.x and scene.replay_button.position.y > scene.palette_button.position.y and scene.replay_button.position.y < scene.flip_button.position.y,"Replay sits between Settings and Flip in the upper-right column")
 	scene.queue_free()
 	await process_frame
 	print("Settings/difficulty: %d checks, %d failures" % [checks,failures])

@@ -1,6 +1,8 @@
 extends Control
 
 const Palette = preload("res://scripts/interface_palette.gd")
+const PiecePalette = preload("res://scripts/palette.gd")
+var color := 1
 var kind := ""
 var count := -1
 
@@ -9,7 +11,7 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
-	var ink := Palette.text()
+	var ink := PiecePalette.tile(color) if kind == "place" else Palette.text()
 	if get_parent() is Button and get_parent().disabled:
 		ink.a *= 0.4
 	var unit := minf(size.x, size.y) * 0.32
@@ -23,6 +25,9 @@ func _draw() -> void:
 		"undo":
 			draw_polyline(PackedVector2Array([Vector2(-0.7,-0.4),Vector2(0.25,-0.4),Vector2(0.65,-0.1),Vector2(0.65,0.35),Vector2(0.3,0.6),Vector2(-0.2,0.6)]),ink,0.18,true)
 			draw_polyline(PackedVector2Array([Vector2(-0.2,-0.85),Vector2(-0.75,-0.4),Vector2(-0.2,0.05)]),ink,0.18,true)
+		"replay":
+			draw_arc(Vector2.ZERO,0.78,-PI*0.6,PI*1.1,36,ink,0.16,true)
+			draw_colored_polygon(PackedVector2Array([Vector2(-0.74,-0.32),Vector2(-0.96,0.12),Vector2(-0.42,-0.02)]),ink)
 		"skip":
 			draw_line(Vector2(-0.8,0),Vector2(0.65,0),ink,0.2,true)
 			draw_polyline(PackedVector2Array([Vector2(0.1,-0.6),Vector2(0.7,0),Vector2(0.1,0.6)]),ink,0.2,true)

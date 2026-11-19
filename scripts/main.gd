@@ -15,6 +15,11 @@ const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
+const MENU_THEMES = {
+	"vines": "Porcelain Vines",
+	"coral_reef": "Coral Reef",
+	"clockwork": "Mechanical Workshop",
+}
 const ColorMark = preload("res://scripts/color_mark.gd")
 const ActionIcon = preload("res://scripts/action_icon.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
@@ -57,6 +62,7 @@ var place_button: Button
 var flip_button: Button
 var blue_button: Button
 var new_button: Button
+var replay_button: Button
 var palette_button: Button
 var palette_menu: PanelContainer
 var palette_list: Control
@@ -170,11 +176,12 @@ func _build_interface() -> void:
 	new_button = _button("Start", _start_new_game)
 	size_picker = _button("Size", _show_menu.bind("Size"))
 	palette_button = _button("⚙", _toggle_palette_menu)
-	for pair: Array in [[erase_button,"erase"],[undo_button,"undo"],[skip_button,"skip"],[palette_button,"settings"],[flip_button,"flip"],[place_button,"place"]]:
+	replay_button = _button("", _replay_game)
+	for pair: Array in [[erase_button,"erase"],[undo_button,"undo"],[skip_button,"skip"],[palette_button,"settings"],[replay_button,"replay"],[flip_button,"flip"],[place_button,"place"]]:
 		var action = ActionIcon.new()
 		action.kind = pair[1]
 		pair[0].text = ""
-		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
+		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "replay":"Replay this game", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
 		pair[0].add_child(action)
 		action.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	palette_menu = PanelContainer.new()
@@ -213,7 +220,7 @@ func _build_interface() -> void:
 		control.z_index = 50
 
 func _controls() -> Array:
-	return [place_button, undo_button, skip_button, erase_button, flip_button, blue_button, palette_button, indicators[0].panel]
+	return [place_button, undo_button, skip_button, erase_button, flip_button, blue_button, palette_button, replay_button, indicators[0].panel]
 
 func _set_rect(control: Control, rect: Rect2) -> void:
 	control.position = rect.position
@@ -271,9 +278,12 @@ func _layout() -> void:
 	var preview_left := controls_left + control_side + gap
 	var preview_width := maxf(1, controls_right - gap - preview_left)
 	var extent := Vector2i.ONE
-	for cell: Vector2i in cells:
-		extent = extent.max(cell + Vector2i.ONE)
-	# Fit full-sized preview tiles rather than shrinking the presented piece.
+	for definition: Dictionary in Rules.PIECES.values():
+		for cell: Vector2i in definition.cells:
+			extent = extent.max(cell + Vector2i.ONE)
+	# Reserve both orientations of every piece, so offers and rotations never
+	# move the board or change the tile size during the game.
+	extent = Vector2i.ONE * maxi(extent.x, extent.y)
 	var low := 28.0
 	var high := maxf(low, view.x - 2 * edge)
 	for iteration in range(18):
@@ -292,6 +302,7 @@ func _layout() -> void:
 	for i in range(3):
 		_set_rect([erase_button, undo_button, skip_button][i], Rect2(controls_left, top + i * (header_height - control_side) / 2, control_side, control_side))
 	_set_rect(palette_button, Rect2(controls_right, top, control_side, control_side))
+	_set_rect(replay_button, Rect2(controls_right, top + (header_height - control_side) / 2, control_side, control_side))
 	_set_rect(flip_button, Rect2(controls_right, top + header_height - control_side, control_side, control_side))
 	_set_rect(piece_view, Rect2(preview_left, top, preview_width, header_height))
 	var board_top := top + header_height + gap
@@ -342,7 +353,7 @@ func _update_summaries(board: Array) -> void:
 	var indicator: Dictionary = indicators[0]
 	indicator.icon.available = states.map(func(state: Dictionary): return state.possible)
 	indicator.icon.complete = states.map(func(state: Dictionary): return occupied and state.complete)
-	indicator.icon.saved = saved_fingerprint == _design_fingerprint()
+	indicator.icon.saved = board == game.board and saved_fingerprint == _design_fingerprint()
 	indicator.icon.queue_redraw()
 	indicator.panel.disabled = not _can_save() or saving
 	_apply_button_style(indicator.panel, indicator.icon.complete.any(func(value): return value))
@@ -376,8 +387,19 @@ func _preview() -> void:
 		legal = game.placement(cells, selected).ok
 	floating_piece.valid = legal
 	place_button.disabled = not physical or game.over or board_view.growing or erase_mode or saving
-	_update_summaries(game.board)
+	place_button.get_child(0).color = game.current_color
+	place_button.get_child(0).queue_redraw()
+	_update_summaries(_prediction_board())
 	_update_floating_position()
+
+# Preview symmetry on a copy; saving and game rules still use the committed board.
+func _prediction_board() -> Array:
+	if not has_hover or game.over or erase_mode or cells.is_empty() or not game.physical_placement(cells, selected).ok:
+		return game.board
+	var predicted: Array = game.board.duplicate(true)
+	for cell: Vector2i in cells:
+		predicted[selected.y + cell.y][selected.x + cell.x] = game.current_color
+	return predicted
 
 func _update_floating_position() -> void:
 	floating_piece.pitch = board_view.pitch
@@ -565,10 +587,15 @@ func _ask_reset(n: int) -> void:
 		requested_size = n
 		_reset())
 
-func _reset() -> void:
+func _replay_game() -> void:
+	if saving: return
+	menu_history.clear()
+	_reset(game.board.size(), game.difficulty)
+
+func _reset(board_size: int = -1, level: int = -1) -> void:
 	palette_menu.hide()
 	erase_mode = false
-	game = Game.new(requested_size, -1, difficulty)
+	game = Game.new(requested_size if board_size < 0 else board_size, -1, difficulty if level < 0 else level)
 	if board_view.zen_visuals != null and board_view.zen_visuals.pond != null:
 		board_view.zen_visuals.pond.reset_choices()
 	if board_view.zen_visuals != null and board_view.zen_visuals.trees != null:
@@ -609,8 +636,9 @@ func _build_settings() -> void:
 	menu_close.tooltip_text = "Close"
 	for page: String in ["New Game", "Gameplay", "Gallery", "Audio"]:
 		settings_options.append(_menu_button(page, _open_gallery if page == "Gallery" else _show_menu.bind(page)))
-	for id: String in Palette.THEMES:
-		var option := _menu_button(Palette.theme_label(id), _review_new_game.bind(id))
+	for id: String in MENU_THEMES:
+		var option := _menu_button(MENU_THEMES[id], _review_new_game.bind(id))
+		option.set_meta("theme_id", id)
 		option.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		option.add_theme_constant_override("outline_size", 0)
 		var tile := ThemeTile.new()
@@ -696,9 +724,10 @@ func _show_menu(page: String, remember: bool = true) -> void:
 	dragging = false
 	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
 	_refresh_theme()
-	_update_summaries(game.board)
+	_update_summaries(_prediction_board())
 
 func _review_new_game(theme: String) -> void:
+	if theme not in MENU_THEMES: return
 	pending_theme = theme
 	_show_menu("Game Presets")
 
@@ -711,7 +740,7 @@ func _set_size_preset(n: int) -> void:
 	_back_menu()
 
 func _start_new_game() -> void:
-	if pending_theme not in Palette.THEMES: return
+	if pending_theme not in MENU_THEMES: return
 	Palette.select_theme(pending_theme)
 	menu_history.clear()
 	_reset()
@@ -765,7 +794,7 @@ func _layout_palette_menu(pad: float) -> void:
 	new_button.text = "Start"
 	gameplay_options[0].text = "Difficulty: " + ["Easy", "Moderate", "Hard"][difficulty]
 	size_picker.text = "Size: %d × %d" % [requested_size,requested_size]
-	preset_summary.text = "%s\nDifficulty: %s\nSize: %d × %d\nAxes: %s" % [Palette.theme_label(pending_theme) if not pending_theme.is_empty() else Palette.theme_name(), ["Easy", "Moderate", "Hard"][difficulty], requested_size,requested_size,"On" if board_view.show_axes else "Off"]
+	preset_summary.text = "%s\nDifficulty: %s\nSize: %d × %d\nAxes: %s" % [MENU_THEMES.get(pending_theme, MENU_THEMES.get(Palette.theme_id(), Palette.theme_name())), ["Easy", "Moderate", "Hard"][difficulty], requested_size,requested_size,"On" if board_view.show_axes else "Off"]
 	for i in range(size_options.size()):
 		var n := 9 if i == 0 else 11
 		size_options[i].text = ("✓ " if requested_size == n else "") + "%d × %d" % [n,n]
@@ -774,8 +803,8 @@ func _layout_palette_menu(pad: float) -> void:
 	background_button.text = "Background noises: " + ("On" if sounds.background_enabled else "Off")
 	effects_button.text = "Special effects: " + ("On" if sounds.effects_enabled else "Off")
 	for i in range(theme_options.size()):
-		var id: String = Palette.THEMES[i]
-		theme_options[i].text = ("✓ " if id == Palette.theme_id() else "") + Palette.theme_label(id)
+		var id: String = theme_options[i].get_meta("theme_id")
+		theme_options[i].text = ("✓ " if id == Palette.theme_id() else "") + MENU_THEMES[id]
 		var tile: Control = theme_options[i].get_child(0)
 		var tile_side: float = maxf(16, row_height - 16 * scale_factor)
 		theme_options[i].set_meta("menu_right_inset", tile_side + 20)
@@ -857,11 +886,11 @@ func _refresh_theme() -> void:
 	for button: Button in themed_buttons:
 		var active := false
 		var color := 1
-		if button in [blue_button]:
+		if button in [blue_button, place_button]:
 			color = game.current_color
-			active = game.current_color == color
+			active = button == blue_button
 		elif theme_options.has(button):
-			active = Palette.THEMES[theme_options.find(button)] == Palette.theme_id()
+			active = button.get_meta("theme_id") == Palette.theme_id()
 		elif difficulty_options.has(button):
 			active = difficulty_options.find(button) == difficulty
 		elif size_options.has(button):
@@ -877,7 +906,7 @@ func _refresh_theme() -> void:
 		_apply_button_style(button, active, color)
 	for button: Button in [blue_button]:
 		button.get_child(0).queue_redraw()
-	for button: Button in [erase_button, undo_button, skip_button, palette_button, flip_button, place_button]:
+	for button: Button in [erase_button, undo_button, skip_button, palette_button, replay_button, flip_button, place_button]:
 		button.get_child(0).queue_redraw()
 	_refresh_menu_style()
 	menu_title.add_theme_color_override("font_color", Interface.text())
@@ -916,7 +945,7 @@ func _toggle_axes() -> void:
 	board_view.show_axes = not board_view.show_axes
 	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
 	_refresh_theme()
-	_update_summaries(game.board)
+	_update_summaries(_prediction_board())
 
 func _toggle_background() -> void:
 	sounds.set_background_enabled(not sounds.background_enabled)

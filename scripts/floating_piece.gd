@@ -23,5 +23,6 @@ func cell_at(point: Vector2) -> Vector2i:
 
 func _draw() -> void:
 	Surface.begin(self)
-	var ink: Color = Palette.tile(color) if valid else Palette.INVALID
+	# Placement validity controls the Place action; it must not hide the chosen color.
+	var ink: Color = Palette.tile(color)
 	Surface.draw_piece(self, cells, origin - Vector2(0, lift()), pitch, ink)
