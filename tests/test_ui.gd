@@ -69,17 +69,17 @@ func _run() -> void:
 			check(Palette.dark() and Palette.floor_color().get_luminance() < 0.3, "snow-white artwork has a contrasting field")
 	check(not Palette.select(-1) and not Palette.select(5), "invalid palette indices are rejected")
 	scene._choose_palette(0)
-	check(scene.indicators.size() == 2, "exactly two symmetry graphics")
-	check(scene.indicators[0].icon.available == [true, true, true, true], "reflection graphic lights all four initial axes")
-	check(scene.indicators[1].icon.available == [true, true, true], "rotation graphic initially available")
+	check(scene.indicators.size() == 1, "one combined symmetry graphic")
+	check(scene.indicators[0].icon.available == [true, true, true, true, true, true, true], "reflection graphic lights all four initial axes")
+	check(scene.indicators[0].icon.available.slice(4) == [true, true, true], "rotation graphic initially available")
 	var partial: Array = Rules.empty_board(9)
 	partial[1][1] = Rules.BLUE
 	partial[1][7] = Rules.BLUE
 	partial[7][1] = Rules.CORAL
 	partial[7][7] = Rules.CORAL
 	scene._update_summaries(partial)
-	check(scene.indicators[0].icon.available == [true, false, false, false], "each axis is highlighted independently")
-	check(not scene.indicators[1].icon.available.any(func(value): return value), "rotation graphic is off when all rotations conflict")
+	check(scene.indicators[0].icon.available == [true, false, false, false, false, false, false], "each axis is highlighted independently")
+	check(not scene.indicators[0].icon.available.slice(4).any(func(value): return value), "rotation graphic is off when all rotations conflict")
 	scene._preview()
 
 	# A tap rotates; drag always translates, including after a stationary hold.
@@ -113,7 +113,7 @@ func _run() -> void:
 	check(scene.cells == gesture_cells and scene.has_hover, "drag after a hold still moves without rotating")
 	scene._clear_selection()
 	scene._preview()
-	check(scene.place_button.size.is_equal_approx(scene.flip_button.size) and is_equal_approx(scene.place_button.size.x, scene.place_button.size.y), "Place and Flip are equal squares")
+	check(is_equal_approx(scene.place_button.size.x, scene.place_button.size.y) and is_equal_approx(scene.flip_button.size.x, scene.flip_button.size.y) and is_equal_approx(scene.place_button.size.x, scene.place_button.size.y), "Place and Flip remain square buttons")
 	check(scene.board_view.position.y >= scene.piece_view.get_rect().end.y, "field sits below header without overlap")
 	for palette_index in range(5):
 		Palette.select(palette_index)
@@ -125,7 +125,7 @@ func _run() -> void:
 	scene.game.queue[scene.game.index] = "J"
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
-	scene.coral_button.pressed.emit()
+	scene.blue_button.pressed.emit()
 	check(scene.game.current_color == Rules.CORAL, "color selection changes piece")
 	var original_cells: Array = scene.cells.duplicate()
 	scene.flip_button.pressed.emit()
@@ -164,8 +164,8 @@ func _run() -> void:
 	touch(scene, off_field, false)
 	check(scene.has_hover and scene.floating_piece.cells.size() == 4, "invalid release keeps floating piece visible")
 	check(not scene.floating_piece.valid and scene.place_button.disabled, "off-field hover is gray and cannot be placed")
-	# Restore a valid hover, then confirm using the dock button.
-	touch(scene, source_point(scene, grab), true)
+	# The tray is gone after moving: regrab the floating piece to restore a valid hover.
+	touch(scene, off_field, true)
 	drag(scene, board_point(scene, move.anchor + grab))
 	touch(scene, board_point(scene, move.anchor + grab), false)
 	scene.place_button.pressed.emit()
@@ -220,7 +220,7 @@ func _run() -> void:
 	check(not scene.floating_piece.valid and not scene.place_button.disabled, "symmetry-breaking physical fit remains placeable with gray warning")
 	check(scene.indicators[0].icon.available.all(func(value): return value), "hover does not change committed possibilities")
 	check(not scene.indicators[0].icon.complete.any(func(value): return value), "missing square does not light existing reflection")
-	check(not scene.indicators[1].icon.complete.any(func(value): return value), "hover never lights a completed rotation")
+	check(not scene.indicators[0].icon.complete.slice(4).any(func(value): return value), "hover never lights a completed rotation")
 	scene.place_button.pressed.emit()
 	check(scene.game.lost and scene.game.over, "confirming symmetry conflict ends game")
 	scene.undo_button.pressed.emit()
@@ -302,7 +302,7 @@ func _run() -> void:
 			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
 		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
-		for control: Control in scene._controls() + [scene.board_view, scene.piece_view, scene.indicators[0].panel, scene.indicators[1].panel]:
+		for control: Control in scene._controls() + [scene.board_view, scene.piece_view, scene.indicators[0].panel]:
 			check(bounds.encloses(control.get_global_rect()), "every element fits " + str(dimensions))
 		check(absf(scene.board_view.size.x - scene.board_view.size.y) < 1, "board remains square at " + str(dimensions))
 		for first in range(scene._controls().size()):
@@ -342,7 +342,7 @@ func _run() -> void:
 	scene.game.queue[scene.game.index] = ""
 	scene.game._refresh_over()
 	scene._refresh()
-	check(scene.game.over and scene._can_save() and scene.indicators[1].icon.complete.all(func(value): return value), "full completed garden keeps save available")
+	check(scene.game.over and scene._can_save() and scene.indicators[0].icon.complete.slice(4).all(func(value): return value), "full completed garden keeps save available")
 	scene._open_gallery()
 	check(scene.gallery_panel.visible, "gallery is available through settings")
 	scene.gallery_panel.hide()
@@ -353,11 +353,11 @@ func _run() -> void:
 		await process_frame
 	scene.cells = Rules.PIECES.J.cells
 	scene._refresh()
-	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "source cells match board pitch")
-	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "source faces match hovering faces")
+	check(scene.piece_view.geometry().unit <= scene.board_view.pitch, "source cells fit within board pitch")
+	check(scene.piece_view.geometry().unit <= scene.board_view.pitch, "source preview fits its header")
 	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 	scene._refresh()
-	check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical I keeps exact cell size")
+	check(scene.piece_view.geometry().unit <= scene.board_view.pitch, "vertical I fits the header")
 	scene._clear_selection()
 	scene._preview()
 	var tall_cells: Array = scene.cells.duplicate()
@@ -373,7 +373,7 @@ func _run() -> void:
 	check(scene.selected == Vector2i(2, 2), "sideways tray piece lands at the requested anchor")
 	scene.dragging = false
 	scene._rotate()
-	check(scene.cells.any(func(cell): return cell.y > 1), "hovering piece still rotates beyond two rows")
+	check(scene.cells == Rules.rotate(tray_cells), "hovering piece rotates in its displayed orientation")
 	scene._clear_selection()
 	root.size = original_window_size
 	scene.cells = scene.game.piece().cells

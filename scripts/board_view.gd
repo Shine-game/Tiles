@@ -54,6 +54,7 @@ var growing := false
 var field := Rect2()
 var pitch := 1.0
 var grid_inset := 8.0
+var flush_frame := false
 var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
 var announced_flowers: Dictionary = {}
@@ -141,6 +142,7 @@ func _build_pattern(before: Array, after: Array) -> void:
 		fountain_water.queue_redraw()
 	if board_frame == null:
 		board_frame = Frame.new()
+		board_frame.thin_rim = 7.0 if flush_frame else 0.0
 		add_child(board_frame)
 	board_frame.apply_theme(Palette.theme_id())
 	if reef_water == null and coral_reef:
@@ -372,8 +374,14 @@ func update_geometry() -> void:
 		return
 	var side: float = minf(size.x, size.y)
 	field = Rect2((size - Vector2.ONE * side) / 2, Vector2.ONE * side)
+	if flush_frame and (board_frame == null or not board_frame.is_present()):
+		field = Rect2(field.position + Vector2.ONE * 7, field.size - Vector2.ONE * 14)
+		side = field.size.x
 	if board_frame != null and board_frame.is_present():
-		field = Frame.fit(Rect2(Vector2.ZERO, size), Palette.theme_id())
+		if flush_frame:
+			field = Rect2(field.position + Vector2.ONE * board_frame.thin_rim, field.size - Vector2.ONE * board_frame.thin_rim * 2)
+		else:
+			field = Frame.fit(Rect2(Vector2.ZERO, size), Palette.theme_id())
 		side = field.size.x
 		board_frame.surround(field)
 	if tile_floor != null and tile_floor.visible:
@@ -384,6 +392,9 @@ func update_geometry() -> void:
 	var edge_allowance: float = 3.0 * Platform.SOURCE_DEPTH / Platform.SOURCE_CELL + 0.02
 	pitch = maxf(1, minf((side - 16.0) / board.size(), (side - 2.0) / (board.size() + 2 * edge_allowance)))
 	grid_inset = maxf(8, (side - board.size() * pitch) / 2)
+	if flush_frame:
+		pitch = side / board.size()
+		grid_inset = 0.0
 	if vines_formations!=null and vines_formations.visible:vines_formations.transform=_sprite_view_transform()
 	if occupied_platform != null:
 		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork or zen_garden else -1.0, not zen_garden)
@@ -438,7 +449,7 @@ func surface_depth() -> float:
 	return 4.0 if clockwork or zen_garden else Platform.depth(pitch)
 
 func _floor_point(position_in_grid: Vector2) -> Vector2:
-	return field.position + Vector2.ONE * grid_inset + position_in_grid * pitch
+	return field.position + Vector2.ONE * grid_inset + position_in_grid * pitch + (Vector2(0, surface_depth()) if flush_frame else Vector2.ZERO)
 
 func _point(position_in_grid: Vector2) -> Vector2:
 	return _floor_point(position_in_grid) - Vector2(0, surface_depth())
@@ -465,6 +476,8 @@ func _draw() -> void:
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
+	if flush_frame and (board_frame == null or not board_frame.is_present()):
+		draw_rect(field.grow(3.5), Color("999999") if Palette.zen_garden else Color(Palette.text(), 0.4), false, 7, true)
 	if show_guides:
 		_draw_guides()
 	if coral_reef or clockwork or zen_garden:
@@ -478,11 +491,11 @@ func _draw_guides() -> void:
 	for y in range(n):
 		for x in range(n + 1):
 			if Growth.value(board, Vector2i(x - 1, y)) == 0 and Growth.value(board, Vector2i(x, y)) == 0:
-				draw_line(_floor_point(Vector2(x, y)), _floor_point(Vector2(x, y + 1)), ink, width, true)
+				draw_line(_guide_point(Vector2(x, y)), _guide_point(Vector2(x, y + 1)), ink, width, true)
 	for y in range(n + 1):
 		for x in range(n):
 			if Growth.value(board, Vector2i(x, y - 1)) == 0 and Growth.value(board, Vector2i(x, y)) == 0:
-				draw_line(_floor_point(Vector2(x, y)), _floor_point(Vector2(x + 1, y)), ink, width, true)
+				draw_line(_guide_point(Vector2(x, y)), _guide_point(Vector2(x + 1, y)), ink, width, true)
 
 func _port_tangent(cell: Vector2i, neighbor: Vector2i) -> Vector2:
 	var direction := Vector2(neighbor - cell)
@@ -549,3 +562,6 @@ func _star(center: Vector2, radius: float, ink: Color) -> void:
 		points.append(center + Vector2.from_angle(i * TAU / 8) * radius * (1.0 if i % 2 == 0 else 0.23))
 	draw_colored_polygon(points, ink)
 	draw_polyline(PackedVector2Array([points[0], points[2], points[4], points[6], points[0]]), Color(ink, 0.18), 0.6, true)
+
+func _guide_point(cell: Vector2) -> Vector2:
+	return _point(cell) if flush_frame else _floor_point(cell)

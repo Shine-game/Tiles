@@ -11,13 +11,9 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
 
-# Keep the source tray at two rows; normalize only its display orientation.
-# Picking it up adopts this orientation. Floating pieces rotate independently.
+# The tray and floating piece keep the same orientation, including tap rotations.
 func display_cells() -> Array:
-	var height := 0
-	for cell: Vector2i in cells:
-		height = maxi(height, cell.y + 1)
-	return Rules.rotate(cells) if height > 2 else cells
+	return cells
 
 func display_cell(cell: Vector2i) -> Vector2i:
 	var index: int = cells.find(cell)

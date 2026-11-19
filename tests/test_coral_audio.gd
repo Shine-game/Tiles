@@ -98,7 +98,7 @@ func _run() -> void:
 	check(reef.event_log.any(func(event: Dictionary): return event.kind == "anemone" and event.members.size() == 4), "one long bubble represents four anemone feet")
 	check(reef.features.filter(func(voice): return voice.player.playing).size() <= 2 and reef.duck_target == -2, "overlapping short/long bubbles respect voice and duck caps")
 	scene.board_view.advance_growth(scene.board_view.pattern.duration + 1)
-	check(not scene.board_view.growing and reef.features.any(func(voice): return voice.player.playing), "bubble tails never prolong Place gate")
+	check(not scene.board_view.growing and reef.structure_loop.player.playing, "continuous tier-three sound never prolongs Place gate")
 	# Pause must freeze dispatch, and resume must not replay already-dispatched cues.
 	scene.board_view.animate_growth(empty, block)
 	scene.board_view.set_process(false)

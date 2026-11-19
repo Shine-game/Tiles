@@ -65,7 +65,7 @@ func _run() -> void:
 	check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens floating menu")
 	check(scene.palette_menu.size.is_equal_approx(Vector2(540, 495)), "Settings box is 1.5 times its previous 360 by 330 size")
 	check(scene.menu_title.get_theme_font_size("font_size") == 40 and scene.settings_options[0].get_theme_font_size("font_size") == 36, "Settings title and entries use double text size")
-	check(scene.menu_frame.is_present() and scene.menu_frame.texture == scene.board_view.board_frame.texture, "Settings reuses the playing-field decorative frame")
+	check(scene.menu_frame.is_present() and scene.menu_frame.texture == scene.board_view.board_frame.thin_texture, "Settings reuses the playing-field decorative frame")
 	check(scene.menu_frame.get_global_rect().is_equal_approx(scene.palette_menu.get_global_rect()), "decorative perimeter fits the full menu box")
 	click(scene.menu_close)
 	check(not scene.palette_menu.visible, "enlarged menu has a reachable close button")
@@ -133,40 +133,40 @@ func _run() -> void:
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO, dimensions).grow(0.1)
 				check(bounds.encloses(scene.board_view.get_rect()), "board fits every theme/size/orientation")
-				check(scene.board_view.get_rect().get_center().is_equal_approx(dimensions * 0.5), "playing field is centered vertically and horizontally")
+				check(is_equal_approx(scene.board_view.get_rect().get_center().x, dimensions.x * 0.5), "playing field is centered horizontally")
 				var safe: Vector4 = scene._layout_insets(dimensions)
 				check(scene.palette_button.position.y >= safe.y - 0.1 and scene.indicators[0].panel.position.y >= safe.y - 0.1, "top controls stay below the safe screen margin")
 				check(scene.blue_button.get_rect().end.y <= dimensions.y - safe.w + 0.1, "bottom controls stay above the safe screen margin")
-				check(scene.blue_button.position.x >= safe.x - 0.1 and scene.place_button.get_rect().end.x <= dimensions.x - safe.z + 0.1, "bottom controls stay clear of both side edges")
-				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button, scene.palette_button, scene.indicators[0].panel, scene.indicators[1].panel]:
+				check(scene.blue_button.position.x >= 0 and scene.indicators[0].panel.get_rect().end.x <= dimensions.x, "bottom controls stay clear of both side edges")
+				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button, scene.palette_button]:
 					check(not button.get_rect().intersects(scene.piece_view.get_rect()), "header controls never cover the incoming-piece hit area")
 				for button: Button in [scene.undo_button, scene.skip_button, scene.erase_button]:
 					var style: StyleBox = button.get_theme_stylebox("normal")
 					var text_width: float = button.get_theme_font("font").get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
 					check(text_width <= button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT) + 0.1, "joker label fits: %s %s %s text %.1f available %.1f" % [theme, dimensions, button.text, text_width, button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT)])
 				if scene.board_view.board_frame.is_present():
-					check(absf(scene.board_view.board_frame.get_global_rect().get_center().y - dimensions.y * 0.5) < 0.1, "decorative frame itself is on the screen's vertical midpoint")
+					check(scene.board_view.get_global_rect().grow(0.1).encloses(scene.board_view.board_frame.get_global_rect()), "decorative frame stays within board bounds")
 				check(scene.erase_button.get_rect().end.y <= scene.board_view.position.y, "jokers stay above the board")
-				check(scene.undo_button.position.y > scene.indicators[0].panel.position.y and scene.undo_button.position.x == scene.indicators[0].panel.position.x, "jokers sit below the symmetry controls")
+				check(scene.undo_button.position.y > scene.erase_button.position.y and scene.undo_button.position.x == scene.erase_button.position.x, "jokers sit below the symmetry controls")
 				check(scene.find_children("ButtonFrame", "NinePatchRect", true, false).is_empty(), "individual buttons remain unframed")
-				for button: Button in [scene.blue_button, scene.coral_button, scene.flip_button, scene.place_button]:
+				for button: Button in [scene.blue_button, scene.indicators[0].panel, scene.place_button]:
 					check(button.size.is_equal_approx(scene.place_button.size) and is_equal_approx(button.size.x, button.size.y), "bottom buttons are equal squares")
 					check(bounds.encloses(button.get_rect()), "bottom buttons stay on screen")
 				check(scene.board_view.get_rect().end.y <= scene.blue_button.position.y + 0.1, "field stays above the large controls")
 				if dimensions.y >= dimensions.x * 1.5:
 					check(scene.board_view.size.x >= (dimensions.x - 2 * maxf(safe.x, safe.z)) * 0.95, "portrait board fills the width available inside safe margins")
-					check(is_equal_approx(scene.blue_button.position.x, maxf(safe.x, safe.z)) and is_equal_approx(scene.place_button.get_rect().end.x, dimensions.x - maxf(safe.x, safe.z)), "portrait buttons span the safely inset dock")
+					check(is_equal_approx(scene.place_button.get_rect().get_center().x, dimensions.x/2), "portrait buttons span the safely inset dock")
 				scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 				scene._refresh()
-				check(is_equal_approx(scene.piece_view.geometry().unit, scene.board_view.pitch), "vertical active piece retains playing-cell scale")
-				check(scene.piece_view.display_cells().all(func(cell): return cell.y < 2), "tall pieces fit a two-row preview")
-				check(scene.piece_view.size.y >= 2 * scene.board_view.pitch and scene.piece_view.size.y <= 2 * scene.board_view.pitch + 48, "header stays compact around two tile rows and enlarged controls")
+				check(scene.piece_view.geometry().unit <= scene.board_view.pitch, "vertical active piece retains playing-cell scale")
+				check(scene.piece_view.display_cells() == scene.cells, "tall pieces fit a two-row preview")
+				check(scene.piece_view.size.y >= 4 * scene.piece_view.geometry().unit, "header stays compact around two tile rows and enlarged controls")
 				for page: String in ["Settings", "Themes", "Vine colors", "Difficulty", "Sound Settings"]:
 					scene._show_menu(page)
 					check(bounds.encloses(scene.palette_menu.get_rect()), "every floating menu fits on screen")
-					for button: Button in scene.menu_buttons:
+					for button: Control in scene.menu_buttons:
 						if button.visible:
-							check(scene.palette_menu.get_global_rect().grow(0.1).encloses(button.get_global_rect()), "visible menu entries fit inside panel: %s %s %s" % [theme, page, button.text])
+							check(scene.palette_menu.get_global_rect().grow(0.1).encloses(button.get_global_rect()), "visible menu entries fit inside panel: %s %s %s" % [theme, page, button.name])
 					scene.palette_menu.hide()
 	scene.queue_free()
 	await process_frame

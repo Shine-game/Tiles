@@ -2,6 +2,9 @@ class_name BoardFrame
 extends NinePatchRect
 
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
+var thin_rim := 0.0
+var thin_texture: Texture2D
+var thin_hole := Rect2()
 var full_frame: Texture2D
 var full_frame_rect := Rect2()
 var source_rect := Rect2()
@@ -53,6 +56,7 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 		return is_present()
 	theme_id = theme
 	texture = null
+	thin_texture = null
 	full_frame = null
 	queue_redraw()
 	appearance = ""
@@ -72,18 +76,44 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 		source_rect = Rect2(src[0],src[1],src[2],src[3])
 	if texture != null and texture.get_size() != Vector2(Themes.specification().frame_geometry.source_size[0], Themes.specification().frame_geometry.source_size[1]):
 		texture = null
-	visible = texture != null or full_frame != null
+	if thin_rim > 0:
+		thin_texture = full_frame if full_frame != null else texture
+		if style.has("opening_rect"):
+			var h: Array = style.opening_rect
+			thin_hole = Rect2(h[0], h[1], h[2], h[3])
+		else:
+			var m := margins()
+			thin_hole = Rect2(m.x, m.y, thin_texture.get_width() - m.x - m.z, thin_texture.get_height() - m.y - m.w)
+		texture = null
+		full_frame = null
+	visible = texture != null or full_frame != null or thin_texture != null
 	if visible:
 		appearance = style.appearance
 	return is_present()
 
 func is_present() -> bool:
-	return visible and (texture != null or full_frame != null)
+	return visible and (texture != null or full_frame != null or thin_texture != null)
 
 func _draw() -> void:
+	if thin_texture != null:
+		var source_size := thin_texture.get_size()
+		var sx := [0.0, thin_hole.position.x, thin_hole.end.x, source_size.x]
+		var sy := [0.0, thin_hole.position.y, thin_hole.end.y, source_size.y]
+		var dx := [0.0, thin_rim, size.x - thin_rim, size.x]
+		var dy := [0.0, thin_rim, size.y - thin_rim, size.y]
+		for y in range(3):
+			for x in range(3):
+				if x == 1 and y == 1: continue
+				draw_texture_rect_region(thin_texture, Rect2(dx[x], dy[y], dx[x+1]-dx[x], dy[y+1]-dy[y]), Rect2(sx[x], sy[y], sx[x+1]-sx[x], sy[y+1]-sy[y]))
+		return
 	if full_frame != null: draw_texture_rect_region(full_frame,full_frame_rect,source_rect)
 
 func surround(board_rect: Rect2) -> void:
+	if thin_rim > 0:
+		position = board_rect.position - Vector2.ONE * thin_rim
+		size = board_rect.size + Vector2.ONE * thin_rim * 2
+		queue_redraw()
+		return
 	if full_frame != null:
 		var hole: Array = profile(theme_id).opening_rect
 		var ratio := board_rect.size/Vector2(hole[2],hole[3])

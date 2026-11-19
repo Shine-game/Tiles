@@ -1,5 +1,7 @@
 extends Node
+const StructureLoop=preload("res://scripts/structure_sound_loop.gd")
 const Themes=preload("res://scripts/pattern/theme_registry.gd")
+var structure_loop=StructureLoop.new()
 var ambience:=AudioStreamPlayer.new()
 var voices:Dictionary={}
 var theme:=""
@@ -12,6 +14,7 @@ var effects_bus:="Master"
 var event_log:Array=[]
 var active_stops:Dictionary={}
 func _ready():
+ add_child(structure_loop)
  add_child(ambience)
  for tier in [1,2,3,23]:
   var voice=AudioStreamPlayer.new()
@@ -20,6 +23,7 @@ func _ready():
 func route(background:String,effects:String):
  background_bus=background
  effects_bus=effects
+ structure_loop.player.bus=effects
  ambience.bus=background
  for voice in voices.values():voice.bus=effects
 func cancel_effects():
@@ -27,6 +31,7 @@ func cancel_effects():
  pending.clear()
  for voice in voices.values():voice.stop()
 func deactivate():
+ structure_loop.clear()
  cancel_effects()
  ambience.stop()
  theme=""
@@ -50,6 +55,8 @@ func activate(next:String):
   var clip:Dictionary=config.get("combined",{}) if tier==23 else config.tiers[str(tier)]
   voices[tier].stream=load(clip.path) if clip.has("path") else null
   voices[tier].volume_db=clip.get("gain_db",0.0)
+ if config.tiers["3"].get("loop_while_exists",false):
+  structure_loop.configure(voices[3].stream,config.tiers["3"].gain_db,effects_bus)
 static func tier1_end(model)->float:
  var end:=0.0
  for event in model.sprite_growth_events.values():
@@ -116,6 +123,11 @@ static func combine(cues:Array,settings:Dictionary)->Array:
  return result
 func reconcile(model,next:String,animating:bool,clock:float,placement_id:int):
  activate(next)
+ if config.tiers["3"].get("loop_while_exists",false):
+  var structures:Variant=model.get("chains")
+  if structures is Dictionary:structures=structures.values()
+  else:structures=model.links
+  structure_loop.reconcile(structures,clock,not animating)
  if placement_id!=placement:
   placement=placement_id
   played.clear()
@@ -126,6 +138,7 @@ func reconcile(model,next:String,animating:bool,clock:float,placement_id:int):
  advance(clock)
 func advance(clock:float):
  if not is_inside_tree() or get_tree().paused:return
+ structure_loop.advance(clock)
  _apply_stops(clock)
  while not pending.is_empty() and pending[0].time<=clock:
   var cue:Dictionary=pending.pop_front()
@@ -133,6 +146,9 @@ func advance(clock:float):
   played[cue.id]=true
   var voice:AudioStreamPlayer=voices[cue.tier]
   # Let each one-shot finish; separate tiers can overlap without restarting it.
+  if cue.tier==3 and config.tiers["3"].get("loop_while_exists",false):
+   event_log.append({"tier":3,"scheduled":cue.time,"clock":clock,"placement":placement})
+   continue
   if voice.playing:continue
   if cue.has("stop_at") and clock>=float(cue.stop_at):continue
   var clip:Dictionary=config.combined if cue.tier==23 else config.tiers[str(cue.tier)]

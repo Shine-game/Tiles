@@ -1,9 +1,11 @@
 class_name CoralAudio
 extends Node
 
+const StructureLoop=preload("res://scripts/structure_sound_loop.gd")
 const Plan = preload("res://scripts/coral_audio_plan.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const SILENT_DB := -60.0
+var structure_loop=StructureLoop.new()
 var specification: Dictionary
 var assets: Dictionary = {}
 var streams: Dictionary = {}
@@ -47,6 +49,8 @@ func _ready() -> void:
 		stream.loop = meta.loop
 		stream.loop_offset = 0
 		streams[meta.id] = stream
+	add_child(structure_loop)
+	structure_loop.configure(streams[specification.events.anemone.assets[0]],float(assets[specification.events.anemone.assets[0]].gain_db),bus_name)
 	ambience = _player()
 	ambience.stream = streams.reef_ambience
 	for slot in range(2):
@@ -102,6 +106,7 @@ func invalidate() -> void:
 			_fade_voice(voice, 0.08)
 
 func deactivate(restart: bool = false) -> void:
+	structure_loop.clear()
 	generation += 1
 	var token: int = generation
 	theme_active = false
@@ -123,6 +128,8 @@ func deactivate(restart: bool = false) -> void:
 func reconcile(pattern, animating: bool, preserve: bool, clock: float, placement_id: int) -> void:
 	var was_active: bool = theme_active
 	activate()
+	if specification.events.anemone.get("loop_while_exists",false):
+		structure_loop.reconcile(pattern.unions.values(),clock,not animating)
 	var plan: Dictionary = Plan.build(pattern, placement_id, clock)
 	targets = plan.targets
 	for voice: Dictionary in features:
@@ -139,7 +146,7 @@ func reconcile(pattern, animating: bool, preserve: bool, clock: float, placement
 			_fade_voice(voice, 0.08)
 	if not animating:
 		invalidate()
-		if not preserve and was_active:
+		if not preserve and was_active and pattern.unions.is_empty():
 			deactivate(true)
 		return
 	timeline = plan
@@ -171,6 +178,7 @@ func _start_growth() -> void:
 	_log({"kind": "growth", "asset": id, "clock": visual_clock, "placement": timeline.placement})
 
 func advance(clock: float) -> void:
+	if theme_active: structure_loop.advance(clock)
 	if not theme_active or timeline.is_empty() or get_tree().paused:
 		return
 	visual_clock = clock
@@ -197,6 +205,9 @@ func _variant(cue: Dictionary) -> String:
 func _play_feature(cue: Dictionary) -> void:
 	cue.members = cue.members.filter(func(identity): return targets.has(identity))
 	if cue.members.is_empty():
+		return
+	if cue.kind == "anemone" and specification.events.anemone.get("loop_while_exists",false):
+		_log({"kind":"anemone","asset":specification.events.anemone.assets[0],"members":cue.members.duplicate(),"clock":visual_clock,"scheduled":cue.time})
 		return
 	for voice: Dictionary in features:
 		if not voice.player.playing and voice.pending.is_empty():
@@ -259,7 +270,7 @@ func _advance_bubbles(voice: Dictionary) -> void:
 		_log({"kind":"colony_bubble","asset":bubble.asset,"clock":visual_clock,"scheduled":bubble.time,"members":voice.members.duplicate()})
 
 func _update_duck() -> void:
-	var target: float = -2 if features.any(func(voice: Dictionary): return voice.player.playing or not voice.pending.is_empty()) else 0
+	var target: float = -2 if structure_loop.player.playing or features.any(func(voice: Dictionary): return voice.player.playing or not voice.pending.is_empty()) else 0
 	if is_equal_approx(target, duck_target):
 		return
 	duck_target = target

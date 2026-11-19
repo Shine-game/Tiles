@@ -41,3 +41,11 @@ Each existing feature voice can mix up to six overlapping shots through `AudioSt
 Vines tier one uses `stop_at_tier_end: true` and `fade_out_seconds: 0.04`. The shared scheduler calculates tier one's actual end from new stem edges, cell arrivals and the authored sprite-decoration growth events. It fades the rustle over the last 40 ms of that visual interval and stops it at the end, even if the original recording is longer. Tier-two/three animation and ambience do not prolong it. This is a runtime trim; the supplied source recording remains unchanged. Clockwork keeps its existing one-shot behavior because the option is enabled only for Vines.
 
 `tests/test_vines_rustle_duration.gd` covers short, medium and long patterns, the fade envelope, exact cutoff, and continued later-tier animation/ambience.
+
+## Persistent tier-three sound
+
+Clockwork's tier-three soundscape entry and Coral's anemone event now set `loop_while_exists: true`. `scripts/structure_sound_loop.gd` provides a shared player whose active lifetime follows the surviving tier-three structures. It begins as the first structure appears, continues after construction finishes, and stops when the last structure is removed or its theme is left. Settled/restored structures enable the loop immediately; ordinary redraws and removal of only some structures preserve the existing playback without restarting it.
+
+A single loop represents all tier-three structures, avoiding multiplied volume. Clockwork uses its chain-run recording; Coral uses only `bubble_long_02`. The former one-shot dispatch is suppressed for these events, so it cannot double the loop. The player follows the effects bus (through Coral's existing limiter where applicable), including its volume/mute controls. Normal scene-tree pause pauses it. Growth cancellation only clears transient effects; the subsequent board reconciliation decides whether the structure loop survives.
+
+`tests/test_tier3_sound_persistence.gd` covers both themes, construction completion, continuous looping, partial and complete removal, stable redraw, settled restoration, effects routing and theme switching. Existing Coral burst and shared soundscape regression tests remain in place.

@@ -249,7 +249,8 @@
           "3": {
             "path": "res://assets/audio/clockwork_asmr/clockwork_tier3_chain_run.wav",
             "gain_db": 0,
-            "coalesce_seconds": 0.35
+            "coalesce_seconds": 0.35,
+            "loop_while_exists": true
           }
         },
         "tier1_component_ids": [
@@ -707,7 +708,8 @@
             ],
             "bus": "ReefFeatures",
             "trigger": "anemone foot visibly begins after supporting colonies become ready",
-            "maximum_voices": 2
+            "maximum_voices": 2,
+            "loop_while_exists": true
           }
         },
         "mix": {

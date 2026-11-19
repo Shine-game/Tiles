@@ -4,6 +4,7 @@ const ThemeAssets = preload("res://scripts/pattern/asset_library.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
+const Interface = preload("res://scripts/interface_palette.gd")
 const Game = preload("res://scripts/game.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 const BoardView = preload("res://scripts/board_view.gd")
@@ -15,6 +16,7 @@ const Gallery = preload("res://scripts/gallery.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
 const ColorMark = preload("res://scripts/color_mark.gd")
+const ActionIcon = preload("res://scripts/action_icon.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
 var game = Game.new()
 var cells: Array = []
@@ -26,6 +28,9 @@ var gesture_age := 0.0
 var gesture_mode := "pending"
 var gesture_start := Vector2.ZERO
 var gesture_from_tray := false
+var tray_moved := false
+var rotate_hint: Label
+var theme_caption: Label
 var erase_mode := false
 var erase_target := Vector2i(-1, -1)
 var saving := false
@@ -53,7 +58,6 @@ var undo_button: Button
 var place_button: Button
 var flip_button: Button
 var blue_button: Button
-var coral_button: Button
 var new_button: Button
 var palette_button: Button
 var palette_menu: PanelContainer
@@ -85,7 +89,6 @@ var confirmation: ConfirmationDialog
 var pending_change: Callable
 var themed_buttons: Array = []
 var reef_background: ColorRect
-var zen_background: ColorRect
 var difficulty: Game.Difficulty = Game.Difficulty.DIFFICULT
 
 func _ready() -> void:
@@ -122,18 +125,28 @@ func _button(text: String, callback: Callable) -> Button:
 	return button
 
 func _build_interface() -> void:
-	for i in range(2):
-		var panel := _button("", _save_design)
-		var icon = SymmetryIcon.new()
-		icon.rotational = i == 1
-		panel.add_child(icon)
-		icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		indicators.append({"panel": panel, "icon": icon})
+	var panel := _button("", _save_design)
+	panel.tooltip_text = "Show symmetries / save a symmetric design"
+	var icon = SymmetryIcon.new()
+	icon.combined = true
+	panel.add_child(icon)
+	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	indicators.append({"panel": panel, "icon": icon})
+	rotate_hint = Label.new()
+	rotate_hint.text = "Tap the piece to rotate it."
+	rotate_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rotate_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(rotate_hint)
+	theme_caption = Label.new()
+	theme_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(theme_caption)
 	piece_view = PieceView.new()
 	piece_view.z_index = 2
 	add_child(piece_view)
 	board_view = BoardView.new()
+	board_view.flush_frame = true
 	add_child(board_view)
+	board_view.z_index = 3
 	board_view.growth_finished.connect(_preview)
 	sounds = GrowthSounds.new()
 	add_child(sounds)
@@ -143,16 +156,16 @@ func _build_interface() -> void:
 	board_view.growth_canceled.connect(sounds.cancel)
 	sounds.attach_board(board_view)
 	flip_button = _button("Flip", _flip)
-	blue_button = _button("", func(): _choose_color(Rules.BLUE))
-	coral_button = _button("", func(): _choose_color(Rules.CORAL))
-	for color_button: Button in [blue_button, coral_button]:
+	blue_button = _button("", func(): _choose_color(Rules.CORAL if game.current_color == Rules.BLUE else Rules.BLUE))
+	for color_button: Button in [blue_button]:
 		var mark := ColorMark.new()
-		mark.color = 1 if color_button == blue_button else 2
+		mark.color = game.current_color
 		color_button.add_child(mark)
 		mark.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		color_button.tooltip_text = "Color %d" % mark.color
 	blue_button.toggle_mode = true
-	coral_button.toggle_mode = true
+	blue_button.get_child(0).paired = true
+	blue_button.tooltip_text = "Switch piece color"
 	place_button = _button("Place", _place)
 	undo_button = _button("↶ 3", _undo)
 	skip_button = _button("⇥ 3", _skip)
@@ -160,6 +173,13 @@ func _build_interface() -> void:
 	new_button = _button("+", func(): _ask_reset(game.board.size()))
 	size_picker = _button("9 × 9", func(): _ask_reset(11 if game.board.size() == 9 else 9))
 	palette_button = _button("⚙", _toggle_palette_menu)
+	for pair: Array in [[erase_button,"erase"],[undo_button,"undo"],[skip_button,"skip"],[palette_button,"settings"],[flip_button,"flip"],[place_button,"place"]]:
+		var action = ActionIcon.new()
+		action.kind = pair[1]
+		pair[0].text = ""
+		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
+		pair[0].add_child(action)
+		action.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	palette_menu = PanelContainer.new()
 	palette_menu.visible = false
 	palette_menu.z_index = 80
@@ -177,11 +197,6 @@ func _build_interface() -> void:
 	water.shader = preload("res://shaders/reef_lagoon.gdshader")
 	reef_background.material = water
 	add_child(reef_background)
-	zen_background = ColorRect.new()
-	zen_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	zen_background.material = ZenVisuals.sand_material()
-	add_child(zen_background)
-	move_child(zen_background, 0)
 	confirmation = ConfirmationDialog.new()
 	confirmation.title = "Start a new game?"
 	confirmation.ok_button_text = "New game"
@@ -201,7 +216,7 @@ func _build_interface() -> void:
 		control.z_index = 50
 
 func _controls() -> Array:
-	return [place_button, undo_button, skip_button, erase_button, flip_button, blue_button, coral_button, palette_button, indicators[0].panel, indicators[1].panel]
+	return [place_button, undo_button, skip_button, erase_button, flip_button, blue_button, palette_button, indicators[0].panel]
 
 func _set_rect(control: Control, rect: Rect2) -> void:
 	control.position = rect.position
@@ -212,9 +227,9 @@ func _layout_row(controls: Array, rect: Rect2, gap: float) -> void:
 	for i in range(controls.size()):
 		_set_rect(controls[i], Rect2(rect.position + Vector2(i * (width + gap), 0), Vector2(width, rect.size.y)))
 
-func _layout_insets(view: Vector2) -> Vector4:
+func _layout_insets(view: Vector2, controls: bool = true) -> Vector4:
 	var short_side := minf(view.x, view.y)
-	var side := clampf(short_side * 0.04, 12, 32)
+	var side := clampf(short_side * 0.04, 12, 32) if controls else 0.0
 	var vertical := clampf(short_side * 0.05, 24, 40)
 	var inset := Vector4(side, vertical, side, vertical)
 	if OS.has_feature("android") or OS.has_feature("ios"):
@@ -225,99 +240,64 @@ func _layout_insets(view: Vector2) -> Vector4:
 			safe = safe.intersection(Rect2(Vector2.ZERO, window))
 			if safe.has_area():
 				var factor := view / window
-				var clearance := clampf(short_side * 0.015, 6, 12)
+				var clearance := clampf(short_side * 0.015, 6, 12) if controls else 0.0
 				inset.x = maxf(inset.x, safe.position.x * factor.x + clearance)
 				inset.y = maxf(inset.y, safe.position.y * factor.y + clearance)
 				inset.z = maxf(inset.z, (window.x - safe.end.x) * factor.x + clearance)
 				inset.w = maxf(inset.w, (window.y - safe.end.y) * factor.y + clearance)
 	return inset
 
-func _header_metrics(view: Vector2, inset: float, gap: float, icon_gap: float) -> Dictionary:
-	var preview_height: float = 2 * board_view.pitch + 8.0
-	var left_space: float = view.x / 2 - 2 * board_view.pitch - inset - gap
-	var icon_limit := maxf(16, (left_space - icon_gap) / 2)
-	var icon_side := minf(minf(64 * 1.3, view.y * 0.12), icon_limit)
-	var helper_height := clampf(view.y * 0.08, 24, 44)
-	var group_height := icon_side + gap + helper_height
-	return {"icon": icon_side, "helper": helper_height, "group": group_height, "preview": preview_height, "height": maxf(preview_height, group_height)}
-
 func _layout() -> void:
-	if not is_instance_valid(board_view):
+	if not is_instance_valid(board_view) or size.x <= 0 or size.y <= 0:
 		return
-	var view: Vector2 = size
-	if view.x <= 0 or view.y <= 0: return
-	var pad: float = clampf(minf(view.x, view.y) * 0.01, 4, 8)
-	var gap: float = clampf(minf(view.x, view.y) * 0.015, 6, 12)
+	var view := size
 	var safe := _layout_insets(view)
-	var side_inset := maxf(safe.x, safe.z)
-	var button_side := maxf(1, minf((view.x - 2 * side_inset - 3 * gap) / 4, view.y * 0.20))
-	for control: Control in _controls():
-		control.add_theme_font_size_override("font_size", clampi(roundi(button_side * 0.2), 12, 28))
-	var icon_gap: float = 2 * pad
-	# The frame stays exactly on the phone's vertical midpoint. Find the largest
-	# square with enough safe space for both control bands, rather than moving
-	# the frame up to squeeze the buttons against the screen edges.
-	var low := 1.0
-	var high := maxf(1, minf(view.x - 2 * side_inset, view.y - 2 * (safe.w + button_side + gap)))
-	for iteration in range(12):
-		var candidate := (low + high) * 0.5
-		board_view.size = Vector2.ONE * candidate
-		board_view.update_geometry()
-		var metrics := _header_metrics(view, side_inset, gap, icon_gap)
-		if float(metrics.height) <= (view.y - candidate) * 0.5 - safe.y - gap:
-			low = candidate
-		else:
-			high = candidate
-	var side := low
-	_set_rect(board_view, Rect2((view - Vector2.ONE * side) * 0.5, Vector2.ONE * side))
+	var gap := clampf(view.x * 0.025, 6, 14)
+	# Fill portrait width; compact windows reserve enough room for usable controls.
+	var hardware := _layout_insets(view, false)
+	var edge := maxf(hardware.x, hardware.z)
+	var available_height := view.y - safe.y - safe.w
+	var short_side := minf(view.x, view.y)
+	var minimum_control := clampf(short_side * 0.05, 16, 36)
+	var minimum_header := 3 * minimum_control + 2 * gap
+	var minimum_dock := clampf(short_side * 0.1, 24, 64)
+	var caption_height := clampf(view.x * 0.04, 14, 22)
+	var side := maxf(1, minf(view.x - 2 * edge, available_height - 3 * gap - caption_height - minimum_header - minimum_dock))
+	var spare := available_height - side - 3 * gap
+	var dock_side := clampf(minf(side * 0.22, spare * 0.31), minimum_dock, spare - caption_height - minimum_header)
+	var header_height := spare - dock_side - caption_height
+	var control_side := minf(side * 0.16, (header_height - 2 * gap) / 3)
+	var left := (view.x - side) * 0.5
+	var top := safe.y
+	var controls_left := left + gap
+	var controls_right := left + side - gap - control_side
+	for i in range(3):
+		_set_rect([erase_button, undo_button, skip_button][i], Rect2(controls_left, top + i * (header_height - control_side) / 2, control_side, control_side))
+	_set_rect(palette_button, Rect2(controls_right, top, control_side, control_side))
+	_set_rect(flip_button, Rect2(controls_right, top + header_height - control_side, control_side, control_side))
+	var preview_left := controls_left + control_side + gap
+	var preview_width := controls_right - gap - preview_left
+	var hint_height := clampf(view.x * 0.05, 16, 26)
+	_set_rect(rotate_hint, Rect2(preview_left, top, preview_width, hint_height))
+	rotate_hint.add_theme_font_size_override("font_size", clampi(roundi(preview_width / 16), 10, 18))
+	_set_rect(piece_view, Rect2(preview_left, top + hint_height + gap, preview_width, maxf(1, header_height - hint_height - gap)))
+	var board_top := top + header_height + gap
+	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
-	var metrics := _header_metrics(view, side_inset, gap, icon_gap)
-	var icon_side: float = metrics.icon
-	var helper_height: float = metrics.helper
-	var header_center: float = (safe.y + board_view.position.y - gap) * 0.5
-	var icon_y: float = header_center - float(metrics.group) * 0.5
-	var group_width: float = 2 * icon_side + icon_gap
-	for i in range(2):
-		_set_rect(indicators[i].panel, Rect2(side_inset + i * (icon_side + icon_gap), icon_y, icon_side, icon_side))
-	_set_rect(palette_button, Rect2(view.x - side_inset - minf(64, icon_side), icon_y, minf(64, icon_side), minf(64, icon_side)))
-	var preview_width: float = 4 * board_view.pitch
-	_set_rect(piece_view, Rect2((view.x - preview_width) / 2, header_center - float(metrics.preview) * 0.5, preview_width, metrics.preview))
-	piece_view.cell_pitch = board_view.pitch
-	var helper_y := icon_y + icon_side + gap
-	var helper_width := group_width
-	var usable_helpers := 3 * 40.0 + 2 * gap
-	if helper_width < usable_helpers:
-		if side_inset + usable_helpers + gap <= piece_view.position.x:
-			helper_width = usable_helpers
-		elif maxf(helper_y, piece_view.get_rect().end.y + gap) + helper_height <= board_view.position.y - gap:
-			# Tall narrow phones have room below the preview for wider hit areas.
-			helper_y = maxf(helper_y, piece_view.get_rect().end.y + gap)
-			helper_width = usable_helpers
-		elif float(metrics.preview) <= icon_side:
-			# Compact windows can share the first row with the preview instead.
-			piece_view.position.y = icon_y
-			helper_width = usable_helpers
-	var helper_font := clampi(roundi(helper_height * 0.42), 10, 18)
-	var font: Font = erase_button.get_theme_font("font")
-	var text_width := (helper_width - 2 * gap) / 3 - 6
-	while helper_font > 8:
-		var widest := 0.0
-		for label: String in ["↶ 3", "⇥ 3", "⌫ 3", "× 3"]:
-			widest = maxf(widest, font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, helper_font).x)
-		if widest <= text_width: break
-		helper_font -= 1
-	for control: Button in [undo_button, skip_button, erase_button]:
-		control.add_theme_font_size_override("font_size", helper_font)
-	_layout_row([undo_button, skip_button, erase_button], Rect2(side_inset, helper_y, helper_width, helper_height), gap)
-	var dock_width: float = 4 * button_side + 3 * gap
-	var dock_y: float = (board_view.get_rect().end.y + gap + view.y - safe.w - button_side) * 0.5
-	var dock := Rect2((view.x - dock_width) / 2, dock_y, dock_width, button_side)
-	_layout_row([blue_button, coral_button, flip_button, place_button], dock, gap)
+	piece_view.cell_pitch = minf(board_view.pitch, minf(preview_width / 4, piece_view.size.y / 4))
+	_set_rect(theme_caption, Rect2(left + gap, board_top + side, side - 2 * gap, caption_height))
+	theme_caption.text = "Theme: " + Palette.theme_label(Palette.theme_id())
+	theme_caption.add_theme_font_size_override("font_size", clampi(roundi(caption_height * 0.65), 10, 16))
+	var dock_y := board_top + side + caption_height + gap
+	var dock_width := maxf(side, 3 * dock_side + 4 * gap)
+	var dock_left := (view.x - dock_width) / 2
+	for i in range(3):
+		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_left + gap + i * (dock_width - 2 * gap - dock_side) / 2, dock_y, dock_side, dock_side))
+	for control: Control in _controls():
+		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26))
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
-	_set_rect(zen_background, Rect2(Vector2.ZERO, view))
-	_sync_zen_background()
-	_layout_palette_menu(pad)
-	_layout_gallery(pad)
+	_layout_palette_menu(gap)
+	_layout_gallery(gap)
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
 	queue_redraw()
@@ -328,40 +308,36 @@ func _refresh() -> void:
 	_refresh_theme()
 	board_view.sync_board(game.board)
 	_layout()
-	piece_view.cells = [] if game.over else cells
+	piece_view.cells = [] if game.over or tray_moved else cells
+	rotate_hint.visible = not game.over and not tray_moved
 	piece_view.color = game.current_color
 	piece_view.queue_redraw()
-	undo_button.text = "↶ %d" % game.undo_left
-	skip_button.text = "⇥ %d" % game.skip_left
-	erase_button.text = ("× %d" if erase_mode else "⌫ %d") % game.erase_left
+	undo_button.get_child(0).count = game.undo_left
+	skip_button.get_child(0).count = game.skip_left
+	erase_button.get_child(0).count = game.erase_left
 	undo_button.disabled = game.history.is_empty() or game.undo_left <= 0 or saving
 	skip_button.disabled = game.over or game.skip_left <= 0 or saving
 	erase_button.disabled = game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)) or saving
-	for button: Button in [flip_button, blue_button, coral_button]:
+	for button: Button in [flip_button, blue_button]:
 		button.disabled = game.over
-	for button: Button in [blue_button, coral_button]:
-		var chosen: bool = (button == blue_button) == (game.current_color == Rules.BLUE)
+	for button: Button in [blue_button]:
+		var chosen := true
 		button.set_pressed_no_signal(chosen)
-		_apply_button_style(button, chosen, 1 if button == blue_button else 2)
+		_apply_button_style(button, chosen, game.current_color)
 		button.get_child(0).queue_redraw()
+	blue_button.get_child(0).color = game.current_color
 	_preview()
 
 func _update_summaries(board: Array) -> void:
 	var states: Array = Rules.symmetry_states(board)
 	var occupied: bool = board.any(func(row: Array): return row.any(func(value): return value != 0))
-	for i in range(2):
-		var available: Array = []
-		var complete: Array = []
-		for symmetry in (range(4) if i == 0 else range(4, 7)):
-			available.append(states[symmetry].possible)
-			complete.append(occupied and states[symmetry].complete)
-		var lit: bool = complete.any(func(value): return value)
-		var indicator: Dictionary = indicators[i]
-		indicator.icon.available = available
-		indicator.icon.complete = complete
-		indicator.icon.saved = saved_fingerprint == _design_fingerprint()
-		indicator.icon.queue_redraw()
-		_apply_button_style(indicator.panel, lit)
+	var indicator: Dictionary = indicators[0]
+	indicator.icon.available = states.map(func(state: Dictionary): return state.possible)
+	indicator.icon.complete = states.map(func(state: Dictionary): return occupied and state.complete)
+	indicator.icon.saved = saved_fingerprint == _design_fingerprint()
+	indicator.icon.queue_redraw()
+	indicator.panel.disabled = not _can_save() or saving
+	_apply_button_style(indicator.panel, indicator.icon.complete.any(func(value): return value))
 
 func _surface_revision(theme: String) -> String:
 	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1"
@@ -442,6 +418,7 @@ func _move_gesture(point: Vector2) -> void:
 		if gesture_from_tray:
 			var grabbed_index: int = cells.find(grabbed_cell)
 			cells = piece_view.display_cells()
+			tray_moved = true
 			grabbed_cell = cells[grabbed_index]
 			_refresh()
 	_drag_to(point)
@@ -523,6 +500,10 @@ func _place() -> void:
 	_refresh()
 
 func _clear_selection() -> void:
+	tray_moved = false
+	piece_view.cells = [] if game.over else cells
+	piece_view.queue_redraw()
+	rotate_hint.visible = not game.over
 	has_hover = false
 	dragging = false
 	selected = Vector2i(-1, -1)
@@ -593,7 +574,7 @@ func _reset() -> void:
 	_refresh()
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Palette.background())
+	draw_rect(Rect2(Vector2.ZERO, size), Interface.background())
 	if Palette.clockwork:
 		var paper := ClockworkVisuals.texture(Themes.profile(Palette.theme_id()).environment.background)
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
@@ -739,7 +720,7 @@ func _layout_palette_menu(pad: float) -> void:
 			_set_rect(row,Rect2(0,title_height+i*(row_height+gap),content_width,row_height))
 			var label: Label = row.get_child(0)
 			label.add_theme_font_size_override("font_size",maxi(12,roundi(28*scale_factor)))
-			label.add_theme_color_override("font_color",Palette.text())
+			label.add_theme_color_override("font_color",Interface.text())
 			continue
 		var button: Button = options[i]
 		button.show()
@@ -754,24 +735,24 @@ func _layout_palette_menu(pad: float) -> void:
 		_set_rect(button, Rect2(0, title_height + i * (row_height + gap), content_width, row_height))
 
 func _refresh_menu_style() -> void:
-	var menu_style := _style(Palette.controls())
+	var menu_style := _style(Interface.controls())
 	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
 	menu_style.content_margin_left = inset.x
 	menu_style.content_margin_top = inset.y
 	menu_style.content_margin_right = inset.z
 	menu_style.content_margin_bottom = inset.w
 	menu_style.set_border_width_all(0 if menu_frame.is_present() else 2)
-	menu_style.border_color = Color(Palette.tile(1), 0.6)
+	menu_style.border_color = Color(Interface.accent(), 0.6)
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _apply_button_style(button: Button, active: bool = false, color: int = 1) -> void:
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var ink: Color = Palette.controls().lerp(Palette.tile(color), 0.30 if active else 0.20)
+		var ink: Color = Interface.controls().lerp(Interface.accent(color), 0.30 if active else 0.20)
 		if state == "hover": ink = ink.lightened(0.04)
 		if state in ["pressed", "hover_pressed"]: ink = ink.darkened(0.025)
 		var style := _style(ink)
 		style.set_border_width_all(3 if active else 2)
-		style.border_color = Color(Palette.tile(color), 0.6)
+		style.border_color = Color(Interface.accent(color), 0.6)
 		if button in [undo_button, skip_button, erase_button]:
 			style.content_margin_top = 2
 			style.content_margin_bottom = 2
@@ -784,22 +765,22 @@ func _apply_button_style(button: Button, active: bool = false, color: int = 1) -
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		button.add_theme_stylebox_override(state, style)
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		button.add_theme_color_override(state, Palette.text())
-	button.add_theme_color_override("font_disabled_color", Palette.muted())
+		button.add_theme_color_override(state, Interface.text())
+	button.add_theme_color_override("font_disabled_color", Interface.muted())
 	var focus := _style(Color.TRANSPARENT)
 	focus.set_border_width_all(2)
-	focus.border_color = Color(Palette.tile(color), 0.9)
+	focus.border_color = Color(Interface.accent(color), 0.9)
 	button.add_theme_stylebox_override("focus", focus)
 
 func _refresh_theme() -> void:
+	rotate_hint.add_theme_color_override("font_color", Interface.text())
+	theme_caption.add_theme_color_override("font_color", Interface.text())
 	reef_background.visible = Palette.coral_reef
-	zen_background.visible = Palette.zen_garden
-	_sync_zen_background()
 	for button: Button in themed_buttons:
 		var active := false
 		var color := 1
-		if button in [blue_button, coral_button]:
-			color = 1 if button == blue_button else 2
+		if button in [blue_button]:
+			color = game.current_color
 			active = game.current_color == color
 		elif theme_options.has(button):
 			active = Palette.THEMES[theme_options.find(button)] == Palette.theme_id()
@@ -814,17 +795,13 @@ func _refresh_theme() -> void:
 		elif button == erase_button:
 			active = erase_mode
 		_apply_button_style(button, active, color)
-	for button: Button in [blue_button, coral_button]:
+	for button: Button in [blue_button]:
+		button.get_child(0).queue_redraw()
+	for button: Button in [erase_button, undo_button, skip_button, palette_button, flip_button, place_button]:
 		button.get_child(0).queue_redraw()
 	_refresh_menu_style()
-	menu_title.add_theme_color_override("font_color", Palette.text())
+	menu_title.add_theme_color_override("font_color", Interface.text())
 	queue_redraw()
-
-func _sync_zen_background() -> void:
-	if zen_background == null or not Palette.zen_garden: return
-	var pitch: float = maxf(1.0, board_view.pitch)
-	zen_background.material.set_shader_parameter("cell_origin", -(board_view.position + board_view._point(Vector2.ZERO)) / pitch)
-	zen_background.material.set_shader_parameter("area_cells", size / pitch)
 
 func _toggle_palette_menu() -> void:
 	dragging = false
