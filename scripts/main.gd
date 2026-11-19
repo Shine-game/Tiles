@@ -6,6 +6,7 @@ const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const Game = preload("res://scripts/game.gd")
+const Session = preload("res://scripts/game_session.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
@@ -13,6 +14,7 @@ const FloatingPiece = preload("res://scripts/floating_piece.gd")
 const GrowthSounds = preload("res://scripts/growth_audio.gd")
 const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
+const GalleryExport = preload("res://scripts/gallery_export.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
 const MENU_THEMES = {
@@ -24,6 +26,10 @@ const ColorMark = preload("res://scripts/color_mark.gd")
 const ActionIcon = preload("res://scripts/action_icon.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
 var game = Game.new()
+# Script-driven tests/render tools opt in explicitly with a temporary session path.
+var session_enabled := not OS.get_cmdline_args().has("--script")
+var session_store = Session.new()
+var session_ready := false
 var cells: Array = []
 var has_hover := false
 var dragging := false
@@ -45,6 +51,13 @@ var gallery_previous: Button
 var gallery_next: Button
 var gallery_close: Button
 var gallery_page: Button
+var gallery_save: Button
+var gallery_share: Button
+var gallery_status: Label
+var gallery_file_dialog: FileDialog
+var gallery_exporter: Node
+var gallery_export_busy := false
+var gallery_export_source := ""
 var gallery_entries: Array = []
 var gallery_index := 0
 var skip_button: Button
@@ -103,11 +116,42 @@ var reef_background: ColorRect
 var difficulty: Game.Difficulty = Game.Difficulty.DIFFICULT
 
 func _ready() -> void:
+	var restored: Dictionary = session_store.load_state() if session_enabled else {}
+	if not restored.is_empty() and restored.theme in MENU_THEMES:
+		Palette.select_theme(restored.theme)
+		Palette.select(int(restored.palette))
+		game = Session.unpack(restored.game)
+		requested_size = int(restored.preset_size)
+		difficulty = int(restored.preset_difficulty) as Game.Difficulty
+	else:
+		restored = {}
 	_build_interface()
-	cells = game.piece().cells
+	if restored.is_empty():
+		cells = _offered_cells()
+	else:
+		cells = Session.decode_cells(restored.offered)
+		has_hover = restored.hover and not game.over
+		tray_moved = restored.tray_moved
+		selected = Vector2i(int(restored.selected[0]),int(restored.selected[1]))
+		board_view.show_axes = restored.axes
+		board_view.restore_session_art(game.board,restored.get("art",{}))
 	resized.connect(_layout)
+	session_ready = true
 	_layout()
 	_refresh()
+
+func _autosave() -> void:
+	if not session_enabled or not session_ready: return
+	var data := {"schema":"tiles.session.v1","theme":Palette.theme_id(),"palette":Palette.selected_index,
+		"game":Session.pack(game),"preset_size":requested_size,"preset_difficulty":difficulty,"axes":board_view.show_axes,
+		"art":board_view.session_art_state(),"offered":Session.encode_cells(cells),"hover":has_hover,"tray_moved":tray_moved,"selected":[selected.x,selected.y]}
+	if not session_store.save_state(data): push_warning("Could not save the current game.")
+
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_WM_CLOSE_REQUEST,NOTIFICATION_WM_GO_BACK_REQUEST]:
+		_autosave()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and session_ready:
+		get_tree().quit()
 
 func _style(color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -144,7 +188,7 @@ func _build_interface() -> void:
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	indicators.append({"panel": panel, "icon": icon})
 	piece_view = PieceView.new()
-	piece_view.z_index = 2
+	piece_view.z_index = 30
 	add_child(piece_view)
 	board_view = BoardView.new()
 	board_view.flush_frame = true
@@ -258,7 +302,7 @@ func _layout() -> void:
 	var safe := _layout_insets(view)
 	var gap := clampf(view.x * 0.025, 6, 14)
 	var hardware := _layout_insets(view, false)
-	var edge := maxf(hardware.x, hardware.z)
+	var edge := 5.0 + maxf(hardware.x, hardware.z)
 	var available_height := view.y - safe.y - safe.w
 	var short_side := minf(view.x, view.y)
 	var minimum_control := clampf(short_side * 0.05, 16, 36)
@@ -266,7 +310,7 @@ func _layout() -> void:
 	var minimum_dock := clampf(short_side * 0.1, 24, 64)
 	# Keep the previous dock as the reference for the requested 20% increase.
 	var old_caption := clampf(view.x * 0.04, 14, 22)
-	var old_side := maxf(1, minf(view.x - 2 * edge, available_height - 3 * gap - old_caption - minimum_header - minimum_dock))
+	var old_side := maxf(1, minf(view.x - 2 * maxf(hardware.x,hardware.z), available_height - 3 * gap - old_caption - minimum_header - minimum_dock))
 	var old_spare := available_height - old_side - 3 * gap
 	var old_dock := clampf(minf(old_side * 0.22, old_spare * 0.31), minimum_dock, old_spare - old_caption - minimum_header)
 	var dock_side := old_dock * 1.2
@@ -279,11 +323,12 @@ func _layout() -> void:
 	var preview_width := maxf(1, controls_right - gap - preview_left)
 	var extent := Vector2i.ONE
 	for definition: Dictionary in Rules.PIECES.values():
+		var bounds := Vector2i.ONE
 		for cell: Vector2i in definition.cells:
-			extent = extent.max(cell + Vector2i.ONE)
-	# Reserve both orientations of every piece, so offers and rotations never
-	# move the board or change the tile size during the game.
-	extent = Vector2i.ONE * maxi(extent.x, extent.y)
+			bounds = bounds.max(cell + Vector2i.ONE)
+		extent = extent.max(Vector2i(maxi(bounds.x,bounds.y),mini(bounds.x,bounds.y)))
+	# New offers lie horizontally. Rotation may extend over the board without
+	# changing the board geometry or the tile scale.
 	var low := 28.0
 	var high := maxf(low, view.x - 2 * edge)
 	for iteration in range(18):
@@ -295,7 +340,7 @@ func _layout() -> void:
 			low = candidate
 		else:
 			high = candidate
-	var side := low
+	var side := maxf(1, view.x - 2 * edge) if view.y >= view.x else low
 	var header_height := available_height - side - dock_side - 2 * gap
 	var left := (view.x - side) / 2
 	var top := safe.y
@@ -346,6 +391,7 @@ func _refresh() -> void:
 		button.get_child(0).queue_redraw()
 	blue_button.get_child(0).color = game.current_color
 	_preview()
+	_autosave()
 
 func _update_summaries(board: Array) -> void:
 	var states: Array = Rules.symmetry_states(board)
@@ -458,6 +504,7 @@ func _finish_gesture(point: Vector2) -> void:
 	if gesture_mode == "pending" and gesture_age <= TAP_LIMIT:
 		_rotate()
 	dragging = false
+	_autosave()
 
 func _erase_cell_at(point: Vector2) -> Vector2i:
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
@@ -525,7 +572,7 @@ func _place() -> void:
 	if not result.ok:
 		return
 	board_view.animate_growth(before, game.board)
-	cells = [] if game.over else game.piece().cells
+	cells = _offered_cells()
 	_clear_selection()
 	_refresh()
 
@@ -536,6 +583,14 @@ func _clear_selection() -> void:
 	has_hover = false
 	dragging = false
 	selected = Vector2i(-1, -1)
+
+func _offered_cells() -> Array:
+	if game.over: return []
+	var offered: Array = game.piece().cells
+	var bounds := Vector2i.ONE
+	for cell: Vector2i in offered:
+		bounds = bounds.max(cell + Vector2i.ONE)
+	return Rules.rotate(offered) if bounds.y > bounds.x else offered
 
 func _rotate() -> void:
 	if not game.over:
@@ -554,7 +609,7 @@ func _choose_color(color: int) -> void:
 
 func _skip() -> void:
 	if game.skip():
-		cells = game.piece().cells
+		cells = _offered_cells()
 		_clear_selection()
 		_refresh()
 
@@ -570,7 +625,7 @@ func _erase(cell: Vector2i) -> void:
 	if game.erase(cell):
 		erase_mode = false
 		board_view.show_settled(game.board, true)
-		cells = game.piece().cells
+		cells = _offered_cells()
 		_clear_selection()
 		_refresh()
 
@@ -601,7 +656,7 @@ func _reset(board_size: int = -1, level: int = -1) -> void:
 	if board_view.zen_visuals != null and board_view.zen_visuals.trees != null:
 		board_view.zen_visuals.trees.reset()
 	board_view.show_settled(game.board)
-	cells = game.piece().cells
+	cells = _offered_cells()
 	size_picker.text = "%d × %d" % [requested_size, requested_size]
 	_clear_selection()
 	_layout()
@@ -734,10 +789,12 @@ func _review_new_game(theme: String) -> void:
 func _set_difficulty_preset(level: int) -> void:
 	difficulty = level as Game.Difficulty
 	_back_menu()
+	_autosave()
 
 func _set_size_preset(n: int) -> void:
 	requested_size = n
 	_back_menu()
+	_autosave()
 
 func _start_new_game() -> void:
 	if pending_theme not in MENU_THEMES: return
@@ -946,6 +1003,7 @@ func _toggle_axes() -> void:
 	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
 	_refresh_theme()
 	_update_summaries(_prediction_board())
+	_autosave()
 
 func _toggle_background() -> void:
 	sounds.set_background_enabled(not sounds.background_enabled)
@@ -990,6 +1048,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _build_gallery() -> void:
+	gallery_exporter = GalleryExport.new()
+	gallery_exporter.completed.connect(_gallery_export_completed)
+	add_child(gallery_exporter)
+	gallery_file_dialog = FileDialog.new()
+	gallery_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	gallery_file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	gallery_file_dialog.filters = PackedStringArray(["*.png ; PNG image"])
+	gallery_file_dialog.title = "Save Image"
+	gallery_file_dialog.file_selected.connect(_save_gallery_file)
+	gallery_file_dialog.canceled.connect(func(): _gallery_export_completed("save", false, ""))
+	add_child(gallery_file_dialog)
 	gallery_panel = Panel.new()
 	gallery_panel.z_index = 100
 	gallery_panel.visible = false
@@ -1008,7 +1077,17 @@ func _build_gallery() -> void:
 	gallery_back.tooltip_text = "Back"
 	gallery_close.tooltip_text = "Close"
 	gallery_page = _button("0 / 0", func(): pass)
-	for control: Control in [gallery_previous, gallery_next, gallery_back, gallery_close, gallery_page]:
+	gallery_save = _button("Save to Photos" if OS.has_feature("android") else "Save Image", _export_gallery_image.bind(false))
+	gallery_share = _button("Share", _export_gallery_image.bind(true))
+	gallery_share.tooltip_text = "Open the phone's sharing menu" if gallery_exporter.can_share() else "Sharing is available in the Android app"
+	gallery_status = Label.new()
+	gallery_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gallery_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gallery_status.max_lines_visible = 2
+	gallery_status.clip_text = true
+	gallery_status.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gallery_panel.add_child(gallery_status)
+	for control: Control in [gallery_previous, gallery_next, gallery_back, gallery_close, gallery_page, gallery_save, gallery_share]:
 		control.reparent(gallery_panel)
 
 func _layout_gallery(pad: float) -> void:
@@ -1016,9 +1095,15 @@ func _layout_gallery(pad: float) -> void:
 	var height: float = clampf(size.y * 0.08, 32, 56)
 	_set_rect(gallery_close, Rect2(size.x - pad - height, pad, height, height))
 	_set_rect(gallery_back, Rect2(pad,pad,height,height))
-	var side: float = maxf(1, minf(size.x - 2 * pad, size.y - 2 * height - 4 * pad))
-	_set_rect(gallery_image, Rect2(Vector2((size.x - side) / 2, height + 2 * pad), Vector2.ONE * side))
-	_layout_row([gallery_previous, gallery_page, gallery_next], Rect2(pad, size.y - pad - height, size.x - 2 * pad, height), pad)
+	var status_height := clampf(size.y * 0.045, 24, 44)
+	var navigation_y := size.y - pad - height
+	var status_y := navigation_y - pad - status_height
+	var actions_y := status_y - pad - height
+	_set_rect(gallery_image, Rect2(pad, height+2*pad, size.x-2*pad, maxf(1,actions_y-height-3*pad)))
+	_layout_row([gallery_save,gallery_share],Rect2(pad,actions_y,size.x-2*pad,height),pad)
+	_set_rect(gallery_status,Rect2(pad,status_y,size.x-2*pad,status_height))
+	gallery_status.add_theme_font_size_override("font_size",clampi(roundi(size.x*0.025),11,18))
+	_layout_row([gallery_previous, gallery_page, gallery_next], Rect2(pad,navigation_y,size.x-2*pad,height),pad)
 
 func _open_gallery() -> void:
 	palette_menu.hide()
@@ -1039,8 +1124,48 @@ func _turn_gallery(direction: int) -> void:
 func _show_gallery_page() -> void:
 	gallery_image.texture = null if gallery_entries.is_empty() else gallery.picture(gallery_entries[gallery_index])
 	gallery_page.text = "%d / %d" % [0 if gallery_entries.is_empty() else gallery_index + 1, gallery_entries.size()]
-	gallery_previous.disabled = gallery_index <= 0
-	gallery_next.disabled = gallery_index >= gallery_entries.size() - 1
+	if not gallery_export_busy:
+		gallery_status.text = "Your saved designs will appear here." if gallery_entries.is_empty() else ""
+	_refresh_gallery_actions()
+
+func _refresh_gallery_actions() -> void:
+	var empty := gallery_entries.is_empty()
+	gallery_save.disabled = empty or gallery_export_busy
+	gallery_share.disabled = empty or gallery_export_busy or not gallery_exporter.can_share()
+	gallery_previous.disabled = gallery_export_busy or gallery_index <= 0
+	gallery_next.disabled = gallery_export_busy or gallery_index >= gallery_entries.size()-1
+
+func _export_gallery_image(share: bool) -> void:
+	if gallery_entries.is_empty() or gallery_export_busy: return
+	var record: Dictionary = gallery_entries[gallery_index]
+	var path: String = gallery.image_path(record)
+	if path.is_empty():
+		gallery_status.text = "This image is no longer available."
+		return
+	gallery_export_busy = true
+	_refresh_gallery_actions()
+	if share:
+		gallery_status.text = "Opening sharing menu…"
+		gallery_exporter.share_image(path,str(record.id))
+	elif OS.has_feature("android"):
+		gallery_status.text = "Saving image…"
+		gallery_exporter.save_image(path,str(record.id))
+	else:
+		gallery_export_source = path
+		gallery_file_dialog.current_file = "Tiles_"+str(record.id)+".png"
+		var pictures := OS.get_system_dir(OS.SYSTEM_DIR_PICTURES)
+		if DirAccess.dir_exists_absolute(pictures): gallery_file_dialog.current_dir = pictures
+		gallery_file_dialog.popup_centered(Vector2i(mini(700,int(size.x-24)),mini(500,int(size.y-24))))
+
+func _save_gallery_file(destination: String) -> void:
+	var result := GalleryExport.export_copy(gallery_export_source,destination)
+	_gallery_export_completed("save",result.ok,result.message)
+
+func _gallery_export_completed(_operation: String, _success: bool, message: String) -> void:
+	gallery_export_busy = false
+	gallery_export_source = ""
+	gallery_status.text = message
+	_refresh_gallery_actions()
 
 func _save_design() -> void:
 	if saving or board_view.growing or not _can_save():

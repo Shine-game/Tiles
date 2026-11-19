@@ -62,3 +62,10 @@ func save_design(board: Array, palette_index: int, image: Image, theme: String =
 func picture(record: Dictionary) -> ImageTexture:
 	var image := Image.load_from_file(directory.path_join(str(record.id) + ".png"))
 	return null if image == null or image.is_empty() else ImageTexture.create_from_image(image)
+
+func image_path(record: Dictionary) -> String:
+	var id := str(record.get("id", ""))
+	if id.is_empty() or not id.is_valid_filename() or id.begins_with("."):
+		return ""
+	var path := directory.path_join(id + ".png")
+	return path if FileAccess.file_exists(path) else ""

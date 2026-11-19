@@ -42,7 +42,7 @@ func run() -> void:
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
 				if dimensions.y > dimensions.x*1.5:
-					check(scene.board_view.size.x <= dimensions.x and scene.board_view.size.x >= dimensions.x * 0.8,"Portrait frame uses the width while allowing a full-size preview")
+					check(is_equal_approx(scene.board_view.position.x,5) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-5),"Both board sizes fill portrait width with five-pixel side margins")
 				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")
 				check(scene.blue_button.position.x >= scene._layout_insets(dimensions).x + 6,"Buttons have extra edge clearance")
 	Palette.select_theme("vines")
@@ -63,8 +63,13 @@ func run() -> void:
 			check(is_equal_approx(preview.unit,scene.board_view.pitch),"All orientations retain full tile size")
 			for cell: Vector2i in shape:
 				var face := Rect2(preview.origin+Vector2(cell)*preview.unit,Vector2.ONE*preview.unit)
-				check(Rect2(Vector2.ZERO,scene.piece_view.size).grow(0.1).encloses(face),"Every preview square fits without clipping")
+				check(Rect2(Vector2.ZERO,scene.size).grow(0.1).encloses(Rect2(scene.piece_view.position+face.position,face.size)),"Rotated preview can overlap the board but stays on screen")
 			shape = Rules.rotate(shape)
+	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
+	scene._refresh()
+	var tall: Dictionary = scene.piece_view.geometry()
+	check(scene.piece_view.position.y+tall.origin.y+4*tall.unit > scene.board_view.position.y,"Tall tray rotation overlaps the playing board")
+	check(scene.piece_view.z_index > scene.board_view.z_index,"Tray rotations render above the playing board")
 	check(scene.board_view.z_index + scene.board_view.tile_floor.z_index > 0,"Tile backgrounds draw above UI background")
 	scene.cells = Rules.PIECES.J.cells.duplicate()
 	scene._refresh()

@@ -29,6 +29,8 @@ func geometry() -> Dictionary:
 	var scale: float = 1.0
 	var drawn_size: Vector2 = Vector2(extent) * unit
 	var origin := (size - drawn_size) / 2
+	# Tall rotations extend downward over the board instead of off the screen.
+	origin.y = maxf(0, origin.y)
 	return {"origin": origin, "unit": unit, "scale": scale}
 
 func cell_at(point: Vector2) -> Vector2i:

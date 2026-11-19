@@ -565,3 +565,30 @@ func _star(center: Vector2, radius: float, ink: Color) -> void:
 
 func _guide_point(cell: Vector2) -> Vector2:
 	return _point(cell) if flush_frame else _floor_point(cell)
+
+func session_art_state() -> Dictionary:
+	var edges: Array = []
+	for key: Vector4i in direction_by_edge:
+		var record: Dictionary = direction_by_edge[key]
+		edges.append({"edge":[key.x,key.y,key.z,key.w],"color":record.color,"flow":record.flow})
+	var cores: Dictionary = {}
+	if junction_layer != null:
+		for id: String in junction_layer.events:
+			if not "/core/leaf_" in id: continue
+			var cell: Vector2i = junction_layer.events[id].owner
+			cores[str(cell)] = [cell.x,cell.y,int(id.get_slice("/",2))]
+	edges.sort_custom(func(a,b):return JSON.stringify(a.edge)<JSON.stringify(b.edge))
+	var sorted_cores := cores.values()
+	sorted_cores.sort_custom(func(a,b):return JSON.stringify(a)<JSON.stringify(b))
+	return {"edges":edges,"leaf_cores":sorted_cores}
+
+func restore_session_art(grid: Array, data: Dictionary) -> void:
+	direction_by_edge.clear()
+	for record: Dictionary in data.get("edges",[]):
+		var key := Vector4i(int(record.edge[0]),int(record.edge[1]),int(record.edge[2]),int(record.edge[3]))
+		direction_by_edge[key] = {"color":int(record.color),"flow":int(record.flow)}
+	if junction_layer == null:
+		junction_layer = JunctionLayer.new()
+		add_child(junction_layer)
+	junction_layer.restore_leaf_cores(data.get("leaf_cores",[]),grid,Palette.theme_id())
+	show_settled(grid,true)

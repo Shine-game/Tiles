@@ -186,3 +186,17 @@ func advance(state) -> void:
 			alpha = minf(alpha,0.0 if cover.old else 1.0-clampf((state.schedule.clock-cover.start)/cover.duration,0.0,1.0))
 		renderer.nodes[id].modulate.a=alpha
 		renderer.nodes[id].visible = not record.is_empty() and record.phase != "waiting" and alpha>0.0
+
+func restore_leaf_cores(cores: Array, grid: Array, theme: String) -> void:
+	var config := configuration(theme)
+	if not config.get("leaf_centers",{}).get("retain_when_connected",false): return
+	for core: Array in cores:
+		var cell := Vector2i(int(core[0]),int(core[1]))
+		var color := int(core[2])
+		if Topology.value(grid,cell) != color: continue
+		if Topology.shape(Topology.neighbor_mask(grid,cell)) in ["bend","t","cross"]: continue
+		var leaves := LeafCenters.placements(config.leaf_centers,cell,color,Topology.neighbor_mask(grid,cell))
+		for i in range(leaves.size()):
+			var id := "junction/%s/%d/%d/%d/core/leaf_%d" % [theme,color,cell.y,cell.x,i]
+			events[id] = {"start":0.0,"end":0.0,"old":true,"revision":JSON.stringify(config.leaf_centers),"owner":cell,"kind":"junction"}
+			specs[id] = leaves[i]

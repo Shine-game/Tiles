@@ -1,6 +1,6 @@
 {
   "schema": "tiles.themes.v1",
-  "default": "zen_garden",
+  "default": "vines",
   "order": [
     "zen_garden",
     "clockwork",

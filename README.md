@@ -1,6 +1,6 @@
 # Tiles — Godot / Android
 
-Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot` in that version, then press **F6** on `main.tscn` or **F5** to play. No web server, Node.js, plugins, or external game dependencies are required.
+Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot` in that version, then press **F6** on `main.tscn` or **F5** to play. No web server or Node.js is required. The bundled Tiles Gallery Android plugin provides photo export and native sharing.
 
 ## Play
 
@@ -18,7 +18,7 @@ Native GDScript puzzle for **Godot 4.7.2 stable official**. Open `project.godot`
 - Each game starts with **three Undo, three Skip, and three Erase uses**. Counts are independent and never refunded by Undo. Undo retracts the latest placement and returns that exact piece, orientation, and color to your hand. It does not reroll; the set-aside next offer stays next if it still fits. At most the last three placements are retained. Erasures of older squares are preserved when undoing a placement.
 - Skip replaces the current offer with another physically fitting shape, without checking symmetry. It excludes the outgoing shape if another fits; if only one shape fits, it may repeat. Skip neither changes the garden nor creates an undo entry.
 - Erase arms a square selection. Tap any occupied square, including the original center, to remove it. Disconnected fragments are allowed. Empty/outside selections cost nothing; tap the helper again or press Escape to cancel for free. Undo and Erase can reopen ended gardens. Erase does not restore a whole tile.
-- Settings opens a floating menu with Themes, Difficulty, Gallery, and Sound Settings. Its box has field’s decorative perimeter. It scales down only as needed to fit smaller screens and includes a close button. Themes shows each name with its core tile; selecting a different theme asks for confirmation before starting a fresh game. Vines retains its five palettes under Themes → Vine colors; palette changes preserve play. Difficulty contains Easy, Moderate, Difficult, Show axes on field, Restart, and the 9×9/11×11 size switch. Show axes on field toggles the vertical, horizontal, and two diagonal reflection axes above all tile artwork. The input-transparent overlay is off by default, remains selected across games/themes during the session, and never appears in saved artwork. Difficulty, board-size changes, and Restart also ask before replacing the game. Sound Settings independently toggles background noises and special effects, preserving the choices across new games and theme changes during the session. Menus and gallery pages fit without scrolling.
+- Settings contains New Game, Gameplay, Gallery and Audio. New Game lists Porcelain Vines, Coral Reef and Mechanical Workshop, then reviews the current gameplay presets with Change and Start. Gameplay selects Easy/Moderate/Hard, 9×9/11×11, and toggles reflection axes. Difficulty and size presets apply at Start; axes update immediately. Audio has separate ambience/effects volume sliders. Every menu has Back upper left and Close upper right. Replay in the upper-right game controls restarts the active theme, size and difficulty without changing next-game presets.
 - There is no timer. Physically impossible placements are disabled. Confirming a physically valid placement that breaks every remaining symmetry ends play. A completely filled board ends with no new piece; saving and the applicable helpers remain accessible.
 
 ## Zen Garden — startup theme
@@ -67,7 +67,9 @@ See [the assessment](docs/coral-reef-analysis.md), [independent audit](docs/cora
 
 ## Local gallery
 
-Symmetric designs are stored as clean 900×900 PNG artwork and board/palette/theme/version JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Empty cells receive the theme’s plain background tiles so the saved surface fills the whole field; no new plants, coral, or mechanisms are added. The live board and saved logical pattern stay unchanged. Completed saves use a distinct appearance revision so older partial images remain available. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette/theme/version again does not duplicate it. The empty board cannot be saved. This is an app-private gallery and needs no Android photo/storage or Internet permission. It does not export to the system Photos app or resume a saved game.
+Symmetric designs are stored as clean 900×900 PNG artwork and board/palette/theme/version JSON metadata in **`user://gallery`**. Captures omit placement guides, hovering pieces, and controls. Empty cells receive the theme’s plain background tiles so the saved surface fills the whole field; no new plants, coral, or mechanisms are added. The live board and saved logical pattern stay unchanged. Completed saves use a distinct appearance revision so older partial images remain available. Settings → Gallery opens the latest design with previous/next page buttons. Saves survive app restarts and game resets; saving the same board/palette/theme/version again does not duplicate it. The empty board cannot be saved. The original gallery stays app-private. Save to Photos exports a PNG to Android's Pictures/Tiles collection; Share opens the native chooser, including Instagram when installed and supported. The player completes publication in the receiving app. Android 10+ needs no photo permission for exporting the app's own image. Android 9 and earlier request storage permission only when Save is pressed; sharing does not need it. Desktop builds provide Save Image through a file chooser; native sharing is Android-only.
+
+The current game is saved automatically after changes, after dropping a floating piece, on app backgrounding and on close, in `user://game_state.json`, with a previous valid backup. Reopening restores the active theme, board, offered orientation/color/hover, piece queue and random state, undo history, joker counts, axes and next-game presets. Growth directions and retained leaf cores are preserved. In-progress construction is shown completed on resume; temporary sound/reveal playback is not replayed. A damaged primary save falls back to the backup, then a fresh game. First launch defaults to Porcelain Vines. Sound volumes are persisted separately. Script-driven test/render runs disable automatic session saving; persistence tests explicitly opt in using a temporary path.
 
 ## Symmetry rule
 
@@ -124,13 +126,14 @@ The committed **Android** preset produces an ARM64 APK with the Compatibility re
 1. Install the matching **4.7.2** export templates from Godot's **Editor → Manage Export Templates**.
 2. Install a supported Java runtime/SDK (Godot recommends OpenJDK 17; higher versions are supported), Android SDK platform-tools, build-tools **36.0.0**, and platform **android-36**.
 3. Set **Editor Settings → Export → Android → Java SDK Path / Android SDK Path**. These machine-local paths and signing keys are not committed.
-4. Create the `build` directory. Export a debug APK from **Project → Export → Android**, or run:
+4. Select **Project → Install Android Build Template** once for the matching engine version. Keep **Gradle Build → Use Gradle Build** enabled and the bundled **Tiles Gallery** editor plugin enabled. Its compiled AAR is included in the repository.
+5. Create the `build` directory. Export a debug APK from **Project → Export → Android**, or run:
 
 ```sh
 godot --headless --path . --export-debug Android build/tiles-debug.apk
 ```
 
-The standard APK export uses the precompiled engine templates, so compiling the engine, installing the NDK, and configuring Gradle are unnecessary for this prototype. Store distribution, AABs, custom Android plugins, and release signing require a separate release setup. Never commit signing keys or passwords.
+The Android export now uses Godot’s Gradle build pipeline to package the native gallery plugin. The first build downloads Gradle/Maven dependencies; the game itself still needs no Internet permission. Compiling the engine is unnecessary. Store distribution and release signing require a separate release setup. Never commit signing keys or passwords. See [Gallery export](docs/gallery-export.md) for plugin rebuilding and device checks.
 
 Install a debug APK on an attached Android device with `adb install -r build/tiles-debug.apk`. Device testing remains necessary for touch feel, safe areas, lifecycle behavior, and performance.
 
