@@ -1,6 +1,8 @@
 class_name GrowthAudio
 extends Node
 
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
+const Soundscape = preload("res://scripts/theme_soundscape.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Workshop = preload("res://scripts/clockwork_audio.gd")
 const Reef = preload("res://scripts/coral_audio.gd")
@@ -20,6 +22,9 @@ var note_count := 0
 var reef: CoralAudio
 var visual_theme := ""
 var workshop: ClockworkAudio
+var soundscape
+var themed_soundscape: bool:
+	get: return Themes.profile(Palette.theme_id()).has("soundscape")
 
 func _ready() -> void:
 	whisper = AudioStreamPlayer.new()
@@ -42,24 +47,30 @@ func _ready() -> void:
 	add_child(workshop)
 	reef = Reef.new()
 	add_child(reef)
+	soundscape = Soundscape.new()
+	add_child(soundscape)
 	_setup_sound_buses()
+	soundscape.route(background_bus,effects_bus)
 	set_process(false)
 
 func attach_board(board) -> void:
-	board.workshop_cue.connect(workshop.play)
+	board.workshop_cue.connect(func(kind):
+		if not themed_soundscape: workshop.play(kind))
 	board.visual_state_changed.connect(_visual_state_changed)
 	board.visual_clock_advanced.connect(reef.advance)
+	board.visual_clock_advanced.connect(soundscape.advance)
 
 func _visual_state_changed(pattern, animating: bool, preserve: bool, clock: float, placement_id: int) -> void:
 	var changed: bool = visual_theme != Palette.theme_id()
 	visual_theme = Palette.theme_id()
-	if Palette.clockwork:
+	if themed_soundscape:
 		_cancel_legacy()
 		if reef.theme_active: reef.deactivate()
-		workshop.activate()
-		active = animating
-		if pattern.dismantling: workshop.play("clunk")
+		if workshop.active: workshop.deactivate()
+		soundscape.reconcile(pattern,Palette.theme_id(),animating,clock,placement_id)
+		active=animating
 		return
+	if not soundscape.theme.is_empty():soundscape.deactivate()
 	if workshop.active: workshop.deactivate()
 	if Palette.coral_reef:
 		_cancel_legacy()
@@ -72,7 +83,7 @@ func _visual_state_changed(pattern, animating: bool, preserve: bool, clock: floa
 			begin()
 
 func begin() -> void:
-	if Palette.coral_reef or Palette.clockwork:
+	if Palette.coral_reef or themed_soundscape:
 		active = true
 		return
 	if fade != null:
@@ -89,7 +100,7 @@ func begin() -> void:
 	set_process(true)
 
 func bloom(corner: Vector2i, _color: int) -> void:
-	if Palette.coral_reef or Palette.clockwork or not active:
+	if Palette.coral_reef or themed_soundscape or not active:
 		return
 	var slot: int = posmod(corner.x + corner.y * 3, PITCHES.size())
 	if elapsed - float(last_note[slot]) < 0.085:
@@ -102,8 +113,8 @@ func _process(delta: float) -> void:
 	elapsed += delta
 
 func finish() -> void:
-	if Palette.clockwork:
-		active = false
+	if themed_soundscape:
+		active=false
 		return
 	if Palette.coral_reef:
 		active = false
@@ -119,6 +130,7 @@ func finish() -> void:
 	# Bell tails may decay naturally; they never keep Place locked.
 
 func cancel() -> void:
+	if soundscape != null: soundscape.cancel_effects()
 	_cancel_legacy()
 	if workshop != null: workshop.cancel_effects()
 	if reef != null and reef.is_inside_tree():

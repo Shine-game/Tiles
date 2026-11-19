@@ -1,0 +1,18 @@
+CLOCKWORK WORKSHOP — ASMR MIX
+
+Loop the 72-second ambience WAV from end to end. Trigger each cue once
+over the continuing ambience.
+
+Tier 1: Two short pipe seating clicks.
+Tier 2: Gear teeth speed up and settle into rotation.
+Tier 3: A few distinct clicks feed into a bicycle-chain-like run.
+
+Game assets are stereo 48 kHz, 16-bit PCM WAVs.
+The preview presents the cues at 0:05, 0:11 and 0:18 with 8 dB of
+overall playback gain. The relationship between the cues and bed is unchanged.
+
+Recordings from the supplied clockwork.rar:
+  daviddumaisaudio-steampunk-loopable-clock-12-188049.mp3
+  freesound_community-mad-scientist-lab-loopable-71170.mp3
+  spinopel-moving-parts-411762.mp3
+  click.wav

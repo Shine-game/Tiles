@@ -229,6 +229,32 @@
             "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color2_basic.json"
           }
         }
+      },
+      "soundscape": {
+        "ambience": {
+          "path": "res://assets/audio/clockwork_asmr/clockwork_asmr_ambience_loop.wav",
+          "gain_db": 0
+        },
+        "tiers": {
+          "1": {
+            "path": "res://assets/audio/clockwork_asmr/clockwork_tier1_pipe_clicks.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 1.0
+          },
+          "2": {
+            "path": "res://assets/audio/clockwork_asmr/clockwork_tier2_gear_start.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 0.35
+          },
+          "3": {
+            "path": "res://assets/audio/clockwork_asmr/clockwork_tier3_chain_run.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 0.35
+          }
+        },
+        "tier1_component_ids": [
+          "T01"
+        ]
       }
     },
     "vines": {
@@ -322,6 +348,29 @@
           "scale": 0.8,
           "core_radius_cells": 0.02,
           "retain_when_connected": true
+        }
+      },
+      "soundscape": {
+        "ambience": {
+          "path": "res://assets/audio/vines_asmr/vines_quiet_garden_loop.wav",
+          "gain_db": 0
+        },
+        "tiers": {
+          "1": {
+            "path": "res://assets/audio/vines_asmr/vines_tier1_leaf_rustle.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 1.0
+          },
+          "2": {
+            "path": "res://assets/audio/vines_asmr/vines_tier2_bloom.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 0.35
+          },
+          "3": {
+            "path": "res://assets/audio/vines_asmr/vines_tier3_butterflies.wav",
+            "gain_db": 0,
+            "coalesce_seconds": 0.35
+          }
         }
       }
     },

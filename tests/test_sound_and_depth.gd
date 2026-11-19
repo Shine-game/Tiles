@@ -24,10 +24,8 @@ func _run() -> void:
 	root.add_child(scene)
 	for i in range(4):
 		await process_frame
-	check(not scene.sounds.active and not scene.sounds.whisper.playing, "idle garden is silent")
-	check(scene.sounds.bells.size() == 5, "flower bells use five harmonious pitches")
-	check(scene.sounds.whisper.stream.get_length() > 1, "foliage audio is loaded")
-	check(scene.sounds.bells[0].stream.get_length() > 1, "bell audio is loaded")
+	check(not scene.sounds.active and scene.sounds.soundscape.ambience.playing, "idle garden plays supplied ambience")
+	check(not scene.sounds.whisper.playing, "legacy foliage is suppressed")
 	var before: Array = Rules.empty_board(9)
 	for cell: Vector2i in [Vector2i(1, 1), Vector2i(2, 1), Vector2i(1, 2)]:
 		before[cell.y][cell.x] = Rules.BLUE
@@ -35,31 +33,18 @@ func _run() -> void:
 	after[2][2] = Rules.BLUE
 	scene.board_view.animate_growth(before, after)
 	scene.board_view.set_process(false)
-	check(scene.sounds.active and scene.sounds.whisper.playing, "growth starts the foliage whisper")
-	check(scene.sounds.note_count == 0, "no bell before a flower opens")
+	check(scene.sounds.active and not scene.sounds.whisper.playing, "growth uses shared soundscape")
 	var flower: Dictionary = scene.board_view.pattern.flowers[Vector2i(2, 2)]
-	var event_time: float = flower.start + Growth.FLOWER_POP * 0.12
-	scene.board_view.advance_growth(event_time - 0.001)
-	check(scene.sounds.note_count == 0, "bell waits for visible petal opening")
+	scene.board_view.advance_growth(maxf(0,flower.start-0.001))
+	check(scene.sounds.soundscape.event_log.filter(func(e):return e.tier==2).is_empty(), "bloom cue waits for visible flower start")
 	scene.board_view.advance_growth(0.002)
-	check(scene.sounds.note_count == 1, "new flower sounds once at opening")
-	scene.board_view.advance_growth(0.01)
-	check(scene.sounds.note_count == 1, "subsequent frames do not repeat the bell")
+	check(scene.sounds.soundscape.event_log.filter(func(e):return e.tier==2).size()==1, "supplied bloom cue plays once")
 	scene.board_view.advance_growth(100)
-	check(not scene.sounds.active, "resolved growth ends the whisper")
-	# Beginning another move must cancel the old fade-out callback.
-	scene.board_view.animate_growth(before, after)
-	scene.board_view.set_process(false)
-	await create_timer(0.16).timeout
-	check(scene.sounds.active and scene.sounds.whisper.playing, "a previous fade cannot stop the next growth sound")
+	check(not scene.sounds.active and scene.sounds.soundscape.ambience.playing,"growth ends while ambience continues")
 	scene.board_view.show_settled(before)
-	check(not scene.sounds.active and not scene.sounds.whisper.playing, "Back or reset cancels foliage sound")
-	for bell: AudioStreamPlayer in scene.sounds.bells:
-		check(not bell.playing, "Back or reset cancels bell tails")
-	# Restoring established flowers produces no sound events.
+	check(scene.sounds.soundscape.pending.is_empty(), "reset clears scheduled effects")
 	scene.board_view.show_settled(after)
-	scene.board_view.advance_growth(100)
-	check(not scene.sounds.active, "restored flowers remain silent")
+	check(scene.sounds.soundscape.pending.is_empty(), "restored flowers do not replay cues")
 	var cell := Vector2(1.5, 1.5)
 	scene.board_view.update_geometry()
 	var ground: Vector2 = scene.board_view._floor_point(cell)

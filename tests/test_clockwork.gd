@@ -86,7 +86,7 @@ func _run() -> void:
 	var visuals = view.clockwork_visuals
 	check(view.clockwork and view.board_frame.is_present(), "selected Clockwork game loads workshop assets and walnut frame")
 	check(view.surface_depth() == 4 and view.occupied_platform.depth_pixels == 4, "metal plates use four UI units of thickness")
-	check(scene.sounds.workshop.active and scene.sounds.workshop.ticking.playing, "quiet clock ambience starts while idle")
+	check(scene.sounds.soundscape.theme=="clockwork" and scene.sounds.soundscape.ambience.playing, "supplied clock ambience starts while idle")
 	check(not scene.sounds.whisper.playing and not scene.sounds.reef.theme_active, "workshop does not play foliage or reef audio")
 	var grid: Array = block(3, 3)
 	grid[7][7] = 1

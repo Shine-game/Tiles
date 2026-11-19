@@ -1,0 +1,73 @@
+extends SceneTree
+const Audio=preload("res://scripts/growth_audio.gd")
+const Board=preload("res://scripts/board_view.gd")
+const Palette=preload("res://scripts/palette.gd")
+const Rules=preload("res://scripts/rules.gd")
+const Themes=preload("res://scripts/pattern/theme_registry.gd")
+const Soundscape=preload("res://scripts/theme_soundscape.gd")
+var checks:=0
+func check(ok:bool,label:String):
+ checks+=1
+ assert(ok,label)
+func _initialize():run.call_deferred()
+func run():
+ var sound=Audio.new()
+ root.add_child(sound)
+ var view=Board.new()
+ root.add_child(view)
+ view.size=Vector2(600,600)
+ sound.attach_board(view)
+ view.growth_canceled.connect(sound.cancel)
+ view.growth_finished.connect(sound.finish)
+ for theme in ["vines","clockwork"]:
+  Palette.select_theme(theme)
+  var empty=Rules.empty_board(7)
+  var board=empty.duplicate(true)
+  for y in range(2,4):
+   for x in range(2,5):board[y][x]=1
+  view.show_settled(empty)
+  check(sound.soundscape.ambience.playing,"Ambience plays without growth")
+  check(sound.soundscape.ambience.stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,"Ambience loops")
+  check(is_equal_approx(sound.soundscape.ambience.stream.get_length(),72),"Full supplied bed")
+  check(sound.soundscape.ambience.bus==sound.background_bus,"Ambience uses existing settings bus")
+  view.animate_growth(empty,board)
+  view.set_process(false)
+  var plan=Soundscape.plan(view.pattern,Themes.profile(theme).soundscape)
+  var tiers=[]
+  for cue in plan:
+   if not tiers.has(cue.tier):tiers.append(cue.tier)
+  check(tiers.size()==3,"All three visual tiers have sound cues")
+  for tier in [1,2,3]:check(sound.soundscape.voices[tier].bus==sound.effects_bus,"Every effect uses effects settings bus")
+  sound.set_background_enabled(false)
+  check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.background_bus)),"Background toggle mutes supplied ambience")
+  check(not AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.effects_bus)),"Effects remain independent")
+  sound.set_effects_enabled(false)
+  check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.effects_bus)),"Effects toggle mutes supplied cues")
+  sound.set_background_enabled(true)
+  sound.set_effects_enabled(true)
+  for cue in plan:
+   view.advance_growth(maxf(0, cue.time-view.clock)+0.001)
+  view.advance_growth(100)
+  check(not view.growing,"Audio does not delay construction")
+  check(not sound.soundscape.event_log.is_empty(),"Cues dispatched by visual clock")
+  for event in sound.soundscape.event_log:check(event.clock+0.001>=event.scheduled,"No cue before its visual event")
+  var count=sound.soundscape.event_log.size()
+  view.show_settled(board,true)
+  check(sound.soundscape.pending.is_empty() and count==sound.soundscape.event_log.size(),"Settled restore never replays growth cues")
+  check(sound.soundscape.ambience.playing,"Ambience persists after construction")
+  check(not sound.workshop.active and not sound.whisper.playing,"Old theme audio does not double playback")
+  view.animate_growth(empty,board)
+  sound.cancel()
+  check(sound.soundscape.pending.is_empty(),"Cancellation clears pending effects")
+ Palette.select_theme("coral_reef")
+ view.show_settled(Rules.empty_board(7))
+ check(sound.soundscape.theme.is_empty() and not sound.soundscape.ambience.playing,"Changing to coral stops supplied ambience")
+ check(sound.reef.theme_active,"Existing coral soundscape remains active")
+ sound.soundscape.deactivate()
+ sound.reef.deactivate()
+ await create_timer(0.7).timeout
+ view.queue_free()
+ sound.queue_free()
+ await create_timer(0.15).timeout
+ print("Theme soundscape: %d checks pass"%checks)
+ quit()
