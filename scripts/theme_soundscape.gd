@@ -12,7 +12,7 @@ var effects_bus:="Master"
 var event_log:Array=[]
 func _ready():
  add_child(ambience)
- for tier in [1,2,3]:
+ for tier in [1,2,3,23]:
   var voice=AudioStreamPlayer.new()
   add_child(voice)
   voices[tier]=voice
@@ -34,16 +34,20 @@ func activate(next:String):
  deactivate()
  theme=next
  config=Themes.profile(theme).soundscape
- var stream:AudioStreamWAV=load(config.ambience.path).duplicate()
- stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
- stream.loop_begin=0
- stream.loop_end=roundi(stream.get_length()*stream.mix_rate)
+ var stream:AudioStream=load(config.ambience.path).duplicate()
+ if stream is AudioStreamWAV:
+  stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
+  stream.loop_begin=0
+  stream.loop_end=roundi(stream.get_length()*stream.mix_rate)
+ elif stream is AudioStreamOggVorbis or stream is AudioStreamMP3:
+  stream.loop=true
  ambience.stream=stream
  ambience.volume_db=config.ambience.gain_db
  ambience.play()
- for tier in [1,2,3]:
-  voices[tier].stream=load(config.tiers[str(tier)].path)
-  voices[tier].volume_db=config.tiers[str(tier)].gain_db
+ for tier in [1,2,3,23]:
+  var clip:Dictionary=config.get("combined",{}) if tier==23 else config.tiers[str(tier)]
+  voices[tier].stream=load(clip.path) if clip.has("path") else null
+  voices[tier].volume_db=clip.get("gain_db",0.0)
 static func plan(model,settings:Dictionary)->Array:
  var cues:Array=[]
  if settings.get("tier1_component_ids",[]).is_empty():
@@ -54,12 +58,18 @@ static func plan(model,settings:Dictionary)->Array:
   for record in model.components.values():
    if not record.old and record.id in settings.tier1_component_ids:cues.append({"id":record.key,"tier":1,"time":record.start})
  for record in model.tier2_records().values():
-  if not record.old:cues.append({"id":"formation/"+str(record.origin),"tier":2,"time":record.start})
+  if not record.old:cues.append({"id":"formation/"+str(record.origin),"tier":2,"time":record.start,"members":[str(record.origin)]})
  var connections:Variant=model.get("chains")
  if connections is Dictionary:connections=connections.values()
  else:connections=model.links
  for record in connections:
-  if not record.old:cues.append({"id":"connection/"+str(record.a)+"/"+str(record.b),"tier":3,"time":record.start})
+  if not record.old:
+   var offset:Array=settings.get("connection_origin_offset",[0,0])
+   var delta:=Vector2i(offset[0],offset[1])
+   cues.append({"id":"connection/"+str(record.a)+"/"+str(record.b),"tier":3,"time":record.start,"members":[str(record.a-delta),str(record.b-delta)]})
+ for cue in cues:
+  cue.time+=float(settings.tiers[str(cue.tier)].get("offset_seconds",0.0))
+  cue.seek_seconds=float(settings.tiers[str(cue.tier)].get("seek_seconds",0.0))
  cues.sort_custom(func(a,b):return a.time<b.time if a.time!=b.time else a.id<b.id)
  var result:Array=[]
  var last:Dictionary={}
@@ -67,6 +77,29 @@ static func plan(model,settings:Dictionary)->Array:
   if cue.time-float(last.get(cue.tier,-1000))<float(settings.tiers[str(cue.tier)].coalesce_seconds):continue
   last[cue.tier]=cue.time
   result.append(cue)
+ return combine(result,settings)
+static func combine(cues:Array,settings:Dictionary)->Array:
+ var combined:Dictionary=settings.get("combined",{})
+ if combined.is_empty():return cues
+ var removed:Dictionary={}
+ var replacements:Array=[]
+ for third in cues:
+  if third.tier!=3:continue
+  for bloom in cues:
+   if bloom.tier!=2 or removed.has(bloom.id):continue
+   var shares:=false
+   for member in third.get("members",[]):
+    if member in bloom.get("members",[]):shares=true
+   if not shares or absf((third.time-bloom.time)-float(combined.tier3_offset_seconds))>float(combined.get("tolerance_seconds",0.05)):continue
+   removed[bloom.id]=true
+   removed[third.id]=true
+   replacements.append({"id":"combined/"+bloom.id+"/"+third.id,"tier":23,"time":bloom.time+float(combined.get("offset_seconds",0.0)),"seek_seconds":float(combined.get("seek_seconds",0.0))})
+   break
+ var result:Array=[]
+ for cue in cues:
+  if not removed.has(cue.id):result.append(cue)
+ result.append_array(replacements)
+ result.sort_custom(func(a,b):return a.time<b.time)
  return result
 func reconcile(model,next:String,animating:bool,clock:float,placement_id:int):
  activate(next)
@@ -87,7 +120,7 @@ func advance(clock:float):
   var voice:AudioStreamPlayer=voices[cue.tier]
   # Let each one-shot finish; separate tiers can overlap without restarting it.
   if voice.playing:continue
-  voice.play()
+  voice.play(float(cue.get("seek_seconds",0.0)))
   event_log.append({"tier":cue.tier,"scheduled":cue.time,"clock":clock,"placement":placement})
   if event_log.size()>256:event_log.pop_front()
 

@@ -352,25 +352,44 @@
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/vines_asmr/vines_quiet_garden_loop.wav",
-          "gain_db": 0
+          "path": "res://assets/audio/vines_effects/Vines_Ambience.ogg",
+          "gain_db": -9.52
         },
         "tiers": {
           "1": {
-            "path": "res://assets/audio/vines_asmr/vines_tier1_leaf_rustle.wav",
-            "gain_db": 0,
-            "coalesce_seconds": 1.0
+            "path": "res://assets/audio/vines_effects/Vines_Growth_Rustle.ogg",
+            "gain_db": 3.76,
+            "coalesce_seconds": 1.0,
+            "offset_seconds": 0.0,
+            "seek_seconds": 0.0
           },
           "2": {
-            "path": "res://assets/audio/vines_asmr/vines_tier2_bloom.wav",
-            "gain_db": 0,
-            "coalesce_seconds": 0.35
+            "path": "res://assets/audio/vines_effects/Vines_Bloom.ogg",
+            "gain_db": -0.01,
+            "coalesce_seconds": 0.35,
+            "offset_seconds": 0.0,
+            "seek_seconds": 0.0
           },
           "3": {
-            "path": "res://assets/audio/vines_asmr/vines_tier3_butterflies.wav",
-            "gain_db": 0,
-            "coalesce_seconds": 0.35
+            "path": "res://assets/audio/vines_effects/Vines_Butterfly_Chime.ogg",
+            "gain_db": 14.27,
+            "coalesce_seconds": 0.35,
+            "offset_seconds": 0.0,
+            "seek_seconds": 0.0
           }
+        },
+        "connection_origin_offset": [
+          1,
+          1
+        ],
+        "combined": {
+          "path": "res://assets/audio/vines_effects/Vines_Bloom_Butterflies_aligned.wav",
+          "gain_db": -2.44,
+          "tier3_offset_seconds": 0.25,
+          "tolerance_seconds": 0.05,
+          "coalesce_seconds": 0.35,
+          "offset_seconds": 0.0,
+          "seek_seconds": 0.0
         }
       }
     },
@@ -670,11 +689,18 @@
             ],
             "bus": "ReefFeatures",
             "trigger": "colony foundation visibly begins after its cycle completes",
-            "maximum_voices": 2
+            "maximum_voices": 2,
+            "burst": {
+              "count": [
+                5,
+                6
+              ],
+              "mix_gain_db": -6.0,
+              "stop_at_visual_end": true
+            }
           },
           "anemone": {
             "assets": [
-              "bubble_long_01",
               "bubble_long_02"
             ],
             "bus": "ReefFeatures",

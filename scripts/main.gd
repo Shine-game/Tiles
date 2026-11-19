@@ -73,6 +73,10 @@ var menu_close: Button
 var back_button: Button
 var vine_colors_button: Button
 var themes_back_button: Button
+var ambience_volume_row: VBoxContainer
+var effects_volume_row: VBoxContainer
+var ambience_volume_slider: HSlider
+var effects_volume_slider: HSlider
 var background_button: Button
 var effects_button: Button
 var axes_button: Button
@@ -641,9 +645,34 @@ func _build_settings() -> void:
 		themed_buttons.append(option)
 	background_button = _menu_button("", _toggle_background)
 	effects_button = _menu_button("", _toggle_effects)
+	ambience_volume_row = _volume_control("Ambience", sounds.background_volume, func(value): sounds.set_background_volume(value/100.0))
+	effects_volume_row = _volume_control("Effects", sounds.effects_volume, func(value): sounds.set_effects_volume(value/100.0))
+	ambience_volume_slider = ambience_volume_row.get_child(1)
+	effects_volume_slider = effects_volume_row.get_child(1)
 	for control: Button in [size_picker, new_button]:
 		control.reparent(palette_list)
 		menu_buttons.append(control)
+
+func _volume_control(title: String, value: float, changed: Callable) -> VBoxContainer:
+	var row := VBoxContainer.new()
+	var label := Label.new()
+	label.text = "%s volume: %d%%" % [title,roundi(value*100)]
+	row.add_child(label)
+	var slider := HSlider.new()
+	slider.min_value=0
+	slider.max_value=100
+	slider.step=1
+	slider.value=value*100
+	slider.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	slider.custom_minimum_size.y=32
+	slider.tooltip_text=title+" volume"
+	slider.value_changed.connect(func(amount):
+		label.text="%s volume: %d%%" % [title,roundi(amount)]
+		changed.call(amount))
+	row.add_child(slider)
+	palette_list.add_child(row)
+	menu_buttons.append(row)
+	return row
 
 func _show_menu(page: String) -> void:
 	menu_page = page
@@ -664,7 +693,7 @@ func _layout_palette_menu(pad: float) -> void:
 	elif menu_page == "Difficulty":
 		options = [back_button] + difficulty_options + [axes_button, size_picker, new_button]
 	elif menu_page == "Sound Settings":
-		options = [back_button, background_button, effects_button]
+		options = [back_button, background_button, ambience_volume_row, effects_button, effects_volume_row]
 	menu_frame.apply_theme(Palette.theme_id())
 	_refresh_menu_style()
 	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
@@ -704,6 +733,14 @@ func _layout_palette_menu(pad: float) -> void:
 	for i in range(difficulty_options.size()):
 		difficulty_options[i].text = ("✓ " if i == difficulty else "") + ["Easy", "Moderate", "Difficult"][i]
 	for i in range(options.size()):
+		if options[i] is VBoxContainer:
+			var row: VBoxContainer = options[i]
+			row.show()
+			_set_rect(row,Rect2(0,title_height+i*(row_height+gap),content_width,row_height))
+			var label: Label = row.get_child(0)
+			label.add_theme_font_size_override("font_size",maxi(12,roundi(28*scale_factor)))
+			label.add_theme_color_override("font_color",Palette.text())
+			continue
 		var button: Button = options[i]
 		button.show()
 		if palette_options.has(button):

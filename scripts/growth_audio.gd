@@ -27,6 +27,7 @@ var themed_soundscape: bool:
 	get: return Themes.profile(Palette.theme_id()).has("soundscape")
 
 func _ready() -> void:
+	_load_sound_settings()
 	whisper = AudioStreamPlayer.new()
 	var stream: AudioStreamWAV = FOLIAGE.duplicate()
 	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
@@ -154,6 +155,9 @@ func _exit_tree() -> void:
 			AudioServer.remove_bus(index)
 
 # Separate buses keep mute independent of theme fades and scheduled effects.
+var settings_path := "user://sound_settings.cfg"
+var background_volume := 1.0
+var effects_volume := 1.0
 var background_enabled := true
 var effects_enabled := true
 var background_bus := ""
@@ -171,17 +175,47 @@ func _setup_sound_buses() -> void:
 	for player: AudioStreamPlayer in bells + workshop.voices:
 		player.bus = effects_bus
 	AudioServer.set_bus_send(AudioServer.get_bus_index(reef.bus_name), effects_bus)
-	set_background_enabled(background_enabled)
-	set_effects_enabled(effects_enabled)
+	_apply_sound_levels()
+
+func _load_sound_settings() -> void:
+	var saved := ConfigFile.new()
+	if saved.load(settings_path) != OK: return
+	background_volume=clampf(float(saved.get_value("sound","ambience_volume",1.0)),0.0,1.0)
+	effects_volume=clampf(float(saved.get_value("sound","effects_volume",1.0)),0.0,1.0)
+	background_enabled=bool(saved.get_value("sound","ambience_enabled",true))
+	effects_enabled=bool(saved.get_value("sound","effects_enabled",true))
+
+func _save_sound_settings() -> void:
+	var saved := ConfigFile.new()
+	saved.set_value("sound","ambience_volume",background_volume)
+	saved.set_value("sound","effects_volume",effects_volume)
+	saved.set_value("sound","ambience_enabled",background_enabled)
+	saved.set_value("sound","effects_enabled",effects_enabled)
+	saved.save(settings_path)
+
+func _apply_sound_levels() -> void:
+	for channel in [[background_bus,background_volume,background_enabled],[effects_bus,effects_volume,effects_enabled]]:
+		var index := AudioServer.get_bus_index(channel[0])
+		if index<=0:continue
+		AudioServer.set_bus_volume_db(index,linear_to_db(maxf(float(channel[1]),0.000001)))
+		AudioServer.set_bus_mute(index,not channel[2] or float(channel[1])<=0.0)
+
+func set_background_volume(value: float) -> void:
+	background_volume=clampf(value,0.0,1.0)
+	_apply_sound_levels()
+	_save_sound_settings()
+
+func set_effects_volume(value: float) -> void:
+	effects_volume=clampf(value,0.0,1.0)
+	_apply_sound_levels()
+	_save_sound_settings()
 
 func set_background_enabled(enabled: bool) -> void:
-	background_enabled = enabled
-	var index := AudioServer.get_bus_index(background_bus)
-	if index > 0:
-		AudioServer.set_bus_mute(index, not enabled)
+	background_enabled=enabled
+	_apply_sound_levels()
+	_save_sound_settings()
 
 func set_effects_enabled(enabled: bool) -> void:
-	effects_enabled = enabled
-	var index := AudioServer.get_bus_index(effects_bus)
-	if index > 0:
-		AudioServer.set_bus_mute(index, not enabled)
+	effects_enabled=enabled
+	_apply_sound_levels()
+	_save_sound_settings()

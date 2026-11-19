@@ -83,6 +83,7 @@ func activate() -> void:
 	set_process(true)
 
 func _fade_voice(voice: Dictionary, seconds: float) -> void:
+	voice.bubbles=[]
 	_kill(voice.fade)
 	voice.fade = create_tween()
 	voice.fade.tween_property(voice.player, "volume_db", SILENT_DB, seconds)
@@ -94,6 +95,8 @@ func invalidate() -> void:
 	pending.clear()
 	timeline.clear()
 	current_growth = -1
+	for voice: Dictionary in features:
+		if voice.kind == "colony" and voice.player.playing: _fade_voice(voice,0.04)
 	for voice: Dictionary in growth:
 		if voice.player.playing:
 			_fade_voice(voice, 0.08)
@@ -131,7 +134,7 @@ func reconcile(pattern, animating: bool, preserve: bool, clock: float, placement
 				if not voice.members.is_empty() and voice.player.playing:
 					_kill(voice.fade)
 					voice.fade = create_tween()
-					voice.fade.tween_property(voice.player, "volume_db", float(assets[voice.asset].gain_db), 0.04)
+					voice.fade.tween_property(voice.player, "volume_db", float(specification.events.colony.burst.mix_gain_db) if voice.kind == "colony" else float(assets[voice.asset].gain_db), 0.04)
 		if voice.members.is_empty() and voice.pending.is_empty() and voice.player.playing:
 			_fade_voice(voice, 0.08)
 	if not animating:
@@ -180,6 +183,8 @@ func advance(clock: float) -> void:
 	while not pending.is_empty() and float(pending[0].time) <= clock:
 		var cue: Dictionary = pending.pop_front()
 		_play_feature(cue)
+	for voice: Dictionary in features:
+		_advance_bubbles(voice)
 
 func _variant(cue: Dictionary) -> String:
 	var ids: Array = specification.events[cue.kind].assets
@@ -223,11 +228,35 @@ func _start_feature(voice: Dictionary, cue: Dictionary) -> void:
 	voice.kind = cue.kind
 	voice.members = cue.members.duplicate()
 	voice.pending = {}
-	voice.player.stream = streams[id]
-	voice.player.volume_db = float(assets[id].gain_db)
+	voice.bubbles=cue.get("bubbles",[]).duplicate(true)
+	voice.burst_end=cue.get("end",INF)
+	voice.burst_finished=false
+	if cue.kind == "colony" and not voice.bubbles.is_empty():
+		var poly:=AudioStreamPolyphonic.new()
+		poly.polyphony=6
+		voice.player.stream=poly
+		voice.player.volume_db=float(specification.events.colony.burst.mix_gain_db)
+	else:
+		voice.player.stream = streams[id]
+		voice.player.volume_db = float(assets[id].gain_db)
 	voice.player.play()
 	_log({"kind": cue.kind, "asset": id, "members": cue.members.duplicate(), "clock": visual_clock, "scheduled": cue.time})
 	_update_duck()
+
+func _advance_bubbles(voice: Dictionary) -> void:
+	if voice.get("kind","")!="colony" or not voice.player.playing:return
+	if visual_clock>=float(voice.get("burst_end",INF)):
+		if not voice.get("burst_finished",false):
+			voice.burst_finished=true
+			_fade_voice(voice,0.04)
+		return
+	var playback=voice.player.get_stream_playback()
+	while not voice.get("bubbles",[]).is_empty() and voice.bubbles[0].time<=visual_clock:
+		var bubble:Dictionary=voice.bubbles.pop_front()
+		var offset:float=maxf(0.0,visual_clock-bubble.time)
+		if offset>=streams[bubble.asset].get_length():continue
+		playback.play_stream(streams[bubble.asset],offset,float(assets[bubble.asset].gain_db),1.0,0,bus_name)
+		_log({"kind":"colony_bubble","asset":bubble.asset,"clock":visual_clock,"scheduled":bubble.time,"members":voice.members.duplicate()})
 
 func _update_duck() -> void:
 	var target: float = -2 if features.any(func(voice: Dictionary): return voice.player.playing or not voice.pending.is_empty()) else 0

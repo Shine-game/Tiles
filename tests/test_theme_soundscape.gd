@@ -27,8 +27,8 @@ func run():
    for x in range(2,5):board[y][x]=1
   view.show_settled(empty)
   check(sound.soundscape.ambience.playing,"Ambience plays without growth")
-  check(sound.soundscape.ambience.stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,"Ambience loops")
-  check(is_equal_approx(sound.soundscape.ambience.stream.get_length(),72),"Full supplied bed")
+  check(sound.soundscape.ambience.stream.loop if sound.soundscape.ambience.stream is AudioStreamOggVorbis else sound.soundscape.ambience.stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,"Ambience loops")
+  check(is_equal_approx(sound.soundscape.ambience.stream.get_length(),15 if theme=="vines" else 72),"Full supplied bed")
   check(sound.soundscape.ambience.bus==sound.background_bus,"Ambience uses existing settings bus")
   view.animate_growth(empty,board)
   view.set_process(false)
@@ -36,7 +36,7 @@ func run():
   var tiers=[]
   for cue in plan:
    if not tiers.has(cue.tier):tiers.append(cue.tier)
-  check(tiers.size()==3,"All three visual tiers have sound cues")
+  check((1 in tiers and 23 in tiers) or (1 in tiers and 2 in tiers and 3 in tiers),"All three visual tiers have sound cues, including combined")
   for tier in [1,2,3]:check(sound.soundscape.voices[tier].bus==sound.effects_bus,"Every effect uses effects settings bus")
   sound.set_background_enabled(false)
   check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.background_bus)),"Background toggle mutes supplied ambience")

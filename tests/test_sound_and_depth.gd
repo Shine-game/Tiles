@@ -75,6 +75,8 @@ func _run() -> void:
 	check(scene.selected == Vector2i(2, 2), "grabbing a raised top rim does not jump up a grid row")
 	scene._clear_selection()
 	scene.sounds.cancel()
+	scene.sounds.soundscape.deactivate()
+	await create_timer(0.1).timeout
 	scene.queue_free()
 	await create_timer(0.12).timeout
 	await process_frame
