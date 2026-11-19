@@ -33,6 +33,6 @@
     }
   },
   "schedule": {
-    "after_tier2_seconds": 1.0
+    "after_tier2_seconds": 0.2
   }
 }

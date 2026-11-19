@@ -40,7 +40,7 @@
   "schedule": {
     "prerequisite": "perimeter_edges_meet",
     "link_overlap_fraction": 1.0,
-    "after_tier1_seconds": 1.0
+    "after_tier1_seconds": 0.2
   },
   "water": {
     "arc_height_cells": 0.45,

@@ -19,7 +19,7 @@ func run():
   view.animate_growth(empty,board)
   view.set_process(false)
   var event:Dictionary=view.pattern.flowers[Vector2i(3,3)]
-  assert(is_equal_approx(event.start,event.tier1_ready+1.0))
+  assert(is_equal_approx(event.start,event.tier1_ready+0.2))
   for shot in view.pattern.sprite_growth_events.values():
    if shot.old:continue
    var owner:String=shot.owner
@@ -43,7 +43,7 @@ func run():
   assert(node.visible and node.material==null)
   var link:Dictionary=view.pattern.links[0]
   var complete:float=maxf(view.pattern.formation_complete(view.pattern.flowers[link.a]),view.pattern.formation_complete(view.pattern.flowers[link.b]))
-  assert(is_equal_approx(link.start,complete+1.0))
+  assert(is_equal_approx(link.start,complete+0.2))
   view.advance_growth(maxf(0.0,link.start-view.clock-0.001))
   assert(view.vines_formations.renderer.nodes.values().filter(func(n):return n.z_index==1).all(func(n):return not n.visible))
   assert(plan.any(func(c):return c.tier==3 and is_equal_approx(c.time,link.start)))
@@ -56,5 +56,5 @@ func run():
   assert(view.vines_formations.renderer.nodes["flower/(3, 3)"].transform==saved)
   assert(view.vines_formations.renderer.nodes["flower/(3, 3)"].material==null)
  view.queue_free()
- print("Vines delayed reveal: local tier-one readiness, 1s wait, sound-length mask, delayed butterflies, original settled art and audio sync pass")
+ print("Vines delayed reveal: local tier-one readiness, 0.2s waits, sound-length mask, delayed butterflies, original settled art and audio sync pass")
  quit()
