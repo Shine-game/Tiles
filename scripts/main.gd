@@ -4,6 +4,10 @@ const ThemeAssets = preload("res://scripts/pattern/asset_library.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
+const Introduction = preload("res://scripts/introduction.gd")
+const IntroModel = preload("res://scripts/tutorial_model.gd")
+var introduction: Control
+var intro_progress_path := IntroModel.PATH
 const InterfaceTheme = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const Game = preload("res://scripts/game.gd")
@@ -140,6 +144,27 @@ func _ready() -> void:
 	session_ready = true
 	_layout()
 	_refresh()
+	if session_enabled: _maybe_introduction.call_deferred(not restored.is_empty())
+
+func _maybe_introduction(returning_player: bool) -> void:
+	var progress := IntroModel.progress(intro_progress_path)
+	if progress.done: return
+	if returning_player and not progress.started:
+		IntroModel.save_progress(1,true,intro_progress_path)
+		return
+	_start_introduction(progress.step)
+
+func _start_introduction(step: int = 1) -> void:
+	if introduction != null: return
+	palette_menu.hide()
+	dragging = false
+	introduction = Introduction.new()
+	introduction.stage = step
+	introduction.progress_path = intro_progress_path
+	introduction.finished.connect(func(): introduction = null)
+	add_child(introduction)
+	introduction.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
 
 func _autosave() -> void:
 	if not session_enabled or not session_ready: return
@@ -518,6 +543,7 @@ func _erase_cell_at(point: Vector2) -> Vector2i:
 	return Vector2i(floori(relative.x), floori(relative.y))
 
 func _input(event: InputEvent) -> void:
+	if introduction != null: return
 	if saving or confirmation.visible:
 		get_viewport().set_input_as_handled()
 		return
@@ -706,8 +732,8 @@ func _build_settings() -> void:
 	back_button = _menu_button("‹", _back_menu)
 	back_button.tooltip_text = "Back"
 	menu_close.tooltip_text = "Close"
-	for page: String in ["Themes", "Gameplay", "Gallery", "Audio"]:
-		settings_options.append(_menu_button(page, _open_gallery if page == "Gallery" else _show_menu.bind(page)))
+	for page: String in ["Themes", "Gameplay", "Gallery", "Audio", "Tutorial"]:
+		settings_options.append(_menu_button(page, _open_gallery if page == "Gallery" else (_start_introduction if page == "Tutorial" else _show_menu.bind(page))))
 	for id: String in MENU_THEMES:
 		var option := _menu_button(MENU_THEMES[id], _review_new_game.bind(id))
 		option.set_meta("theme_id", id)

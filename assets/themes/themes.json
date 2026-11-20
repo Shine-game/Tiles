@@ -362,7 +362,7 @@
       },
       "preview": {
         "ground": "edd7ad",
-        "core": "res://art/themes/coral_reef/artwork/salmon/coral_tier0_core_color1_1.png"
+        "core": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color1_basic.png"
       },
       "audio": {
         "schema": "symmetrical_tiles.audio.v1",

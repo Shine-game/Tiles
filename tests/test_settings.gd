@@ -62,7 +62,7 @@ func _run() -> void:
 	for i in range(4): await process_frame
 	click(scene.palette_button)
 	check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens")
-	check(scene.settings_options.map(func(button):return button.text) == ["Themes","Gameplay","Gallery","Audio"],"Settings has the requested sections")
+	check(scene.settings_options.map(func(button):return button.text) == ["Themes","Gameplay","Gallery","Audio","Tutorial"],"Settings has the requested sections")
 	click(scene.settings_options[0])
 	check(scene.menu_page == "Themes" and scene.theme_options.all(func(button):return button.visible),"Themes lists available themes")
 	click(scene.theme_options[0])
