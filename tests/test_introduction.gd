@@ -64,12 +64,6 @@ func run() -> void:
 		for variant: Dictionary in Rules.orientations(puzzle.offered):
 			if Model.accepts(puzzle,variant.cells,puzzle.anchor,puzzle.color): reachable = true
 		check(reachable,"Rotate and flip can reach the solution")
-	var fixture := Model.axis_demo_board()
-	check(Rules.symmetry_states(fixture)[0].complete,"Axes demonstration starts with vertical symmetry")
-	var half := Model.placed(fixture,[Vector2i.ZERO,Vector2i.RIGHT],Vector2i(1,1),1)
-	check(Rules.symmetry_states(half)[0].possible and not Rules.symmetry_states(half)[0].complete,"Unfinished symmetry remains possible")
-	var broken := Model.placed(half,[Vector2i.ZERO],Vector2i(3,1),2)
-	check(not Rules.symmetry_states(broken).any(func(state):return state.possible),"Bad placement breaks every remaining symmetry")
 	root.size = Vector2i(540,825)
 	Palette.select_theme("clockwork")
 	var game = Main.new()
@@ -97,12 +91,25 @@ func run() -> void:
 	var stationary: Array = intro.cells.duplicate()
 	intro._process(3)
 	check(intro.stage == 3 and intro.cells == stationary and intro.animation.is_empty(),"Tile never rotates automatically")
-	intro.transform_piece("rotate")
+	var original_unit: float = intro.tray_geometry().unit
+	var overlap_cell: Vector2i = intro.cells[0]
+	for cell: Vector2i in intro.cells:
+		if cell.y > overlap_cell.y: overlap_cell = cell
+	var offer_geometry: Dictionary = intro.tray_geometry()
+	var offered_tap := InputEventScreenTouch.new()
+	offered_tap.position = offer_geometry.origin+(Vector2(overlap_cell)+Vector2.ONE/2)*offer_geometry.unit
+	check(not intro.tray_rect.has_point(offered_tap.position),"Full-size offer extends beyond the old small tray")
+	offered_tap.pressed = true
+	intro._input(offered_tap)
+	offered_tap.pressed = false
+	intro._input(offered_tap)
 	check(intro.stage == 3 and intro.animation == "rotate","Player starts a rotation animation")
 	intro._process(Intro.ANIMATION_SECONDS/2)
 	check(intro.stage == 3 and intro.cells == stationary,"Rotation completes before moving on")
 	intro._process(Intro.ANIMATION_SECONDS/2+0.01)
 	check(intro.stage == 4 and intro.cells == Rules.rotate(stationary),"Finished rotation advances to flip")
+	check(is_equal_approx(intro.tray_geometry().unit,original_unit),"Rotation preserves full square size")
+
 	var normal: Color = intro.pulse_bases[intro.flip].normal.base.bg_color
 	intro.elapsed = 1.3
 	intro.animate_pulses()
@@ -128,6 +135,19 @@ func run() -> void:
 		check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18),"Tutorial text stays doubled")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
+		var fixed_board: Rect2 = intro.board_rect
+		for piece: Dictionary in Rules.PIECES.values():
+			intro.cells = intro.laid_cells(piece.cells)
+			var bounds := Vector2i.ONE
+			for cell: Vector2i in intro.cells: bounds = bounds.max(cell+Vector2i.ONE)
+			check(bounds.x >= bounds.y,"Every new offer lies horizontally")
+			for turn in range(4):
+				var geometry: Dictionary = intro.tray_geometry()
+				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/5),"Offer and board use identical tile sizes in every orientation")
+				check(geometry.origin.y >= intro.tray_rect.position.y,"Tall rotations extend downward, below the text")
+				check(intro.board_rect == fixed_board,"Rotating offered shapes never moves the board")
+				intro.cells = Rules.rotate(intro.cells)
+
 	# Restore actual viewport size before exercising native controls.
 	game.size = Vector2(540,825)
 	game._layout()
@@ -135,6 +155,13 @@ func run() -> void:
 	for stage in [6,7,8]:
 		if intro.stage != stage: intro.enter(stage)
 		check(intro.guide_cells().is_empty() and intro.hint in intro.pulsing,"Symmetry button pulses without giving away the placement")
+		var original_grid: Array = intro.grid.duplicate(true)
+		intro.grid[0][0] = 1
+		var partner := Rules.transform(Vector2i.ZERO,intro.puzzle.symmetry,5)
+		intro.grid[partner.y][partner.x] = 2
+		intro.selected = false
+		check(not Rules.symmetry_states(intro.grid)[intro.puzzle.symmetry].possible and not intro.exercise_axis_state().possible,"Exercise axes disappear when prediction makes symmetry impossible")
+		intro.grid = original_grid
 		intro.show_hint()
 		check(intro.guide_cells().is_empty(),"No shadow before a wrong placement")
 		drag_piece(intro,Vector2i.ZERO)
@@ -146,24 +173,10 @@ func run() -> void:
 		drag_piece(intro,intro.puzzle.anchor)
 		check(game.indicators[0].icon.complete[intro.puzzle.symmetry],"Symmetry indicator responds to correct hover")
 		intro.place.pressed.emit()
-		check(intro.stage == stage+1,"Correct symmetry placement advances instantly")
-	intro.elapsed = 1.1
-	intro.update_axis_demo()
-	intro.update_controls()
-	check(game.indicators[0].icon.complete[0],"Demonstration lights an existing axis")
-	intro.elapsed = 3.2
-	intro.update_axis_demo()
-	intro.update_controls()
-	check(not game.indicators[0].icon.complete[0] and game.indicators[0].icon.available[0],"Hover/rotation changes active axes")
-	intro.elapsed = 6.5
-	intro.update_axis_demo()
-	intro.update_controls()
-	check(not game.indicators[0].icon.available.any(func(value):return value),"Irrevocably broken axes disappear")
-	intro.elapsed = 7.9
-	intro.update_axis_demo()
-	check(intro.demo_lost and intro.desaturation == 0,"Bad placement retains original board colors")
-	intro._process(2.2)
-	check(intro.stage == 10 and intro.repair_phase == 0 and intro.desaturation == 0,"Repair lesson starts with a colored symmetric board")
+		check(intro.stage == (10 if stage == 8 else stage+1),"Correct symmetry placement advances instantly and skips removed card")
+	check(intro.stage == 10 and intro.repair_phase == 0 and intro.progress_label.text == "9 / 10","Rotational exercise goes directly to destruction lesson with ten-step numbering")
+	intro.enter(9)
+	check(intro.stage == 10 and intro.repair_phase == 0,"Old saved axes-card progress resumes at destruction lesson")
 	check(Rules.symmetry_states(intro.grid)[0].complete,"Repair pattern starts with vertical symmetry")
 	check(intro.forward.disabled,"Forward cannot bypass the repair exercise")
 	intro.next_step()
@@ -206,7 +219,7 @@ func run() -> void:
 	drag_piece(intro,Model.repair_offers()[2].anchor)
 	await click_control(intro.place)
 	check(intro.repair_phase == 6 and Rules.symmetry_states(intro.grid)[0].complete and game.indicators[0].icon.complete[0],"Replacement domino restores and highlights vertical symmetry")
-	check(intro.desaturation == 0 and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
+	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
 	intro._process(1.3)
 	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
 	check(game.game.board == Model.seed_board(0) and game.game.queue[game.game.index] == "L3" and intro.forward.disabled,"Real seed forces the next piece and cannot be skipped with Forward")

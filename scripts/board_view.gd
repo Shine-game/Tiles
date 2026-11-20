@@ -30,6 +30,7 @@ const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
+const Rules = preload("res://scripts/rules.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 var tile_floor: ColorRect
@@ -56,6 +57,7 @@ var flush_frame := false
 var direction_by_edge: Dictionary = {}
 var leaf_texture: Texture2D = Brush.leaf()
 var announced_flowers: Dictionary = {}
+var axes_states: Array = []
 var axes_overlay: Control
 var show_axes := false:
 	set(enabled):
@@ -434,6 +436,10 @@ func update_geometry() -> void:
 func _sprite_view_transform() -> Transform2D:
 	return Transform2D(0.0, Vector2.ONE * pitch, 0.0, _point(Vector2.ZERO))
 
+func set_axis_states(states: Array) -> void:
+	axes_states = states.duplicate(true)
+	_sync_axes()
+
 func _sync_axes() -> void:
 	var enabled: bool = show_axes and show_guides and not complete_background and not board.is_empty()
 	if axes_overlay == null:
@@ -443,6 +449,7 @@ func _sync_axes() -> void:
 		add_child(axes_overlay)
 	axes_overlay.visible = enabled
 	if enabled:
+		axes_overlay.states = axes_states if not axes_states.is_empty() else Rules.symmetry_states(board)
 		axes_overlay.configure(Rect2(_point(Vector2.ZERO), Vector2.ONE * board.size() * pitch), pitch)
 
 func surface_depth() -> float:

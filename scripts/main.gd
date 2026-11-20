@@ -426,6 +426,7 @@ func _refresh() -> void:
 
 func _update_summaries(board: Array) -> void:
 	var states: Array = Rules.symmetry_states(board)
+	board_view.set_axis_states(states)
 	var occupied: bool = board.any(func(row: Array): return row.any(func(value): return value != 0))
 	var indicator: Dictionary = indicators[0]
 	indicator.icon.available = states.map(func(state: Dictionary): return state.possible)

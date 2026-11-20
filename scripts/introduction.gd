@@ -3,8 +3,9 @@ signal finished
 const Model = preload("res://scripts/tutorial_model.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
+const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
-const TEXT := ["", "The beauty of symmetry.", "Drag the piece to its position,\nthen press the place button.", "Tap the tile to rotate it.", "Press to flip.", "Press to change color.", "Find the vertical symmetry.", "Find the horizontal symmetry.", "Find the rotational symmetry.", "Watch the axes for hints.\nA completed symmetry lights its axis.\nA broken symmetry loses its axis.", "Save a wrong placement:\nerase one tile, undo a move,\nor get a new piece.", "Enjoy infinite creations.\nFollow the marked placements."]
+const TEXT := ["", "The beauty of symmetry.", "Drag the piece to its position,\nthen press the place button.", "Tap the tile to rotate it.", "Press to flip.", "Press to change color.", "Find the vertical symmetry.", "Find the horizontal symmetry.", "Find the rotational symmetry.", "", "Save a wrong placement:\nerase one tile, undo a move,\nor get a new piece.", "Enjoy infinite creations.\nFollow the marked placements."]
 const REPAIR_TEXT := [
 	"Break the symmetry:\nplace the L as marked.",
 	"Add a wrong move:\nplace the single square as marked.",
@@ -53,8 +54,6 @@ var animation_time := 0.0
 var animation_color := 1
 var repair_phase := 0
 var repair_erasing := false
-var demo_lost := false
-var desaturation := 0.0
 var seed_started := false
 var seed_index := 0
 var seed_old_modes := {}
@@ -105,7 +104,8 @@ func _ready() -> void:
 func enter(step: int) -> void:
 	reset_pulses()
 	var keep_piece := stage in [3,4] and step == stage+1
-	stage = step
+	# Keep saved stage IDs compatible; the removed card forwards to the repair lesson.
+	stage = 10 if step == 9 else step
 	elapsed = 0
 	animation = ""
 	animation_time = 0
@@ -114,10 +114,8 @@ func enter(step: int) -> void:
 	hint_visible = false
 	attempts = 0
 	if not keep_piece: selected = false
-	desaturation = 0
-	demo_lost = false
 	text.text = TEXT[stage]
-	progress_label.text = "%d / 11" % stage
+	progress_label.text = "%d / 10" % (stage-1 if stage >= 10 else stage)
 	if stage == 1:
 		grid = Model.principle()
 		cells = []
@@ -131,13 +129,11 @@ func enter(step: int) -> void:
 			grid = Model.principle()
 			cells = Rules.PIECES.J.cells.duplicate()
 			color = 1
-	elif stage == 9:
-		grid = Model.axis_demo_board()
-		cells = []
 	elif stage == 10:
 		repair_phase = 0
 		prepare_repair()
 	elif stage == 11: start_seed()
+	if not keep_piece: cells = laid_cells(cells)
 	if persist: Model.save_progress(stage,false,progress_path,seed_index)
 	choose_pulses()
 	layout()
@@ -149,7 +145,7 @@ func choose_pulses() -> void:
 		2: pulsing = [place]
 		4: pulsing = [flip]
 		5: pulsing = [recolor]
-		6,7,8,9: pulsing = [hint]
+		6,7,8: pulsing = [hint]
 		10:
 			match repair_phase:
 				0,1,5: pulsing = [place]
@@ -196,7 +192,7 @@ func layout() -> void:
 	text.add_theme_font_size_override("font_size",font_size)
 	var font := text.get_theme_font("font")
 	var text_height := 0.0
-	for caption: String in TEXT+REPAIR_TEXT+["No symmetry remains.\nThe game has ended.",TEXT[11]+"\n3 / 3"]:
+	for caption: String in TEXT+REPAIR_TEXT+[TEXT[11]+"\n3 / 3"]:
 		text_height = maxf(text_height,font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,preparation.size.x,font_size).y)
 	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
 	text.size = Vector2(preparation.size.x,text_height+8)
@@ -221,7 +217,7 @@ func update_controls() -> void:
 	place.disabled = place_disabled
 	forward.disabled = stage in [10,11]
 	skip.disabled = false
-	hint.disabled = stage not in [6,7,8,9,10,11]
+	hint.disabled = stage not in [6,7,8,10,11]
 	var jokers := [host.undo_button,host.erase_button,host.skip_button]
 	for i in range(jokers.size()):
 		var control: Button = jokers[i]
@@ -238,6 +234,7 @@ func update_controls() -> void:
 	recolor.get_child(0).queue_redraw()
 	var prediction := prediction_board()
 	var states := Rules.symmetry_states(prediction)
+	if stage == 11: host.board_view.set_axis_states(states)
 	var icon = host.indicators[0].icon
 	icon.available = states.map(func(state): return state.possible)
 	icon.complete = states.map(func(state): return state.complete)
@@ -253,8 +250,7 @@ func prediction_board() -> Array:
 	return grid
 
 func ink(index: int) -> Color:
-	var result := Palette.tile(index)
-	return result.lerp(Color(result.get_luminance(),result.get_luminance(),result.get_luminance()),desaturation)
+	return Palette.tile(index)
 
 func transform_piece(operation: String) -> void:
 	if not animation.is_empty() or stage not in [3,4,5,6,7,8,11]: return
@@ -309,39 +305,10 @@ func _process(delta: float) -> void:
 		animation_time += delta
 		if animation_time >= ANIMATION_SECONDS: complete_transform()
 	elif stage == 1 and elapsed >= 2: enter(2)
-	elif stage == 9:
-		update_axis_demo()
-		if elapsed >= 10: enter(10)
 	elif stage == 10 and repair_phase == 6 and elapsed >= 1.2: enter(11)
 	animate_pulses()
 	update_controls()
 	queue_redraw()
-
-func update_axis_demo() -> void:
-	var base := Model.axis_demo_board()
-	desaturation = 0
-	demo_lost = false
-	selected = elapsed >= 1 and elapsed < 5 or elapsed >= 6 and elapsed < 7
-	if elapsed < 2.5:
-		grid = base
-		cells = [Vector2i.ZERO,Vector2i.DOWN]
-		anchor = Vector2i(2,1)
-		color = 1
-	elif elapsed < 5:
-		grid = base
-		cells = [Vector2i.ZERO,Vector2i.RIGHT]
-		anchor = Vector2i(1,1)
-		color = 1
-	else:
-		grid = Model.placed(base,[Vector2i.ZERO,Vector2i.RIGHT],Vector2i(1,1),1)
-		cells = [Vector2i.ZERO]
-		anchor = Vector2i(3,1)
-		color = 2
-		if elapsed >= 7:
-			grid = Model.placed(grid,cells,anchor,color)
-			selected = false
-			demo_lost = true
-			text.text = "No symmetry remains.\nLet’s learn how to repair it."
 
 func prepare_repair() -> void:
 	grid = Model.repair_board(repair_phase)
@@ -353,7 +320,7 @@ func prepare_repair() -> void:
 	elapsed = 0
 	text.text = REPAIR_TEXT[repair_phase]
 	var index: int = {0:0,1:1,5:2}.get(repair_phase,-1)
-	cells = Model.repair_offers()[index].cells.duplicate() if index >= 0 else []
+	cells = laid_cells(Model.repair_offers()[index].cells) if index >= 0 else []
 	# The player sees the unsuitable next piece before using the replacement joker.
 	if repair_phase == 4: cells = [Vector2i.ZERO,Vector2i.RIGHT,Vector2i(2,0)]
 
@@ -405,7 +372,7 @@ func prepare_seed() -> void:
 	host.piece_view.cells = host.cells
 	host.has_hover = false
 	grid = host.game.board.duplicate(true)
-	cells = step.cells.duplicate()
+	cells = laid_cells(step.cells)
 	color = 1
 	selected = false
 	anchor = Vector2i.ZERO
@@ -459,16 +426,25 @@ func _exit_tree() -> void:
 	var tree := get_tree()
 	if tree != null: tree.paused = previous_pause
 
+func laid_cells(shape: Array) -> Array:
+	var extent := Vector2i.ONE
+	for cell: Vector2i in shape: extent = extent.max(cell+Vector2i.ONE)
+	return Rules.rotate(shape) if extent.y > extent.x else shape.duplicate()
+
 func tray_geometry() -> Dictionary:
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
-	var unit := minf(tray_rect.size.x/maxi(4,extent.x),tray_rect.size.y/maxi(1,extent.y))*0.85
-	return {"unit":unit,"origin":tray_rect.get_center()-Vector2(extent)*unit/2}
+	var unit := board_rect.size.x/grid_size()
+	var drawn_size := Vector2(extent)*unit
+	var origin := tray_rect.position+(tray_rect.size-drawn_size)/2
+	# Match the main game: full-size rotations extend down over the board.
+	origin.y = maxf(tray_rect.position.y,origin.y)
+	return {"unit":unit,"origin":origin}
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton or event is InputEventMouseMotion or event is InputEventScreenTouch or event is InputEventScreenDrag:
 		var point: Vector2 = event.position
-		if held or board_rect.has_point(point) or tray_rect.has_point(point): _gui_input(event)
+		if held or board_rect.has_point(point) or tray_rect.has_point(point) or (not selected and piece_cell_at(point).x >= 0): _gui_input(event)
 
 func _gui_input(event: InputEvent) -> void:
 	if not animation.is_empty() or stage not in [2,3,4,5,6,7,8,10,11]: return
@@ -577,20 +553,14 @@ func piece_ink() -> Color:
 	if stage == 3 and animation.is_empty(): result = result.lerp(Color.WHITE,0.45*pulse_amount())
 	return result
 
-func draw_axis(index: int, state: Dictionary) -> void:
-	if not state.possible: return
-	var center := board_rect.get_center()
-	var radius := board_rect.size.x/2
-	var ink_value := Color("477D76",0.95 if state.complete else 0.28)
-	var width := 3.0 if state.complete else 1.2
-	if index < 4:
-		var direction: Vector2 = [Vector2.DOWN,Vector2.RIGHT,Vector2(1,-1),Vector2(1,1)][index]
-		draw_dashed_line(center-direction*radius,center+direction*radius,ink_value,width,7)
-	elif index == 5:
-		draw_circle(center,4,ink_value)
-		draw_arc(center,board_rect.size.x*0.08,-PI/2,PI*1.25,36,ink_value,width,true)
-		var tip := center+Vector2(0,-board_rect.size.x*0.08)
-		draw_line(tip,tip+Vector2(-7,4),ink_value,width,true)
+func exercise_axis_state() -> Dictionary:
+	var index: int = puzzle.symmetry if stage in [6,7,8] else 0
+	return Rules.symmetry_states(prediction_board())[index]
+
+func draw_exercise_axes() -> void:
+	if stage not in [6,7,8,10]: return
+	var indices: Array = [puzzle.symmetry] if stage != 10 else [0,1,2,3,4,5,6]
+	Axes.paint(self,board_rect,Rules.symmetry_states(prediction_board()),indices)
 
 func _draw() -> void:
 	if grid.is_empty(): return
@@ -601,14 +571,8 @@ func _draw() -> void:
 		for y in range(n):
 			for x in range(n):
 				var rect := Rect2(board_rect.position+Vector2(x,y)*unit,Vector2.ONE*unit)
-				tile(rect,Color("F1E7EB").lerp(Color("D9D9D9"),desaturation))
+				tile(rect,Color("F1E7EB"))
 				if grid[y][x] > 0: tile(rect,ink(grid[y][x]))
-	if stage in [6,7,8]:
-		var index: int = puzzle.symmetry
-		draw_axis(index,Rules.symmetry_states(prediction_board())[index])
-	elif stage in [9,10]:
-		var states := Rules.symmetry_states(prediction_board())
-		for index in [0,1,2,3,5]: draw_axis(index,states[index])
 	for cell: Vector2i in guide_cells():
 		var marker := Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit)
 		hatched_guide(marker)
@@ -616,8 +580,9 @@ func _draw() -> void:
 			draw_rect(marker.grow(-5),Color.WHITE.lerp(Color("477D76"),pulse_amount()),false,4)
 			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Color.WHITE,3,true)
 			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Color.WHITE,3,true)
-	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,9,10,11]: return
-	if stage == 9 and not selected: return
+	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,10,11]:
+		draw_exercise_axes()
+		return
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
 	var geometry := tray_geometry()
@@ -628,9 +593,11 @@ func _draw() -> void:
 	var flip_scale := 1.0
 	if animation == "rotate": angle = PI/2*smoothstep(0,ANIMATION_SECONDS,animation_time)
 	elif animation == "flip": flip_scale = cos(PI*clampf(animation_time/ANIMATION_SECONDS,0,1))
-	elif stage == 9 and elapsed >= 2.5 and elapsed < 2.5+ANIMATION_SECONDS:
-		angle = PI/2*(1-smoothstep(2.5,2.5+ANIMATION_SECONDS,elapsed))
+	if not selected:
+		var half_height := piece_unit*(absf(sin(angle))*extent.x+absf(cos(angle))*extent.y)/2
+		center.y = maxf(center.y,tray_rect.position.y+half_height)
 	draw_set_transform(center,angle,Vector2(flip_scale,1))
 	for cell: Vector2i in cells:
 		tile(Rect2(Vector2(cell)*piece_unit-Vector2(extent)*piece_unit/2,Vector2.ONE*piece_unit),piece_ink())
 	draw_set_transform(Vector2.ZERO)
+	draw_exercise_axes()

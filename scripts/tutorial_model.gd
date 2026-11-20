@@ -44,9 +44,6 @@ static func accepts(puzzle: Dictionary, cells: Array, anchor: Vector2i, color: i
 	var trial := placed(puzzle.board,cells,anchor,color)
 	return trial == puzzle.target and Rules.symmetry_states(trial)[puzzle.symmetry].complete
 
-static func axis_demo_board() -> Array:
-	return [[1,0,2,0,1],[2,0,0,0,2],[0,0,0,0,0],[1,0,0,0,1],[2,0,1,0,2]]
-
 # The player makes two mistakes, then repairs the same board with all three jokers.
 static func repair_base() -> Array:
 	return [[0,0,1,0,0],[0,0,1,0,0],[0,1,1,1,0],[0,0,1,0,0],[0,0,1,0,0]]
