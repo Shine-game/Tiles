@@ -70,13 +70,14 @@
       ],
       "ui": {
         "floor": "c4b99b",
-        "background": "B8AD98",
+        "background": "e5d4ae",
         "controls": "B8AD98",
         "text": "362F28",
         "muted": "8B806D",
         "garden": "a3a29a",
         "lit_edge": "D2C7B2",
-        "shaded_edge": "8B806D"
+        "shaded_edge": "8B806D",
+        "panel_background": "e4d6bb"
       },
       "frame": {
         "enabled": true,
@@ -181,9 +182,10 @@
         "platform": "F1E7EB",
         "floor": "FFF9F3",
         "seams": "DCCBD5",
-        "background": "B0BAA5",
+        "background": "FFF9F3",
         "lit_edge": "CBD2C1",
-        "shaded_edge": "808D75"
+        "shaded_edge": "808D75",
+        "panel_background": "eeedf3"
       },
       "frame": {
         "enabled": true,
@@ -320,14 +322,15 @@
       ],
       "ui": {
         "floor": "ffffff",
-        "background": "C6B99E",
+        "background": "d6ece6",
         "controls": "C6B99E",
         "text": "303C39",
         "muted": "9B8C72",
         "garden": "ffffff",
         "platform": "edd7ad",
         "lit_edge": "DFD4BC",
-        "shaded_edge": "9B8C72"
+        "shaded_edge": "9B8C72",
+        "panel_background": "eeedf3"
       },
       "frame": {
         "enabled": true,

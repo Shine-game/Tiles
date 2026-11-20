@@ -1,5 +1,6 @@
 extends SceneTree
 const Palette = preload("res://scripts/palette.gd")
+const Interface = preload("res://scripts/interface_palette.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const Main = preload("res://scripts/main.gd")
 var failures := 0
@@ -16,6 +17,7 @@ func run() -> void:
 	for id: String in palettes:
 		Palette.select_theme(id)
 		game._refresh_theme()
+		check(game.reef_background.visible == (id == "coral_reef"), "Coral background artwork remains enabled")
 		var normal: StyleBoxFlat = game.theme.get_stylebox("normal", "Button")
 		var pressed: StyleBoxFlat = game.theme.get_stylebox("pressed", "Button")
 		check(normal.bg_color == Color(palettes[id][0]), id + " surface")
@@ -24,9 +26,9 @@ func run() -> void:
 		check(game.theme.get_color("font_color", "Button") == Color(palettes[id][3]), id + " labels")
 		check(pressed.shadow_size < normal.shadow_size and pressed.content_margin_top - normal.content_margin_top == UI.TRAVEL, "shared press geometry")
 		check(game.confirmation.theme == game.theme, "dialog inherits shared theme")
-		check(game.gallery_panel.get_theme_stylebox("panel").bg_color == normal.bg_color, "gallery inherits surface")
+		check(game.gallery_panel.get_theme_stylebox("panel").bg_color == Interface.panel_background(), "gallery retains panel background")
 		game._show_menu("Audio")
-		check(game.palette_menu.get_theme_stylebox("panel").bg_color == normal.bg_color, "settings surface")
+		check(game.palette_menu.get_theme_stylebox("panel").bg_color == Interface.panel_background(), "settings retains panel background")
 		var icon = game.place_button.get_child(0)
 		var before: Vector2 = icon.position
 		game.place_button.button_down.emit()

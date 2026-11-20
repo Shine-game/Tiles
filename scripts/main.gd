@@ -660,6 +660,16 @@ func _reset(board_size: int = -1, level: int = -1) -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Interface.background())
+	if Palette.clockwork:
+		var paper := ClockworkVisuals.texture(Themes.profile(Palette.theme_id()).environment.background)
+		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
+		var extent: Vector2 = paper.get_size() * factor
+		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
+	elif Palette.theme_id() == "vines":
+		var paper := ThemeAssets.texture(Themes.profile("vines").environment.background)
+		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
+		var extent: Vector2 = paper.get_size() * factor
+		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 
 func _menu_button(text: String, callback: Callable) -> Button:
 	var button := _button(text, callback)
@@ -912,7 +922,7 @@ func _refresh_theme() -> void:
 	confirmation.theme = theme
 	if gallery_file_dialog != null: gallery_file_dialog.theme = theme
 	if gallery_panel != null: gallery_panel.remove_theme_stylebox_override("panel")
-	reef_background.visible = false
+	reef_background.visible = Palette.coral_reef
 	for button: Button in themed_buttons:
 		var active := false
 		var color := 1
