@@ -1,6 +1,8 @@
 @tool
 extends RefCounted
 
+const ExportAssets = preload("res://addons/tiles_gallery/export_assets.gd")
+
 const REQUIRED_CLASSES = ["Lorg/shinegame/tiles/gallery/GalleryPlugin;", "Lorg/shinegame/tiles/gallery/GalleryImageProvider;"]
 
 static func contains_text(bytes: PackedByteArray, text: String) -> bool:
@@ -47,6 +49,8 @@ static func inspect(path: String) -> Dictionary:
 	for file: String in files:
 		if file.get_base_dir().is_empty() and file.begins_with("classes") and file.ends_with(".dex"):
 			classes.merge(plugin_classes(zip.read_file(file)))
+	for orphan: String in ExportAssets.orphan_imports(files, zip.read_file):
+		errors.append("Unreferenced imported asset in APK: " + orphan)
 	zip.close()
 	for descriptor: String in REQUIRED_CLASSES:
 		if not classes.has(descriptor): errors.append("Missing compiled class: "+descriptor)
