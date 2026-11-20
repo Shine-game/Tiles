@@ -10,6 +10,25 @@ func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error(message)
+func drag_piece(intro, destination: Vector2i) -> void:
+	var point: Vector2
+	var grabbed: Vector2i = intro.cells[0]
+	if intro.selected:
+		point = intro.board_rect.position+(Vector2(intro.anchor+grabbed)+Vector2.ONE/2)*intro.board_rect.size.x/5
+	else:
+		var geometry: Dictionary = intro.tray_geometry()
+		point = geometry.origin+(Vector2(grabbed)+Vector2.ONE/2)*geometry.unit
+	var touch := InputEventScreenTouch.new()
+	touch.position = point
+	touch.pressed = true
+	intro._gui_input(touch)
+	var movement := InputEventScreenDrag.new()
+	movement.position = intro.board_rect.position+(Vector2(destination+grabbed)+Vector2.ONE/2)*intro.board_rect.size.x/5
+	intro._gui_input(movement)
+	touch.position = movement.position
+	touch.pressed = false
+	intro._gui_input(touch)
+
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var path := "user://intro-test.cfg"
@@ -71,17 +90,19 @@ func run() -> void:
 	check(intro.text.text == "Can you restore it?" and not intro.advance.disabled, "Principle demonstration ends with missing tile")
 	intro.next_step()
 	intro._process(3.1)
+	drag_piece(intro,Vector2i(1,1))
+	check(intro.selected, "Piece can enter board before learning transforms")
 	var tap := InputEventMouseButton.new()
 	tap.button_index = MOUSE_BUTTON_LEFT
-	tap.position = intro.tray_rect.get_center()
+	tap.position = intro.board_rect.position+(Vector2(intro.anchor+intro.cells[0])+Vector2.ONE/2)*intro.board_rect.size.x/5
 	tap.pressed = true
 	intro._gui_input(tap)
 	tap.pressed = false
 	intro._gui_input(tap)
-	check(intro.stage == 3, "Player tap completes rotation lesson")
+	check(intro.stage == 3 and intro.selected, "Tap rotates the live board piece without sending it back to tray")
 	intro._process(2.1)
 	intro.flip.pressed.emit()
-	check(intro.stage == 4, "Player flip completes reflection lesson")
+	check(intro.stage == 4 and intro.selected, "Flip keeps the exercise piece on the board")
 	intro._process(2.1)
 	intro.recolor.pressed.emit()
 	intro._process(1.4)
@@ -101,6 +122,29 @@ func run() -> void:
 	check(intro.hint_offered and intro.grid == intro.puzzle.board, "Failed attempts offer hint without changing board")
 	intro.hint.pressed.emit()
 	check(intro.hint_visible, "Hint reveals missing footprint")
+	intro.enter(5)
+	intro.demo = false
+	intro.color = 1
+	intro.cells = intro.puzzle.offered.duplicate()
+	var guide: Array = intro.guide_cells()
+	var original_cells: Array = intro.cells.duplicate()
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.position = intro.board_rect.position+(Vector2(guide[0])+Vector2.ONE/2)*intro.board_rect.size.x/5
+	click.pressed = true
+	intro._gui_input(click)
+	click.pressed = false
+	intro._gui_input(click)
+	check(not intro.selected and intro.cells == original_cells and intro.guide_cells() == guide, "Clicking fixed target does not select or transform anything")
+	drag_piece(intro,Vector2i(1,0))
+	check(intro.selected and intro.anchor == Vector2i(1,0) and intro.color == 1, "Unprepared piece can move onto arbitrary board position")
+	drag_piece(intro,Vector2i(0,2))
+	check(intro.anchor == Vector2i(0,2), "Piece can be picked up and moved again on board")
+	intro.transform_piece("rotate")
+	intro.flip.pressed.emit()
+	intro.recolor.pressed.emit()
+	check(intro.selected and intro.color == 2 and intro.grid == intro.puzzle.board, "On-board transforms preserve piece and do not commit grid")
+	check(intro.guide_cells() == guide, "Target guide never moves with the exercise tile")
 	for stage in [5,6,7,8,9,10]:
 		intro.enter(stage)
 		intro.demo = false
@@ -108,10 +152,7 @@ func run() -> void:
 		intro.cells = intro.puzzle.solution.duplicate()
 		intro.anchor = intro.puzzle.anchor
 		intro.color = 2
-		var touch := InputEventScreenTouch.new()
-		touch.position = intro.board_rect.position+(Vector2(intro.puzzle.anchor)+Vector2.ONE*0.2)*intro.board_rect.size.x/5
-		touch.pressed = true
-		intro._gui_input(touch)
+		drag_piece(intro,intro.puzzle.anchor)
 		intro.place.pressed.emit()
 		check(intro.succeeding and intro.grid == intro.puzzle.target, "Correct player placement completes exercise")
 		check(game.indicators[0].icon.complete[intro.puzzle.symmetry], "Existing symmetry button responds to placement")

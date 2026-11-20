@@ -92,6 +92,7 @@ func _ready() -> void:
 	enter(stage)
 
 func enter(step: int) -> void:
+	var keep_piece := stage in [2,3,4] and step == stage+1
 	stage = step
 	elapsed = 0
 	idle = 0
@@ -99,7 +100,7 @@ func enter(step: int) -> void:
 	hint_visible = false
 	hint_offered = false
 	succeeding = false
-	selected = false
+	if not keep_piece: selected = false
 	drag = false
 	held = false
 	board_angle = 0
@@ -177,6 +178,7 @@ func transform_piece(operation: String) -> void:
 		"rotate": cells = Rules.rotate(cells)
 		"flip": cells = Rules.flip(cells)
 		"color": color = 3-color
+	if selected: clamp_anchor()
 	idle = 0
 	if (stage == 2 and operation == "rotate") or (stage == 3 and operation == "flip"):
 		enter(stage+1)
@@ -194,7 +196,7 @@ func offer_hint() -> void:
 
 func show_hint() -> void:
 	hint_visible = true
-	text.text = "Match the outlined spaces.\nTap to rotate; flip and change color as needed."
+	text.text = "Match the hatched spaces.\nTap to rotate; flip and change color as needed."
 	queue_redraw()
 
 func try_place() -> void:
@@ -299,33 +301,66 @@ func _gui_input(event: InputEvent) -> void:
 		motion = true
 	else: return
 	if motion:
-		if held and point.distance_to(drag_start) > 10 and stage >= 5:
+		if held and point.distance_to(drag_start) > 10:
 			drag = true
 			select_at(point)
 		return
 	if pressed:
-		if tray_rect.has_point(point):
-			held = true
-			drag_start = point
-			var geometry := tray_geometry()
-			grabbed = Vector2i((point-geometry.origin)/geometry.unit)
-			if grabbed not in cells: grabbed = cells[0]
-		elif board_rect.has_point(point) and stage >= 5:
-			grabbed = Vector2i.ZERO
-			select_at(point)
+		var hit := piece_cell_at(point)
+		if hit.x < 0: return # The guide and empty board never pick up or move a tile.
+		held = true
+		drag_start = point
+		grabbed = hit
 	else:
 		if held and not drag: transform_piece("rotate")
 		held = false
 		drag = false
 	accept_event()
 
+func piece_cell_at(point: Vector2) -> Vector2i:
+	var local: Vector2
+	if selected:
+		if not board_rect.has_point(point): return Vector2i(-1,-1)
+		local = (point-board_rect.position)/(board_rect.size.x/5)-Vector2(anchor)
+	else:
+		var geometry := tray_geometry()
+		local = (point-geometry.origin)/geometry.unit
+	var cell := Vector2i(floori(local.x),floori(local.y))
+	return cell if cell in cells else Vector2i(-1,-1)
+
+func clamp_anchor() -> void:
+	var extent := Vector2i.ONE
+	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
+	anchor = Vector2i(clampi(anchor.x,0,5-extent.x),clampi(anchor.y,0,5-extent.y))
+
 func select_at(point: Vector2) -> void:
-	if not board_rect.has_point(point): return
-	anchor = Vector2i((point-board_rect.position)/(board_rect.size.x/5))-grabbed
-	selected = true
+	if tray_rect.has_point(point):
+		selected = false
+	elif board_rect.has_point(point):
+		var relative := (point-board_rect.position)/(board_rect.size.x/5)
+		anchor = Vector2i(floori(relative.x),floori(relative.y))-grabbed
+		clamp_anchor()
+		selected = true
+	else: return
 	idle = 0
 	update_controls()
 	queue_redraw()
+
+func guide_cells() -> Array:
+	return puzzle.missing.duplicate() if not succeeding and (stage in [5,6,7] or (stage in [8,9,10] and hint_visible)) else []
+
+func hatched_guide(rect: Rect2) -> void:
+	var bounds := rect.grow(-4)
+	var width := bounds.size.x
+	var height := bounds.size.y
+	var stroke := Color("477D76",0.2)
+	draw_rect(bounds,Color("477D76",0.3),false,1)
+	var diagonal := 0.0
+	while diagonal <= width+height:
+		var a := Vector2(maxf(0,diagonal-height),minf(height,diagonal))
+		var b := Vector2(minf(width,diagonal),maxf(0,diagonal-width))
+		draw_line(bounds.position+a,bounds.position+b,stroke,1,true)
+		diagonal += 9
 
 func tile(rect: Rect2, ink: Color, opacity: float = 1.0) -> void:
 	var style := StyleBoxFlat.new()
@@ -367,34 +402,33 @@ func _draw() -> void:
 			rotation = (PI/2 if elapsed > 0.8 else 0) + (PI/2 if elapsed > 2 else 0)
 		var flip_x := -1.0 if stage == 3 and demo and elapsed > 0.8 else 1.0
 		var demo_color := 3-color if stage == 4 and demo and elapsed > 0.8 else color
-		draw_set_transform(tray_rect.get_center(),rotation,Vector2(flip_x,1))
-		for cell: Vector2i in cells:
-			tile(Rect2(geometry.origin-tray_rect.get_center()+Vector2(cell)*geometry.unit,Vector2.ONE*geometry.unit),ink(demo_color))
-		draw_set_transform(Vector2.ZERO)
-		if stage == 2: draw_rect(tray_rect.grow(3),Color("477D76",0.6+sin(elapsed*4)*0.3),false,2)
-		if hint_visible:
-			for cell: Vector2i in puzzle.missing:
-				draw_rect(Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit).grow(-3),Color("477D76"),false,2)
+		if not selected:
+			draw_set_transform(tray_rect.get_center(),rotation,Vector2(flip_x,1))
+			for cell: Vector2i in cells:
+				tile(Rect2(geometry.origin-tray_rect.get_center()+Vector2(cell)*geometry.unit,Vector2.ONE*geometry.unit),ink(demo_color))
+			draw_set_transform(Vector2.ZERO)
+		if stage == 2:
+			var focus := board_rect if selected else tray_rect
+			draw_rect(focus.grow(3),Color("477D76",0.6+sin(elapsed*4)*0.3),false,2)
+		for cell: Vector2i in guide_cells():
+			hatched_guide(Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit))
 		if selected:
-			for offset: Vector2i in cells:
-				var cell := anchor+offset
-				if cell.x in range(5) and cell.y in range(5): tile(Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit),ink(color),0.6)
+			var display: Array = Rules.flip(cells) if stage == 3 and demo and elapsed > 0.8 else cells
+			for offset: Vector2i in display:
+				var rect := Rect2(board_rect.position+Vector2(anchor+offset)*unit,Vector2.ONE*unit)
+				tile(rect,ink(demo_color))
+				draw_rect(rect.grow(-2),Color("303C39",0.45),false,1)
 	if stage in [3,4] and not succeeding:
 		var control: Button = flip if stage == 3 else recolor
 		draw_rect(control.get_rect().grow(3),Color("477D76",0.6+sin(elapsed*4)*0.3),false,2)
 	if stage in range(5,11) and (selected or succeeding):
 		draw_rect(hint.get_rect().grow(3),Color("477D76",0.7+0.2*sin(elapsed*5)),false,3)
-	# Short-lived reflected ghosts explain the relationship without changing cells.
 	if (stage == 5 and elapsed < 3) or (stage == 7 and demo) or (stage == 6 and succeeding):
+		var opacity := 0.2+0.4*absf(sin(elapsed*3))
 		for y in range(5):
 			for x in range(5):
-				if puzzle.board[y][x] != 2: continue
-				var original := Vector2(x,y)+Vector2.ONE/2
-				var partner := Vector2(Rules.transform(Vector2i(x,y),puzzle.symmetry,5))+Vector2.ONE/2
-				var amount := (elapsed/3 if stage == 5 else mirror_amount)
-				var position := original.lerp(partner,clampf(amount,0,1))
-				if stage == 7: position = Vector2(2.5,2.5)+(original-Vector2(2.5,2.5)).rotated(PI*mirror_amount)
-				tile(Rect2(board_rect.position+(position-Vector2.ONE/2)*unit,Vector2.ONE*unit),ink(2),0.3)
+				if puzzle.board[y][x] == 2:
+					draw_rect(Rect2(board_rect.position+Vector2(x,y)*unit,Vector2.ONE*unit).grow(-4),Color("477D76",opacity),false,2)
 
 func show_art() -> void:
 	grid = Rules.empty_board(5)
