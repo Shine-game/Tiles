@@ -690,6 +690,9 @@ func _ask_reset(n: int) -> void:
 		_reset())
 
 func _replay_game() -> void:
+	if introduction != null:
+		introduction.finish(true)
+		return
 	if saving: return
 	_confirm_new_game("Start new game", func():
 		menu_history.clear()
@@ -1024,6 +1027,9 @@ func _refresh_theme() -> void:
 	queue_redraw()
 
 func _toggle_palette_menu() -> void:
+	if introduction != null:
+		introduction.next_step()
+		return
 	dragging = false
 	if palette_menu.visible:
 		palette_menu.hide()

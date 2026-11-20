@@ -24,6 +24,9 @@ func _draw() -> void:
 		"undo":
 			draw_polyline(PackedVector2Array([Vector2(-0.7,-0.4),Vector2(0.25,-0.4),Vector2(0.65,-0.1),Vector2(0.65,0.35),Vector2(0.3,0.6),Vector2(-0.2,0.6)]),ink,0.18,true)
 			draw_polyline(PackedVector2Array([Vector2(-0.2,-0.85),Vector2(-0.75,-0.4),Vector2(-0.2,0.05)]),ink,0.18,true)
+		"close":
+			draw_line(Vector2(-0.65,-0.65),Vector2(0.65,0.65),ink,0.18,true)
+			draw_line(Vector2(0.65,-0.65),Vector2(-0.65,0.65),ink,0.18,true)
 		"replay":
 			draw_arc(Vector2.ZERO,0.78,-PI*0.6,PI*1.1,36,ink,0.16,true)
 			draw_colored_polygon(PackedVector2Array([Vector2(-0.74,-0.32),Vector2(-0.96,0.12),Vector2(-0.42,-0.02)]),ink)

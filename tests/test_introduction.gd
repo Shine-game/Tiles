@@ -86,9 +86,16 @@ func run() -> void:
 	game._layout()
 	intro.layout()
 	check(paused, "Tutorial pauses underlying game")
+	check(not game.erase_button.visible and not game.undo_button.visible and not game.skip_button.visible, "Tutorial hides all jokers")
+	check(intro.forward == game.palette_button and intro.skip == game.replay_button and intro.place == game.place_button, "Navigation reuses existing button positions")
+	check(intro.place.text == "" and intro.place.get_child(0).visible, "Place retains its normal hand icon")
 	intro._process(7.1)
-	check(intro.text.text == "Can you restore it?" and not intro.advance.disabled, "Principle demonstration ends with missing tile")
-	intro.next_step()
+	check(intro.text.text == "Can you restore it?" and intro.restore_prompt and intro.cells == [Vector2i.ZERO] and intro.guide_cells() == [Vector2i(1,1)], "Restore prompt immediately offers its matching tile and fixed target")
+	drag_piece(intro,Vector2i(1,1))
+	intro.place.pressed.emit()
+	check(intro.succeeding and intro.grid == intro.puzzle.target, "Introductory missing tile can actually be restored")
+	intro._process(2.4)
+	check(intro.stage == 2, "Restoration hands off to rotation lesson")
 	intro._process(3.1)
 	drag_piece(intro,Vector2i(1,1))
 	check(intro.selected, "Piece can enter board before learning transforms")
@@ -112,14 +119,19 @@ func run() -> void:
 		game._layout()
 		intro.layout()
 		check(intro.board_rect.is_equal_approx(Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)), "Five-by-five occupies the existing grid opening")
+		check(intro.text.position.y >= intro.progress_label.get_rect().end.y and intro.text.get_rect().end.y <= intro.tray_rect.position.y, "Comments sit below step count and above offered piece")
 		var bounds := Rect2(Vector2.ZERO,dimensions)
 		check(bounds.encloses(intro.board_rect) and bounds.encloses(intro.tray_rect), "Phone layout fits")
 		for control in [intro.skip,intro.flip,intro.place,intro.recolor]: check(bounds.encloses(control.get_rect()), "Tutorial controls fit phone")
 	intro.selected = true
 	intro.anchor = Vector2i.ZERO
+	var instruction: String = intro.text.text
 	intro.try_place()
 	intro.try_place()
-	check(intro.hint_offered and intro.grid == intro.puzzle.board, "Failed attempts offer hint without changing board")
+	check(not intro.hint_offered and intro.text.text == instruction and intro.grid == intro.puzzle.board, "Wrong Place presses have no visible reaction")
+	intro.idle = 18.1
+	intro._process(0.1)
+	check(intro.hint_offered, "Inactivity can still offer a hint")
 	intro.hint.pressed.emit()
 	check(intro.hint_visible, "Hint reveals missing footprint")
 	intro.enter(5)
@@ -167,9 +179,12 @@ func run() -> void:
 	game._start_introduction()
 	var replay = game.introduction
 	check(replay.stage == 1, "Replay starts at beginning")
+	replay.forward.pressed.emit()
+	check(replay.stage == 2, "Forward advances even without completing the current exercise")
 	replay.skip.pressed.emit()
 	await process_frame
 	check(not paused and Model.progress(path).done, "Skip works during demonstration")
+	check(game.erase_button.visible and game.undo_button.visible and game.skip_button.visible and game.palette_button.text == "" and game.replay_button.text == "" and game.palette_button.get_child(0).kind == "settings" and game.replay_button.get_child(0).kind == "replay" and game.replay_button.tooltip_text == "Start new game", "Ending tutorial restores normal controls")
 	game.intro_progress_path = path
 	DirAccess.remove_absolute(path)
 	game._maybe_introduction(false)

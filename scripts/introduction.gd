@@ -13,6 +13,7 @@ var elapsed := 0.0
 var idle := 0.0
 var demo := false
 var succeeding := false
+var restore_prompt := false
 var attempts := 0
 var hint_offered := false
 var hint_visible := false
@@ -38,6 +39,7 @@ var flip: Button
 var recolor: Button
 var place: Button
 var advance: Button
+var forward: Button
 var hint: Button
 var tray: Control
 var showcase: Control
@@ -46,7 +48,6 @@ var host: Control
 var saved_controls: Array = []
 var saved_visibility := {}
 var saved_place_text := ""
-var saved_skip_tooltip := ""
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -68,20 +69,29 @@ func _ready() -> void:
 	progress_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(progress_label)
 	assert(host != null, "Introduction uses the existing game interface")
-	skip = host.skip_button
+	skip = host.replay_button
 	flip = host.flip_button
 	recolor = host.blue_button
 	place = host.place_button
-	advance = place
+	forward = host.palette_button
+	advance = forward
 	hint = host.indicators[0].panel
 	tray = host.piece_view
 	saved_place_text = place.text
-	saved_skip_tooltip = skip.tooltip_text
-	skip.tooltip_text = "Skip tutorial"
 	for control: Button in host._controls():
-		saved_controls.append({"node":control,"mode":control.process_mode,"disabled":control.disabled})
+		saved_controls.append({"node":control,"mode":control.process_mode,"disabled":control.disabled,"visible":control.visible,"text":control.text,"tooltip":control.tooltip_text,"icon_visible":control.get_child(0).visible,"icon_kind":control.get_child(0).get("kind"),"icon_count":control.get_child(0).get("count")})
 		control.process_mode = Node.PROCESS_MODE_ALWAYS
 		control.disabled = true
+	for control: Button in [host.erase_button,host.undo_button,host.skip_button]: control.hide()
+	forward.text = ""
+	forward.get_child(0).kind = "skip"
+	forward.get_child(0).count = -1
+	forward.tooltip_text = "Forward"
+	forward.get_child(0).show()
+	skip.text = ""
+	skip.get_child(0).kind = "close"
+	skip.tooltip_text = "End tutorial"
+	skip.get_child(0).show()
 	for control: Control in [host.piece_view,host.floating_piece]:
 		saved_visibility[control] = control.visible
 		control.hide()
@@ -100,6 +110,7 @@ func enter(step: int) -> void:
 	hint_visible = false
 	hint_offered = false
 	succeeding = false
+	restore_prompt = false
 	if not keep_piece: selected = false
 	drag = false
 	held = false
@@ -129,13 +140,17 @@ func layout() -> void:
 	if text == null or host == null: return
 	var field: Rect2 = host.board_view.field
 	board_rect = Rect2(host.board_view.position+field.position,field.size)
-	tray_rect = host.piece_view.get_rect()
-	text.position = Vector2(16,host.board_view.get_rect().end.y+3)
-	text.size = Vector2(host.size.x-32,maxf(30,place.position.y-text.position.y-4))
-	text.add_theme_font_size_override("font_size",clampi(roundi(host.size.x*0.033),12,21))
-	progress_label.position = Vector2(tray_rect.position.x,tray_rect.position.y-8)
-	progress_label.size = Vector2(tray_rect.size.x,18)
+	var preparation: Rect2 = host.piece_view.get_rect()
+	var top := maxf(4,preparation.position.y-24)
+	progress_label.position = Vector2(preparation.position.x,top)
+	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",12)
+	var font_size := clampi(roundi(host.size.x*0.028),12,18)
+	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
+	text.size = Vector2(preparation.size.x,font_size*2.4)
+	text.add_theme_font_size_override("font_size",font_size)
+	var tray_top := text.get_rect().end.y+4
+	tray_rect = Rect2(preparation.position.x,tray_top,preparation.size.x,maxf(24,host.board_view.position.y-tray_top-4))
 	if showcase != null:
 		showcase.position = host.board_view.position
 		showcase.size = host.board_view.size
@@ -146,9 +161,11 @@ func update_controls() -> void:
 	flip.disabled = demo or succeeding or stage < 3 or stage == 11
 	recolor.disabled = demo or succeeding or stage < 4 or stage == 11
 	place.disabled = demo or succeeding or stage < 5 or not selected
-	if stage in [1,11]: place.disabled = stage == 1 and elapsed < 7
-	place.text = ("Begin" if stage == 11 else "Continue") if stage in [1,11] else saved_place_text
-	place.get_child(0).visible = stage not in [1,11]
+	if stage == 1: place.disabled = not restore_prompt or not selected or succeeding
+	if stage == 11: place.disabled = false
+	place.text = saved_place_text
+	place.get_child(0).show()
+	forward.disabled = false
 	hint.disabled = stage < 5 or stage == 11
 	skip.disabled = false
 	skip.get_child(0).count = -1
@@ -171,7 +188,7 @@ func ink(index: int) -> Color:
 	return Palette.tile(index)
 
 func transform_piece(operation: String) -> void:
-	if demo or succeeding or stage < 2 or stage > 10: return
+	if demo or succeeding or (stage < 2 and not restore_prompt) or stage > 10: return
 	if operation == "flip" and stage < 3: return
 	if operation == "color" and stage < 4: return
 	match operation:
@@ -200,36 +217,39 @@ func show_hint() -> void:
 	queue_redraw()
 
 func try_place() -> void:
-	if stage in [1,11]:
+	if stage == 11:
 		next_step()
 		return
-	if stage < 5 or stage > 10 or demo or succeeding or not selected: return
+	if (stage < 5 and not restore_prompt) or stage > 10 or demo or succeeding or not selected: return
 	idle = 0
 	if Model.accepts(puzzle,cells,anchor,color):
 		grid = puzzle.target.duplicate(true)
 		selected = false
 		succeeding = true
 		success_elapsed = 0
-	else:
-		attempts += 1
-		text.text = "Try another fit."
-		if attempts >= 2: offer_hint()
+	else: return
 	update_controls()
 	queue_redraw()
 
 func next_step() -> void:
 	if stage == 11: finish(false)
-	elif stage == 1 and elapsed >= 7: enter(2)
+	else: enter(stage+1)
+
 
 func finish(_skipped: bool) -> void:
 	if persist: Model.save_progress(stage,true,progress_path)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
 		record.node.disabled = record.disabled
+		record.node.visible = record.visible
+		record.node.text = record.text
+		record.node.tooltip_text = record.tooltip
+		record.node.get_child(0).visible = record.icon_visible
+		if record.icon_kind != null: record.node.get_child(0).kind = record.icon_kind
+		if record.icon_count != null: record.node.get_child(0).count = record.icon_count
 	for control: Control in saved_visibility: control.visible = saved_visibility[control]
 	place.text = saved_place_text
 	place.get_child(0).show()
-	skip.tooltip_text = saved_skip_tooltip
 	get_tree().paused = previous_pause
 	finished.emit()
 	host._refresh()
@@ -245,10 +265,17 @@ func _process(delta: float) -> void:
 	if stage == 1:
 		if elapsed > 3 and elapsed < 5: board_angle = PI*smoothstep(3,5,elapsed)
 		elif elapsed >= 5: board_angle = PI
-		if elapsed >= 6:
+		if elapsed >= 6 and not restore_prompt:
+			var target: Array = grid.duplicate(true)
 			grid[1][1] = 0
+			board_angle = 0
+			cells = [Vector2i.ZERO]
+			color = 2
+			puzzle = {"board":grid.duplicate(true),"target":target,"missing":[Vector2i(1,1)],"anchor":Vector2i(1,1),"solution":cells.duplicate(),"symmetry":0,"color":2}
+			restore_prompt = true
 			text.text = "Can you restore it?"
-		demo = elapsed < 7
+		if restore_prompt: board_angle = 0
+		demo = not restore_prompt
 	elif stage == 2 and demo and elapsed >= 3:
 		cells = Rules.rotate(Rules.rotate(cells))
 		demo = false
@@ -280,7 +307,7 @@ func _input(event: InputEvent) -> void:
 		if held or board_rect.has_point(point) or tray_rect.has_point(point): _gui_input(event)
 
 func _gui_input(event: InputEvent) -> void:
-	if demo or succeeding or stage < 2 or stage > 10: return
+	if demo or succeeding or (stage < 2 and not restore_prompt) or stage > 10: return
 	var point := Vector2.ZERO
 	var pressed := false
 	var motion := false
@@ -347,7 +374,7 @@ func select_at(point: Vector2) -> void:
 	queue_redraw()
 
 func guide_cells() -> Array:
-	return puzzle.missing.duplicate() if not succeeding and (stage in [5,6,7] or (stage in [8,9,10] and hint_visible)) else []
+	return puzzle.missing.duplicate() if not succeeding and (restore_prompt or stage in [5,6,7] or (stage in [8,9,10] and hint_visible)) else []
 
 func hatched_guide(rect: Rect2) -> void:
 	var bounds := rect.grow(-4)
@@ -395,7 +422,7 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO,6,Color("477D76"))
 		draw_arc(Vector2.ZERO,unit*0.35,-PI/2,PI/2,20,Color("477D76"),2,true)
 	draw_set_transform(Vector2.ZERO)
-	if stage in range(2,11) and not succeeding:
+	if (stage in range(2,11) or restore_prompt) and not succeeding:
 		var geometry := tray_geometry()
 		var rotation := 0.0
 		if stage == 2 and demo:
@@ -407,7 +434,7 @@ func _draw() -> void:
 			for cell: Vector2i in cells:
 				tile(Rect2(geometry.origin-tray_rect.get_center()+Vector2(cell)*geometry.unit,Vector2.ONE*geometry.unit),ink(demo_color))
 			draw_set_transform(Vector2.ZERO)
-		if stage == 2:
+		if stage == 2 or restore_prompt:
 			var focus := board_rect if selected else tray_rect
 			draw_rect(focus.grow(3),Color("477D76",0.6+sin(elapsed*4)*0.3),false,2)
 		for cell: Vector2i in guide_cells():
