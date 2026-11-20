@@ -6,7 +6,7 @@ const Palette = preload("res://scripts/palette.gd")
 const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
-const TEXT := ["", "Create endless symmetrical patterns.", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
+const TEXT := ["", "", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
 	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
 	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
@@ -130,7 +130,7 @@ func enter(step: int) -> void:
 	reset_pulses()
 	var keep_piece := stage in [2,3,4] and step == stage+1
 	# Keep saved stage IDs compatible; the removed card forwards to the repair lesson.
-	stage = 10 if step == 9 else step
+	stage = 2 if step == 1 else (10 if step == 9 else step)
 	elapsed = 0
 	animation = ""
 	animation_time = 0
@@ -140,11 +140,8 @@ func enter(step: int) -> void:
 	attempts = 0
 	if not keep_piece: selected = false
 	set_caption(TEXT[stage])
-	progress_label.text = "%d / 10" % (stage-1 if stage >= 10 else stage)
-	if stage == 1:
-		grid = Model.principle()
-		cells = []
-	elif stage in [2,3,4,5]:
+	progress_label.text = "%d / 9" % (stage-2 if stage >= 10 else stage-1)
+	if stage in [2,3,4,5]:
 		if not keep_piece:
 			puzzle = Model.recipe(5)
 			grid = puzzle.board.duplicate(true)
@@ -170,21 +167,26 @@ func enter(step: int) -> void:
 	update_controls()
 	queue_redraw()
 
-func choose_pulses() -> void:
+func desired_pulses() -> Array:
+	if leaving or not animation.is_empty(): return []
 	match stage:
-		3: pulsing = [flip]
-		4: pulsing = [recolor]
-		5: pulsing = [place]
-		6,7,8: pulsing = [hint]
+		3: return [flip]
+		4: return [recolor]
+		5,6,7,8:
+			return [place] if exercise_placement_correct() else []
 		10:
 			match repair_phase:
-				1,2,6: pulsing = [place]
-				3: pulsing = [host.undo_button]
-				4: pulsing = [host.erase_button]
-				5: pulsing = [host.skip_button]
-				_: pulsing = [hint]
-		11: pulsing = []
-		_: pulsing = []
+				1,2,6: return [place] if repair_matches_target() else []
+				3: return [host.undo_button]
+				4: return [host.erase_button]
+				5: return [host.skip_button]
+	return []
+
+func exercise_placement_correct() -> bool:
+	return selected and stage in [5,6,7,8] and Model.accepts(puzzle,cells,anchor,color)
+
+func choose_pulses() -> void:
+	pulsing = desired_pulses()
 	for control: Button in pulsing:
 		var states := {}
 		for state in ["normal","hover","pressed","hover_pressed","disabled"]:
@@ -225,7 +227,7 @@ func layout() -> void:
 	if not current.is_equal_approx(adjusted_board_rect): normal_board_rect = current
 	# The central header belongs entirely to the caption; side controls never move.
 	var preparation: Rect2 = host.piece_view.get_rect()
-	progress_label.position = preparation.position+Vector2(0,-18) if stage == 10 else preparation.position
+	progress_label.position = preparation.position+Vector2(0,-18)
 	progress_label.z_index = 2
 	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",12)
@@ -233,36 +235,38 @@ func layout() -> void:
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
 	var font := text.get_theme_font("normal_font")
-	var captions: Array = REPAIR_TEXT if stage == 10 else ([TEXT[11]] if stage == 11 else TEXT.slice(1,9))
+	var captions: Array = TEXT.slice(2,9)+[TEXT[11]]+REPAIR_TEXT
 	var font_size := 2*clampi(roundi(host.size.x*0.028),12,18)
-	# Long explanatory cards still leave room for a usable nine-square field.
-	var minimum_side := minf(normal_board_rect.size.x,maxf(100,normal_board_rect.size.y*0.45))
-	var maximum_caption_height := preparation.size.y-18 if n == 9 else normal_board_rect.end.y-preparation.position.y-18-minimum_side-2*maxf(0,minimum_side-rim)/n-24
-	var caption_height := 0.0
+	# Fit the longest complete cue once, then reuse its type size and window.
+	var reserved := preparation.grow(-4)
+	var caption_height := reserved.size.y
 	while true:
-		caption_height = 1 if stage == 10 else maxf(1,preparation.size.y-18)
+		var longest := 0.0
 		for caption: String in captions:
-			var height := measure_caption(caption,font,font_size,preparation.size.x)
-			if stage == 10 and caption in REPAIR_TEXT.slice(3,7): height += measure_caption("Save the pattern",font,font_size,preparation.size.x)+6
-			caption_height = maxf(caption_height,height)
-		if stage == 10 or caption_height <= maximum_caption_height or font_size <= (8 if n == 9 else 14): break
+			var height := measure_caption(caption,font,font_size,reserved.size.x)
+			if caption in REPAIR_TEXT.slice(3,7): height += measure_caption("Save the pattern",font,font_size,reserved.size.x)+4
+			longest = maxf(longest,height)
+		if longest <= caption_height or font_size <= 6: break
 		font_size -= 1
 	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
-	caption_rect = Rect2(preparation.position+Vector2(0,18),Vector2(preparation.size.x,caption_height))
+	caption_rect = reserved
 	var body_rect := caption_rect
 	repair_header.visible = stage == 10 and repair_phase in [3,4,5,6]
 	repair_header.add_theme_font_size_override("normal_font_size",font_size)
 	repair_header.add_theme_color_override("default_color",Ink.text())
 	if repair_header.visible:
-		var header_height := measure_caption("Save the pattern",font,font_size,preparation.size.x)
-		repair_header.position = caption_rect.position
-		repair_header.size = Vector2(preparation.size.x,header_height)
-		body_rect = Rect2(caption_rect.position+Vector2(0,header_height+6),Vector2(preparation.size.x,maxf(1,caption_height-header_height-6)))
-	var current_height := measure_caption(text.text,font,font_size,preparation.size.x)
+		var header_height := measure_caption("Save the pattern",font,font_size,reserved.size.x)
+		var body_height := 0.0
+		for caption: String in REPAIR_TEXT.slice(3,7): body_height = maxf(body_height,measure_caption(caption,font,font_size,reserved.size.x))
+		var group_top := caption_rect.position.y+maxf(0,(caption_height-header_height-4-body_height)/2)
+		repair_header.position = Vector2(caption_rect.position.x,group_top)
+		repair_header.size = Vector2(reserved.size.x,header_height)
+		body_rect = Rect2(caption_rect.position.x,group_top+header_height+4,reserved.size.x,body_height)
+	var current_height := measure_caption(text.text,font,font_size,reserved.size.x)
 	text.position = body_rect.position+Vector2(0,maxf(0,(body_rect.size.y-current_height)/2))
-	text.size = Vector2(preparation.size.x,current_height)
+	text.size = Vector2(reserved.size.x,current_height)
 	# Split the remaining height into two offer rows and a square board.
 	# Include the board frame in the calculation and anchor its bottom to the game.
 	var gap := 12.0
@@ -308,9 +312,9 @@ func update_controls() -> void:
 	if stage == 11: place_disabled = place_disabled or host.board_view.growing
 	# Never transiently disable a held button before assigning its final state.
 	place.disabled = place_disabled
-	forward.disabled = stage != 1
+	forward.disabled = true
 	skip.disabled = false
-	hint.disabled = stage not in [6,7,8,10,11]
+	hint.disabled = stage not in [10,11]
 	var jokers := [host.undo_button,host.erase_button,host.skip_button]
 	for i in range(jokers.size()):
 		var control: Button = jokers[i]
@@ -329,10 +333,13 @@ func update_controls() -> void:
 	var states := Rules.symmetry_states(prediction)
 	if stage == 11: host.board_view.set_axis_states(states)
 	var icon = host.indicators[0].icon
-	icon.available = states.map(func(state): return state.possible)
-	icon.complete = states.map(func(state): return state.complete)
+	icon.available = states.map(func(state): return true if stage < 10 else state.possible)
+	icon.complete = states.map(func(state): return false if stage < 10 else state.complete)
 	icon.saved = false
 	icon.queue_redraw()
+	if pulsing != desired_pulses():
+		reset_pulses()
+		choose_pulses()
 
 func grid_size() -> int: return 9 if stage in [10,11] else 5
 
@@ -403,7 +410,6 @@ func _process(delta: float) -> void:
 	if not animation.is_empty():
 		animation_time += delta
 		if animation_time >= ANIMATION_SECONDS: complete_transform()
-	elif stage == 1 and elapsed >= 2: enter(2)
 	elif stage == 10:
 		if repair_phase == 7 and elapsed >= 5: enter(11)
 	elif stage == 11:
@@ -681,13 +687,15 @@ func piece_ink() -> Color:
 	return result
 
 func exercise_axis_state() -> Dictionary:
-	var index: int = puzzle.symmetry if stage in [6,7,8] else 0
-	return Rules.symmetry_states(prediction_board())[index]
+	# Early axes teach the requested geometry; prediction begins in the later lesson.
+	return {"possible":true,"complete":false}
 
-func draw_exercise_axes() -> void:
-	if stage not in [6,7,8,10]: return
-	var indices: Array = [puzzle.symmetry] if stage != 10 else [0,1,2,3,4,5,6]
-	Axes.paint(self,board_rect,Rules.symmetry_states(prediction_board()),indices)
+func draw_exercise_axes(canvas: CanvasItem = null) -> void:
+	if stage not in [2,3,4,5,6,7,8,10]: return
+	var states := Rules.symmetry_states(prediction_board())
+	var indices: Array = [puzzle.symmetry] if stage < 10 else [0,1,2,3,4,5,6]
+	if stage < 10: states[puzzle.symmetry] = exercise_axis_state()
+	Axes.paint(self if canvas == null else canvas,board_rect,states,indices)
 
 func _draw() -> void:
 	if grid.is_empty(): return
@@ -707,7 +715,7 @@ func _draw() -> void:
 			draw_rect(marker.grow(-5),Color.WHITE.lerp(Color("477D76"),pulse_amount()),false,4)
 			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Color.WHITE,3,true)
 			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Color.WHITE,3,true)
-	draw_exercise_axes()
+	if not selected or cells.is_empty(): draw_exercise_axes()
 	piece_overlay.queue_redraw()
 
 func _draw_piece() -> void:
@@ -733,3 +741,4 @@ func _draw_piece() -> void:
 		style.set_corner_radius_all(4)
 		piece_overlay.draw_style_box(style,Rect2(Vector2(cell)*piece_unit-Vector2(extent)*piece_unit/2,Vector2.ONE*piece_unit).grow(-1.5))
 	piece_overlay.draw_set_transform(Vector2.ZERO)
+	if selected: draw_exercise_axes(piece_overlay)

@@ -80,11 +80,7 @@ func run() -> void:
 	for button in [game.erase_button,game.undo_button,game.skip_button]:
 		check(button.visible and button.disabled,"Jokers remain visible but disabled")
 	check(intro.forward == game.palette_button and intro.skip == game.replay_button,"Tutorial reuses navigation positions")
-	var static_grid: Array = intro.grid.duplicate(true)
-	intro._process(0.8)
-	check(intro.stage == 1 and intro.grid == static_grid and intro.cells.is_empty(),"First step is a static symmetric pattern")
-	intro._process(1.3)
-	check(intro.stage == 2 and intro.cells.size() == 3 and intro.place.disabled,"Step two offers one L with Place disabled")
+	check(intro.stage == 2 and intro.cells.size() == 3 and intro.place.disabled and intro.progress_label.text == "1 / 9","Tutorial opens directly on rotation as the first of nine cards")
 	var preparation_board: Array = intro.grid.duplicate(true)
 	var stationary: Array = intro.cells.duplicate()
 	intro._process(1)
@@ -126,13 +122,13 @@ func run() -> void:
 		game._layout()
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
-		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") >= 14,"Caption keeps large type where space permits and fits smaller screens")
+		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") >= 6,"Caption keeps large type where space permits and fits smaller screens")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
 		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
 		check(is_equal_approx(intro.tray_rect.size.y,2*intro.board_rect.size.x/5),"Exactly two tile heights are reserved for the offer")
 		check(controls == game._controls().map(func(button):return button.get_rect()),"Tutorial proportions never move any original button")
-		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x) and is_equal_approx(intro.text.size.x,game.piece_view.size.x) and is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Caption is centered between the two button columns")
+		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x+4) and is_equal_approx(intro.text.size.x,game.piece_view.size.x-8) and is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Caption is centered between the two button columns")
 		check(intro.text.get_theme_color("font_color") == intro.Ink.text(),"Caption uses the button drawing color")
 		for caption: String in Intro.TEXT.slice(1,9):
 			intro.set_caption(caption)
@@ -157,19 +153,36 @@ func run() -> void:
 				check(intro.board_rect == fixed_board,"Rotating offered shapes never moves the board")
 				intro.cells = Rules.rotate(intro.cells)
 
+	# Every card shares the same fitted type size and centered text window.
+	var reference_font := -1
+	for card in [2,3,4,5,6,7,8,10,11]:
+		intro.enter(card)
+		if reference_font < 0: reference_font = intro.text.get_theme_font_size("font_size")
+		check(intro.text.get_theme_font_size("font_size") == reference_font,"Type size is consistent across the whole tutorial")
+		check(intro.caption_rect.encloses(intro.text.get_rect()),"Centered cue stays inside its reserved window")
+		if card != 10:
+			check(is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Short cues are vertically centered too")
+	intro.finish(true)
+	await process_frame
+	# Continue the practice exercise on the original saved game.
+	game.game = original_game
+	Palette.select_theme("clockwork")
+	game._refresh()
+	game._start_introduction(6)
+	intro = game.introduction
 	# Restore actual viewport size before exercising native controls.
 	game.size = Vector2(540,825)
 	game._layout()
 	intro.layout()
 	for stage in [6,7,8]:
 		if intro.stage != stage: intro.enter(stage)
-		check(intro.guide_cells().is_empty() and intro.hint in intro.pulsing,"Symmetry button pulses without giving away the placement")
+		check(intro.guide_cells().is_empty() and intro.hint not in intro.pulsing and intro.place not in intro.pulsing,"Neither symmetry nor Place pulses before the exercise is solved")
 		var original_grid: Array = intro.grid.duplicate(true)
 		intro.grid[0][0] = 1
 		var partner := Rules.transform(Vector2i.ZERO,intro.puzzle.symmetry,5)
 		intro.grid[partner.y][partner.x] = 2
 		intro.selected = false
-		check(not Rules.symmetry_states(intro.grid)[intro.puzzle.symmetry].possible and not intro.exercise_axis_state().possible,"Exercise axes disappear when prediction makes symmetry impossible")
+		check(not Rules.symmetry_states(intro.grid)[intro.puzzle.symmetry].possible and intro.exercise_axis_state().possible and not intro.exercise_axis_state().complete,"Early exercise axis stays visible and unchanged even for an impossible hover")
 		intro.grid = original_grid
 		intro.show_hint()
 		check(intro.guide_cells().is_empty(),"No shadow before a wrong placement")
@@ -180,10 +193,14 @@ func run() -> void:
 		intro.cells = intro.puzzle.solution.duplicate()
 		intro.color = intro.puzzle.color
 		drag_piece(intro,intro.puzzle.anchor)
-		check(game.indicators[0].icon.complete[intro.puzzle.symmetry],"Symmetry indicator responds to correct hover")
+		check(not game.indicators[0].icon.complete.any(func(value):return value) and intro.hint not in intro.pulsing,"Symmetry button stays neutral during the introductory exercises")
+		check(intro.place in intro.pulsing,"Only Place pulses when orientation, color, and position are correct")
+		drag_piece(intro,Vector2i.ZERO)
+		check(intro.place not in intro.pulsing,"Place stops highlighting when moved away from the correct position")
+		drag_piece(intro,intro.puzzle.anchor)
 		intro.place.pressed.emit()
 		check(intro.stage == (10 if stage == 8 else stage+1),"Correct symmetry placement advances instantly and skips removed card")
-	check(intro.stage == 10 and intro.repair_phase == 1 and intro.progress_label.text == "9 / 10","Rotational exercise goes directly to destruction lesson with ten-step numbering")
+	check(intro.stage == 10 and intro.repair_phase == 1 and intro.progress_label.text == "8 / 9","Axes lesson follows the three exercises with nine-card numbering")
 	intro.enter(9)
 	check(intro.stage == 10 and intro.repair_phase == 1,"Old saved axes-card progress resumes at destruction lesson")
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
@@ -193,6 +210,7 @@ func run() -> void:
 		var normal_field: Rect2 = Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		var shared_preview_unit := -1.0
+		var shared_font_size := -1
 		var stable_header := Rect2()
 		for phase in range(Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
@@ -203,8 +221,11 @@ func run() -> void:
 				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern" and intro.repair_header.get_rect() == stable_header,"Save the pattern stays fixed as the actions change underneath")
 				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"Each repair body sits beneath the persistent header without repeating it")
 			if shared_preview_unit < 0: shared_preview_unit = intro.tray_geometry().unit
+			if shared_font_size < 0: shared_font_size = intro.text.get_theme_font_size("font_size")
+			check(shared_font_size == intro.text.get_theme_font_size("font_size"),"Every cue uses the same font fitted to the longest text")
+			check(intro.caption_rect.encloses(intro.text.get_rect()),"Every cue fits entirely within the reserved text window")
 			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
-			check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18),"Exercise text uses its normal readable size")
+			check(intro.text.get_theme_font_size("font_size") >= 6,"Shared cue formatting fits the reserved text window")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
@@ -369,7 +390,7 @@ func run() -> void:
 	for button in [game.erase_button,game.undo_button,game.skip_button]: check(button.visible,"Jokers remain in the real UI")
 	game._start_introduction()
 	intro = game.introduction
-	check(intro.stage == 1,"Replay starts from the beginning")
+	check(intro.stage == 2 and intro.progress_label.text == "1 / 9","Replay starts directly on the rotation card")
 	intro.skip.pressed.emit()
 	await process_frame
 	check(not paused and game.introduction == null,"End tutorial exits at any time")
