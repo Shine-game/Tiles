@@ -24,9 +24,9 @@ class GalleryAndroidExport extends EditorExportPlugin:
 			for item in value: _collect_audio(item)
 		elif value is String and value.begins_with("res://") and value.get_extension() in ["wav", "ogg", "mp3"]:
 			allowed_audio[value] = true
-	func _export_file(path: String, _type: String, _features: PackedStringArray) -> void:
+	func _export_file(path: String, type: String, _features: PackedStringArray) -> void:
 		# Explicit sprite inventory also rejects obsolete local/untracked artwork.
-		if path.get_extension().to_lower() == "png" and not allowed_sprites.has(path): skip()
+		if (type == "Texture2D" or path.get_extension().to_lower() in ["png", "jpg", "jpeg", "webp", "svg", "bmp", "tga", "exr", "hdr", "ktx", "dds"]) and not allowed_sprites.has(path): skip()
 		if path.get_extension().to_lower() in ["wav", "ogg", "mp3"] and not allowed_audio.has(path): skip()
 	func _get_export_options_overrides(platform: EditorExportPlatform) -> Dictionary:
 		return {"gradle_build/use_gradle_build":true} if platform is EditorExportPlatformAndroid else {}
@@ -34,9 +34,10 @@ class GalleryAndroidExport extends EditorExportPlugin:
 		allowed_audio.clear()
 		_collect_audio(JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json")))
 		# Shared fallback and the existing workshop compatibility player.
-		for clip: String in ["shared/shared_tier_1.wav", "shared/shared_tier_2.wav", "clockwork/clockwork_ambient_legacy.wav", "clockwork/clockwork_tier_1_legacy.wav", "clockwork/clockwork_tier_2_legacy.wav", "clockwork/clockwork_tier_3_legacy.wav"]:
+		for clip: String in ["shared/shared_tier_1.wav", "shared/shared_tier_2.wav", "clockwork/clockwork_ambient_legacy.ogg", "clockwork/clockwork_tier_1_legacy.ogg", "clockwork/clockwork_tier_2_legacy.ogg", "clockwork/clockwork_tier_3_legacy.ogg"]:
 			allowed_audio["res://assets/audio/" + clip] = true
 		allowed_sprites.clear()
+		allowed_sprites["res://assets/icon.svg"] = true
 		var inventory: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/audit.json"))
 		for sprite: String in inventory.runtime_pngs: allowed_sprites["res://" + sprite] = true
 		if features.has("Android") or features.has("android"):

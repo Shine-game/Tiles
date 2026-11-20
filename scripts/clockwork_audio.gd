@@ -13,12 +13,11 @@ var cue_count := 0
 
 func _ready() -> void:
 	for id: String in ["tick", "click", "clunk", "steam"]:
-		clips[id] = load(ROOT + {"tick":"clockwork_ambient_legacy.wav","click":"clockwork_tier_1_legacy.wav","clunk":"clockwork_tier_2_legacy.wav","steam":"clockwork_tier_3_legacy.wav"}[id])
+		clips[id] = load(ROOT + {"tick":"clockwork_ambient_legacy.ogg","click":"clockwork_tier_1_legacy.ogg","clunk":"clockwork_tier_2_legacy.ogg","steam":"clockwork_tier_3_legacy.ogg"}[id])
 	ticking = AudioStreamPlayer.new()
-	var loop: AudioStreamWAV = clips.tick.duplicate()
-	loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	loop.loop_begin = 0
-	loop.loop_end = loop.mix_rate
+	var loop: AudioStreamOggVorbis = clips.tick.duplicate()
+	loop.loop = true
+	loop.loop_offset = 0.0
 	ticking.stream = loop
 	ticking.volume_db = -24
 	add_child(ticking)

@@ -33,23 +33,27 @@
     },
     {
       "old": "assets/audio/clockwork_asmr/clockwork_asmr_ambience_loop.wav",
-      "path": "assets/audio/clockwork/clockwork_ambient.wav",
-      "sha256": "8ac5213c12ea5097b8359db2e5e55b08ae6b0b0af4057ad276473d181c04517a"
+      "path": "assets/audio/clockwork/clockwork_ambient.ogg",
+      "sha256": "1d5757978d80cbbececc443ddba3d67901b9cc90268139f1cc299f67259ee6de",
+      "source_sha256": "8ac5213c12ea5097b8359db2e5e55b08ae6b0b0af4057ad276473d181c04517a"
     },
     {
       "old": "assets/audio/clockwork_asmr/clockwork_tier1_pipe_clicks.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_1.wav",
-      "sha256": "16ee44e83caec4495cab9a53cde441321ae30aef7b5c80d0ca6fab693cd19361"
+      "path": "assets/audio/clockwork/clockwork_tier_1.ogg",
+      "sha256": "06d091817987a288473dc3d098be8f5389a1eef9743ab6aa0a16ed534a2066e4",
+      "source_sha256": "16ee44e83caec4495cab9a53cde441321ae30aef7b5c80d0ca6fab693cd19361"
     },
     {
       "old": "assets/audio/clockwork_asmr/clockwork_tier2_gear_start.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_2.wav",
-      "sha256": "ffd69ac6842b24da2070075c8e6996bc86880b49ecbcfd158b8fecafa1dc654d"
+      "path": "assets/audio/clockwork/clockwork_tier_2.ogg",
+      "sha256": "073096a33cc9f81231c3747c271592d13a1dbb4e606778150e45b29af0eb0e7d",
+      "source_sha256": "ffd69ac6842b24da2070075c8e6996bc86880b49ecbcfd158b8fecafa1dc654d"
     },
     {
       "old": "assets/audio/clockwork_asmr/clockwork_tier3_chain_run.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_3.wav",
-      "sha256": "fa49eb95f064f0a24b9cad322f1538595d5b229ebdb7fa1f08315bd340b4e0a3"
+      "path": "assets/audio/clockwork/clockwork_tier_3.ogg",
+      "sha256": "765d78661f0347e968dc2e5936ba8ce75a310251919b7203007e60d6cdb1618d",
+      "source_sha256": "fa49eb95f064f0a24b9cad322f1538595d5b229ebdb7fa1f08315bd340b4e0a3"
     },
     {
       "old": "assets/audio/vines_asmr/vines_quiet_garden_loop.wav",
@@ -118,23 +122,27 @@
     },
     {
       "old": "assets/audio/clockwork/tick.wav",
-      "path": "assets/audio/clockwork/clockwork_ambient_legacy.wav",
-      "sha256": "50acb04bb9508ff06c92aba4165d69650677a7639ac78ba4049a9dcce05401a9"
+      "path": "assets/audio/clockwork/clockwork_ambient_legacy.ogg",
+      "sha256": "454aeaced089869c9dbd282f78fa477482b34423f5088066b37ea7f151c669ed",
+      "source_sha256": "50acb04bb9508ff06c92aba4165d69650677a7639ac78ba4049a9dcce05401a9"
     },
     {
       "old": "assets/audio/clockwork/click.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_1_legacy.wav",
-      "sha256": "f5dcb29dbedea3bf87cd9c218b1c0f051322e0838d482cd98cf98202860f0b8a"
+      "path": "assets/audio/clockwork/clockwork_tier_1_legacy.ogg",
+      "sha256": "c8f2aa3b98cc9b0453b5c28ed31b5f105ed5f28f8621163e003b442c323eae94",
+      "source_sha256": "f5dcb29dbedea3bf87cd9c218b1c0f051322e0838d482cd98cf98202860f0b8a"
     },
     {
       "old": "assets/audio/clockwork/clunk.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_2_legacy.wav",
-      "sha256": "b9536bc0a08496dc39f8a6e7a266d564d74ffdb4b0f507b47581bad7e18404a3"
+      "path": "assets/audio/clockwork/clockwork_tier_2_legacy.ogg",
+      "sha256": "d5dfae4fee9c07e85cd18d14414840fcd1565ae3bd6b727072883d106fa3905b",
+      "source_sha256": "b9536bc0a08496dc39f8a6e7a266d564d74ffdb4b0f507b47581bad7e18404a3"
     },
     {
       "old": "assets/audio/clockwork/steam.wav",
-      "path": "assets/audio/clockwork/clockwork_tier_3_legacy.wav",
-      "sha256": "efb298eb5b658f4554b8176d325d3b48ec7c1bbd61bb820555e11d46540e9567"
+      "path": "assets/audio/clockwork/clockwork_tier_3_legacy.ogg",
+      "sha256": "1a01a63f1f463dfe6d03ca9a30629e3f10fb0140f5d2eb906fe4a959fdd262af",
+      "source_sha256": "efb298eb5b658f4554b8176d325d3b48ec7c1bbd61bb820555e11d46540e9567"
     },
     {
       "old": "assets/audio/foliage.wav",
