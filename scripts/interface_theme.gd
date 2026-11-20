@@ -13,9 +13,13 @@ static func button_style(state: String, selected: bool = false) -> StyleBoxFlat:
 	style.set_border_width_all(2 if selected else BEVEL)
 	var pressed := state in ["pressed", "hover_pressed"]
 	style.border_color = Palette.shade() if pressed else Palette.light()
-	style.shadow_color = Color(Palette.shade(), 0.8)
+	style.shadow_color = Color(Palette.shadow(), 0.65)
 	style.shadow_size = 1 if pressed else SHADOW
-	style.shadow_offset = Vector2(0, 1) if pressed else Vector2(1, SHADOW)
+	style.shadow_offset = Vector2(0, 1) if pressed else Vector2(0 if Palette.directional_bevel() else 1, SHADOW)
+	if Palette.directional_bevel():
+		style.border_color = Palette.shade()
+		style.border_width_bottom = 1 if pressed else 2
+		style.border_width_right = 1 if pressed else 2
 	style.content_margin_left = 6
 	style.content_margin_right = 6
 	style.content_margin_top = 4 + (TRAVEL if pressed else 0)
@@ -81,3 +85,32 @@ static func press_children(button: Button, down: bool) -> void:
 	for child: Node in button.get_children():
 		if child is Control: child.position.y += offset - previous
 	button.set_meta("press_travel", offset)
+
+# StyleBoxFlat supplies the lower bevel; this thin overlay lights only top/left.
+class BevelHighlight extends Control:
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		resized.connect(queue_redraw)
+		get_parent().button_down.connect(queue_redraw)
+		get_parent().button_up.connect(queue_redraw)
+	func _draw() -> void:
+		if not Palette.directional_bevel(): return
+		if get_parent().is_pressed() and get_parent().get_meta("press_travel", 0) == 0:
+			draw_set_transform(Vector2(0, TRAVEL))
+		var r: float = minf(RADIUS, minf(size.x, size.y) / 2)
+		var ink := Palette.light()
+		draw_line(Vector2(r, 0.5), Vector2(size.x-r, 0.5), ink, 1, true)
+		draw_line(Vector2(0.5, r), Vector2(0.5, size.y-r), ink, 1, true)
+		draw_arc(Vector2(r,r), r-0.5, PI, 1.5*PI, 12, ink, 1, true)
+		draw_arc(Vector2(size.x-r,r), r-0.5, 1.5*PI, 1.75*PI, 6, ink, 1, true)
+		draw_arc(Vector2(r,size.y-r), r-0.5, 0.75*PI, PI, 6, ink, 1, true)
+
+static func sync_highlight(button: Button) -> void:
+	var overlay := button.get_node_or_null("BevelHighlight")
+	if overlay == null:
+		overlay = BevelHighlight.new()
+		overlay.name = "BevelHighlight"
+		button.add_child(overlay)
+		overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.visible = Palette.directional_bevel()
+	overlay.queue_redraw()

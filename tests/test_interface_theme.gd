@@ -13,7 +13,7 @@ func run() -> void:
 	var game = Main.new()
 	root.add_child(game)
 	await process_frame
-	var palettes := {"coral_reef":["C6B99E","DFD4BC","9B8C72","303C39"],"clockwork":["B8AD98","D2C7B2","8B806D","362F28"],"vines":["B0BAA5","CBD2C1","808D75","303A2D"]}
+	var palettes := {"coral_reef":["DCEFED","F4FCFA","A8C9C5","2E4846"],"clockwork":["F1D6A6","FBE8C4","C6A16D","4B3324"],"vines":["F9E5DD","FFF5EF","D4B5BB","513D49"]}
 	for id: String in palettes:
 		Palette.select_theme(id)
 		game._refresh_theme()
@@ -21,7 +21,19 @@ func run() -> void:
 		var normal: StyleBoxFlat = game.theme.get_stylebox("normal", "Button")
 		var pressed: StyleBoxFlat = game.theme.get_stylebox("pressed", "Button")
 		check(normal.bg_color == Color(palettes[id][0]), id + " surface")
-		check(normal.border_color == Color(palettes[id][1]), id + " light edge")
+		check(normal.border_color == Color(palettes[id][2]), id + " bevel edge")
+		if id == "vines":
+			check(normal.shadow_color.is_equal_approx(Color("A98796", 0.65)), "Vines mauve shadow")
+			check(Interface.muted() == Color("A68C96"), "Vines disabled mauve")
+			check(Interface.light() == Color("FFF5EF") and game.place_button.get_node("BevelHighlight").visible, "Vines ivory highlight")
+		if id == "coral_reef":
+			check(normal.shadow_color.is_equal_approx(Color("749B97", 0.65)), "Coral aqua shadow")
+			check(Interface.muted() == Color("829F9C"), "Coral disabled sea green")
+			check(Interface.light() == Color("F4FCFA") and game.place_button.get_node("BevelHighlight").visible, "Coral top-left highlight")
+		if id == "clockwork":
+			check(normal.shadow_color.is_equal_approx(Color("896447", 0.65)), "walnut shadow")
+			check(Interface.muted() == Color("A08863"), "disabled sepia")
+			check(Interface.light() == Color("FBE8C4") and game.place_button.get_node("BevelHighlight").visible, "top-left highlight")
 		check(pressed.border_color == Color(palettes[id][2]), id + " depressed edge")
 		check(game.theme.get_color("font_color", "Button") == Color(palettes[id][3]), id + " labels")
 		check(pressed.shadow_size < normal.shadow_size and pressed.content_margin_top - normal.content_margin_top == UI.TRAVEL, "shared press geometry")

@@ -916,6 +916,7 @@ func _refresh_menu_style() -> void:
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _apply_button_style(button: Button, active: bool = false, _color: int = 1) -> void:
+	InterfaceTheme.sync_highlight(button)
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
 		var style := InterfaceTheme.button_style(state, active)
 		if theme_options.has(button):

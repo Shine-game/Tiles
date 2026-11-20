@@ -12,7 +12,7 @@ func _ready() -> void:
 func _draw() -> void:
 	var ink := Palette.text()
 	if get_parent() is Button and get_parent().disabled:
-		ink.a *= 0.4
+		ink = Palette.muted()
 	var unit := minf(size.x, size.y) * 0.32
 	draw_set_transform(size * 0.5, 0, Vector2.ONE * unit)
 	match kind:
@@ -48,4 +48,4 @@ func _draw() -> void:
 		var center := Vector2(size.x * 0.82,size.y * 0.19)
 		var text := str(count)
 		var extent := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size)
-		draw_string(font,center+Vector2(-extent.x*0.5,font_size*0.35),text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Palette.text())
+		draw_string(font,center+Vector2(-extent.x*0.5,font_size*0.35),text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,ink)

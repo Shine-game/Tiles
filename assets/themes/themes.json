@@ -71,13 +71,15 @@
       "ui": {
         "floor": "c4b99b",
         "background": "e5d4ae",
-        "controls": "B8AD98",
-        "text": "362F28",
+        "controls": "F1D6A6",
+        "text": "4B3324",
         "muted": "8B806D",
         "garden": "a3a29a",
-        "lit_edge": "D2C7B2",
-        "shaded_edge": "8B806D",
-        "panel_background": "e4d6bb"
+        "lit_edge": "FBE8C4",
+        "shaded_edge": "C6A16D",
+        "panel_background": "e4d6bb",
+        "button_shadow": "896447",
+        "disabled_text": "A08863"
       },
       "frame": {
         "enabled": true,
@@ -176,16 +178,18 @@
       "version": "1.8",
       "colors": [],
       "ui": {
-        "controls": "B0BAA5",
-        "text": "303A2D",
+        "controls": "F9E5DD",
+        "text": "513D49",
         "muted": "808D75",
         "platform": "F1E7EB",
         "floor": "FFF9F3",
         "seams": "DCCBD5",
         "background": "FFF9F3",
-        "lit_edge": "CBD2C1",
-        "shaded_edge": "808D75",
-        "panel_background": "eeedf3"
+        "lit_edge": "FFF5EF",
+        "shaded_edge": "D4B5BB",
+        "panel_background": "eeedf3",
+        "button_shadow": "A98796",
+        "disabled_text": "A68C96"
       },
       "frame": {
         "enabled": true,
@@ -323,14 +327,16 @@
       "ui": {
         "floor": "ffffff",
         "background": "d6ece6",
-        "controls": "C6B99E",
-        "text": "303C39",
+        "controls": "DCEFED",
+        "text": "2E4846",
         "muted": "9B8C72",
         "garden": "ffffff",
         "platform": "edd7ad",
-        "lit_edge": "DFD4BC",
-        "shaded_edge": "9B8C72",
-        "panel_background": "eeedf3"
+        "lit_edge": "F4FCFA",
+        "shaded_edge": "A8C9C5",
+        "panel_background": "eeedf3",
+        "button_shadow": "749B97",
+        "disabled_text": "829F9C"
       },
       "frame": {
         "enabled": true,
