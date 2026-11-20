@@ -214,14 +214,14 @@ func _build_interface() -> void:
 	skip_button = _button("⇥ 3", _skip)
 	erase_button = _button("⌫ 3", _toggle_erase)
 	new_button = _button("Start", _start_new_game)
-	size_picker = _button("Size", _show_menu.bind("Size"))
+	size_picker = _button("Size", _cycle_size_preset)
 	palette_button = _button("⚙", _toggle_palette_menu)
 	replay_button = _button("", _replay_game)
 	for pair: Array in [[erase_button,"erase"],[undo_button,"undo"],[skip_button,"skip"],[palette_button,"settings"],[replay_button,"replay"],[flip_button,"flip"],[place_button,"place"]]:
 		var action = ActionIcon.new()
 		action.kind = pair[1]
 		pair[0].text = ""
-		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "replay":"Replay this game", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
+		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "replay":"Start new game", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
 		pair[0].add_child(action)
 		action.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	palette_menu = PanelContainer.new()
@@ -242,8 +242,9 @@ func _build_interface() -> void:
 	reef_background.material = water
 	add_child(reef_background)
 	confirmation = ConfirmationDialog.new()
-	confirmation.title = "Start a new game?"
-	confirmation.ok_button_text = "New game"
+	confirmation.title = ""
+	confirmation.ok_button_text = "Confirm"
+	confirmation.cancel_button_text = "Go back"
 	confirmation.confirmed.connect(func():
 		if pending_change.is_valid(): pending_change.call()
 		pending_change = Callable())
@@ -648,8 +649,20 @@ func _ask_reset(n: int) -> void:
 
 func _replay_game() -> void:
 	if saving: return
-	menu_history.clear()
-	_reset(game.board.size(), game.difficulty)
+	_confirm_new_game("Start new game", func():
+		menu_history.clear()
+		_reset(game.board.size(), game.difficulty))
+
+func _game_started() -> bool:
+	return game.moves > 0 or game.index > 0 or game.undo_left < 3 or game.skip_left < 3 or game.erase_left < 3
+
+func _request_configuration_change(action: Callable, page: String) -> void:
+	var apply := func():
+		action.call()
+		_reset()
+		_show_menu(page, false)
+	if _game_started(): _confirm_new_game("Start new game", apply)
+	else: apply.call()
 
 func _reset(board_size: int = -1, level: int = -1) -> void:
 	palette_menu.hide()
@@ -693,7 +706,7 @@ func _build_settings() -> void:
 	back_button = _menu_button("‹", _back_menu)
 	back_button.tooltip_text = "Back"
 	menu_close.tooltip_text = "Close"
-	for page: String in ["New Game", "Gameplay", "Gallery", "Audio"]:
+	for page: String in ["Themes", "Gameplay", "Gallery", "Audio"]:
 		settings_options.append(_menu_button(page, _open_gallery if page == "Gallery" else _show_menu.bind(page)))
 	for id: String in MENU_THEMES:
 		var option := _menu_button(MENU_THEMES[id], _review_new_game.bind(id))
@@ -708,7 +721,7 @@ func _build_settings() -> void:
 		difficulty_options.append(_menu_button(["Easy", "Moderate", "Hard"][level], _set_difficulty_preset.bind(level)))
 	axes_button = _menu_button("Show axes on field: Off", _toggle_axes)
 	axes_button.toggle_mode = true
-	gameplay_options = [_menu_button("Difficulty", _show_menu.bind("Difficulty")), size_picker, axes_button]
+	gameplay_options = [_menu_button("Difficulty", _cycle_difficulty_preset), size_picker, axes_button]
 	for n in [9,11]:
 		size_options.append(_menu_button("%d × %d" % [n,n], _set_size_preset.bind(n)))
 	preset_summary = Label.new()
@@ -786,9 +799,15 @@ func _show_menu(page: String, remember: bool = true) -> void:
 	_update_summaries(_prediction_board())
 
 func _review_new_game(theme: String) -> void:
-	if theme not in MENU_THEMES: return
-	pending_theme = theme
-	_show_menu("Game Presets")
+	_request_theme(theme)
+
+func _cycle_difficulty_preset() -> void:
+	var next_level := ((int(difficulty) + 1) % 3) as Game.Difficulty
+	_request_configuration_change(func(): difficulty = next_level, "Gameplay")
+
+func _cycle_size_preset() -> void:
+	var n := 11 if requested_size == 9 else 9
+	_request_configuration_change(func(): requested_size = n, "Gameplay")
 
 func _set_difficulty_preset(level: int) -> void:
 	difficulty = level as Game.Difficulty
@@ -810,7 +829,7 @@ func _layout_palette_menu(pad: float) -> void:
 	for option: Control in menu_buttons:
 		option.hide()
 	var options: Array = settings_options
-	if menu_page == "New Game":
+	if menu_page == "Themes":
 		options = theme_options
 	elif menu_page == "Game Presets":
 		options = [preset_summary, change_presets_button, new_button]
@@ -967,16 +986,15 @@ func _toggle_palette_menu() -> void:
 	else:
 		_show_menu("Settings")
 
-func _confirm_new_game(message: String, action: Callable) -> void:
+func _confirm_new_game(_message: String, action: Callable) -> void:
 	dragging = false
 	pending_change = action
-	confirmation.dialog_text = message + "\nYour current game will be replaced."
+	confirmation.dialog_text = "Start new game"
 	confirmation.popup_centered(Vector2i(mini(360, int(size.x - 24)), 160))
 
 func _request_theme(id: String) -> void:
-	if id not in Palette.THEMES or id == Palette.theme_id():
-		return
-	_confirm_new_game("Switch to %s and start a new game?" % Palette.theme_label(id), _select_theme.bind(id))
+	if id not in MENU_THEMES or id == Palette.theme_id(): return
+	_request_configuration_change(func(): Palette.select_theme(id), "Themes")
 
 func _select_theme(id: String) -> void:
 	if Palette.select_theme(id):
@@ -990,11 +1008,9 @@ func _request_difficulty(level: int) -> void:
 		_reset())
 
 func _toggle_axes() -> void:
-	board_view.show_axes = not board_view.show_axes
-	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
-	_refresh_theme()
-	_update_summaries(_prediction_board())
-	_autosave()
+	axes_button.set_pressed_no_signal(board_view.show_axes)
+	var enabled: bool = not board_view.show_axes
+	_request_configuration_change(func(): board_view.show_axes = enabled, "Gameplay")
 
 func _toggle_background() -> void:
 	sounds.set_background_enabled(not sounds.background_enabled)
