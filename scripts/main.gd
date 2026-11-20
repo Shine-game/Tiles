@@ -4,6 +4,7 @@ const ThemeAssets = preload("res://scripts/pattern/asset_library.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
+const InterfaceTheme = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const Game = preload("res://scripts/game.gd")
 const Session = preload("res://scripts/game_session.gd")
@@ -167,15 +168,10 @@ func _button(text: String, callback: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.clip_text = true
-	button.add_theme_stylebox_override("normal", _style(Color("e5ebdf")))
-	button.add_theme_stylebox_override("hover", _style(Color("d7e2d0")))
-	button.add_theme_stylebox_override("pressed", _style(Color("c9d9c4")))
-	button.add_theme_stylebox_override("disabled", _style(Color("e4e5df")))
-	for state in ["font_color", "font_hover_color", "font_pressed_color"]:
-		button.add_theme_color_override(state, Color("334638"))
-	button.add_theme_color_override("font_disabled_color", Color("929b8e"))
 	add_child(button)
 	themed_buttons.append(button)
+	button.button_down.connect(InterfaceTheme.press_children.bind(button, true))
+	button.button_up.connect(InterfaceTheme.press_children.bind(button, false))
 	button.pressed.connect(callback)
 	return button
 
@@ -664,16 +660,6 @@ func _reset(board_size: int = -1, level: int = -1) -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Interface.background())
-	if Palette.clockwork:
-		var paper := ClockworkVisuals.texture(Themes.profile(Palette.theme_id()).environment.background)
-		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
-		var extent: Vector2 = paper.get_size() * factor
-		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
-	elif Palette.theme_id() == "vines":
-		var paper := ThemeAssets.texture(Themes.profile("vines").environment.background)
-		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
-		var extent: Vector2 = paper.get_size() * factor
-		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 
 func _menu_button(text: String, callback: Callable) -> Button:
 	var button := _button(text, callback)
@@ -901,45 +887,32 @@ func _layout_palette_menu(pad: float) -> void:
 		row_y += row_height + gap
 
 func _refresh_menu_style() -> void:
-	var menu_style := _style(Interface.controls())
+	var menu_style := InterfaceTheme.panel_style()
 	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
 	menu_style.content_margin_left = inset.x
 	menu_style.content_margin_top = inset.y
 	menu_style.content_margin_right = inset.z
 	menu_style.content_margin_bottom = inset.w
 	menu_style.set_border_width_all(0 if menu_frame.is_present() else 2)
-	menu_style.border_color = Color(Interface.accent(), 0.6)
+	menu_style.border_color = Interface.light()
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
-func _apply_button_style(button: Button, active: bool = false, color: int = 1) -> void:
+func _apply_button_style(button: Button, active: bool = false, _color: int = 1) -> void:
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var ink: Color = Interface.controls().lerp(Interface.accent(color), 0.30 if active else 0.20)
-		if state == "hover": ink = ink.lightened(0.04)
-		if state in ["pressed", "hover_pressed"]: ink = ink.darkened(0.025)
-		var style := _style(ink)
-		style.set_border_width_all(3 if active else 2)
-		style.border_color = Color(Interface.accent(color), 0.6)
-		if button in [undo_button, skip_button, erase_button]:
-			style.content_margin_top = 2
-			style.content_margin_bottom = 2
-			style.content_margin_left = 3
-			style.content_margin_right = 3
+		var style := InterfaceTheme.button_style(state, active)
 		if theme_options.has(button):
 			style.content_margin_left = 18
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		elif palette_options.has(button):
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		button.add_theme_stylebox_override(state, style)
-	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		button.add_theme_color_override(state, Interface.text())
-	button.add_theme_color_override("font_disabled_color", Interface.muted())
-	var focus := _style(Color.TRANSPARENT)
-	focus.set_border_width_all(2)
-	focus.border_color = Color(Interface.accent(color), 0.9)
-	button.add_theme_stylebox_override("focus", focus)
 
 func _refresh_theme() -> void:
-	reef_background.visible = Palette.coral_reef
+	theme = InterfaceTheme.build()
+	confirmation.theme = theme
+	if gallery_file_dialog != null: gallery_file_dialog.theme = theme
+	if gallery_panel != null: gallery_panel.remove_theme_stylebox_override("panel")
+	reef_background.visible = false
 	for button: Button in themed_buttons:
 		var active := false
 		var color := 1

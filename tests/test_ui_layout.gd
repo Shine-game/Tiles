@@ -18,12 +18,7 @@ func run() -> void:
 	await process_frame
 	for theme: String in Palette.THEMES:
 		scene._select_theme(theme)
-		if theme == "zen_garden":
-			check(Interface.background() == Color.WHITE and Interface.text() == Color("202020"), "Zen interface uses neutral colors")
-			check(Interface.accent(1) == Interface.accent(2), "Zen controls have no gameplay color tint")
-			check(Palette.tile(1) == Color("ab946b") and Palette.tile(2) == Color("687567"), "Zen game colors remain intact")
-		else:
-			check(Interface.background() == Palette.background() and Interface.accent(1) == Palette.tile(1), "Other themes keep their interface styling")
+		check(Interface.background() == Palette.background() and Interface.accent(1) == Interface.text(), "Theme surface and readable shared UI ink")
 		for n in [9,11]:
 			scene.requested_size = n
 			scene._reset()

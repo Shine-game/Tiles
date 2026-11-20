@@ -9,11 +9,13 @@
     ],
     "ui": {
       "floor": "f0ece3",
-      "background": "f0ece3",
-      "controls": "f4f1e8",
-      "text": "4c5847",
-      "muted": "999f91",
-      "garden": "ede7db"
+      "background": "C5C3B9",
+      "controls": "C5C3B9",
+      "text": "343630",
+      "muted": "96948A",
+      "garden": "ede7db",
+      "lit_edge": "DEDBD1",
+      "shaded_edge": "96948A"
     },
     "frame": {
       "enabled": false,

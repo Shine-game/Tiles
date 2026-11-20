@@ -1,7 +1,6 @@
 extends Control
 
 const Palette = preload("res://scripts/interface_palette.gd")
-const PiecePalette = preload("res://scripts/palette.gd")
 var color := 1
 var kind := ""
 var count := -1
@@ -11,7 +10,7 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
-	var ink := PiecePalette.tile(color) if kind == "place" else Palette.text()
+	var ink := Palette.text()
 	if get_parent() is Button and get_parent().disabled:
 		ink.a *= 0.4
 	var unit := minf(size.x, size.y) * 0.32
