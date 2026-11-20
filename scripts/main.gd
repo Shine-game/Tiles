@@ -824,9 +824,9 @@ func _layout_palette_menu(pad: float) -> void:
 		options = [ambience_volume_row, effects_volume_row]
 	elif menu_page == "Vine colors":
 		options = palette_options
-	menu_frame.apply_theme(Palette.theme_id())
+	menu_frame.hide()
 	_refresh_menu_style()
-	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
+	var inset := Vector4(12, 12, 12, 12)
 	var row_units := options.size() + (1 if menu_page == "Game Presets" else 0)
 	var desired_height: float = (38 + 70 * row_units + 12) * 1.5
 	var width: float = minf(540, size.x - 2 * pad)
@@ -841,8 +841,8 @@ func _layout_palette_menu(pad: float) -> void:
 	var y: float = minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
 	_set_rect(palette_menu, Rect2((size.x - width) / 2, maxf(pad, y), width, height))
 	_set_rect(palette_list, Rect2(Vector2(inset.x, inset.y), Vector2(content_width, content_height)))
-	menu_frame.surround(Rect2(Vector2.ZERO, Vector2(content_width, content_height)))
-	menu_title.text = menu_page
+	menu_title.text = ""
+	menu_title.hide()
 	menu_title.add_theme_font_size_override("font_size", maxi(12, roundi(40 * scale_factor)))
 	var close_side: float = maxf(22, 48 * scale_factor)
 	menu_close.show()
@@ -906,13 +906,12 @@ func _layout_palette_menu(pad: float) -> void:
 
 func _refresh_menu_style() -> void:
 	var menu_style := InterfaceTheme.panel_style()
-	var inset: Vector4 = Frame.margins() if menu_frame.is_present() else Vector4(12, 12, 12, 12)
+	var inset := Vector4(12, 12, 12, 12)
 	menu_style.content_margin_left = inset.x
 	menu_style.content_margin_top = inset.y
 	menu_style.content_margin_right = inset.z
 	menu_style.content_margin_bottom = inset.w
-	menu_style.set_border_width_all(0 if menu_frame.is_present() else 2)
-	menu_style.border_color = Interface.light()
+	menu_style.set_border_width_all(0)
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _apply_button_style(button: Button, active: bool = false, _color: int = 1) -> void:

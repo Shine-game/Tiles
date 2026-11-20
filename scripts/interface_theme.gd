@@ -31,8 +31,9 @@ static func button_style(state: String, selected: bool = false) -> StyleBoxFlat:
 	return style
 
 static func panel_style() -> StyleBoxFlat:
-	var style := button_style("normal")
-	style.bg_color = Palette.panel_background()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Palette.controls()
+	style.set_corner_radius_all(RADIUS)
 	style.set_content_margin_all(12)
 	return style
 
