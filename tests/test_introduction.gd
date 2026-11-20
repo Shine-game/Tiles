@@ -98,7 +98,7 @@ func run() -> void:
 	var offer_geometry: Dictionary = intro.tray_geometry()
 	var offered_tap := InputEventScreenTouch.new()
 	offered_tap.position = offer_geometry.origin+(Vector2(overlap_cell)+Vector2.ONE/2)*offer_geometry.unit
-	check(not intro.tray_rect.has_point(offered_tap.position),"Full-size offer extends beyond the old small tray")
+	check(intro.tray_rect.has_point(offered_tap.position),"Two-row offer fits in its reserved tray")
 	offered_tap.pressed = true
 	intro._input(offered_tap)
 	offered_tap.pressed = false
@@ -131,16 +131,32 @@ func run() -> void:
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
 		game.size = dimensions
 		game._layout()
+		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
 		check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18),"Tutorial text stays doubled")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
+		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
+		check(is_equal_approx(intro.tray_rect.size.y,2*intro.board_rect.size.x/5),"Exactly two tile heights are reserved for the offer")
+		check(controls == game._controls().map(func(button):return button.get_rect()),"Tutorial proportions never move any original button")
+		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x) and is_equal_approx(intro.text.size.x,game.piece_view.size.x) and intro.text.vertical_alignment == VERTICAL_ALIGNMENT_CENTER,"Caption is centered between the two button columns")
+		check(intro.text.get_theme_color("font_color") == intro.Ink.text(),"Caption uses the button drawing color")
+		for caption: String in Intro.TEXT+Intro.REPAIR_TEXT+[Intro.TEXT[11]+"\n3 / 3"]:
+			intro.text.text = caption
+			intro.layout()
+			check(intro.text.get_rect().end.y <= intro.tray_rect.position.y+0.1,"Caption fit %s %s text end %s tray top %s" % [dimensions,caption,intro.text.get_rect().end.y,intro.tray_rect.position.y])
+		intro.text.text = Intro.TEXT[intro.stage]
+
+
 		var fixed_board: Rect2 = intro.board_rect
 		for piece: Dictionary in Rules.PIECES.values():
 			intro.cells = intro.laid_cells(piece.cells)
 			var bounds := Vector2i.ONE
 			for cell: Vector2i in intro.cells: bounds = bounds.max(cell+Vector2i.ONE)
 			check(bounds.x >= bounds.y,"Every new offer lies horizontally")
+			var presented: Dictionary = intro.tray_geometry()
+			check(presented.origin.y+bounds.y*presented.unit <= intro.adjusted_board_rect.position.y-11.9,"Every presented offer clears the outer frame by twelve pixels")
+
 			for turn in range(4):
 				var geometry: Dictionary = intro.tray_geometry()
 				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/5),"Offer and board use identical tile sizes in every orientation")

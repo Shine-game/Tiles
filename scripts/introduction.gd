@@ -3,6 +3,7 @@ signal finished
 const Model = preload("res://scripts/tutorial_model.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
+const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TEXT := ["", "The beauty of symmetry.", "Drag the piece to its position,\nthen press the place button.", "Tap the tile to rotate it.", "Press to flip.", "Press to change color.", "Find the vertical symmetry.", "Find the horizontal symmetry.", "Find the rotational symmetry.", "", "Save a wrong placement:\nerase one tile, undo a move,\nor get a new piece.", "Enjoy infinite creations.\nFollow the marked placements."]
@@ -67,15 +68,15 @@ func _ready() -> void:
 	theme = UI.build()
 	text = Label.new()
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	text.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.add_theme_color_override("font_color",Color("303C39"))
+	text.add_theme_color_override("font_color",Ink.text())
 	add_child(text)
 	progress_label = Label.new()
 	progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	progress_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	progress_label.add_theme_color_override("font_color",Color("55615C"))
+	progress_label.add_theme_color_override("font_color",Ink.text())
 	add_child(progress_label)
 	assert(host != null)
 	skip = host.replay_button
@@ -184,26 +185,39 @@ func layout() -> void:
 	if text == null or host == null: return
 	var current: Rect2 = host.board_view.get_rect()
 	if not current.is_equal_approx(adjusted_board_rect): normal_board_rect = current
+	# The central header belongs entirely to the caption; side controls never move.
 	var preparation: Rect2 = host.piece_view.get_rect()
-	progress_label.position = Vector2(preparation.position.x,maxf(4,preparation.position.y-24))
+	progress_label.position = preparation.position
 	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",12)
-	var font_size := 2*clampi(roundi(host.size.x*0.028),12,18)
-	text.add_theme_font_size_override("font_size",font_size)
+	progress_label.add_theme_color_override("font_color",Ink.text())
+	text.add_theme_font_size_override("font_size",2*clampi(roundi(host.size.x*0.028),12,18))
+	text.add_theme_color_override("font_color",Ink.text())
 	var font := text.get_theme_font("font")
-	var text_height := 0.0
-	for caption: String in TEXT+REPAIR_TEXT+[TEXT[11]+"\n3 / 3"]:
-		text_height = maxf(text_height,font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,preparation.size.x,font_size).y)
-	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
-	text.size = Vector2(preparation.size.x,text_height+8)
-	tray_rect = Rect2(preparation.position.x,text.get_rect().end.y+4,preparation.size.x,48)
-	var board_top := maxf(normal_board_rect.position.y,tray_rect.end.y+8)
-	var side := maxf(60,minf(normal_board_rect.size.x,normal_board_rect.end.y-board_top))
-	adjusted_board_rect = Rect2((host.size.x-side)/2,board_top,side,side)
+	var font_size := text.get_theme_font_size("font_size")
+	var caption_height := maxf(1,preparation.size.y-18)
+	# Reserve the longest caption so large text stays readable and the board stays still.
+	for caption: String in TEXT+REPAIR_TEXT+[TEXT[11]+"\n3 / 3","Tap the marked square\nto erase it."]:
+		var measured := font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,preparation.size.x,font_size)
+		var lines := maxi(1,ceili(measured.y/font.get_height(font_size)))
+		caption_height = maxf(caption_height,measured.y+lines*text.get_theme_constant("line_spacing"))
+	text.position = preparation.position+Vector2(0,18)
+	text.size = Vector2(preparation.size.x,caption_height)
+	# Split the remaining height into two offer rows and a square board.
+	# Include the board frame in the calculation and anchor its bottom to the game.
+	var n := grid_size()
+	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
+	var gap := 12.0
+	var content_top := maxf(normal_board_rect.position.y,text.position.y+caption_height+gap)
+	var available_height := normal_board_rect.end.y-content_top
+	var side := maxf(60,minf(normal_board_rect.size.x,(available_height+2*rim/n-gap)/(1+2.0/n)))
+	adjusted_board_rect = Rect2((host.size.x-side)/2,normal_board_rect.end.y-side,side,side)
 	host.board_view.position = adjusted_board_rect.position
 	host.board_view.size = adjusted_board_rect.size
 	host.board_view.update_geometry()
 	board_rect = Rect2(host.board_view.position+host.board_view.field.position,host.board_view.field.size)
+	var offer_height := 2*board_rect.size.x/n
+	tray_rect = Rect2(normal_board_rect.position.x,adjusted_board_rect.position.y-gap-offer_height,normal_board_rect.size.x,offer_height)
 	queue_redraw()
 
 func update_controls() -> void:
