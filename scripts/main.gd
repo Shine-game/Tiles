@@ -159,6 +159,7 @@ func _start_introduction(step: int = 1) -> void:
 	palette_menu.hide()
 	dragging = false
 	introduction = Introduction.new()
+	introduction.host = self
 	introduction.stage = step
 	introduction.progress_path = intro_progress_path
 	introduction.finished.connect(func(): introduction = null)
@@ -596,6 +597,9 @@ func _process(delta: float) -> void:
 		_update_floating_position()
 
 func _place() -> void:
+	if introduction != null:
+		introduction.try_place()
+		return
 	if not has_hover or board_view.growing or erase_mode or saving:
 		return
 	var before: Array = game.board
@@ -624,21 +628,33 @@ func _offered_cells() -> Array:
 	return Rules.rotate(offered) if bounds.y > bounds.x else offered
 
 func _rotate() -> void:
+	if introduction != null:
+		introduction.transform_piece("rotate")
+		return
 	if not game.over:
 		cells = Rules.rotate(cells)
 		_refresh()
 
 func _flip() -> void:
+	if introduction != null:
+		introduction.transform_piece("flip")
+		return
 	if not game.over:
 		cells = Rules.flip(cells)
 		_refresh()
 
 func _choose_color(color: int) -> void:
+	if introduction != null:
+		introduction.transform_piece("color")
+		return
 	if not game.over:
 		game.current_color = color
 		_refresh()
 
 func _skip() -> void:
+	if introduction != null:
+		introduction.finish(true)
+		return
 	if game.skip():
 		cells = _offered_cells()
 		_clear_selection()
@@ -1203,6 +1219,9 @@ func _gallery_export_completed(_operation: String, _success: bool, message: Stri
 	_refresh_gallery_actions()
 
 func _save_design() -> void:
+	if introduction != null:
+		introduction.show_hint()
+		return
 	if saving or board_view.growing or not _can_save():
 		return
 	saving = true

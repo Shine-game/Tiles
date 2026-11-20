@@ -9,9 +9,9 @@ static func recipe(stage: int) -> Dictionary:
 		symmetry = 1
 		motif = [Vector2i(1,0),Vector2i(2,0),Vector2i(3,0),Vector2i(1,1)]
 	elif stage == 7: symmetry = 5
-	elif stage == 8:
-		symmetry = 3
-		motif = [Vector2i(0,2),Vector2i(0,3),Vector2i(1,3)]
+	elif stage in [8,9,10]:
+		symmetry = {8:0,9:1,10:5}[stage]
+		motif = [Vector2i(0,0),Vector2i(0,1),Vector2i(1,1)]
 	var board := Rules.empty_board(5)
 	var target := Rules.empty_board(5)
 	var missing: Array = []
@@ -27,7 +27,7 @@ static func recipe(stage: int) -> Dictionary:
 	for cell: Vector2i in missing: anchor = anchor.min(cell)
 	var solution: Array = missing.map(func(cell: Vector2i): return cell-anchor)
 	return {"board":board,"target":target,"missing":missing,"anchor":anchor,"solution":solution,
-		"offered":Rules.rotate(Rules.flip(solution)),"symmetry":symmetry,"color":2}
+		"offered":Rules.PIECES.L3.cells.duplicate() if stage >= 8 else Rules.rotate(Rules.flip(solution)),"symmetry":symmetry,"color":2}
 
 static func accepts(puzzle: Dictionary, cells: Array, anchor: Vector2i, color: int) -> bool:
 	var trial: Array = puzzle.board.duplicate(true)
@@ -40,7 +40,7 @@ static func accepts(puzzle: Dictionary, cells: Array, anchor: Vector2i, color: i
 static func progress(path: String = PATH) -> Dictionary:
 	var config := ConfigFile.new()
 	if config.load(path) != OK: return {"done":false,"step":1,"started":false}
-	return {"started":bool(config.get_value("intro","started",false)),"done":bool(config.get_value("intro","done",false)),"step":clampi(int(config.get_value("intro","step",1)),1,9)}
+	return {"started":bool(config.get_value("intro","started",false)),"done":bool(config.get_value("intro","done",false)),"step":clampi(int(config.get_value("intro","step",1)),1,11)}
 
 static func save_progress(step: int, done: bool, path: String = PATH) -> Error:
 	var config := ConfigFile.new()
