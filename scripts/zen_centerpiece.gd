@@ -3,11 +3,11 @@ extends Node2D
 
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const ROOT := "res://art/themes/zen_garden/artwork/centers/"
-const FILES := ["one_flat_top_stone_256.png", "three_stone_cairn_256.png", "tall_bamboo_behind_cairn_visual.png"]
+const FILES := ["zen_tier2_one_flat_top_stone_color0_1.png", "zen_tier2_three_stone_cairn_color0_1.png", "zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png"]
 const TEXTURES := [
-	preload("res://art/themes/zen_garden/artwork/centers/one_flat_top_stone_256.png"),
-	preload("res://art/themes/zen_garden/artwork/centers/three_stone_cairn_256.png"),
-	preload("res://art/themes/zen_garden/artwork/centers/tall_bamboo_behind_cairn_visual.png")]
+	preload("res://art/themes/zen_garden/artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png"),
+	preload("res://art/themes/zen_garden/artwork/centers/zen_tier2_three_stone_cairn_color0_1.png"),
+	preload("res://art/themes/zen_garden/artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png")]
 const ADDITION = preload("res://shaders/zen_center_addition.gdshader")
 # The supplied stone is 112 source pixels wide; at this scale its radius is
 # 33.6 logical pixels, inside the innermost groove's 40-pixel radius.

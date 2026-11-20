@@ -56,7 +56,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/core.png"
+                "path": "../masks/coral_tier0_mask_core_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",

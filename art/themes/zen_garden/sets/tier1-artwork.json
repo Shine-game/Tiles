@@ -19,17 +19,17 @@
         }
       },
       "bases": [
-        "../artwork/tier1/zen_tier1_stone_color1_10.json",
-        "../artwork/tier1/zen_tier1_stone_color1_11.json",
-        "../artwork/tier1/zen_tier1_stone_color1_12.json",
-        "../artwork/tier1/zen_tier1_stone_color1_13.json",
-        "../artwork/tier1/zen_tier1_stone_color1_14.json",
-        "../artwork/tier1/zen_tier1_stone_color1_15.json",
-        "../artwork/tier1/zen_tier1_stone_color1_5.json",
         "../artwork/tier1/zen_tier1_stone_color1_6.json",
         "../artwork/tier1/zen_tier1_stone_color1_7.json",
         "../artwork/tier1/zen_tier1_stone_color1_8.json",
         "../artwork/tier1/zen_tier1_stone_color1_9.json",
+        "../artwork/tier1/zen_tier1_stone_color1_10.json",
+        "../artwork/tier1/zen_tier1_stone_color1_11.json",
+        "../artwork/tier1/zen_tier1_stone_color1_1.json",
+        "../artwork/tier1/zen_tier1_stone_color1_2.json",
+        "../artwork/tier1/zen_tier1_stone_color1_3.json",
+        "../artwork/tier1/zen_tier1_stone_color1_4.json",
+        "../artwork/tier1/zen_tier1_stone_color1_5.json",
         "../artwork/tier1/zen_tier1_stone_color1_basic.json"
       ],
       "decorations": [

@@ -127,8 +127,8 @@
             "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.json"
           },
           "t": {
-            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color1_basic.json",
-            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color2_basic.json"
+            "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.json",
+            "2": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.json"
           },
           "cross": {
             "1": "res://art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.json",
@@ -168,7 +168,7 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://art/themes/clockwork_workshop/artwork/frame.png",
+        "texture": "res://art/themes/clockwork_workshop/artwork/clockwork_ui_frame_color0_1.png",
         "appearance": "walnut-workshop-v1",
         "material": "Aged walnut workshop frame with the shared 14-unit rim and 10-unit lower sidewall.",
         "provenance": "Original artwork from Clockwork_Workshop_v1_Codex.zip."
@@ -187,7 +187,7 @@
       },
       "environment": {
         "catalog": "res://art/themes/clockwork_workshop/sets/environment.json",
-        "background": "res://art/themes/clockwork_workshop/artwork/background/drafting_paper_1080x1650.png"
+        "background": "res://art/themes/clockwork_workshop/artwork/background/clockwork_ui_drafting_paper_1080x1650_color0_1.png"
       },
       "preview": {
         "ground": "a3a29a",
@@ -217,8 +217,8 @@
             "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color2_basic.json"
           },
           "t": {
-            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color1_basic.json",
-            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color2_basic.json"
+            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color1_basic.json",
+            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color2_basic.json"
           },
           "cross": {
             "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color1_basic.json",
@@ -272,7 +272,7 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://art/themes/vines/artwork/vines_frame.png",
+        "texture": "res://art/themes/vines/artwork/vines_ui_frame_color0_1.png",
         "appearance": "vines-porcelain-frame-2",
         "source_rect": [
           0,
@@ -299,7 +299,7 @@
         "environment": "vines"
       },
       "environment": {
-        "background": "res://art/themes/vines/artwork/vines_ui_background.png"
+        "background": "res://art/themes/vines/artwork/vines_ui_ui_background_color0_1.png"
       },
       "preview": {
         "ground": "fff5fb",
@@ -326,8 +326,8 @@
             "2": "res://art/themes/vines/artwork/junctions/vines_tier1_bend_color2_basic.json"
           },
           "t": {
-            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color1_basic.json",
-            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color2_basic.json"
+            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_tjoint_color1_basic.json",
+            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_tjoint_color2_basic.json"
           },
           "cross": {
             "1": "res://art/themes/vines/artwork/junctions/vines_tier1_crossroad_color1_basic.json",
@@ -342,7 +342,7 @@
           "decorations": [
             "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json",
             "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.json",
-            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.json"
+            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_3.json"
           ],
           "core_count": 8,
           "endpoint_count": 8,
@@ -414,7 +414,7 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://assets/frames/coral_reef_frame.png",
+        "texture": "res://assets/frames/coral_ui_frame_color0_1.png",
         "appearance": "bleached-wreck-timber-v1",
         "material": "Pale bleached wreck timber, rounded relief, cool shaded flank, turquoise inner reveal, restrained marine encrustation.",
         "provenance": "User-supplied Coral_Reef_Frame.zip; original 256x266 RGBA PNG installed unchanged, geometry verified against CODEX_FRAME_HANDOFF.md."
@@ -436,7 +436,7 @@
       },
       "preview": {
         "ground": "edd7ad",
-        "core": "res://art/themes/coral_reef/artwork/salmon/core.png"
+        "core": "res://art/themes/coral_reef/artwork/salmon/coral_tier0_core_color1_1.png"
       },
       "audio": {
         "schema": "symmetrical_tiles.audio.v1",
@@ -731,7 +731,6 @@
           "rules": "audio follows visual callbacks and never changes occupancy, symmetry, controls or placement gates"
         },
         "review": {
-          "schedule": "../review/events.json",
           "audio": "../review/reef_soundscape.mp3",
           "video": "../review/growth_with_audio.mp4"
         }
@@ -757,8 +756,8 @@
             "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color2_basic.json"
           },
           "t": {
-            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color1_basic.json",
-            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color2_basic.json"
+            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color1_basic.json",
+            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color2_basic.json"
           },
           "cross": {
             "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color1_basic.json",

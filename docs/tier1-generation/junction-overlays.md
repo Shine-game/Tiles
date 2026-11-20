@@ -22,7 +22,7 @@ Each shape/color has a separate PNG and sidecar, even if bytes are identical:
 
 ```
 vines_tier1_bend_color1_basic.png / .json
-vines_tier1_Tjoint_color1_basic.png / .json
+vines_tier1_tjoint_color1_basic.png / .json
 vines_tier1_crossroad_color1_basic.png / .json
 ```
 

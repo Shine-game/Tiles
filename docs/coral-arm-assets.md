@@ -6,11 +6,11 @@ clockwise rotation; logical component IDs and dependencies remain directional.
 
 Keep these ordinary family source PNGs and their import settings:
 
-- `art/themes/coral_reef/artwork/salmon/arm_n.png`
-- `art/themes/coral_reef/artwork/turquoise/arm_n.png`
-- `art/themes/coral_reef/artwork/salmon/junction_ne.png`
-- `art/themes/coral_reef/artwork/turquoise/junction_ne.png`
-- `art/themes/coral_reef/masks/junction_ne.png`
+- `art/themes/coral_reef/artwork/salmon/coral_tier1_arm_n_color1_1.png`
+- `art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_n_color2_1.png`
+- `art/themes/coral_reef/artwork/salmon/coral_tier1_junction_ne_color1_1.png`
+- `art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_ne_color2_1.png`
+- `art/themes/coral_reef/masks/coral_tier1_mask_junction_ne_color0_1.png`
 
 There is no external arm mask dependency. The common `linear_reveal` provider
 creates the canonical center-to-north field in memory, at the same 8-bit precision

@@ -69,7 +69,7 @@ func _run() -> void:
 	var material := ShaderMaterial.new()
 	material.shader = CHAIN
 	material.set_shader_parameter("link_scale", Visuals.CHAIN_LINK_SCALE)
-	material.set_shader_parameter("link_art", Visuals.texture("artwork/copper/CH01_link.png"))
+	material.set_shader_parameter("link_art", Visuals.texture("artwork/copper/clockwork_tier3_link_color1_1.png"))
 	material.set_shader_parameter("progress", 0.0)
 	strip.material = material
 	viewport.add_child(strip)

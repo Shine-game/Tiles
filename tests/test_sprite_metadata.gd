@@ -102,7 +102,7 @@ func _run() -> void:
 	settings = raw(Sprites.SETTINGS_PATH); settings.defaults.spawn.erase("mode")
 	reject(Sprites.load_sprite(seed, LEAF.get_base_dir(), settings), "Incomplete settings are diagnosed before normalization")
 	reject(Assets.load_sprite_catalog(Themes.sprite_catalog_path("vines"), "res://", "a_different_theme"), "Registry/catalog identity mismatch is diagnosed")
-	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://art/themes/coral_reef/masks/arm_n.png"}}
+	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png"}}
 	var explicit := Sprites.load_sprite(masked)
 	check(explicit.ok and explicit.reveals.color1.provider == "texture" and Assets.resolve(explicit.reveals.color1) != null, "Explicit same-size grayscale reveal integrates with shared assets")
 	masked.spawn.reveal_mask = masked.images.color1

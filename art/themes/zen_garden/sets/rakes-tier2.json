@@ -23,7 +23,7 @@
           },
           "asset": {
             "provider": "texture",
-            "path": "../artwork/architecture/stone_lantern_2x2_visual.png"
+            "path": "../artwork/architecture/zen_tier2_stone_lantern_color0_1.png"
           },
           "pivot_px": [
             627.0,

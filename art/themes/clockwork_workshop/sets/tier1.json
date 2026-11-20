@@ -22,11 +22,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/C01.png"
+                "path": "../artwork/copper/clockwork_tier0_core_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/C01.png"
+                "path": "../artwork/gunmetal/clockwork_tier0_core_color2_1.png"
               }
             }
           },
@@ -55,11 +55,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/C02.png"
+                "path": "../artwork/copper/clockwork_tier0_core_color1_2.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/C02.png"
+                "path": "../artwork/gunmetal/clockwork_tier0_core_color2_2.png"
               }
             }
           },
@@ -88,11 +88,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/C03.png"
+                "path": "../artwork/copper/clockwork_tier0_core_color1_3.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/C03.png"
+                "path": "../artwork/gunmetal/clockwork_tier0_core_color2_3.png"
               }
             }
           },
@@ -119,11 +119,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/T01.png"
+                "path": "../artwork/copper/clockwork_tier1_pipe_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/T01.png"
+                "path": "../artwork/gunmetal/clockwork_tier1_pipe_color2_1.png"
               }
             }
           },
@@ -155,7 +155,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/T01_from_core_E.png"
+                "path": "../masks/clockwork_tier1_mask_from_core_e_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -175,11 +175,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/T03.png"
+                "path": "../artwork/copper/clockwork_tier1_pipe_color1_3.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/T03.png"
+                "path": "../artwork/gunmetal/clockwork_tier1_pipe_color2_3.png"
               }
             }
           },

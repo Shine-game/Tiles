@@ -14,11 +14,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/L01.png"
+                "path": "../artwork/copper/clockwork_tier2_wheel_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/L01.png"
+                "path": "../artwork/gunmetal/clockwork_tier2_wheel_color2_1.png"
               }
             }
           },
@@ -48,11 +48,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H00_plain_hatch.png"
+                "path": "../artwork/copper/clockwork_tier2_plain_hatch_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H00_plain_hatch.png"
+                "path": "../artwork/gunmetal/clockwork_tier2_plain_hatch_color2_1.png"
               }
             }
           },

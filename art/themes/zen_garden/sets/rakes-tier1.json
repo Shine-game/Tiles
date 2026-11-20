@@ -56,15 +56,15 @@
           "stage_artwork": [
             {
               "provider": "texture",
-              "path": "../artwork/centers/one_flat_top_stone_256.png"
+              "path": "../artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/three_stone_cairn_256.png"
+              "path": "../artwork/centers/zen_tier2_three_stone_cairn_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/tall_bamboo_behind_cairn_visual.png"
+              "path": "../artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png"
             }
           ],
           "z_index": 2,
@@ -87,15 +87,15 @@
           "stage_artwork": [
             {
               "provider": "texture",
-              "path": "../artwork/centers/one_flat_top_stone_256.png"
+              "path": "../artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/three_stone_cairn_256.png"
+              "path": "../artwork/centers/zen_tier2_three_stone_cairn_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/tall_bamboo_behind_cairn_visual.png"
+              "path": "../artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png"
             }
           ],
           "z_index": 2,
@@ -118,15 +118,15 @@
           "stage_artwork": [
             {
               "provider": "texture",
-              "path": "../artwork/centers/one_flat_top_stone_256.png"
+              "path": "../artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/three_stone_cairn_256.png"
+              "path": "../artwork/centers/zen_tier2_three_stone_cairn_color0_1.png"
             },
             {
               "provider": "texture",
-              "path": "../artwork/centers/tall_bamboo_behind_cairn_visual.png"
+              "path": "../artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png"
             }
           ],
           "z_index": 2,

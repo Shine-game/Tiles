@@ -2,369 +2,351 @@
   "source": "User-uploaded ground, cores, stone_paths, architecture, rock_formations and Downloads RAR archives; originals copied without image edits; supplied watershed masks and shoreline plants copied unchanged",
   "assets": [
     {
-      "path": "artwork/cores/stepping_stone_core_256.png",
+      "path": "artwork/cores/zen_tier0_stepping_stone_core_color0_1.png",
       "source_asset": "ARTWORK/cores/stepping_stone_core_256.png",
       "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8",
       "bytes": 33946
     },
     {
-      "path": "artwork/ground/sand_ground_256.png",
+      "path": "artwork/ground/zen_ui_sand_ground_color0_1.png",
       "source_asset": "ARTWORK/ground/sand_ground_256.png",
       "sha256": "e09ebd324fe150aaa28b676cd57afe9447306459794ce26df01d7c07de42a739",
       "bytes": 106331
     },
     {
-      "path": "artwork/stone_paths/half_stone_E_256.png",
-      "source_asset": "ARTWORK/stone_paths/half_stone_E_256.png",
-      "sha256": "a2e509ae525ecbe2be0b6b57dcedde8d74f6f35b6b858e8e974c7fea5a71a012",
-      "bytes": 48830
-    },
-    {
-      "path": "artwork/stone_paths/half_stone_N_256.png",
+      "path": "artwork/stone_paths/zen_tier1_half_stone_n_color0_1.png",
       "source_asset": "ARTWORK/stone_paths/half_stone_N_256.png",
       "sha256": "359c461a64ae2d9dd6443442138fa3597d09de1489fd553c87a71dfef7fab685",
       "bytes": 43723
     },
     {
-      "path": "artwork/stone_paths/half_stone_S_256.png",
-      "source_asset": "ARTWORK/stone_paths/half_stone_S_256.png",
-      "sha256": "96116c83b6346cc0f25fdd144331395fb224cc770b9e9b793c455b4d43744dc2",
-      "bytes": 49765
-    },
-    {
-      "path": "artwork/stone_paths/half_stone_W_256.png",
-      "source_asset": "ARTWORK/stone_paths/half_stone_W_256.png",
-      "sha256": "e53fed8eb85259f7fa2172243be6dbb012a14e012f4f729a2051e32f7f01a6bf",
-      "bytes": 50002
-    },
-    {
-      "path": "artwork/centers/one_flat_top_stone_256.png",
+      "path": "artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png",
       "source_asset": "Downloads.rar/center_stone.png",
       "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0",
       "bytes": 27364,
       "note": "User-supplied aligned 256x256 center artwork; source pixels unchanged"
     },
     {
-      "path": "artwork/centers/three_stone_cairn_256.png",
+      "path": "artwork/centers/zen_tier2_three_stone_cairn_color0_1.png",
       "source_asset": "Downloads.rar/center_stone_pyramid.png",
       "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820",
       "bytes": 27744,
       "note": "User-supplied aligned 256x256 center artwork; source pixels unchanged"
     },
     {
-      "path": "artwork/centers/tall_bamboo_behind_cairn_visual.png",
+      "path": "artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png",
       "source_asset": "Downloads.rar/center_stone_bamboo.png",
       "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646",
       "bytes": 52611,
       "note": "User-supplied aligned 256x256 center artwork; source pixels unchanged"
     },
     {
-      "path": "artwork/architecture/stone_lantern_2x2_visual.png",
+      "path": "artwork/architecture/zen_tier2_stone_lantern_color0_1.png",
       "source_asset": "ARTWORK/architecture/stone_lantern_2x2_visual.png",
       "sha256": "fd98f89858b63c827009202f5c6f03b6136829b49f0402e6f58a3eed58e8f3c4",
       "bytes": 1259251,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     },
     {
-      "path": "artwork/rock_formations/rock_01_peak_and_low_bedrock_visual.png",
+      "path": "artwork/rock_formations/zen_tier2_rock_color0_1.png",
       "source_asset": "ARTWORK/rock_formations/rock_01_peak_and_low_bedrock_visual.png",
       "sha256": "e7f6018dd35b15063776b631c0de6aa86f5afbf34361fa9bea4a295c7f67d7e3",
       "bytes": 1961485,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     },
     {
-      "path": "artwork/rock_formations/rock_02_peak_and_low_bedrock_visual.png",
+      "path": "artwork/rock_formations/zen_tier2_rock_color0_2.png",
       "source_asset": "ARTWORK/rock_formations/rock_02_peak_and_low_bedrock_visual.png",
       "sha256": "328c332e83d4dbe1159274658416443bf892e1be35f97759735df2d019a09d14",
       "bytes": 2191301,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     },
     {
-      "path": "artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png",
+      "path": "artwork/rock_formations/zen_tier2_rock_color0_3.png",
       "source_asset": "ARTWORK/rock_formations/rock_03_peak_and_low_bedrock_visual.png",
       "sha256": "d97bc2f1f0362b454d4483f79cc14a76d5ad5c454d593825618b96b0029544e4",
       "bytes": 2097129,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     },
     {
-      "path": "artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png",
+      "path": "artwork/rock_formations/zen_tier2_rock_color0_4.png",
       "source_asset": "ARTWORK/rock_formations/rock_04_peak_and_low_bedrock_visual.png",
       "sha256": "0503294a7426385674e89b950aead11990a2b8525077c1665a4a05ed3117ca15",
       "bytes": 1952325,
       "note": "User-supplied visual master; source pixels unchanged, uniformly scaled at runtime"
     },
     {
-      "path": "artwork/watersheds/01/water_n.png",
+      "path": "artwork/watersheds/01/zen_tier2_mask_water_n_color0_1.png",
       "source_asset": "ARTWORK/watersheds/01/water_n.png",
       "sha256": "32061ec7d9d2cb450a081cf916fb82428c9f59a90963144537a0c72033ad39c3",
       "bytes": 4618
     },
     {
-      "path": "artwork/watersheds/01/water_e.png",
+      "path": "artwork/watersheds/01/zen_tier2_mask_water_e_color0_1.png",
       "source_asset": "ARTWORK/watersheds/01/water_e.png",
       "sha256": "a087d5f1b8399a22d51983eb4a19f017e138e92fead6f9f5e9f7468b8f6be260",
       "bytes": 5149
     },
     {
-      "path": "artwork/watersheds/01/water_s.png",
+      "path": "artwork/watersheds/01/zen_tier2_mask_water_s_color0_1.png",
       "source_asset": "ARTWORK/watersheds/01/water_s.png",
       "sha256": "09d08ba31050e61e499f3a1e3574df555ba96a020cbca076a486a9b9793a81be",
       "bytes": 5181
     },
     {
-      "path": "artwork/watersheds/01/water_w.png",
+      "path": "artwork/watersheds/01/zen_tier2_mask_water_w_color0_1.png",
       "source_asset": "ARTWORK/watersheds/01/water_w.png",
       "sha256": "b3dab5fa6aa5ac61178567b2ff6a209181169738240984e2b1972cec9ac81c66",
       "bytes": 6144
     },
     {
-      "path": "artwork/watersheds/01/rock_occlusion.png",
+      "path": "artwork/watersheds/01/zen_tier2_mask_rock_occlusion_color0_1.png",
       "source_asset": "ARTWORK/watersheds/01/rock_occlusion.png",
       "sha256": "e0fa22b9929aa24c60f5e5da1201d23e81898fef01f93c5a6d2fa454be0bcbe4",
       "bytes": 16216
     },
     {
-      "path": "artwork/watersheds/02/water_n.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_water_n_color0_2.png",
       "source_asset": "ARTWORK/watersheds/02/water_n.png",
       "sha256": "9744fd9670f24fd5d8775ebabb0d8f51b4d291df315300ea00931ebf2a4660ac",
       "bytes": 12488
     },
     {
-      "path": "artwork/watersheds/02/water_e.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_water_e_color0_2.png",
       "source_asset": "ARTWORK/watersheds/02/water_e.png",
       "sha256": "ac04defc28fdada32eddb21a702d34db2cda65b5d1ff3a94890e18d5a3bf5dc3",
       "bytes": 4724
     },
     {
-      "path": "artwork/watersheds/02/water_s.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_water_s_color0_2.png",
       "source_asset": "ARTWORK/watersheds/02/water_s.png",
       "sha256": "cd6adf95b2be7579dc60a6506998d85c81702a40ae5573ae83112a7a2d76081e",
       "bytes": 3981
     },
     {
-      "path": "artwork/watersheds/02/water_w.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_water_w_color0_2.png",
       "source_asset": "ARTWORK/watersheds/02/water_w.png",
       "sha256": "0c43274917f19e2c374eded6d55bdc57ef8b91bd460cf1375fb175dbde22b3c8",
       "bytes": 5075
     },
     {
-      "path": "artwork/watersheds/02/rock_occlusion.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_rock_occlusion_color0_2.png",
       "source_asset": "ARTWORK/watersheds/02/rock_occlusion.png",
       "sha256": "fe402f751a344bf060ef9e294cfb5eca92f0c700c662f12fb0cc9fd599186038",
       "bytes": 12854
     },
     {
-      "path": "artwork/watersheds/03/water_n.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_water_n_color0_3.png",
       "source_asset": "ARTWORK/watersheds/03/water_n.png",
       "sha256": "10e712a7f3dc90bb3e48a9fec75980384be238713480d5d92b38cbeff1509171",
       "bytes": 4383
     },
     {
-      "path": "artwork/watersheds/03/water_e.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_water_e_color0_3.png",
       "source_asset": "ARTWORK/watersheds/03/water_e.png",
       "sha256": "21246e16bc9532666e44c61f3b4303b7d61a12c5c9d1e7fe685d691d2aef42e3",
       "bytes": 4090
     },
     {
-      "path": "artwork/watersheds/03/water_s.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_water_s_color0_3.png",
       "source_asset": "ARTWORK/watersheds/03/water_s.png",
       "sha256": "b1ee1994c4307a0aab76fd83879e37bf572d88b073f0b834bbca5d54a355a136",
       "bytes": 3352
     },
     {
-      "path": "artwork/watersheds/03/water_w.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_water_w_color0_3.png",
       "source_asset": "ARTWORK/watersheds/03/water_w.png",
       "sha256": "66adf3a9a1dab8e84def161a2f7e4e0f388a978bacbacef99560b9833f783725",
       "bytes": 4958
     },
     {
-      "path": "artwork/watersheds/03/rock_occlusion.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_rock_occlusion_color0_3.png",
       "source_asset": "ARTWORK/watersheds/03/rock_occlusion.png",
       "sha256": "993e9bb4787f02f1dac0f05e43a6054e2346631513832820e60bd5748110f273",
       "bytes": 6682
     },
     {
-      "path": "artwork/watersheds/04/water_n.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_water_n_color0_4.png",
       "source_asset": "ARTWORK/watersheds/04/water_n.png",
       "sha256": "de1c39fd9cdea71b6ed95dd27d797cfba124a00abffab19a5b1075c0677b7f5c",
       "bytes": 4059
     },
     {
-      "path": "artwork/watersheds/04/water_e.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_water_e_color0_4.png",
       "source_asset": "ARTWORK/watersheds/04/water_e.png",
       "sha256": "553c5193fcc66e0671da7dbf0c70882c7a3a5ed4bf39789fb7a9ae1b42b0e4e8",
       "bytes": 3531
     },
     {
-      "path": "artwork/watersheds/04/water_s.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_water_s_color0_4.png",
       "source_asset": "ARTWORK/watersheds/04/water_s.png",
       "sha256": "bdf1f03381d2c47d6faa6ca5bcb4237ab3631513045a80ff18a5267ff72ec628",
       "bytes": 3350
     },
     {
-      "path": "artwork/watersheds/04/water_w.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_water_w_color0_4.png",
       "source_asset": "ARTWORK/watersheds/04/water_w.png",
       "sha256": "820248495f8d2d3f11fb5d64ac00ce7528593cb19da064d8e4db4f4df4c99c77",
       "bytes": 4876
     },
     {
-      "path": "artwork/watersheds/04/rock_occlusion.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_rock_occlusion_color0_4.png",
       "source_asset": "ARTWORK/watersheds/04/rock_occlusion.png",
       "sha256": "00b3e69312cc15dc9a7b165aaf1bec9a3e7f0506a863010e75851aba8825199a",
       "bytes": 5821
     },
     {
-      "path": "artwork/shoreline_plants/01_shore_sedge.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_1.png",
       "source_asset": "ARTWORK/shoreline_plants/01_shore_sedge.png",
       "sha256": "6fe568f7b2b4f344ddc2f1456c9f86d247e7936e5b387dfbf86978faaa454ca3",
       "bytes": 110400
     },
     {
-      "path": "artwork/shoreline_plants/02_shore_fern.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_2.png",
       "source_asset": "ARTWORK/shoreline_plants/02_shore_fern.png",
       "sha256": "e0b09bc0929b74507304a79d26293a8b5a657b3aead400fbb66774d342926da3",
       "bytes": 111739
     },
     {
-      "path": "artwork/shoreline_plants/03_shore_herbs.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_3.png",
       "source_asset": "ARTWORK/shoreline_plants/03_shore_herbs.png",
       "sha256": "4012cf1492cfb15a5579e1bdd3009748fd9d6873dcaed61a6c35828dafb249e2",
       "bytes": 106093
     },
     {
-      "path": "artwork/shoreline_plants/04_shore_rush.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_4.png",
       "source_asset": "ARTWORK/shoreline_plants/04_shore_rush.png",
       "sha256": "dfe32f7c383aeb144deed89658e94b18b86b770cb937cf518fee7086d1df7b24",
       "bytes": 105254
     },
     {
-      "path": "artwork/shoreline_plants/05_shore_clover.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_5.png",
       "source_asset": "ARTWORK/shoreline_plants/05_shore_clover.png",
       "sha256": "2ef7c676d7a0e442bb096523d315d8c23bb2fe6e37ad0971fe3596bced4a55f7",
       "bytes": 105799
     },
     {
-      "path": "artwork/shoreline_plants/06_shore_reeds.png",
+      "path": "artwork/shoreline_plants/zen_tier2_shore_plant_color0_6.png",
       "source_asset": "ARTWORK/shoreline_plants/06_shore_reeds.png",
       "sha256": "39579219aca72cfe42249fbde6895861da14e31cae847619344d1c1b9fb70678",
       "bytes": 95536
     },
     {
-      "path": "artwork/watersheds/02/watershed_n.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_watershed_n_color0_1.png",
       "source_asset": "ARTWORK/watersheds/02/watershed_n.png",
       "sha256": "060f0ebbf41c8bfe5258df4938b626506d92143674c49672e1dbb4d12c33456d",
       "bytes": 6463
     },
     {
-      "path": "artwork/watersheds/02/watershed_e.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_watershed_e_color0_1.png",
       "source_asset": "ARTWORK/watersheds/02/watershed_e.png",
       "sha256": "173a5722530666fa8858890ba049950f8d57c3861758b2994905a97eb552dc9b",
       "bytes": 3934
     },
     {
-      "path": "artwork/watersheds/02/watershed_s.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_watershed_s_color0_1.png",
       "source_asset": "ARTWORK/watersheds/02/watershed_s.png",
       "sha256": "1fdd29e640ffb4135e0cd2aef264380a2dba03e27629e2daae3ee6f646510052",
       "bytes": 3293
     },
     {
-      "path": "artwork/watersheds/02/watershed_w.png",
+      "path": "artwork/watersheds/02/zen_tier2_mask_watershed_w_color0_1.png",
       "source_asset": "ARTWORK/watersheds/02/watershed_w.png",
       "sha256": "8eba617231c2a466d7bf316263c491a207295b18e6dc15e10168ade902d77ce6",
       "bytes": 4447
     },
     {
-      "path": "artwork/watersheds/03/watershed_n.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_watershed_n_color0_2.png",
       "source_asset": "ARTWORK/watersheds/03/watershed_n.png",
       "sha256": "fc3f477385fee36710a1607b905409f9f0a607937a72bfe70c82c0ec58e29c03",
       "bytes": 3882
     },
     {
-      "path": "artwork/watersheds/03/watershed_e.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_watershed_e_color0_2.png",
       "source_asset": "ARTWORK/watersheds/03/watershed_e.png",
       "sha256": "e496edbbcd095c67cc77bc1f6994f987cc78efd14550beb066c7b521bd06c258",
       "bytes": 4310
     },
     {
-      "path": "artwork/watersheds/03/watershed_s.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_watershed_s_color0_2.png",
       "source_asset": "ARTWORK/watersheds/03/watershed_s.png",
       "sha256": "43e3756a0d480b64f32ec097fea63e0447fe47e4c29222edb10fe5f3d023e80b",
       "bytes": 3198
     },
     {
-      "path": "artwork/watersheds/03/watershed_w.png",
+      "path": "artwork/watersheds/03/zen_tier2_mask_watershed_w_color0_2.png",
       "source_asset": "ARTWORK/watersheds/03/watershed_w.png",
       "sha256": "9e45d967233a35e3bb5efe1d7ce2edac48d683ac3a7208ae94e724f86ac79eeb",
       "bytes": 4963
     },
     {
-      "path": "artwork/watersheds/04/watershed_n.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_watershed_n_color0_3.png",
       "source_asset": "ARTWORK/watersheds/04/watershed_n.png",
       "sha256": "b2c01593dd18ee957149b621431a268e0b90fe901e8928ced920fcf6515075ae",
       "bytes": 3987
     },
     {
-      "path": "artwork/watersheds/04/watershed_e.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_watershed_e_color0_3.png",
       "source_asset": "ARTWORK/watersheds/04/watershed_e.png",
       "sha256": "1815c3cd2d0cded2bc3ee90c43139426579adc4a06c605cc3f77a4f27c9c07f7",
       "bytes": 4029
     },
     {
-      "path": "artwork/watersheds/04/watershed_s.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_watershed_s_color0_3.png",
       "source_asset": "ARTWORK/watersheds/04/watershed_s.png",
       "sha256": "745f0adab4b5e65127be7b83490b165e0bcf2b1aafe3382d1545deb06ce20c62",
       "bytes": 3694
     },
     {
-      "path": "artwork/watersheds/04/watershed_w.png",
+      "path": "artwork/watersheds/04/zen_tier2_mask_watershed_w_color0_3.png",
       "source_asset": "ARTWORK/watersheds/04/watershed_w.png",
       "sha256": "e69435126836013a7fe1016421bea834362da5ec127655ee979b6a30103f6be6",
       "bytes": 5180
     },
     {
-      "path": "artwork/trees/individual_first_set/spring_sakura_long_03.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_1.png",
       "source_asset": "ARTWORK/trees/individual_first_set/spring_sakura_long_03.png",
       "sha256": "58f82edbca3b63866c3743aeeb79d8d333c56086b93e0ec8ee2d81635e89bf08",
       "bytes": 702145
     },
     {
-      "path": "artwork/trees/individual_first_set/autumn_red_short_01.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_3.png",
       "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_short_01.png",
       "sha256": "5a0a5efde1a894632a8a2620210d5aa13bf74ac054243b1b69dca63474b042f6",
       "bytes": 321130
     },
     {
-      "path": "artwork/trees/individual_first_set/spring_sakura_medium_02.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_2.png",
       "source_asset": "ARTWORK/trees/individual_first_set/spring_sakura_medium_02.png",
       "sha256": "1bc2a7f7e36afc2b422aff979ec980de02fcdaa5dcf5f93687bca979b3444314",
       "bytes": 492333
     },
     {
-      "path": "artwork/trees/individual_first_set/autumn_red_medium_02.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_2.png",
       "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_medium_02.png",
       "sha256": "16ece47af718fb59065c3bb10b0a3f9b31d2297f821e18e06af30da329c86ee1",
       "bytes": 573022
     },
     {
-      "path": "artwork/trees/individual_first_set/summer_green_short_01.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_2.png",
       "source_asset": "ARTWORK/trees/individual_first_set/summer_green_short_01.png",
       "sha256": "6086036ad5c67d6c7c59338d1ac293132bdf747bf6646c3c6b5c322fba97d807",
       "bytes": 198697
     },
     {
-      "path": "artwork/trees/individual_first_set/summer_green_long_02.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_1.png",
       "source_asset": "ARTWORK/trees/individual_first_set/summer_green_long_02.png",
       "sha256": "0ed1b9fabed74efd6941711773b8b622697c2f6e6de443f016b46a641952ab66",
       "bytes": 634808
     },
     {
-      "path": "artwork/trees/individual_first_set/autumn_red_long_03.png",
+      "path": "artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_1.png",
       "source_asset": "ARTWORK/trees/individual_first_set/autumn_red_long_03.png",
       "sha256": "8ceb57b64ebb5e2c345d3e57c72032d84583984029a5081ee4ea6495fb4ac52d",
       "bytes": 807370
     },
     {
-      "path": "artwork/trees/winter/winter_bare_branches_light_snow_3x3_sheet.png",
+      "path": "artwork/trees/winter/zen_tier3_tree_winter_color0_1.png",
       "source_asset": "ARTWORK/trees/winter/winter_bare_branches_light_snow_3x3_sheet.png",
       "sha256": "a8d3c49e8d18d5e524c37d64c6dd8b3ecd1957d173031bb4fcd7be411c2b576b",
       "bytes": 1872369

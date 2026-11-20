@@ -19,7 +19,7 @@ The frame draws above the occupied ground/coral perimeter. Coral Reef's existing
 ## Theme personalization and installation
 
 1. Prepare the material PNG using the common geometry above. Nine-slice stretching preserves rim/corner thickness but stretches longitudinal grain and marine marks; the source is not declared seamless or validated for tiled repetition.
-2. Add the PNG at its profile's texture path. For Coral Reef this is `assets/frames/coral_reef_frame.png`.
+2. Add the PNG at its profile's texture path. For Coral Reef this is `assets/frames/coral_ui_frame_color0_1.png`.
 3. Import with lossless compression, alpha preserved, mipmaps off and linear/clamped sampling. Inspect dimensions and the opening's alpha at native size before enabling a new theme.
 4. Update only that theme's profile: set `enabled`, `texture`, a stable nonempty `appearance` ID, `material` and `provenance`. Change the appearance ID when artwork changes. Keep the central geometry intact.
 5. Run the frame runner and the UI, water, gallery and platform checks for 9×9 and 11×11, including narrow portrait and landscape layouts. Review grain and marks at game scale when the real artwork is available.
@@ -30,7 +30,7 @@ The JSON is explicitly included in Android export. Missing or disabled artwork l
 
 The supplied `CODEX_FRAME_HANDOFF.md` defines bleached wreck timber, rounded relief, a cool shaded flank, turquoise inner reveal and restrained marine deposits. Those details are recorded in the Coral Reef profile. The source image is described as generated from the approved mockup and technically aligned with ImageMagick; no additional rights or exclusivity are asserted.
 
-The original `coral_reef_frame.png` from the user-supplied `Coral_Reef_Frame.zip` is installed unchanged and enabled. Its 256×266 RGBA dimensions, fully transparent 228×228 opening and lower sidewall region were independently checked. Archive SHA-256: `d947fa6f60460e4ff51e47a3ba9be16dd81ca495f1653618aedac433acb6ecba`. PNG SHA-256: `66c1e60140e7d0eff36d10ad27f58a7bcaed31bd828694a134516fe88643d933`. Clockwork Workshop uses the original walnut frame from its handoff package through the same shared geometry and renderer. Vines and Labyrinth profiles await their own artwork.
+The original `coral_ui_frame_color0_1.png` from the user-supplied `Coral_Reef_Frame.zip` is installed unchanged and enabled. Its 256×266 RGBA dimensions, fully transparent 228×228 opening and lower sidewall region were independently checked. Archive SHA-256: `d947fa6f60460e4ff51e47a3ba9be16dd81ca495f1653618aedac433acb6ecba`. PNG SHA-256: `66c1e60140e7d0eff36d10ad27f58a7bcaed31bd828694a134516fe88643d933`. Clockwork Workshop uses the original walnut frame from its handoff package through the same shared geometry and renderer. Vines and Labyrinth profiles await their own artwork.
 
 `tests/test_board_frame.gd` uses a clearly marked technical color-patch fixture to check nine-slice geometry, transparency, corner/sidewall preservation, responsive fitting, edge-cell input and lighting coordinates. The fixture is never installed as game artwork. The original PNG is additionally checked for exact dimensions and transparent opening, and exercised by the normal game/theme/gallery tests.
 

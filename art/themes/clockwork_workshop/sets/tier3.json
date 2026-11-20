@@ -14,11 +14,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H00_plain_hatch.png"
+                "path": "../artwork/copper/clockwork_tier2_plain_hatch_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H00_plain_hatch.png"
+                "path": "../artwork/gunmetal/clockwork_tier2_plain_hatch_color2_1.png"
               }
             }
           },
@@ -40,11 +40,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H01_valve.png"
+                "path": "../artwork/copper/clockwork_tier3_valve_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H01_valve.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_valve_color2_1.png"
               }
             }
           },
@@ -66,11 +66,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H02_rotating.png"
+                "path": "../artwork/copper/clockwork_tier3_rotating_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H02_rotating.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_rotating_color2_1.png"
               }
             }
           },
@@ -92,11 +92,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H03_exhaust.png"
+                "path": "../artwork/copper/clockwork_tier3_exhaust_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H03_exhaust.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_exhaust_color2_1.png"
               }
             }
           },
@@ -118,11 +118,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/J00_chain_junction.png"
+                "path": "../artwork/copper/clockwork_tier3_chain_junction_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/J00_chain_junction.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_chain_junction_color2_1.png"
               }
             }
           },
@@ -144,11 +144,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H00_left_shutter.png"
+                "path": "../artwork/copper/clockwork_tier2_left_shutter_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H00_left_shutter.png"
+                "path": "../artwork/gunmetal/clockwork_tier2_left_shutter_color2_1.png"
               }
             }
           },
@@ -170,11 +170,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H00_right_shutter.png"
+                "path": "../artwork/copper/clockwork_tier2_right_shutter_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H00_right_shutter.png"
+                "path": "../artwork/gunmetal/clockwork_tier2_right_shutter_color2_1.png"
               }
             }
           },
@@ -196,11 +196,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H03_opaque_underlay.png"
+                "path": "../artwork/copper/clockwork_tier3_opaque_underlay_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H03_opaque_underlay.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_opaque_underlay_color2_1.png"
               }
             }
           },
@@ -222,11 +222,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H03_shutters_left.png"
+                "path": "../artwork/copper/clockwork_tier3_shutters_left_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H03_shutters_left.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_shutters_left_color2_1.png"
               }
             }
           },
@@ -248,11 +248,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/H03_shutters_right.png"
+                "path": "../artwork/copper/clockwork_tier3_shutters_right_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/H03_shutters_right.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_shutters_right_color2_1.png"
               }
             }
           },
@@ -274,11 +274,11 @@
             "variants": {
               "copper": {
                 "provider": "texture",
-                "path": "../artwork/copper/CH01_link.png"
+                "path": "../artwork/copper/clockwork_tier3_link_color1_1.png"
               },
               "gunmetal": {
                 "provider": "texture",
-                "path": "../artwork/gunmetal/CH01_link.png"
+                "path": "../artwork/gunmetal/clockwork_tier3_link_color2_1.png"
               }
             }
           },

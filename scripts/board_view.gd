@@ -209,7 +209,7 @@ func _sync_blank_ground() -> void:
 			ink.set_shader_parameter("submerged", coral_reef)
 			ink.set_shader_parameter("metal_surface", clockwork)
 			if clockwork:
-				ink.set_shader_parameter("metal_lip", Workshop.texture("artwork/ground/edge_lip_2ui.png"))
+				ink.set_shader_parameter("metal_lip", Workshop.texture("artwork/ground/clockwork_ui_edge_lip_color0_1.png"))
 			sprite.material = ink
 			blank_ground.add_child(sprite)
 
@@ -472,7 +472,7 @@ func _draw() -> void:
 		return
 	update_geometry()
 	if clockwork and paper_background:
-		var paper := Workshop.texture("artwork/background/drafting_paper_1080x1650.png")
+		var paper := Workshop.texture("artwork/background/clockwork_ui_drafting_paper_1080x1650_color0_1.png")
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)

@@ -20,7 +20,7 @@
     "color": 1,
     "archive_color": "salmon",
     "source": "center_2.png",
-    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color1_basic.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color1_basic.png",
     "sha256": "2f5cfa2d3fac500a05de86cf8268ca9cce1089833a825460b44d9333acc8093c"
   },
   {
@@ -28,7 +28,7 @@
     "color": 2,
     "archive_color": "teal",
     "source": "center_2.png",
-    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color2_basic.png",
+    "image": "art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color2_basic.png",
     "sha256": "9c706d2b2782a610dd5220a25edf124d3b83d38a80a7f9491a10fc40b17668c0"
   },
   {

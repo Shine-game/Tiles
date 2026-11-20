@@ -13,7 +13,7 @@ an independently named source file for that endpoint core.
 | Endpoint file | Copied from |
 | --- | --- |
 | `artwork/centers/raked_sand_endpoint_relief_256.res` | `artwork/cores/raked_sand_core_relief_256.res` |
-| `artwork/centers/stepping_stone_endpoint_core_256.png` | `artwork/cores/stepping_stone_core_256.png` |
+| `artwork/centers/zen_tier2_stepping_stone_endpoint_core_color0_1.png` | `artwork/cores/zen_tier0_stepping_stone_core_color0_1.png` |
 
 Paths are relative to `art/themes/zen_garden/`. The stone PNG is a byte-for-byte
 copy. The rake core previously existed only as `ZenGeometry.height_image(0)`.

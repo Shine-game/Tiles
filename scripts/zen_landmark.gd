@@ -5,12 +5,12 @@ const Sets = preload("res://scripts/zen_sets.gd")
 const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Timing = preload("res://scripts/pattern/growth_schedule.gd")
 const SURFACE = preload("res://shaders/zen_landmark.gdshader")
-const LANTERN = preload("res://art/themes/zen_garden/artwork/architecture/stone_lantern_2x2_visual.png")
+const LANTERN = preload("res://art/themes/zen_garden/artwork/architecture/zen_tier2_stone_lantern_color0_1.png")
 const ROCKS := [
-	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_01_peak_and_low_bedrock_visual.png"),
-	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_02_peak_and_low_bedrock_visual.png"),
-	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png"),
-	preload("res://art/themes/zen_garden/artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png")]
+	preload("res://art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_1.png"),
+	preload("res://art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_2.png"),
+	preload("res://art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_3.png"),
+	preload("res://art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_4.png")]
 const GROW_SECONDS := 0.45
 const PATTERN_SECONDS := 0.30
 const PATTERN_HOLD_SECONDS := 0.10

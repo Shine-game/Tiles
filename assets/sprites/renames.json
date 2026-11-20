@@ -1,0 +1,1245 @@
+{
+  "schema": "tiles.sprite-renames.v1",
+  "files": [
+    {
+      "old": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_4.png",
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color1_3.png",
+      "sha256": "b7b91544eb7f24fdb430b5312acb7039f0fb00d6bb2031387baa9fb933e8d733"
+    },
+    {
+      "old": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_4.png",
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_3.png",
+      "sha256": "1ac30bfc416f4df7640c1a92c60e71c91efdb2523b898780f26de8bf302a9408"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_1.png",
+      "sha256": "f64fa96848ec3df884b875975b9265c8c9a603e7fa471f8066258933172a32a6"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_2.png",
+      "sha256": "18b7918c8c00c3f574e4493169892a8f393e41052a9c82fe5da8e37b936f60b6"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_3.png",
+      "sha256": "bfcde2ae9e9caa0f63fac6eab5b4ea93e5ff85396cecd3ceff9fcd1374bae930"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_4.png",
+      "sha256": "57d62133a884dc55bd2d0105dde33ff2dadeb19ec74fd3aa95ab13ea4ef6155a"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.png",
+      "sha256": "4e0b398603515f79065812cbbf8cfbafb10d8b801c139de7ed31397798abb815"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.png",
+      "sha256": "47f7b6f54968df3e5534fb3727d631454339bc5c495b0b58aaf48e6767cc4893"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.png",
+      "sha256": "ff62f1fa50dc8e1a5af563980dee46b9da492f9a8363a26e33ffd9c199bfe10e"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_12.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.png",
+      "sha256": "dec9da9db292e82abe8c30c62f62e3edd589e3257a07c7c124091c31dfc26ff9"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_13.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.png",
+      "sha256": "01d514f7119e73649e867c708046e0861a04ee9dcd1fb306cbdf0789e775e936"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_14.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.png",
+      "sha256": "44d9ff85bff3b0b2857c76d2a673c06128a7c584767d6aa54368b00cb3fca4fb"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_15.png",
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.png",
+      "sha256": "9fabf61fc7849219ed35ab2bd01c0e91cbc8ab904b30573d65b95de0e4dd67ef"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color1_basic.png",
+      "path": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color1_basic.png",
+      "sha256": "81b65c27d80d11f471394ef9c29f445371b1e3f3e5752ed3ad7ea57ed039117a"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color2_basic.png",
+      "path": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color2_basic.png",
+      "sha256": "ed52c2159c4d414f3be7952300f7d38b645be2f0a96517ebb662d0d34bdce7e2"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color1_basic.png",
+      "path": "art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color1_basic.png",
+      "sha256": "2f5cfa2d3fac500a05de86cf8268ca9cce1089833a825460b44d9333acc8093c"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/junctions/coral_tier1_Tjoint_color2_basic.png",
+      "path": "art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color2_basic.png",
+      "sha256": "9c706d2b2782a610dd5220a25edf124d3b83d38a80a7f9491a10fc40b17668c0"
+    },
+    {
+      "old": "art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color1_basic.png",
+      "path": "art/themes/vines/artwork/junctions/vines_tier1_tjoint_color1_basic.png",
+      "sha256": "aefa0e05764d9ec1691731447973c7195599b7a991487ac9665a0c002b4e6e27"
+    },
+    {
+      "old": "art/themes/vines/artwork/junctions/vines_tier1_Tjoint_color2_basic.png",
+      "path": "art/themes/vines/artwork/junctions/vines_tier1_tjoint_color2_basic.png",
+      "sha256": "8f6d7b64483df82380b76625152a7006f7475190ccb2d639d20bee9518d288c8"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color1_basic.png",
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.png",
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color2_basic.png",
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.png",
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/01/rock_occlusion.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_rock_occlusion_color0_1.png",
+      "sha256": "e0fa22b9929aa24c60f5e5da1201d23e81898fef01f93c5a6d2fa454be0bcbe4"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/01/water_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_e_color0_1.png",
+      "sha256": "a087d5f1b8399a22d51983eb4a19f017e138e92fead6f9f5e9f7468b8f6be260"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/01/water_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_n_color0_1.png",
+      "sha256": "32061ec7d9d2cb450a081cf916fb82428c9f59a90963144537a0c72033ad39c3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/01/water_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_s_color0_1.png",
+      "sha256": "09d08ba31050e61e499f3a1e3574df555ba96a020cbca076a486a9b9793a81be"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/01/water_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_w_color0_1.png",
+      "sha256": "b3dab5fa6aa5ac61178567b2ff6a209181169738240984e2b1972cec9ac81c66"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/rock_occlusion.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_rock_occlusion_color0_2.png",
+      "sha256": "fe402f751a344bf060ef9e294cfb5eca92f0c700c662f12fb0cc9fd599186038"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/water_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_e_color0_2.png",
+      "sha256": "ac04defc28fdada32eddb21a702d34db2cda65b5d1ff3a94890e18d5a3bf5dc3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/water_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_n_color0_2.png",
+      "sha256": "9744fd9670f24fd5d8775ebabb0d8f51b4d291df315300ea00931ebf2a4660ac"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/water_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_s_color0_2.png",
+      "sha256": "cd6adf95b2be7579dc60a6506998d85c81702a40ae5573ae83112a7a2d76081e"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/water_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_w_color0_2.png",
+      "sha256": "0c43274917f19e2c374eded6d55bdc57ef8b91bd460cf1375fb175dbde22b3c8"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/watershed_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_e_color0_1.png",
+      "sha256": "173a5722530666fa8858890ba049950f8d57c3861758b2994905a97eb552dc9b"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/watershed_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_n_color0_1.png",
+      "sha256": "060f0ebbf41c8bfe5258df4938b626506d92143674c49672e1dbb4d12c33456d"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/watershed_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_s_color0_1.png",
+      "sha256": "1fdd29e640ffb4135e0cd2aef264380a2dba03e27629e2daae3ee6f646510052"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/02/watershed_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_w_color0_1.png",
+      "sha256": "8eba617231c2a466d7bf316263c491a207295b18e6dc15e10168ade902d77ce6"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/rock_occlusion.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_rock_occlusion_color0_3.png",
+      "sha256": "993e9bb4787f02f1dac0f05e43a6054e2346631513832820e60bd5748110f273"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/water_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_e_color0_3.png",
+      "sha256": "21246e16bc9532666e44c61f3b4303b7d61a12c5c9d1e7fe685d691d2aef42e3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/water_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_n_color0_3.png",
+      "sha256": "10e712a7f3dc90bb3e48a9fec75980384be238713480d5d92b38cbeff1509171"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/water_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_s_color0_3.png",
+      "sha256": "b1ee1994c4307a0aab76fd83879e37bf572d88b073f0b834bbca5d54a355a136"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/water_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_w_color0_3.png",
+      "sha256": "66adf3a9a1dab8e84def161a2f7e4e0f388a978bacbacef99560b9833f783725"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/watershed_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_e_color0_2.png",
+      "sha256": "e496edbbcd095c67cc77bc1f6994f987cc78efd14550beb066c7b521bd06c258"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/watershed_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_n_color0_2.png",
+      "sha256": "fc3f477385fee36710a1607b905409f9f0a607937a72bfe70c82c0ec58e29c03"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/watershed_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_s_color0_2.png",
+      "sha256": "43e3756a0d480b64f32ec097fea63e0447fe47e4c29222edb10fe5f3d023e80b"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/03/watershed_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_w_color0_2.png",
+      "sha256": "9e45d967233a35e3bb5efe1d7ce2edac48d683ac3a7208ae94e724f86ac79eeb"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/rock_occlusion.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_rock_occlusion_color0_4.png",
+      "sha256": "00b3e69312cc15dc9a7b165aaf1bec9a3e7f0506a863010e75851aba8825199a"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/water_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_e_color0_4.png",
+      "sha256": "553c5193fcc66e0671da7dbf0c70882c7a3a5ed4bf39789fb7a9ae1b42b0e4e8"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/water_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_n_color0_4.png",
+      "sha256": "de1c39fd9cdea71b6ed95dd27d797cfba124a00abffab19a5b1075c0677b7f5c"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/water_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_s_color0_4.png",
+      "sha256": "bdf1f03381d2c47d6faa6ca5bcb4237ab3631513045a80ff18a5267ff72ec628"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/water_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_w_color0_4.png",
+      "sha256": "820248495f8d2d3f11fb5d64ac00ce7528593cb19da064d8e4db4f4df4c99c77"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/watershed_e.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_e_color0_3.png",
+      "sha256": "1815c3cd2d0cded2bc3ee90c43139426579adc4a06c605cc3f77a4f27c9c07f7"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/watershed_n.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_n_color0_3.png",
+      "sha256": "b2c01593dd18ee957149b621431a268e0b90fe901e8928ced920fcf6515075ae"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/watershed_s.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_s_color0_3.png",
+      "sha256": "745f0adab4b5e65127be7b83490b165e0bcf2b1aafe3382d1545deb06ce20c62"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/watersheds/04/watershed_w.png",
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_w_color0_3.png",
+      "sha256": "e69435126836013a7fe1016421bea834362da5ec127655ee979b6a30103f6be6"
+    },
+    {
+      "old": "assets/frames/coral_reef_frame.png",
+      "path": "assets/frames/coral_ui_frame_color0_1.png",
+      "sha256": "66c1e60140e7d0eff36d10ad27f58a7bcaed31bd828694a134516fe88643d933"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/background/drafting_paper_1080x1650.png",
+      "path": "art/themes/clockwork_workshop/artwork/background/clockwork_ui_drafting_paper_1080x1650_color0_1.png",
+      "sha256": "1ab9969c8cb1a64b8d9bbbbeded9dca9907adbfd4b478da33fa15b20fac9d6db"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/C01.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_1.png",
+      "sha256": "abe117313618a7c368664da1c43ed71abc87b9e3f4443b22d198b42bf59517c5"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/C02.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_2.png",
+      "sha256": "e80c1979d2cad15a62aff67876dd26e80d65b3ece18c9b7df68ae889f4e2985f"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/C03.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_3.png",
+      "sha256": "074f028e5abcfff10ed43bfab0fee489d1644faa37545ce6747c68af88b2b7cb"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/CH01_link.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_link_color1_1.png",
+      "sha256": "ed42c640e8d6fe5e5daa038b6b26b1a8865aa8fd4d2c81ad22ab35f60d062b7c"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H00_left_shutter.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_left_shutter_color1_1.png",
+      "sha256": "c19b270ca9d08072794807d678b86c0a945457b127265c4cc6ebb4cdb3047ab3"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H00_plain_hatch.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_plain_hatch_color1_1.png",
+      "sha256": "e00ca9144fecb2eff98b45e0234abc0dab92bcb7ffb2a27a38a4db579d19228f"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H00_right_shutter.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_right_shutter_color1_1.png",
+      "sha256": "8afb666dcb253bb21a55ee4b4236d3406d08a6e07ae4f8432ce819c165ed5069"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H01_valve.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_valve_color1_1.png",
+      "sha256": "bfbd84f6cbbb9b76f02dd6c2c24ef6a05112f75f9d777389b91f166f0192f4bd"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H02_rotating.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_rotating_color1_1.png",
+      "sha256": "81b65c27d80d11f471394ef9c29f445371b1e3f3e5752ed3ad7ea57ed039117a"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H03_exhaust.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_exhaust_color1_1.png",
+      "sha256": "7e0a7c8eda64a5f5ecc5ecb92ce8c6d57ffdc955a707be7147cf7a746203a1fa"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H03_opaque_underlay.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_opaque_underlay_color1_1.png",
+      "sha256": "c3e2981904f87139529b7987797430f4c130fd5b3f2adf0385005ac0ca9ad3f6"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H03_shutters_left.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_shutters_left_color1_1.png",
+      "sha256": "7e1312311192ddadf116dd58c7ce419dd230ebba1d3ee175a08c1685e428a423"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/H03_shutters_right.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_shutters_right_color1_1.png",
+      "sha256": "95c317d08ad8bb1a973f21867116b8c65e872ee2e7ea82ae18875915c9a70876"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/J00_chain_junction.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier3_chain_junction_color1_1.png",
+      "sha256": "ee3f0610b2b943c64abb6f40f581e7d3d5f138bcf8c16da3cf0ae5bb46cc8451"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/L01.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_1.png",
+      "sha256": "00b48f4afafe2305035df52da77489d7b7ace3c4f6a19355170d194ab9c657a4"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/L02.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_2.png",
+      "sha256": "ca9b63ddb320c8e68bf05d79c55b13526460c9695a993a39d2e0f9d621d79cc9"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/L03.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_3.png",
+      "sha256": "2c6085b7d0991626d9c03d8e724a71cafc3b7cff51922cb902cb7c0e3bf44664"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/T01.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier1_pipe_color1_1.png",
+      "sha256": "5cd4713fae3b1ce4fa1cedfc7eb5edb0078c964ef5a6bae1634a58de10fbdb1c"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/T02.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier1_pipe_color1_2.png",
+      "sha256": "33fdef10a877c18ad041de7cfd08dc47005d6fdf07d6cd1115504247f04e3dc8"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/copper/T03.png",
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier1_pipe_color1_3.png",
+      "sha256": "e50006e10e05423ac777740987997de55ce5f86bf1f199fd94183b05681a85a3"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/frame.png",
+      "path": "art/themes/clockwork_workshop/artwork/clockwork_ui_frame_color0_1.png",
+      "sha256": "bf963b2aad1544b270034ccb7e13dd845d77d03dfcb4a04c40fa4b07ac5b282c"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/edge_lip_2ui.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_ui_edge_lip_color0_1.png",
+      "sha256": "8a181fc06031b0b344c90d1df6d9ee02074d3f533d9782c612eed1234ab651d7"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/plate_01.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_ui_plate_color0_1.png",
+      "sha256": "f7ac21a5dedecd2bfea6f0a058709abac28d5d3a8ab6ebc33b45a8559f9d2476"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/plate_02.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_ui_plate_color0_2.png",
+      "sha256": "a2eec878e04ccbf3adcee240090943b486433118e90db9350369d7e6d8306ed8"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/sidewall_4ui.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_ui_sidewall_color0_1.png",
+      "sha256": "eb01fa4f3664a9aec2aa2fbc38da448f1479d1707e6ec041d761d8e73ce4bb59"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/steam_0.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_tier3_steam_color0_1.png",
+      "sha256": "7bff5ba5515ec5c7aa22aa6930b5ac47865b0d29a454f410b02ee761caf70b30"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/steam_1.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_tier3_steam_color0_2.png",
+      "sha256": "a140a634b4ad65cb41247eeb95645141b9428b1575ab44b7a46d09a7ab60b854"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/ground/steam_2.png",
+      "path": "art/themes/clockwork_workshop/artwork/ground/clockwork_tier3_steam_color0_3.png",
+      "sha256": "b24e469e5bff151dbd3967c8e98f6053ffa8f3859a7f6581a44982e8d54c5540"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/C01.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier0_core_color2_1.png",
+      "sha256": "ab4b1f29e73ccc1e2b05954206e40e6b89952f31e132debfc584492563e27392"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/C02.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier0_core_color2_2.png",
+      "sha256": "231755d34c2bd559d4f806b2c7edf7c9886fc9fd9aaac5d51b52588ce85b65c9"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/C03.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier0_core_color2_3.png",
+      "sha256": "2cc0a38158d718e99b8c24cc26aa9bc1e3bae5eda368237bceca83db5a373574"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/CH01_link.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_link_color2_1.png",
+      "sha256": "0244102a2a503878b3ee911fc5bc57a0b8b87ef67a317e8e3fd12cf1c70d9045"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H00_left_shutter.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_left_shutter_color2_1.png",
+      "sha256": "9f9aed2c448b312d2e48a24c94657784dc399572adc22111959421f4992af57c"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H00_plain_hatch.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_plain_hatch_color2_1.png",
+      "sha256": "e04a97efa7d55a3ea92d0a58f4e7ed7e6be1b0e7258322ccbf12c512d0730d12"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H00_right_shutter.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_right_shutter_color2_1.png",
+      "sha256": "54f927e78dc5a0df62d4d0f1296d75f37bc2e59ea5ac4214f25497b3e7c34540"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H01_valve.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_valve_color2_1.png",
+      "sha256": "e4e45b75d231e1c5d0a96731e396030a98f4f26e5971749ebe6b8db01fe4f3f4"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H02_rotating.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_rotating_color2_1.png",
+      "sha256": "ed52c2159c4d414f3be7952300f7d38b645be2f0a96517ebb662d0d34bdce7e2"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H03_exhaust.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_exhaust_color2_1.png",
+      "sha256": "e2dcccbe86330fefe4b046f9aa635a8afa14f6d60ba67c3d2418962e45f26290"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H03_opaque_underlay.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_opaque_underlay_color2_1.png",
+      "sha256": "a3f64a5be6cc2660e9a937b363652133a1dc5bc7c8496955dad58b2687b16040"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H03_shutters_left.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_shutters_left_color2_1.png",
+      "sha256": "1868a8ce7b54043fdaa13d6e715b169b9cc78858307d6be2d1abc5059b87945d"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/H03_shutters_right.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_shutters_right_color2_1.png",
+      "sha256": "b79bbae55e7bcfc6b9c80099066a091e34346b59c294fc6c961d8b4b67cfa9cc"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/J00_chain_junction.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier3_chain_junction_color2_1.png",
+      "sha256": "e836772241cdfd5b477a11001d255e5227075630561a2d0313d68626363c84f6"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/L01.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_1.png",
+      "sha256": "af834f2bb795b5697ae7c241998e188867c7b5ebc153e6a7baab620100e7b7df"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/L02.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_2.png",
+      "sha256": "1fa2f155d88f1ef6f8c845fdd5f6568eb62329153120783bd3b6d3d987e1c8c5"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/L03.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_3.png",
+      "sha256": "c0abce690c484d058fc938becb17e63b5f8d0a450fe89e9ae904ec686c4d4d78"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/T01.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier1_pipe_color2_1.png",
+      "sha256": "ce7e92252f3bd36af5179eb2277d85c854897487832b45200894d732ee72e290"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/T02.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier1_pipe_color2_2.png",
+      "sha256": "478c890d38ac847fa35724f5584e8c740b4977ae088772aaa234d53268d89b9b"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/gunmetal/T03.png",
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier1_pipe_color2_3.png",
+      "sha256": "71721e9b9a6bf83ec2f40d9d5323ce4ba59d92007792083c1d0a569dd89d1529"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/pins/plate_pin_copper.png",
+      "path": "art/themes/clockwork_workshop/artwork/pins/clockwork_ui_plate_pin_color1_1.png",
+      "sha256": "5abd36004dd515d9ba881767e354528b899cc41349e7c9740cfb6cfd605d5972"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/artwork/pins/plate_pin_gunmetal.png",
+      "path": "art/themes/clockwork_workshop/artwork/pins/clockwork_ui_plate_pin_color2_1.png",
+      "sha256": "129af35e007e8fd206b240a868301ca2c0e4ce04cfa1e3d4b4ae02c42d010fc0"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_core_E.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_e_color0_1.png",
+      "sha256": "3ab9bff693e0955ef25b98cf41c5eefd43d8e89e92fe974eff7b25e0be219a72"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_core_N.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_n_color0_1.png",
+      "sha256": "8fc49f4fac0bcf695450e8b2e7f451ad73db08665b5e19c57169b08a09892a62"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_core_S.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_s_color0_1.png",
+      "sha256": "acaa5d10b6a29e46e97df4e366ae533ebd0b8245fd2973b6bcded60d80a7c57f"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_core_W.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_w_color0_1.png",
+      "sha256": "d22223335b1ed93c06fd683d26c85f57314219d3919d6a4257983d873006f505"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_edge_E.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_e_color0_1.png",
+      "sha256": "6a44ac02ddebf78cd4fe71eb6ff81b9930dfa896e01905af9c551104b03857f5"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_edge_N.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_n_color0_1.png",
+      "sha256": "bf0ae68eeb66761a9736b5cfca61578f05133a2e76f0f9b4b444b2b2e6e0bea0"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_edge_S.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_s_color0_1.png",
+      "sha256": "73f307f9875ab64033bdb6d3bc8f85521a214d1965cd4812d5c45a998dd760b9"
+    },
+    {
+      "old": "art/themes/clockwork_workshop/masks/T01_from_edge_W.png",
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_w_color0_1.png",
+      "sha256": "2d29009ccb21cff197d0a3f5a1dd9f7ac032e4b74e814fce5a02f5d18e853c33"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_01.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_1.png",
+      "sha256": "11d52bf4c8611b7255b32ec6f3e593c7fe0949e48203c3484b44bbfa65ef1f48"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_02.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_2.png",
+      "sha256": "ff88c3327ee839422c9eb202028e27eac60aafb24f7ae79aba153caece4e0e42"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_03.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_3.png",
+      "sha256": "4a3eab4eabcf0aa02b6e4cc734d3aafe8d52ea3c7eff6d870b23799741ede086"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_04.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_4.png",
+      "sha256": "ba94289bd6c1472b0e8b6a6d7480344f184f005e486368640580ebda55d7a9e3"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_05.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_5.png",
+      "sha256": "f47fdb07ed2302b9d98afbcd6cfa7c0c34d733d9044ff311a5eec3d31ef45243"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/ground/ground_06.png",
+      "path": "art/themes/coral_reef/artwork/ground/coral_ui_ground_color0_6.png",
+      "sha256": "4d52cb27516b488598a11bdca88d31f448e2250acb68fff308d571c2affff22d"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_foot.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_foot_color1_1.png",
+      "sha256": "0ff3247ceb74f06f672b52c3e67306ade98ec52b7ba640cb481ca61b4697c35c"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_oral_disc.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_oral_disc_color1_1.png",
+      "sha256": "b5779aa8d30fc87c6447de238b0c3524d87bb4b543b03ad321d875a177270439"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_0.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_1.png",
+      "sha256": "0f4b0090d945e4952c9c2df057b845dac809855e6d873c6d19a65daa2ac6f05f"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_1.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_2.png",
+      "sha256": "a74163e8ebfc6a08d20cc0cb0a9ccadb29648b509cb1375288e0be65e7cc8128"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_2.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_3.png",
+      "sha256": "655f89af71f861fadca13bb8934fd66485d8b3801faef39817511085ddfbf7f8"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_3.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_4.png",
+      "sha256": "22fd1493b042b54f5b40ddd98c2f6f3415e612b019c15862a910c14e6094ef8d"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_4.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_5.png",
+      "sha256": "0f2bf9ca6e2500ee8350555d176f850c6d43a26385d526f7c4dd235e698ade6a"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_5.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_6.png",
+      "sha256": "512588c606946de0811ce9ab25c281104e54cfacb06bb8e2d94d62cc1fb9d256"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_6.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_7.png",
+      "sha256": "aa769e27e52ca6c6dea96d59fda35f61a523ec27b304a23fdc82f94f31bbe60c"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/anemone_region_7.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_anemone_region_color1_8.png",
+      "sha256": "55b657209c3a2cf6aa47ff608f527e705ec47138e47c55ad3dbb0018ee00ddb2"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/arm_e.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_e_color1_1.png",
+      "sha256": "07f46ba3002ce6ef43c9b262a3b9329a0d76089e53dfd27eebce531eab8c790b"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/arm_n.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_n_color1_1.png",
+      "sha256": "7597e7ccb34ee3a66507d04bfe4f2b3ef1d93bf873462061c469282d4b86afd5"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/arm_s.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_s_color1_1.png",
+      "sha256": "25b2c2102604d40a2282873ff4038ceb43fa657d0d644000ed5da7397ef24338"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/arm_w.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_w_color1_1.png",
+      "sha256": "eda1cd83a571181fbad85c3b868758a086d24e4e2cf51fc683a4fbf00cdc70f7"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/colony_body.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_body_color1_1.png",
+      "sha256": "2042e9d2cff641443e5fe9167f5ee81f717638b83f90071054ac543d78322c35"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/colony_fingers_nw.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_nw_color1_1.png",
+      "sha256": "f42b8413fcf00b257d58fa472f94085034c5b3e5b06ca63f00c22ccf2f9abc27"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/colony_fingers_se.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_se_color1_1.png",
+      "sha256": "848b14052b2721690e5712c9e76d903a77a41d5b4b72b0fd2df23809cc2082cb"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/colony_fold_ne.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_ne_color1_1.png",
+      "sha256": "35fc4904edb1cdfcdad4257649162ed1736c19dd0d7de9a120849278d0223a19"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/colony_fold_sw.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_sw_color1_1.png",
+      "sha256": "5152e5571912e35e4e22966f0ca688d64701c758af29b5f1e00e4abb9c595c7a"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/core.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier0_core_color1_1.png",
+      "sha256": "55483ccdf240adbc7690c93bcab2ba8713373efc991e887d6780457f4033fa6b"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_e_0.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_1.png",
+      "sha256": "27ef2088cb5205b71c2c564a18bb193f3b13a5ba11cd49603b183d17f74dc183"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_e_1.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_2.png",
+      "sha256": "1636868aa6fea67df859020877501256ecdadd92ad4064692d580ab3774ff058"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_n_0.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_1.png",
+      "sha256": "b76e82df9aad96e90d2de2f4e5b70cd8fcdbbf2015cc48983cd0fc4fb6d36e2d"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_n_1.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_2.png",
+      "sha256": "a13a254575cc93cdf36e7e725c7cd8777a87a22bb80dd229042faff60f2585c7"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_s_0.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_1.png",
+      "sha256": "a29268da33802f7c34b5eab4f4d49f6a427dc09365857ce2a2ebedc4d0fbf835"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_s_1.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_2.png",
+      "sha256": "e2ee821b5d6300d4971553a6507454947a87e7a4edc30778dbe64bbfc7e2a7b8"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_w_0.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_1.png",
+      "sha256": "e8fb28e9fcc452eb4a90bf0bda0ded840fe48bab61fb84c662209f1d385837b0"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/fingers_w_1.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_2.png",
+      "sha256": "22b9c366c9c6988b57d97e913c5678c4bb1244b83ccc11099106228e5b583456"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/junction_es.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_es_color1_1.png",
+      "sha256": "c23a8e6f214cb8fc46f5cf986fca92216304d0ecaec5ec26d1aae83e7246a2d8"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/junction_ne.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_ne_color1_1.png",
+      "sha256": "ae469b73d65d6ed6b7013864f04a35137122998d8a1538433d708674e6e51f8c"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/junction_sw.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_sw_color1_1.png",
+      "sha256": "f283fde576a0c1ecc35e90135cf95641ec795419fc3137d7fb098f57cd3a7571"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/salmon/junction_wn.png",
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_wn_color1_1.png",
+      "sha256": "6c009f45b0f20da0984b57f624a6f291c7732e6e54b08bd4b06839d046c08620"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_foot.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_foot_color2_1.png",
+      "sha256": "76235ffb5f832a25bc6842e724469ed7c2e678ee8393a4cca631e4df56d045ee"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_oral_disc.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_oral_disc_color2_1.png",
+      "sha256": "5d153e5088e447a7b746905cdb240178aa0247c82b6d5402145c38bfaaa82a39"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_0.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_1.png",
+      "sha256": "f77f16f4631b51260f889cc00043d41668e3fe7184f421a941fe7c1803ceedbf"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_1.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_2.png",
+      "sha256": "81dc887b2145cbb61785b6361a4f65d3a9c90060292b10449986ae186c841efe"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_2.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_3.png",
+      "sha256": "d484d4ec2d7cdcd2d0b2a710b2ddf14b564b1ece5d37e980a87dd33d8458d0cd"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_3.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_4.png",
+      "sha256": "bdb656b7cc7ba78cf2732d86b912c218744919ac7de06b16b25d73100ab93c27"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_4.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_5.png",
+      "sha256": "4ef59c6839c9d47e992718c011f2eec570ad41dceb1b6029f48b250b1f7f0e7f"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_5.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_6.png",
+      "sha256": "2bceb9db47f63637235339067ff599a43db4420886a1d282e39ccf63fec155ab"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_6.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_7.png",
+      "sha256": "2c2fda1a522584192861e537533b3c1e7d2cd4323882c3f5779fbc8209f765c6"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/anemone_region_7.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_anemone_region_color2_8.png",
+      "sha256": "3f9faa4bf00db815a236bdfd35dee31ed9b80f44acbe031e1b33747841460e02"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/arm_e.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_e_color2_1.png",
+      "sha256": "7030a848cc363a3782e450dca737dcf8a4159910e68fdde54ea0ded4a5b60511"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/arm_n.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_n_color2_1.png",
+      "sha256": "bfa66707c349436b8059a3ae2d5b6f72eb79f85d33cb6c7b6039eb9d13f8b1c5"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/arm_s.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_s_color2_1.png",
+      "sha256": "e3117e6976a6ba755cd53e902f800afebae64cb22f2e80a49d1ce02c75a91ee6"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/arm_w.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_w_color2_1.png",
+      "sha256": "e6e8644cc6e7f5eb6640308b0e47441dbdc0e19ffe89848fd7dd99a4d2674df9"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/colony_body.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_body_color2_1.png",
+      "sha256": "87e81edeb205c5b23abaad8ff23c56949c684755061775b3c9f3dcfa600e73d2"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/colony_fingers_nw.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_nw_color2_1.png",
+      "sha256": "e051567631d9664570f1127b29e18b76f0c27fe07eae098ff3a8ffeb3cfb761f"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/colony_fingers_se.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_se_color2_1.png",
+      "sha256": "789bae7fa463c4e6bdff1a5412120bf99aa7b9a078e7641de8523d7a4e5a2636"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/colony_fold_ne.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_ne_color2_1.png",
+      "sha256": "425c35a4d70f708a6da6ba69948024ee0532bae50df88b082931c6baa9db3752"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/colony_fold_sw.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_sw_color2_1.png",
+      "sha256": "f293eaa4ac9b704566047dcf322c52944ebc97695174742522a1cb2716182444"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/core.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier0_core_color2_1.png",
+      "sha256": "af71a99a33b3e351ebc5f53536439ed5427b509eef98a0d6dafc5b05c983f0af"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_e_0.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_1.png",
+      "sha256": "25b69e7accfa42240565522ceba0253403f12622348fe0854a2aeb4b24761da9"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_e_1.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_2.png",
+      "sha256": "5325aa964ad6af9a0deb16affb6e53afe47d93a81d0b0eafc47e7fda81efa80f"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_n_0.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_1.png",
+      "sha256": "6b46e0294d914667f26c1b71d12400cd0a61419ee3508f02339de78e3b2942ec"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_n_1.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_2.png",
+      "sha256": "1b993557fc58c24000333c8fdd6de5c6293159b210953ea2106579a347cbeba9"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_s_0.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_1.png",
+      "sha256": "7a58d00b6623a022e7774a45c167d4f8c24d3602c9510a107ee63fe9fa3e3cb5"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_s_1.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_2.png",
+      "sha256": "6886b74aff00078750cb900e5793254b66f32fb22d721ab15d4dbd483cd7054f"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_w_0.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_1.png",
+      "sha256": "5310d1cdbb8b9dfa0fa88fd3af7a436fd8841ba7154c77cbb94e08da7a6b2c21"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/fingers_w_1.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_2.png",
+      "sha256": "e63730f08feeb46968281a33ece2de0926a72d864d517f4568bcd5da83df9ac5"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/junction_es.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_es_color2_1.png",
+      "sha256": "3c7df48da74ea2eebccd2a4e85bfe39860cd6353a417f6eca830a8ab4a582474"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/junction_ne.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_ne_color2_1.png",
+      "sha256": "bb53fe5f75eeb4229c5565ae21ca0a083e4b1fd876dbffe737cd78362e571efc"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/junction_sw.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_sw_color2_1.png",
+      "sha256": "bb4c61a00e624896ef9d61fd4634c260b35d71bd9c0e13734739b0fb0e0b25ec"
+    },
+    {
+      "old": "art/themes/coral_reef/artwork/turquoise/junction_wn.png",
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_wn_color2_1.png",
+      "sha256": "fa0a68b0b9865120e956ef39a6a20bf78628320c7885ced78996d158af70697a"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_foot.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_foot_color0_1.png",
+      "sha256": "731ccda2eb03e4b8882b90af4241a2ab19af11c610702d35f3a52885071f0f81"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_oral_disc.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_oral_disc_color0_1.png",
+      "sha256": "fe195e461bffce15e79518d5d072d02056929642db005958df5aa2d55fc90b9c"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_0.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_1.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_1.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_2.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_2.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_3.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_3.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_4.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_4.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_5.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_5.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_6.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_6.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_7.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/anemone_region_7.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_anemone_region_color0_8.png",
+      "sha256": "4ff95a79e78e5b77b27db5b9a62ca7e00b7d2339c60aeda61daaf04903c82c1e"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/arm_e.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_e_color0_1.png",
+      "sha256": "a0c401f47f390c8371886a5155043560e8caae5d949f8b5b16ffcf1c5a60c900"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/arm_n.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png",
+      "sha256": "64d39de7c7f91716d7250f7d30c8fca02074b5412315cdd260e6a865c3ac9091"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/arm_s.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_s_color0_1.png",
+      "sha256": "b8e6053b363f7df5fa65e642478ce854f56fa12ce91d1a5727dabe6e29c30b44"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/arm_w.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_w_color0_1.png",
+      "sha256": "bd051d9cb524a397acdc1315e64083f7ef03773ceb0626f651cacaea1b96ea2b"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/colony_body.png",
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_body_color0_1.png",
+      "sha256": "1e34f97b5af91cded2b89286420ffbaa58f85f89cc8889f77536887744dfe6f7"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/colony_fingers_nw.png",
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_nw_color0_1.png",
+      "sha256": "b9db12b1f9968bbab03002d005107a6817145f5bb46d4a57987bd4c7f9ccd916"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/colony_fingers_se.png",
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_se_color0_1.png",
+      "sha256": "984a73ac9bb17ac3311ac4cbc691c9619f4c797b500de60c14e91f162ea7286d"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/colony_fold_ne.png",
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_ne_color0_1.png",
+      "sha256": "8bb014b302bdcfb2dc09b26693b801e8f86c1b96991113280bd55ea0a2a430b5"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/colony_fold_sw.png",
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_sw_color0_1.png",
+      "sha256": "1b4f3b6ab66465f452f05623a431181bda065129150a82c0f762b20e38fb7a6c"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/core.png",
+      "path": "art/themes/coral_reef/masks/coral_tier0_mask_core_color0_1.png",
+      "sha256": "3dd5d20e1ba30bf05eced7f5776e1d5194efb9496dd704fe2f8c4e7f1617faa0"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_e_0.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_1.png",
+      "sha256": "d5bb467d188ab4c95d1c823052cd1c9818d059baa78922bbf147175a38021847"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_e_1.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_2.png",
+      "sha256": "abf9696a42b21e0564ba6d71320a2a0f09e3fad577660728ae3de2e15afc128f"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_n_0.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_1.png",
+      "sha256": "8b15788c9f8f6ec26bb1092307d3622e5497ed65a7bf41b4bc7a644513ce58a2"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_n_1.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_2.png",
+      "sha256": "d0905864d542b0d15d3440420b5d4ae4fe95e9599dc6b5c30786f64cb7bed42d"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_s_0.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_1.png",
+      "sha256": "5be47797aeaeff7fc9dec21dd05457a320a6f6ffa7d34f7872b5258a001824e7"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_s_1.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_2.png",
+      "sha256": "a8ab7068b47b442f92c7ee90387dbff9729691fd805608deac55e96c34ed5a63"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_w_0.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_1.png",
+      "sha256": "5f56f41cf227e89247035997ba24789b36c5c7dc3fda3c3937e9ecb538df260c"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/fingers_w_1.png",
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_2.png",
+      "sha256": "d1ef555b41a24de5eae85e33c211ae127312d5ea066558b01cff3bedbcb4271a"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/junction_es.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_es_color0_1.png",
+      "sha256": "f73b1ae3885c43b3db8d841a0b37c2c5afd10911823c24c3a3e0f31491b560b6"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/junction_ne.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_ne_color0_1.png",
+      "sha256": "3955b830b1946413d9cf765fc29dd2d3cbadd9541e5202bbed99f2dea8de9179"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/junction_sw.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_sw_color0_1.png",
+      "sha256": "9a1c32327977b16e629d75ba5afa3aaf29800e67c1fcf2347e236cc239cf5047"
+    },
+    {
+      "old": "art/themes/coral_reef/masks/junction_wn.png",
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_wn_color0_1.png",
+      "sha256": "45c85ed73bc291155f7bf1f9d36569dfbd60b224cb9911b9bf4c89c51995288f"
+    },
+    {
+      "old": "art/themes/vines/artwork/vines_frame.png",
+      "path": "art/themes/vines/artwork/vines_ui_frame_color0_1.png",
+      "sha256": "b30070d8c920a1355f44bd51911c59186223ecf91db9fa64a329d65060aeed71"
+    },
+    {
+      "old": "art/themes/vines/artwork/vines_ui_background.png",
+      "path": "art/themes/vines/artwork/vines_ui_ui_background_color0_1.png",
+      "sha256": "1f7308e54ce261d099907539089497dcef780297f7eb11baffbaf582d81b98ca"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/architecture/stone_lantern_2x2_visual.png",
+      "path": "art/themes/zen_garden/artwork/architecture/zen_tier2_stone_lantern_color0_1.png",
+      "sha256": "fd98f89858b63c827009202f5c6f03b6136829b49f0402e6f58a3eed58e8f3c4"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/centers/one_flat_top_stone_256.png",
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png",
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/centers/stepping_stone_endpoint_core_256.png",
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_stepping_stone_endpoint_core_color0_1.png",
+      "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/centers/tall_bamboo_behind_cairn_visual.png",
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png",
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/centers/three_stone_cairn_256.png",
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_three_stone_cairn_color0_1.png",
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/cores/stepping_stone_core_256.png",
+      "path": "art/themes/zen_garden/artwork/cores/zen_tier0_stepping_stone_core_color0_1.png",
+      "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/ground/sand_ground_256.png",
+      "path": "art/themes/zen_garden/artwork/ground/zen_ui_sand_ground_color0_1.png",
+      "sha256": "e09ebd324fe150aaa28b676cd57afe9447306459794ce26df01d7c07de42a739"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/rock_formations/rock_01_peak_and_low_bedrock_visual.png",
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_1.png",
+      "sha256": "e7f6018dd35b15063776b631c0de6aa86f5afbf34361fa9bea4a295c7f67d7e3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/rock_formations/rock_02_peak_and_low_bedrock_visual.png",
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_2.png",
+      "sha256": "328c332e83d4dbe1159274658416443bf892e1be35f97759735df2d019a09d14"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png",
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_3.png",
+      "sha256": "d97bc2f1f0362b454d4483f79cc14a76d5ad5c454d593825618b96b0029544e4"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png",
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_4.png",
+      "sha256": "0503294a7426385674e89b950aead11990a2b8525077c1665a4a05ed3117ca15"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/01_shore_sedge.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_1.png",
+      "sha256": "6fe568f7b2b4f344ddc2f1456c9f86d247e7936e5b387dfbf86978faaa454ca3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/02_shore_fern.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_2.png",
+      "sha256": "e0b09bc0929b74507304a79d26293a8b5a657b3aead400fbb66774d342926da3"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/03_shore_herbs.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_3.png",
+      "sha256": "4012cf1492cfb15a5579e1bdd3009748fd9d6873dcaed61a6c35828dafb249e2"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/04_shore_rush.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_4.png",
+      "sha256": "dfe32f7c383aeb144deed89658e94b18b86b770cb937cf518fee7086d1df7b24"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/05_shore_clover.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_5.png",
+      "sha256": "2ef7c676d7a0e442bb096523d315d8c23bb2fe6e37ad0971fe3596bced4a55f7"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/shoreline_plants/06_shore_reeds.png",
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_6.png",
+      "sha256": "39579219aca72cfe42249fbde6895861da14e31cae847619344d1c1b9fb70678"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/stone_paths/half_stone_E_256.png",
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_e_color0_1.png",
+      "sha256": "a2e509ae525ecbe2be0b6b57dcedde8d74f6f35b6b858e8e974c7fea5a71a012"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/stone_paths/half_stone_N_256.png",
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_n_color0_1.png",
+      "sha256": "359c461a64ae2d9dd6443442138fa3597d09de1489fd553c87a71dfef7fab685"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/stone_paths/half_stone_S_256.png",
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_s_color0_1.png",
+      "sha256": "96116c83b6346cc0f25fdd144331395fb224cc770b9e9b793c455b4d43744dc2"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/stone_paths/half_stone_W_256.png",
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_w_color0_1.png",
+      "sha256": "e53fed8eb85259f7fa2172243be6dbb012a14e012f4f729a2051e32f7f01a6bf"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/autumn_red_long_03.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_1.png",
+      "sha256": "8ceb57b64ebb5e2c345d3e57c72032d84583984029a5081ee4ea6495fb4ac52d"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/autumn_red_medium_02.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_2.png",
+      "sha256": "16ece47af718fb59065c3bb10b0a3f9b31d2297f821e18e06af30da329c86ee1"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/autumn_red_short_01.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_3.png",
+      "sha256": "5a0a5efde1a894632a8a2620210d5aa13bf74ac054243b1b69dca63474b042f6"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/spring_sakura_long_03.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_1.png",
+      "sha256": "58f82edbca3b63866c3743aeeb79d8d333c56086b93e0ec8ee2d81635e89bf08"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/spring_sakura_medium_02.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_2.png",
+      "sha256": "1bc2a7f7e36afc2b422aff979ec980de02fcdaa5dcf5f93687bca979b3444314"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/summer_green_long_02.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_1.png",
+      "sha256": "0ed1b9fabed74efd6941711773b8b622697c2f6e6de443f016b46a641952ab66"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/individual_first_set/summer_green_short_01.png",
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_2.png",
+      "sha256": "6086036ad5c67d6c7c59338d1ac293132bdf747bf6646c3c6b5c322fba97d807"
+    },
+    {
+      "old": "art/themes/zen_garden/artwork/trees/winter/winter_bare_branches_light_snow_3x3_sheet.png",
+      "path": "art/themes/zen_garden/artwork/trees/winter/zen_tier3_tree_winter_color0_1.png",
+      "sha256": "a8d3c49e8d18d5e524c37d64c6dd8b3ecd1957d173031bb4fcd7be411c2b576b"
+    },
+    {
+      "old": "art/themes/vines/artwork/tier2/vines_tier2_butterfly_color1_basic.png",
+      "path": "art/themes/vines/artwork/tier3/vines_tier3_butterfly_color1_basic.png",
+      "sha256": "d4f7b8e493c0fd6012d1fac214bc1f9368382592a689bce710f098327a8b6daa"
+    },
+    {
+      "old": "art/themes/vines/artwork/tier2/vines_tier2_butterfly_color2_basic.png",
+      "path": "art/themes/vines/artwork/tier3/vines_tier3_butterfly_color2_basic.png",
+      "sha256": "cfbf73dc97a7977fe166a5f403d80cb957d5b7c60cef8029a5155ee06b114f13"
+    }
+  ]
+}

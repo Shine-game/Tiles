@@ -2,11 +2,11 @@
   "engine": "Godot 4.6.3",
   "artwork": [
     {
-      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color1_basic.png",
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.png",
       "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
     },
     {
-      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_Tjoint_color2_basic.png",
+      "image": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.png",
       "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
     },
     {

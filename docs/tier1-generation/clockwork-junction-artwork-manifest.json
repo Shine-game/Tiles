@@ -17,14 +17,14 @@
     "shape": "t",
     "color": "copper",
     "source": "H02_rotating.png",
-    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color1_basic.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color1_basic.png",
     "sha256": "81b65c27d80d11f471394ef9c29f445371b1e3f3e5752ed3ad7ea57ed039117a"
   },
   {
     "shape": "t",
     "color": "gunmetal",
     "source": "H02_rotating.png",
-    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_Tjoint_color2_basic.png",
+    "image": "art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color2_basic.png",
     "sha256": "ed52c2159c4d414f3be7952300f7d38b645be2f0a96517ebb662d0d34bdce7e2"
   },
   {

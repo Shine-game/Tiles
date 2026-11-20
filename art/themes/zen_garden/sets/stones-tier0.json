@@ -11,7 +11,7 @@
         "core": {
           "asset": {
             "provider": "texture",
-            "path": "../artwork/cores/stepping_stone_core_256.png"
+            "path": "../artwork/cores/zen_tier0_stepping_stone_core_color0_1.png"
           },
           "pivot_px": [
             128,

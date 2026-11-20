@@ -407,7 +407,7 @@
     }
   ],
   "authoring": {
-    "source": "stone_10.png",
+    "source": "half_stone_S_256.png",
     "notes": [
       "255x255 verified; source filename _256 is not a dimension declaration.",
       "Original 30 exterior candidate anchors; runtime must check the selected texture alpha.",

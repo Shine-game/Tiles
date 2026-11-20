@@ -14,11 +14,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_foot.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_foot_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_foot.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_foot_color2_1.png"
               }
             }
           },
@@ -40,7 +40,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_foot.png"
+                "path": "../masks/coral_tier3_mask_anemone_foot_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -58,11 +58,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_0.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_0.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_1.png"
               }
             }
           },
@@ -90,7 +90,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_0.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -108,11 +108,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_1.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_2.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_1.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_2.png"
               }
             }
           },
@@ -140,7 +140,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_1.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_2.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -158,11 +158,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_2.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_3.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_2.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_3.png"
               }
             }
           },
@@ -190,7 +190,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_2.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_3.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -208,11 +208,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_3.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_4.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_3.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_4.png"
               }
             }
           },
@@ -240,7 +240,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_3.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_4.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -258,11 +258,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_4.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_5.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_4.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_5.png"
               }
             }
           },
@@ -290,7 +290,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_4.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_5.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -308,11 +308,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_5.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_6.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_5.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_6.png"
               }
             }
           },
@@ -340,7 +340,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_5.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_6.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -358,11 +358,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_6.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_7.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_6.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_7.png"
               }
             }
           },
@@ -390,7 +390,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_6.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_7.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -408,11 +408,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_region_7.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_region_color1_8.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_region_7.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_region_color2_8.png"
               }
             }
           },
@@ -440,7 +440,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_region_7.png"
+                "path": "../masks/coral_tier3_mask_anemone_region_color0_8.png"
               },
               "purpose": "reveal",
               "channel": "r",
@@ -458,11 +458,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/anemone_oral_disc.png"
+                "path": "../artwork/salmon/coral_tier3_anemone_oral_disc_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/anemone_oral_disc.png"
+                "path": "../artwork/turquoise/coral_tier3_anemone_oral_disc_color2_1.png"
               }
             }
           },
@@ -490,7 +490,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/anemone_oral_disc.png"
+                "path": "../masks/coral_tier3_mask_anemone_oral_disc_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",

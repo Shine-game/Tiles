@@ -26,19 +26,19 @@
             "variants": {
               "0": {
                 "provider": "texture",
-                "path": "../artwork/rock_formations/rock_01_peak_and_low_bedrock_visual.png"
+                "path": "../artwork/rock_formations/zen_tier2_rock_color0_1.png"
               },
               "1": {
                 "provider": "texture",
-                "path": "../artwork/rock_formations/rock_02_peak_and_low_bedrock_visual.png"
+                "path": "../artwork/rock_formations/zen_tier2_rock_color0_2.png"
               },
               "2": {
                 "provider": "texture",
-                "path": "../artwork/rock_formations/rock_03_peak_and_low_bedrock_visual.png"
+                "path": "../artwork/rock_formations/zen_tier2_rock_color0_3.png"
               },
               "3": {
                 "provider": "texture",
-                "path": "../artwork/rock_formations/rock_04_peak_and_low_bedrock_visual.png"
+                "path": "../artwork/rock_formations/zen_tier2_rock_color0_4.png"
               }
             }
           },

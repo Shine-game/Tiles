@@ -30,8 +30,8 @@ func run():
    root.add_child(visuals)
    visuals.reconcile(model,true,false)
    for entry in visuals.registry.values():
-    if entry.event.id=="L01":check(entry.node.texture.resource_path==Model.ROOT+"artwork/"+("gunmetal" if color==1 else "copper")+"/L01.png","Wheel uses opposite metal")
-    if entry.event.id=="H00_plain_hatch":check(entry.node.texture.resource_path==Model.ROOT+"artwork/"+("copper" if color==1 else "gunmetal")+"/H00_plain_hatch.png","Cap retains original metal")
+    if entry.event.id=="L01":check(entry.node.texture.resource_path==Model.ROOT+"artwork/"+("gunmetal" if color==1 else "copper")+("/clockwork_tier2_wheel_color%d_1.png" % (3-color)),"Wheel uses opposite metal")
+    if entry.event.id=="H00_plain_hatch":check(entry.node.texture.resource_path==Model.ROOT+"artwork/"+("copper" if color==1 else "gunmetal")+("/clockwork_tier2_plain_hatch_color%d_1.png" % color),"Cap retains original metal")
     if entry.event.id=="H00_plain_hatch":check(entry.node.scale==Vector2(1.5,1.5),"Initial and terminal plain caps scaled 150 percent")
    for entry in visuals.chain_nodes.values():
     for strip in entry.strips:check(is_equal_approx(absf(strip.position.y+strip.size.y/2),45.0),"Chain run touches enlarged cap radius")

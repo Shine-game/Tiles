@@ -14,11 +14,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/salmon/colony_body.png"
+                "path": "../artwork/salmon/coral_tier2_colony_body_color1_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/turquoise/colony_body.png"
+                "path": "../artwork/turquoise/coral_tier2_colony_body_color2_1.png"
               }
             }
           },
@@ -50,7 +50,7 @@
             "reveal": {
               "asset": {
                 "provider": "texture",
-                "path": "../masks/colony_body.png"
+                "path": "../masks/coral_tier2_mask_colony_body_color0_1.png"
               },
               "purpose": "reveal",
               "channel": "r",

@@ -1,0 +1,16 @@
+{
+  "schema": "tiles.junction-sprite.v1",
+  "image": "clockwork_tier1_tjoint_color2_basic.png",
+  "center": [
+    255.5,
+    255.5
+  ],
+  "scale": 5.0,
+  "rotation": {
+    "range_deg": [
+      0,
+      360
+    ]
+  },
+  "color_role": "original"
+}

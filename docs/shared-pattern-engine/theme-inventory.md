@@ -38,7 +38,7 @@ are source-package metadata, not the current runtime verification status.
 - **Tier 1 centerpieces:** reuse that multipart assembly at endpoints, bends, Ts
   and crosses. `has_wheel()` suppresses it only for masks 5/10. No separate shape
   PNGs are required to retain the current rule.
-- **Vines and joins:** `T01` half-tube with `masks/T01_from_core_E.png`, quarter
+- **Vines and joins:** `T01` half-tube with `masks/clockwork_tier1_mask_from_core_e_color0_1.png`, quarter
   turns and two-front arrival; `T03` coupling at each shared boundary. `T02`
   tube-to-wheel collars exist in the source package but are intentionally unused.
 - **Straight-run decoration gap:** `T03` is a required boundary join today, not a
@@ -78,14 +78,14 @@ dependency on Coral-specific scheduling and manifest data.
 - **Tier 1 vine:** `zen_geometry.gd` generates canonical isolated, endpoint,
   straight, bend, T and cross motifs with four exact edge grooves. Geometry and
   relief textures are procedural providers; a new engine must preserve them.
-- **Tier 1 centers:** `one_flat_top_stone_256.png` for bends,
-  `three_stone_cairn_256.png` for Ts, and
-  `tall_bamboo_behind_cairn_visual.png` for crosses. Stages composite on a fixed
+- **Tier 1 centers:** `zen_tier2_one_flat_top_stone_color0_1.png` for bends,
+  `zen_tier2_three_stone_cairn_color0_1.png` for Ts, and
+  `zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png` for crosses. Stages composite on a fixed
   canvas and persist through topology changes. Endpoints currently have no
   center decoration. Reusing the bend stone is an available candidate, not an
   already approved endpoint assignment.
 - **Straight-run decoration:** no separate role/art mapping is declared.
-- **Tier 2:** `stone_lantern_2x2_visual.png`, with pedestal-centered pivot at half
+- **Tier 2:** `zen_tier2_stone_lantern_color0_1.png`, with pedestal-centered pivot at half
   the original displayed height. Rake pattern completes first and stays beneath
   the lantern. Ordinary center stones are suppressed in supported formations.
 - **Tier 3:** `zen_trees.gd`, `zen_tree_art.gd`, `zen_tree_trunk.gd` and branch/trunk
@@ -100,7 +100,7 @@ exact live canopy capture. Do not reconstruct the canopy from the final board on
 
 ### Stepping-stone family (logical color 2)
 
-- **Tier 0:** `cores/stepping_stone_core_256.png`.
+- **Tier 0:** `cores/zen_tier0_stepping_stone_core_color0_1.png`.
 - **Tier 1 vine:** four `stone_paths/half_stone_N/E/S/W_256.png` modules at 70%
   scale, anchored at boundary midpoints so opposing halves still meet. They are
   explicit directional assets, not copies of one rotated canonical sprite.

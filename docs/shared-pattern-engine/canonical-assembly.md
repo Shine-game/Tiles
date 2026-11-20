@@ -38,7 +38,7 @@ field. Junctions load the retained `junction_ne.png` mask in every direction.
 | Coral arms | One `arm_n.png` per color; one generated canonical reveal field |
 | Coral junctions | One `junction_ne.png` per color; one retained NE mask |
 | Clockwork ordinary tubes/couplings | Existing canonical T01/T03 images per metal; shared rotation; T01's one east-facing field |
-| Zen stepping-stone paths | One `half_stone_N_256.png`; shared edge placement, rotation and declared S/W tangential mirroring |
+| Zen stepping-stone paths | One `zen_tier1_half_stone_n_color0_1.png`; shared edge placement, rotation and declared S/W tangential mirroring |
 | Zen rake shapes | One procedural geometry/relief per canonical topology shape; shared rotation to all orientations |
 | Vines | One procedural curve/foliage implementation follows the connection direction; no compass sprite pack |
 
@@ -60,8 +60,8 @@ theme or a pending artwork migration.
 ## Cleanup and appearance
 
 See [Coral's cleanup list](../coral-arm-assets.md). Zen no longer loads
-`artwork/stone_paths/half_stone_E_256.png`, `half_stone_S_256.png` or
-`half_stone_W_256.png`; their matching import files may also be removed. Retain N.
+`artwork/stone_paths/zen_tier1_half_stone_e_color0_1.png`, `zen_tier1_half_stone_s_color0_1.png` or
+`zen_tier1_half_stone_w_color0_1.png`; their matching import files may also be removed. Retain N.
 Original source-package hashes are historical provenance and are not edited.
 
 The Coral appearance revision is `2.2` (canonical junction growth field), and Zen

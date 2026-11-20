@@ -17,7 +17,7 @@
         "core": {
           "asset": {
             "provider": "texture",
-            "path": "../artwork/centers/stepping_stone_endpoint_core_256.png"
+            "path": "../artwork/centers/zen_tier2_stepping_stone_endpoint_core_color0_1.png"
           },
           "pivot_px": [
             128,
@@ -36,7 +36,7 @@
         "half": {
           "asset": {
             "provider": "texture",
-            "path": "../artwork/stone_paths/half_stone_N_256.png"
+            "path": "../artwork/stone_paths/zen_tier1_half_stone_n_color0_1.png"
           },
           "pivot_px": [
             128,

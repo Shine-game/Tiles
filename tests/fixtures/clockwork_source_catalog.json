@@ -2,8 +2,8 @@
   "components": {
     "C01": {
       "assets": {
-        "copper": "artwork/copper/C01.png",
-        "gunmetal": "artwork/gunmetal/C01.png"
+        "copper": "artwork/copper/clockwork_tier0_core_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier0_core_color2_1.png"
       },
       "canvas": [
         256,
@@ -24,8 +24,8 @@
     },
     "C02": {
       "assets": {
-        "copper": "artwork/copper/C02.png",
-        "gunmetal": "artwork/gunmetal/C02.png"
+        "copper": "artwork/copper/clockwork_tier0_core_color1_2.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier0_core_color2_2.png"
       },
       "canvas": [
         256,
@@ -46,8 +46,8 @@
     },
     "C03": {
       "assets": {
-        "copper": "artwork/copper/C03.png",
-        "gunmetal": "artwork/gunmetal/C03.png"
+        "copper": "artwork/copper/clockwork_tier0_core_color1_3.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier0_core_color2_3.png"
       },
       "canvas": [
         256,
@@ -68,8 +68,8 @@
     },
     "T01": {
       "assets": {
-        "copper": "artwork/copper/T01.png",
-        "gunmetal": "artwork/gunmetal/T01.png"
+        "copper": "artwork/copper/clockwork_tier1_pipe_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier1_pipe_color2_1.png"
       },
       "canvas": [
         256,
@@ -101,12 +101,12 @@
         "length": 128,
         "reverse": true
       },
-      "growth_field": "masks/T01_from_core_E.png"
+      "growth_field": "masks/clockwork_tier1_mask_from_core_e_color0_1.png"
     },
     "T02": {
       "assets": {
-        "copper": "artwork/copper/T02.png",
-        "gunmetal": "artwork/gunmetal/T02.png"
+        "copper": "artwork/copper/clockwork_tier1_pipe_color1_2.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier1_pipe_color2_2.png"
       },
       "canvas": [
         256,
@@ -133,8 +133,8 @@
     },
     "T03": {
       "assets": {
-        "copper": "artwork/copper/T03.png",
-        "gunmetal": "artwork/gunmetal/T03.png"
+        "copper": "artwork/copper/clockwork_tier1_pipe_color1_3.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier1_pipe_color2_3.png"
       },
       "canvas": [
         256,
@@ -162,8 +162,8 @@
     },
     "L01": {
       "assets": {
-        "copper": "artwork/copper/L01.png",
-        "gunmetal": "artwork/gunmetal/L01.png"
+        "copper": "artwork/copper/clockwork_tier2_wheel_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_wheel_color2_1.png"
       },
       "canvas": [
         512,
@@ -184,8 +184,8 @@
     },
     "L02": {
       "assets": {
-        "copper": "artwork/copper/L02.png",
-        "gunmetal": "artwork/gunmetal/L02.png"
+        "copper": "artwork/copper/clockwork_tier2_wheel_color1_2.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_wheel_color2_2.png"
       },
       "canvas": [
         512,
@@ -206,8 +206,8 @@
     },
     "L03": {
       "assets": {
-        "copper": "artwork/copper/L03.png",
-        "gunmetal": "artwork/gunmetal/L03.png"
+        "copper": "artwork/copper/clockwork_tier2_wheel_color1_3.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_wheel_color2_3.png"
       },
       "canvas": [
         512,
@@ -228,8 +228,8 @@
     },
     "H00_plain_hatch": {
       "assets": {
-        "copper": "artwork/copper/H00_plain_hatch.png",
-        "gunmetal": "artwork/gunmetal/H00_plain_hatch.png"
+        "copper": "artwork/copper/clockwork_tier2_plain_hatch_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_plain_hatch_color2_1.png"
       },
       "canvas": [
         512,
@@ -250,8 +250,8 @@
     },
     "H01_valve": {
       "assets": {
-        "copper": "artwork/copper/H01_valve.png",
-        "gunmetal": "artwork/gunmetal/H01_valve.png"
+        "copper": "artwork/copper/clockwork_tier3_valve_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_valve_color2_1.png"
       },
       "canvas": [
         512,
@@ -272,8 +272,8 @@
     },
     "H02_rotating": {
       "assets": {
-        "copper": "artwork/copper/H02_rotating.png",
-        "gunmetal": "artwork/gunmetal/H02_rotating.png"
+        "copper": "artwork/copper/clockwork_tier3_rotating_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_rotating_color2_1.png"
       },
       "canvas": [
         512,
@@ -294,8 +294,8 @@
     },
     "H03_exhaust": {
       "assets": {
-        "copper": "artwork/copper/H03_exhaust.png",
-        "gunmetal": "artwork/gunmetal/H03_exhaust.png"
+        "copper": "artwork/copper/clockwork_tier3_exhaust_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_exhaust_color2_1.png"
       },
       "canvas": [
         512,
@@ -316,8 +316,8 @@
     },
     "J00_chain_junction": {
       "assets": {
-        "copper": "artwork/copper/J00_chain_junction.png",
-        "gunmetal": "artwork/gunmetal/J00_chain_junction.png"
+        "copper": "artwork/copper/clockwork_tier3_chain_junction_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_chain_junction_color2_1.png"
       },
       "canvas": [
         512,
@@ -338,8 +338,8 @@
     },
     "H00_left_shutter": {
       "assets": {
-        "copper": "artwork/copper/H00_left_shutter.png",
-        "gunmetal": "artwork/gunmetal/H00_left_shutter.png"
+        "copper": "artwork/copper/clockwork_tier2_left_shutter_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_left_shutter_color2_1.png"
       },
       "canvas": [
         512,
@@ -360,8 +360,8 @@
     },
     "H00_right_shutter": {
       "assets": {
-        "copper": "artwork/copper/H00_right_shutter.png",
-        "gunmetal": "artwork/gunmetal/H00_right_shutter.png"
+        "copper": "artwork/copper/clockwork_tier2_right_shutter_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier2_right_shutter_color2_1.png"
       },
       "canvas": [
         512,
@@ -382,8 +382,8 @@
     },
     "H03_opaque_underlay": {
       "assets": {
-        "copper": "artwork/copper/H03_opaque_underlay.png",
-        "gunmetal": "artwork/gunmetal/H03_opaque_underlay.png"
+        "copper": "artwork/copper/clockwork_tier3_opaque_underlay_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_opaque_underlay_color2_1.png"
       },
       "canvas": [
         512,
@@ -404,8 +404,8 @@
     },
     "H03_shutters_left": {
       "assets": {
-        "copper": "artwork/copper/H03_shutters_left.png",
-        "gunmetal": "artwork/gunmetal/H03_shutters_left.png"
+        "copper": "artwork/copper/clockwork_tier3_shutters_left_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_shutters_left_color2_1.png"
       },
       "canvas": [
         512,
@@ -426,8 +426,8 @@
     },
     "H03_shutters_right": {
       "assets": {
-        "copper": "artwork/copper/H03_shutters_right.png",
-        "gunmetal": "artwork/gunmetal/H03_shutters_right.png"
+        "copper": "artwork/copper/clockwork_tier3_shutters_right_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_shutters_right_color2_1.png"
       },
       "canvas": [
         512,
@@ -448,8 +448,8 @@
     },
     "CH01_link": {
       "assets": {
-        "copper": "artwork/copper/CH01_link.png",
-        "gunmetal": "artwork/gunmetal/CH01_link.png"
+        "copper": "artwork/copper/clockwork_tier3_link_color1_1.png",
+        "gunmetal": "artwork/gunmetal/clockwork_tier3_link_color2_1.png"
       },
       "canvas": [
         64,

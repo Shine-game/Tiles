@@ -14,11 +14,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_01.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_1.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_01.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_1.png"
               }
             }
           },
@@ -39,11 +39,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_02.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_2.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_02.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_2.png"
               }
             }
           },
@@ -64,11 +64,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_03.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_3.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_03.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_3.png"
               }
             }
           },
@@ -89,11 +89,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_04.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_4.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_04.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_4.png"
               }
             }
           },
@@ -114,11 +114,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_05.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_5.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_05.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_5.png"
               }
             }
           },
@@ -139,11 +139,11 @@
             "variants": {
               "salmon": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_06.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_6.png"
               },
               "turquoise": {
                 "provider": "texture",
-                "path": "../artwork/ground/ground_06.png"
+                "path": "../artwork/ground/coral_ui_ground_color0_6.png"
               }
             }
           },

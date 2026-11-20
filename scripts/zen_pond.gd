@@ -8,7 +8,7 @@ const MASK_SHADER = preload("res://shaders/zen_pond_mask.gdshader")
 const WATER_SHADER = preload("res://shaders/zen_pond.gdshader")
 const ROOT := "res://art/themes/zen_garden/artwork/"
 const DIRECTIONS := ["n", "e", "s", "w"]
-const PLANTS := ["01_shore_sedge.png", "02_shore_fern.png", "03_shore_herbs.png", "04_shore_rush.png", "05_shore_clover.png", "06_shore_reeds.png"]
+const PLANTS := ["zen_tier2_shore_plant_color0_1.png", "zen_tier2_shore_plant_color0_2.png", "zen_tier2_shore_plant_color0_3.png", "zen_tier2_shore_plant_color0_4.png", "zen_tier2_shore_plant_color0_5.png", "zen_tier2_shore_plant_color0_6.png"]
 const FILL_SECONDS := 0.85
 const PLANT_SECONDS := 0.35
 const MASK_CELL := 128.0
@@ -29,7 +29,7 @@ static func source(path: String) -> Texture2D:
 	return textures[path]
 
 static func mask_path(variant: int, kind: String) -> String:
-	return "watersheds/%02d/%s.png" % [variant + 1, kind]
+	return "watersheds/%02d/zen_tier2_mask_%s_color0_%d.png" % [variant + 1, kind, variant if kind.begins_with("watershed_") else variant + 1]
 
 # Overlapping 2x2 centers are one cell apart. Each connecting triangle runs
 # from its center to their shared midpoint, not to the far edge of its 2x2.

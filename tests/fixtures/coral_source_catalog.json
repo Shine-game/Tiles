@@ -3,8 +3,8 @@
     "core": {
       "id": "core",
       "artwork": {
-        "salmon": "artwork/salmon/core.png",
-        "turquoise": "artwork/turquoise/core.png"
+        "salmon": "artwork/salmon/coral_tier0_core_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier0_core_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -210,7 +210,7 @@
           ]
         },
         "path_length_px": 45.4558,
-        "mask": "masks/core.png",
+        "mask": "masks/coral_tier0_mask_core_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -226,20 +226,20 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/core.png",
+      "growth_mask": "masks/coral_tier0_mask_core_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 20,
-      "reveal_mask": "masks/core.png"
+      "reveal_mask": "masks/coral_tier0_mask_core_color0_1.png"
     },
     "arm_n": {
       "id": "arm_n",
       "artwork": {
-        "salmon": "artwork/salmon/arm_n.png",
-        "turquoise": "artwork/turquoise/arm_n.png"
+        "salmon": "artwork/salmon/coral_tier1_arm_n_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_arm_n_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -375,8 +375,8 @@
     "fingers_n_0": {
       "id": "fingers_n_0",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_n_0.png",
-        "turquoise": "artwork/turquoise/fingers_n_0.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_n_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_n_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -556,7 +556,7 @@
           ]
         },
         "path_length_px": 33.5563,
-        "mask": "masks/fingers_n_0.png",
+        "mask": "masks/coral_tier3_mask_fingers_n_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -572,20 +572,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_n_0.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_n_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_n_0.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_n_color0_1.png"
     },
     "fingers_n_1": {
       "id": "fingers_n_1",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_n_1.png",
-        "turquoise": "artwork/turquoise/fingers_n_1.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_n_color1_2.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_n_color2_2.png"
       },
       "canvas_px": [
         256,
@@ -777,7 +777,7 @@
           ]
         },
         "path_length_px": 36.1421,
-        "mask": "masks/fingers_n_1.png",
+        "mask": "masks/coral_tier3_mask_fingers_n_color0_2.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -793,20 +793,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_n_1.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_n_color0_2.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_n_1.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_n_color0_2.png"
     },
     "arm_e": {
       "id": "arm_e",
       "artwork": {
-        "salmon": "artwork/salmon/arm_n.png",
-        "turquoise": "artwork/turquoise/arm_n.png"
+        "salmon": "artwork/salmon/coral_tier1_arm_n_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_arm_n_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -942,8 +942,8 @@
     "fingers_e_0": {
       "id": "fingers_e_0",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_e_0.png",
-        "turquoise": "artwork/turquoise/fingers_e_0.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_e_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_e_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -1123,7 +1123,7 @@
           ]
         },
         "path_length_px": 33.5563,
-        "mask": "masks/fingers_e_0.png",
+        "mask": "masks/coral_tier3_mask_fingers_e_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1139,20 +1139,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_e_0.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_e_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_e_0.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_e_color0_1.png"
     },
     "fingers_e_1": {
       "id": "fingers_e_1",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_e_1.png",
-        "turquoise": "artwork/turquoise/fingers_e_1.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_e_color1_2.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_e_color2_2.png"
       },
       "canvas_px": [
         256,
@@ -1344,7 +1344,7 @@
           ]
         },
         "path_length_px": 36.1421,
-        "mask": "masks/fingers_e_1.png",
+        "mask": "masks/coral_tier3_mask_fingers_e_color0_2.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1360,20 +1360,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_e_1.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_e_color0_2.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_e_1.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_e_color0_2.png"
     },
     "arm_s": {
       "id": "arm_s",
       "artwork": {
-        "salmon": "artwork/salmon/arm_n.png",
-        "turquoise": "artwork/turquoise/arm_n.png"
+        "salmon": "artwork/salmon/coral_tier1_arm_n_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_arm_n_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -1509,8 +1509,8 @@
     "fingers_s_0": {
       "id": "fingers_s_0",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_s_0.png",
-        "turquoise": "artwork/turquoise/fingers_s_0.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_s_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_s_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -1690,7 +1690,7 @@
           ]
         },
         "path_length_px": 33.5563,
-        "mask": "masks/fingers_s_0.png",
+        "mask": "masks/coral_tier3_mask_fingers_s_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1706,20 +1706,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_s_0.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_s_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_s_0.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_s_color0_1.png"
     },
     "fingers_s_1": {
       "id": "fingers_s_1",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_s_1.png",
-        "turquoise": "artwork/turquoise/fingers_s_1.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_s_color1_2.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_s_color2_2.png"
       },
       "canvas_px": [
         256,
@@ -1911,7 +1911,7 @@
           ]
         },
         "path_length_px": 36.1421,
-        "mask": "masks/fingers_s_1.png",
+        "mask": "masks/coral_tier3_mask_fingers_s_color0_2.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -1927,20 +1927,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_s_1.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_s_color0_2.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_s_1.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_s_color0_2.png"
     },
     "arm_w": {
       "id": "arm_w",
       "artwork": {
-        "salmon": "artwork/salmon/arm_n.png",
-        "turquoise": "artwork/turquoise/arm_n.png"
+        "salmon": "artwork/salmon/coral_tier1_arm_n_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_arm_n_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -2076,8 +2076,8 @@
     "fingers_w_0": {
       "id": "fingers_w_0",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_w_0.png",
-        "turquoise": "artwork/turquoise/fingers_w_0.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_w_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_w_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -2257,7 +2257,7 @@
           ]
         },
         "path_length_px": 33.5563,
-        "mask": "masks/fingers_w_0.png",
+        "mask": "masks/coral_tier3_mask_fingers_w_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -2273,20 +2273,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_w_0.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_w_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_w_0.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_w_color0_1.png"
     },
     "fingers_w_1": {
       "id": "fingers_w_1",
       "artwork": {
-        "salmon": "artwork/salmon/fingers_w_1.png",
-        "turquoise": "artwork/turquoise/fingers_w_1.png"
+        "salmon": "artwork/salmon/coral_tier3_fingers_w_color1_2.png",
+        "turquoise": "artwork/turquoise/coral_tier3_fingers_w_color2_2.png"
       },
       "canvas_px": [
         256,
@@ -2478,7 +2478,7 @@
           ]
         },
         "path_length_px": 36.1421,
-        "mask": "masks/fingers_w_1.png",
+        "mask": "masks/coral_tier3_mask_fingers_w_color0_2.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -2494,20 +2494,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/fingers_w_1.png",
+      "growth_mask": "masks/coral_tier3_mask_fingers_w_color0_2.png",
       "motif_position": "ordinary supporting cell",
       "size_px": [
         256,
         256
       ],
       "layer": 30,
-      "reveal_mask": "masks/fingers_w_1.png"
+      "reveal_mask": "masks/coral_tier3_mask_fingers_w_color0_2.png"
     },
     "junction_ne": {
       "id": "junction_ne",
       "artwork": {
-        "salmon": "artwork/salmon/junction_ne.png",
-        "turquoise": "artwork/turquoise/junction_ne.png"
+        "salmon": "artwork/salmon/coral_tier1_junction_ne_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_junction_ne_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -2628,7 +2628,7 @@
           ]
         },
         "path_length_px": 14.4142,
-        "mask": "masks/junction_ne.png",
+        "mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -2644,7 +2644,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_ne.png",
+      "growth_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 0,
       "growth_mask_rotation_clockwise": 0,
@@ -2653,13 +2653,13 @@
         256
       ],
       "layer": 11,
-      "reveal_mask": "masks/junction_ne.png"
+      "reveal_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png"
     },
     "junction_es": {
       "id": "junction_es",
       "artwork": {
-        "salmon": "artwork/salmon/junction_ne.png",
-        "turquoise": "artwork/turquoise/junction_ne.png"
+        "salmon": "artwork/salmon/coral_tier1_junction_ne_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_junction_ne_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -2780,7 +2780,7 @@
           ]
         },
         "path_length_px": 14.4142,
-        "mask": "masks/junction_ne.png",
+        "mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -2796,7 +2796,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_ne.png",
+      "growth_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 90,
       "growth_mask_rotation_clockwise": 0,
@@ -2805,13 +2805,13 @@
         256
       ],
       "layer": 11,
-      "reveal_mask": "masks/junction_ne.png"
+      "reveal_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png"
     },
     "junction_sw": {
       "id": "junction_sw",
       "artwork": {
-        "salmon": "artwork/salmon/junction_ne.png",
-        "turquoise": "artwork/turquoise/junction_ne.png"
+        "salmon": "artwork/salmon/coral_tier1_junction_ne_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_junction_ne_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -2932,7 +2932,7 @@
           ]
         },
         "path_length_px": 14.4142,
-        "mask": "masks/junction_ne.png",
+        "mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -2948,7 +2948,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_ne.png",
+      "growth_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 180,
       "growth_mask_rotation_clockwise": 0,
@@ -2957,13 +2957,13 @@
         256
       ],
       "layer": 11,
-      "reveal_mask": "masks/junction_ne.png"
+      "reveal_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png"
     },
     "junction_wn": {
       "id": "junction_wn",
       "artwork": {
-        "salmon": "artwork/salmon/junction_ne.png",
-        "turquoise": "artwork/turquoise/junction_ne.png"
+        "salmon": "artwork/salmon/coral_tier1_junction_ne_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier1_junction_ne_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -3084,7 +3084,7 @@
           ]
         },
         "path_length_px": 14.4142,
-        "mask": "masks/junction_ne.png",
+        "mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -3100,7 +3100,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/junction_ne.png",
+      "growth_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png",
       "motif_position": "ordinary supporting cell",
       "artwork_rotation_clockwise": 270,
       "growth_mask_rotation_clockwise": 0,
@@ -3109,13 +3109,13 @@
         256
       ],
       "layer": 11,
-      "reveal_mask": "masks/junction_ne.png"
+      "reveal_mask": "masks/coral_tier1_mask_junction_ne_color0_1.png"
     },
     "colony_body": {
       "id": "colony_body",
       "artwork": {
-        "salmon": "artwork/salmon/colony_body.png",
-        "turquoise": "artwork/turquoise/colony_body.png"
+        "salmon": "artwork/salmon/coral_tier2_colony_body_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier2_colony_body_color2_1.png"
       },
       "canvas_px": [
         512,
@@ -3363,7 +3363,7 @@
           ]
         },
         "path_length_px": 89.0,
-        "mask": "masks/colony_body.png",
+        "mask": "masks/coral_tier2_mask_colony_body_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -3379,20 +3379,20 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/colony_body.png",
+      "growth_mask": "masks/coral_tier2_mask_colony_body_color0_1.png",
       "motif_position": "shared corner of the four supporting cells",
       "size_px": [
         512,
         512
       ],
       "layer": 40,
-      "reveal_mask": "masks/colony_body.png"
+      "reveal_mask": "masks/coral_tier2_mask_colony_body_color0_1.png"
     },
     "colony_fold_ne": {
       "id": "colony_fold_ne",
       "artwork": {
-        "salmon": "artwork/salmon/colony_fold_ne.png",
-        "turquoise": "artwork/turquoise/colony_fold_ne.png"
+        "salmon": "artwork/salmon/coral_tier2_colony_fold_ne_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier2_colony_fold_ne_color2_1.png"
       },
       "canvas_px": [
         512,
@@ -3624,7 +3624,7 @@
           ]
         },
         "path_length_px": 234.1249,
-        "mask": "masks/colony_fold_ne.png",
+        "mask": "masks/coral_tier2_mask_colony_fold_ne_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -3640,20 +3640,20 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/colony_fold_ne.png",
+      "growth_mask": "masks/coral_tier2_mask_colony_fold_ne_color0_1.png",
       "motif_position": "shared corner of the four supporting cells",
       "size_px": [
         512,
         512
       ],
       "layer": 41,
-      "reveal_mask": "masks/colony_fold_ne.png"
+      "reveal_mask": "masks/coral_tier2_mask_colony_fold_ne_color0_1.png"
     },
     "colony_fold_sw": {
       "id": "colony_fold_sw",
       "artwork": {
-        "salmon": "artwork/salmon/colony_fold_sw.png",
-        "turquoise": "artwork/turquoise/colony_fold_sw.png"
+        "salmon": "artwork/salmon/coral_tier2_colony_fold_sw_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier2_colony_fold_sw_color2_1.png"
       },
       "canvas_px": [
         512,
@@ -3885,7 +3885,7 @@
           ]
         },
         "path_length_px": 164.0955,
-        "mask": "masks/colony_fold_sw.png",
+        "mask": "masks/coral_tier2_mask_colony_fold_sw_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -3901,20 +3901,20 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/colony_fold_sw.png",
+      "growth_mask": "masks/coral_tier2_mask_colony_fold_sw_color0_1.png",
       "motif_position": "shared corner of the four supporting cells",
       "size_px": [
         512,
         512
       ],
       "layer": 42,
-      "reveal_mask": "masks/colony_fold_sw.png"
+      "reveal_mask": "masks/coral_tier2_mask_colony_fold_sw_color0_1.png"
     },
     "colony_fingers_nw": {
       "id": "colony_fingers_nw",
       "artwork": {
-        "salmon": "artwork/salmon/colony_fingers_nw.png",
-        "turquoise": "artwork/turquoise/colony_fingers_nw.png"
+        "salmon": "artwork/salmon/coral_tier2_colony_fingers_nw_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier2_colony_fingers_nw_color2_1.png"
       },
       "canvas_px": [
         512,
@@ -4146,7 +4146,7 @@
           ]
         },
         "path_length_px": 96.4853,
-        "mask": "masks/colony_fingers_nw.png",
+        "mask": "masks/coral_tier2_mask_colony_fingers_nw_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -4162,20 +4162,20 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/colony_fingers_nw.png",
+      "growth_mask": "masks/coral_tier2_mask_colony_fingers_nw_color0_1.png",
       "motif_position": "shared corner of the four supporting cells",
       "size_px": [
         512,
         512
       ],
       "layer": 43,
-      "reveal_mask": "masks/colony_fingers_nw.png"
+      "reveal_mask": "masks/coral_tier2_mask_colony_fingers_nw_color0_1.png"
     },
     "colony_fingers_se": {
       "id": "colony_fingers_se",
       "artwork": {
-        "salmon": "artwork/salmon/colony_fingers_se.png",
-        "turquoise": "artwork/turquoise/colony_fingers_se.png"
+        "salmon": "artwork/salmon/coral_tier2_colony_fingers_se_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier2_colony_fingers_se_color2_1.png"
       },
       "canvas_px": [
         512,
@@ -4407,7 +4407,7 @@
           ]
         },
         "path_length_px": 104.8995,
-        "mask": "masks/colony_fingers_se.png",
+        "mask": "masks/coral_tier2_mask_colony_fingers_se_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -4423,20 +4423,20 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/colony_fingers_se.png",
+      "growth_mask": "masks/coral_tier2_mask_colony_fingers_se_color0_1.png",
       "motif_position": "shared corner of the four supporting cells",
       "size_px": [
         512,
         512
       ],
       "layer": 44,
-      "reveal_mask": "masks/colony_fingers_se.png"
+      "reveal_mask": "masks/coral_tier2_mask_colony_fingers_se_color0_1.png"
     },
     "anemone_foot": {
       "id": "anemone_foot",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_foot.png",
-        "turquoise": "artwork/turquoise/anemone_foot.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_foot_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_foot_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -4644,7 +4644,7 @@
           ]
         },
         "path_length_px": 190.5269,
-        "mask": "masks/anemone_foot.png",
+        "mask": "masks/coral_tier3_mask_anemone_foot_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -4660,7 +4660,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/anemone_foot.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_foot_color0_1.png",
       "footprint_cells": [
         [
           0,
@@ -4677,13 +4677,13 @@
         512
       ],
       "layer": 70,
-      "reveal_mask": "masks/anemone_foot.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_foot_color0_1.png"
     },
     "anemone_region_0": {
       "id": "anemone_region_0",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_0.png",
-        "turquoise": "artwork/turquoise/anemone_region_0.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -4897,7 +4897,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_0.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -4913,7 +4913,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_0.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_1.png",
       "footprint_cells": [
         [
           0,
@@ -4930,13 +4930,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_0.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_1.png"
     },
     "anemone_region_1": {
       "id": "anemone_region_1",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_1.png",
-        "turquoise": "artwork/turquoise/anemone_region_1.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_2.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_2.png"
       },
       "canvas_px": [
         256,
@@ -5150,7 +5150,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_1.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_2.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -5166,7 +5166,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_1.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_2.png",
       "footprint_cells": [
         [
           0,
@@ -5183,13 +5183,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_1.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_2.png"
     },
     "anemone_region_2": {
       "id": "anemone_region_2",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_2.png",
-        "turquoise": "artwork/turquoise/anemone_region_2.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_3.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_3.png"
       },
       "canvas_px": [
         256,
@@ -5403,7 +5403,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_2.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_3.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -5419,7 +5419,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_2.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_3.png",
       "footprint_cells": [
         [
           0,
@@ -5436,13 +5436,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_2.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_3.png"
     },
     "anemone_region_3": {
       "id": "anemone_region_3",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_3.png",
-        "turquoise": "artwork/turquoise/anemone_region_3.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_4.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_4.png"
       },
       "canvas_px": [
         256,
@@ -5656,7 +5656,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_3.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_4.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -5672,7 +5672,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_3.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_4.png",
       "footprint_cells": [
         [
           0,
@@ -5689,13 +5689,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_3.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_4.png"
     },
     "anemone_region_4": {
       "id": "anemone_region_4",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_4.png",
-        "turquoise": "artwork/turquoise/anemone_region_4.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_5.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_5.png"
       },
       "canvas_px": [
         256,
@@ -5909,7 +5909,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_4.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_5.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -5925,7 +5925,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_4.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_5.png",
       "footprint_cells": [
         [
           0,
@@ -5942,13 +5942,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_4.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_5.png"
     },
     "anemone_region_5": {
       "id": "anemone_region_5",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_5.png",
-        "turquoise": "artwork/turquoise/anemone_region_5.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_6.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_6.png"
       },
       "canvas_px": [
         256,
@@ -6162,7 +6162,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_5.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_6.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -6178,7 +6178,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_5.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_6.png",
       "footprint_cells": [
         [
           0,
@@ -6195,13 +6195,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_5.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_6.png"
     },
     "anemone_region_6": {
       "id": "anemone_region_6",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_6.png",
-        "turquoise": "artwork/turquoise/anemone_region_6.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_7.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_7.png"
       },
       "canvas_px": [
         256,
@@ -6415,7 +6415,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_6.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_7.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -6431,7 +6431,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_6.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_7.png",
       "footprint_cells": [
         [
           0,
@@ -6448,13 +6448,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_6.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_7.png"
     },
     "anemone_region_7": {
       "id": "anemone_region_7",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_region_7.png",
-        "turquoise": "artwork/turquoise/anemone_region_7.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_region_color1_8.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_region_color2_8.png"
       },
       "canvas_px": [
         256,
@@ -6668,7 +6668,7 @@
           ]
         },
         "path_length_px": 165.8995,
-        "mask": "masks/anemone_region_7.png",
+        "mask": "masks/coral_tier3_mask_anemone_region_color0_8.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -6684,7 +6684,7 @@
         ],
         "branching_allowed": true
       },
-      "growth_mask": "masks/anemone_region_7.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_region_color0_8.png",
       "footprint_cells": [
         [
           0,
@@ -6701,13 +6701,13 @@
         512
       ],
       "layer": 71,
-      "reveal_mask": "masks/anemone_region_7.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_region_color0_8.png"
     },
     "anemone_oral_disc": {
       "id": "anemone_oral_disc",
       "artwork": {
-        "salmon": "artwork/salmon/anemone_oral_disc.png",
-        "turquoise": "artwork/turquoise/anemone_oral_disc.png"
+        "salmon": "artwork/salmon/coral_tier3_anemone_oral_disc_color1_1.png",
+        "turquoise": "artwork/turquoise/coral_tier3_anemone_oral_disc_color2_1.png"
       },
       "canvas_px": [
         256,
@@ -6881,7 +6881,7 @@
           ]
         },
         "path_length_px": 34.799,
-        "mask": "masks/anemone_oral_disc.png",
+        "mask": "masks/coral_tier3_mask_anemone_oral_disc_color0_1.png",
         "mask_authoritative": true,
         "connected_splits": "Field branches through the component alpha; crown partitions share a field and clock.",
         "start_px": [
@@ -6897,7 +6897,7 @@
         ],
         "branching_allowed": false
       },
-      "growth_mask": "masks/anemone_oral_disc.png",
+      "growth_mask": "masks/coral_tier3_mask_anemone_oral_disc_color0_1.png",
       "footprint_cells": [
         [
           0,
@@ -6914,13 +6914,13 @@
         512
       ],
       "layer": 72,
-      "reveal_mask": "masks/anemone_oral_disc.png"
+      "reveal_mask": "masks/coral_tier3_mask_anemone_oral_disc_color0_1.png"
     },
     "ground_01": {
       "id": "ground_01",
       "artwork": {
-        "salmon": "artwork/ground/ground_01.png",
-        "turquoise": "artwork/ground/ground_01.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_1.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_1.png"
       },
       "canvas_px": [
         256,
@@ -6952,8 +6952,8 @@
     "ground_02": {
       "id": "ground_02",
       "artwork": {
-        "salmon": "artwork/ground/ground_02.png",
-        "turquoise": "artwork/ground/ground_02.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_2.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_2.png"
       },
       "canvas_px": [
         256,
@@ -6985,8 +6985,8 @@
     "ground_03": {
       "id": "ground_03",
       "artwork": {
-        "salmon": "artwork/ground/ground_03.png",
-        "turquoise": "artwork/ground/ground_03.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_3.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_3.png"
       },
       "canvas_px": [
         256,
@@ -7018,8 +7018,8 @@
     "ground_04": {
       "id": "ground_04",
       "artwork": {
-        "salmon": "artwork/ground/ground_04.png",
-        "turquoise": "artwork/ground/ground_04.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_4.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_4.png"
       },
       "canvas_px": [
         256,
@@ -7051,8 +7051,8 @@
     "ground_05": {
       "id": "ground_05",
       "artwork": {
-        "salmon": "artwork/ground/ground_05.png",
-        "turquoise": "artwork/ground/ground_05.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_5.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_5.png"
       },
       "canvas_px": [
         256,
@@ -7084,8 +7084,8 @@
     "ground_06": {
       "id": "ground_06",
       "artwork": {
-        "salmon": "artwork/ground/ground_06.png",
-        "turquoise": "artwork/ground/ground_06.png"
+        "salmon": "artwork/ground/coral_ui_ground_color0_6.png",
+        "turquoise": "artwork/ground/coral_ui_ground_color0_6.png"
       },
       "canvas_px": [
         256,
