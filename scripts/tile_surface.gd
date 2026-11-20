@@ -3,7 +3,6 @@ extends RefCounted
 
 const Palette = preload("res://scripts/palette.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
-const Zen = preload("res://scripts/zen_visuals.gd")
 
 static func depth(unit: float) -> float:
 	return 4.0 if Palette.clockwork or Palette.zen_garden else Platform.depth(unit)
@@ -17,7 +16,7 @@ static func _zen_top(slab, n: int, pitch: float, invalid: bool) -> void:
 		face = ColorRect.new()
 		face.name = "ZenSand"
 		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		face.material = Zen.sand_material()
+		face.material = load("res://scripts/zen_visuals.gd").sand_material()
 		slab.add_child(face)
 	var margin: float = slab.depth_pixels * 2 + 1
 	face.position = Vector2.ONE * margin

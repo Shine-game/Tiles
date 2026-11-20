@@ -32,13 +32,11 @@ const Water = preload("res://scripts/reef_water.gd")
 const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
-const Zen = preload("res://scripts/zen_growth.gd")
-const ZenLayer = preload("res://scripts/zen_visuals.gd")
 var tile_floor: ColorRect
 var vines_formations: Node2D
 var fountain_water: Node2D
 var zen_garden := false
-var zen_visuals: ZenVisuals
+var zen_visuals
 var zen_floor: ColorRect
 var board: Array = []
 var pattern = Growth.new()
@@ -129,7 +127,8 @@ func _build_pattern(before: Array, after: Array) -> void:
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	zen_garden = Palette.zen_garden
-	var model_hooks := {"zen_garden": Zen, "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
+	var model_hooks := { "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
+	if zen_garden: model_hooks["zen_garden"] = load("res://scripts/zen_growth.gd")
 	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
 	pattern.build(before, after)
 	if fountain_water == null and Palette.theme_id() == "vines" and Vines.tier2.definition.water.get("enabled", true):
@@ -251,6 +250,7 @@ func _sync_coral(settled: bool, preserve: bool) -> void:
 
 func _sync_zen(settled: bool) -> void:
 	if zen_garden:
+		var ZenLayer = load("res://scripts/zen_visuals.gd")
 		if zen_visuals == null:
 			zen_visuals = ZenLayer.new()
 			zen_visuals.z_index = 1

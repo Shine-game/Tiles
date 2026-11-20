@@ -19,10 +19,7 @@ func _draw() -> void:
 	pitch = minf(size.x, size.y)
 	var rect := Rect2((size - Vector2.ONE * pitch) / 2, Vector2.ONE * pitch)
 	draw_style_box(_ground(), rect)
-	if theme_id == "zen_garden":
-		draw_texture_rect(ZenVisuals.SAND, rect, false)
-		# The centered decoration is unfinished: show the theme's sand tile.
-	elif core != null:
+	if core != null:
 		draw_texture_rect_region(core, rect.grow(-pitch * 0.12), core_region)
 	else:
 		var ink: Color = preload("res://scripts/palette.gd").PAIRS[0].colors[0]

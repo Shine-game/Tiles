@@ -17,8 +17,13 @@ def audit():
         found=suffixes.get(value,[])
         return found[0] if len(found)==1 else None
     visited=set();used=set();missing=[]
-    pending=list((ROOT/'art/themes').glob('*/sets/*.json'))+[ROOT/'assets/themes/themes.json']
+    registry=json.loads((ROOT/'assets/themes/themes.json').read_text())
+    pending=[ROOT/'assets/themes/themes.json']
+    for profile in registry['themes'].values():
+        for family in profile['sets'].values():
+            pending.extend(ROOT/path.removeprefix('res://') for path in family.values())
     for p in (ROOT/'scripts').rglob('*.gd'):
+        if p.name.startswith('zen'):continue  # Preserved, inactive theme.
         for value in re.findall(r'[\"\']([^\"\'\n]+\.(?:png|json))[\"\']',p.read_text()):
             if '%' in value or '*' in value or value.startswith(('user://','/tmp/')) or len(value)<=5:continue
             target=resolve(value,p)
@@ -28,7 +33,7 @@ def audit():
             elif value.startswith(('res://','artwork/')):missing.append({'owner':str(p.relative_to(ROOT)),'path':value})
     # Generated runtime paths, checked explicitly rather than mistaken for dead files.
     for p in paths:
-        if '/watersheds/' in str(p) or '/shoreline_plants/' in str(p) or '/trees/' in str(p) or '_steam_color0_' in p.name:used.add(p) if p.suffix=='.png' else None
+        if ('zen_garden' in registry['themes'] and any(part in str(p) for part in ['/watersheds/','/shoreline_plants/','/trees/'])) or '_steam_color0_' in p.name:used.add(p) if p.suffix=='.png' else None
     def walk(data,owner,trail=''):
         if isinstance(data,dict):
             for key,value in data.items():

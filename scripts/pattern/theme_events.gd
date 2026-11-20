@@ -4,10 +4,6 @@ extends RefCounted
 # persistent history stay owned by their theme; no nodes enter common state.
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Growth = preload("res://scripts/growth.gd")
-const Landmark = preload("res://scripts/zen_landmark.gd")
-const Pond = preload("res://scripts/zen_pond.gd")
-const Trees = preload("res://scripts/zen_trees.gd")
-const Centerpiece = preload("res://scripts/zen_centerpiece.gd")
 const Schedule = preload("res://scripts/pattern/growth_schedule.gd")
 
 static func _put(events: Dictionary, id: String, start: float, end: float, old: bool, owner: Variant = null, retiring: bool = false) -> void:
@@ -57,6 +53,11 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 	return events
 
 static func _zen(events: Dictionary, prefix: String, model, zen) -> void:
+	# Archived theme: load its timing providers only when explicitly activated.
+	var Landmark = load("res://scripts/zen_landmark.gd")
+	var Pond = load("res://scripts/zen_pond.gd")
+	var Trees = load("res://scripts/zen_trees.gd")
+	var Centerpiece = load("res://scripts/zen_centerpiece.gd")
 	for cell: Vector2i in model.arrivals:
 		var at: float = model.arrivals[cell]
 		_put(events, prefix + "pattern/%d/%d/%d" % [model.board[cell.y][cell.x], cell.y, cell.x], at, at + Landmark.PATTERN_SECONDS, at < 0, cell)
