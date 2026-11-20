@@ -297,6 +297,7 @@ func _layout() -> void:
 	var view := size
 	var safe := _layout_insets(view)
 	var gap := clampf(view.x * 0.025, 6, 14)
+	if view.x > view.y: gap = 2.0
 	var hardware := _layout_insets(view, false)
 	var edge := 5.0 + maxf(hardware.x, hardware.z)
 	var available_height := view.y - safe.y - safe.w
@@ -310,8 +311,12 @@ func _layout() -> void:
 	var old_spare := available_height - old_side - 3 * gap
 	var old_dock := clampf(minf(old_side * 0.22, old_spare * 0.31), minimum_dock, old_spare - old_caption - minimum_header)
 	var dock_side := old_dock * 1.2
+	# Three equal buttons: W = 3B + 6P (outer P, inner 2P).
+	var dock_padding := (view.x - 3 * dock_side) / 6.0
 	var old_header := old_spare - old_dock - old_caption
 	var control_side := minf(old_side * 0.16, (old_header - 2 * gap) / 3)
+	if view.x > view.y:
+		control_side = minf(control_side, maxf(12, (view.y - safe.y - view.x / 3.0 - 40 - 3 * gap) / 3.0))
 	var button_inset := maxf(safe.x, safe.z) + gap
 	var controls_left := button_inset
 	var controls_right := view.x - button_inset - control_side
@@ -325,19 +330,23 @@ func _layout() -> void:
 		extent = extent.max(Vector2i(maxi(bounds.x,bounds.y),mini(bounds.x,bounds.y)))
 	# New offers lie horizontally. Rotation may extend over the board without
 	# changing the board geometry or the tile scale.
-	var low := 28.0
+	var low := 40.0
 	var high := maxf(low, view.x - 2 * edge)
 	for iteration in range(18):
 		var candidate := (low + high) / 2
 		var unit := maxf(1, (candidate - 28) / maxi(1, game.board.size()))
 		var preview_height := extent.y * unit + 2 * gap
 		var header := maxf(3 * control_side + 2 * gap, preview_height)
-		if candidate + header + dock_side + 2 * gap <= available_height and extent.x * unit <= preview_width:
+		if candidate + header + dock_side + 2 * dock_padding + gap <= view.y - safe.y and extent.x * unit <= preview_width:
 			low = candidate
 		else:
 			high = candidate
 	var side := maxf(1, view.x - 2 * edge) if view.y >= view.x else low
-	var header_height := available_height - side - dock_side - 2 * gap
+	var header_height := view.y - safe.y - side - dock_side - 2 * dock_padding - gap
+	control_side = minf(control_side, maxf(1, (header_height - 2 * gap) / 3.0))
+	controls_right = view.x - button_inset - control_side
+	preview_left = controls_left + control_side + gap
+	preview_width = maxf(1, controls_right - gap - preview_left)
 	var left := (view.x - side) / 2
 	var top := safe.y
 	for i in range(3):
@@ -350,10 +359,9 @@ func _layout() -> void:
 	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
 	piece_view.cell_pitch = board_view.pitch
-	var dock_y := board_top + side + gap
-	var dock_width := view.x - 2 * button_inset
+	var dock_y := board_top + side + dock_padding
 	for i in range(3):
-		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(button_inset + i * (dock_width - dock_side) / 2, dock_y, dock_side, dock_side))
+		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + 2 * dock_padding), dock_y, dock_side, dock_side))
 	for control: Control in _controls():
 		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26))
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
