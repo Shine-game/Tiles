@@ -45,7 +45,7 @@ func click_control(button: Button, expect_press: bool = true) -> void:
 	click.pressed = true
 	root.push_input(click,true)
 	await process_frame
-	check(button.is_pressed() == expect_press,"Held native press survives refresh, or stays disabled")
+	check((button.disabled != expect_press) if button.toggle_mode else (button.is_pressed() == expect_press),"Native press remains available across refresh; toggle controls may change their latched state")
 	click.pressed = false
 	click.button_mask = 0
 	root.push_input(click,true)
@@ -182,28 +182,56 @@ func run() -> void:
 		check(game.indicators[0].icon.complete[intro.puzzle.symmetry],"Symmetry indicator responds to correct hover")
 		intro.place.pressed.emit()
 		check(intro.stage == (10 if stage == 8 else stage+1),"Correct symmetry placement advances instantly and skips removed card")
-	check(intro.stage == 10 and intro.repair_phase == 0 and intro.progress_label.text == "9 / 10","Rotational exercise goes directly to destruction lesson with ten-step numbering")
+	check(intro.stage == 10 and intro.repair_phase == 1 and intro.progress_label.text == "9 / 10","Rotational exercise goes directly to destruction lesson with ten-step numbering")
 	intro.enter(9)
-	check(intro.stage == 10 and intro.repair_phase == 0,"Old saved axes-card progress resumes at destruction lesson")
+	check(intro.stage == 10 and intro.repair_phase == 1,"Old saved axes-card progress resumes at destruction lesson")
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
 		game.size = dimensions
 		game._layout()
+		var normal_frame: Rect2 = game.board_view.get_rect()
+		var normal_field: Rect2 = Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)
+		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		for phase in range(Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
-			check(intro.caption_rect.end.y <= intro.tray_rect.position.y+0.1,"Full explanatory cue fits above the offer on each phone size")
-			check(intro.text.get_content_height() <= intro.text.size.y+1,"Bold heading/body fit: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
+			check(intro.caption_rect.end.y <= normal_frame.position.y+0.1,"Caption above normal field %s: end %f board top %f font %d" % [dimensions,intro.caption_rect.end.y,normal_frame.position.y,intro.text.get_theme_font_size("font_size")])
+			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
+			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
+			if not intro.cells.is_empty():
+				check(intro.offer_over_board and intro.selected and not Model.placed(intro.grid,intro.cells,intro.anchor,intro.color).is_empty(),"Offer spawns in empty board squares when the header has no room")
+			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
 			check(is_equal_approx(intro.tray_rect.size.y,2*intro.board_rect.size.x/9),"Expanded field keeps exactly two offer rows")
 	game.size = Vector2(540,825)
 	game._layout()
 	intro.enter(10)
 	check(Rules.symmetry_states(intro.grid)[0].complete,"Repair pattern starts with vertical symmetry")
-	check(intro.grid.size() == 9 and intro.guide_cells().is_empty() and intro.cells.is_empty(),"Watch-axes introduction shows the expanded board without an offer")
-	check(Model.repair_base() == Model.seed_board(Model.seed_steps().size()),"Final replay reconstructs the exact repair base, without wrong moves")
+	check(intro.grid.size() == 9 and intro.guide_cells().size() == 3 and intro.cells.size() == 3,"Watch-axes cue immediately offers a movable piece on the expanded field")
+	check(Model.repair_board(7) == Model.replay_board(Model.replay_steps().size()),"Replay includes both colors through the correct final placement")
 	intro._process(3.1)
-	check(intro.repair_phase == 1,"Initial axes cue leads to first forced wrong move")
+	check(intro.repair_phase == 1,"Axes exploration waits for the player instead of advancing automatically")
 
+	check("[b]" not in intro.text.text and "[b]" not in str(Intro.TEXT) and "[b]" not in str(Intro.REPAIR_TEXT),"All tutorial wording uses regular text")
+	intro.set_caption("[b]Regular lettering[/b]")
+	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
+	intro.set_caption(Intro.REPAIR_TEXT[1])
+	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
+	var saved_repair: Array = intro.grid.duplicate(true)
+	drag_piece(intro,Vector2i(3,3))
+	check(not Rules.symmetry_states(intro.prediction_board())[0].complete and not game.indicators[0].icon.complete[0],"Colliding floating piece no longer shows the committed board's present symmetry")
+	check(intro.grid == saved_repair and intro.place.disabled,"Colliding preview never changes committed tiles or enables Place")
+	intro.transform_piece("rotate")
+	intro._process(Intro.ANIMATION_SECONDS+0.01)
+	check(intro.stage == 10 and intro.repair_phase == 1,"Free rotation does not advance the axes lesson")
+	await click_control(intro.flip)
+	intro._process(Intro.ANIMATION_SECONDS+0.01)
+	await click_control(intro.recolor)
+	intro._process(Intro.ANIMATION_SECONDS+0.01)
+	check(intro.repair_phase == 1 and intro.color == 1 and intro.place.disabled,"Mirroring and recoloring are free and incorrect configuration stays disabled")
+	intro.cells = Model.repair_offers()[0].cells.duplicate()
+	intro.color = Model.repair_offers()[0].color
+	intro.selected = false
+	intro.update_controls()
 	check(intro.forward.disabled,"Forward cannot bypass the repair exercise")
 	intro.next_step()
 	check(intro.stage == 10,"Forward handler cannot skip repair")
@@ -213,7 +241,10 @@ func run() -> void:
 		drag_piece(intro,Vector2i(4,4))
 		intro.try_place()
 		check(intro.repair_phase == phase,"Unmarked placement cannot progress")
+		check(intro.place.disabled,"Place remains disabled away from the required configuration")
+
 		drag_piece(intro,offer.anchor)
+		check(not intro.place.disabled,"Place enables only at the required geometry, location, and color")
 		await click_control(intro.place)
 		check(intro.repair_phase == phase+1 and intro.grid == Model.repair_board(phase+1),"Player must commit the forced wrong piece")
 		if phase == 1:
@@ -256,12 +287,14 @@ func run() -> void:
 	drag_piece(intro,Model.repair_offers()[2].anchor)
 	await click_control(intro.place)
 	check(intro.repair_phase == 7 and Rules.symmetry_states(intro.grid)[0].complete and game.indicators[0].icon.complete[0],"Replacement domino restores and highlights vertical symmetry")
+	check("You don't have to fill the board!" in intro.text.text and "Save your pattern anytime" in intro.text.text,"Recovered pattern explains saving without filling the field")
+
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
-	intro._process(1.3)
+	intro._process(5.1)
 	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
-	check(game.game.board == Model.seed_board(0) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
+	check(game.game.board == Model.replay_board(0) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
 	intro._process(0.7)
-	check(game.game.moves == 1 and game.game.board == Model.seed_board(1) and intro.seed_index == 1,"Replay automatically commits its first legal placement")
+	check(game.game.moves == 1 and game.game.board == Model.replay_board(1) and intro.seed_index == 1,"Replay automatically commits its first legal placement")
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Replay creates real 2x2 artwork")
 	check(Model.progress(path).seed_index == 1,"Automatic replay progress is saved")
 	intro.update_replay(10)
@@ -274,20 +307,40 @@ func run() -> void:
 	game._maybe_introduction(true)
 	intro = game.introduction
 	check(intro.stage == 11 and intro.seed_index == 1 and game.game == partial_game,"Automatic replay resumes its saved construction")
-	for index in range(1,Model.seed_steps().size()):
+	for index in range(1,Model.replay_steps().size()):
 		game.board_view.show_settled(game.game.board)
 		intro.update_replay(0.7)
-		check(game.game.board == Model.seed_board(index+1),"Every replayed move matches the intended construction")
+		check(game.game.board == Model.replay_board(index+1),"Every replayed move matches the intended construction")
 	check(game.introduction != null and intro.replay_finishing,"Replay does not hand off before final artwork finishes")
+	var full_replay_frame: Rect2 = game.board_view.get_rect()
+	check(full_replay_frame == intro.normal_board_rect and game.game.board[2][1] == 2 and game.game.board[2][7] == 2,"Replay retains normal field size and reaches the two-color restored pattern")
+
 	game.board_view.show_settled(game.game.board)
-	intro.update_replay(0.7)
+	intro._process(0.7)
+	check(not game.palette_button.disabled,"Final tutorial update cannot disable Settings again")
 	await process_frame
 	check(game.introduction == null and not paused,"Completed automatic replay hands control to the player")
-	check(game.game.moves == Model.seed_steps().size() and game.game.board == Model.repair_base() and not game.game.over,"Exact demonstration pattern becomes the playable game")
+	check(game.board_view.get_rect().is_equal_approx(full_replay_frame),"Handoff does not resize the nine-square playing field")
+
+	check(game.game.moves == Model.replay_steps().size() and game.game.board == Model.repair_board(7) and not game.game.over,"Exact demonstration pattern becomes the playable game")
 	check(Rules.symmetry_states(game.game.board)[0].complete,"Replayed pattern preserves vertical symmetry")
 	check(Session.valid_game(Session.pack(game.game)),"Replayed game is valid for normal save/resume")
 	check(Model.progress(path).done,"Tutorial completion is saved")
 	check(game.palette_button.get_child(0).kind == "settings" and game.replay_button.get_child(0).kind == "replay","Real-game controls are restored")
+	for button: Button in [game.palette_button,game.replay_button,game.flip_button,game.blue_button,game.erase_button,game.undo_button,game.skip_button]:
+		check(button.visible and not button.disabled,"Normal available controls are active immediately after handoff")
+	await click_control(game.palette_button)
+	check(game.palette_menu.visible and game.menu_page == "Settings","Native Settings click opens menu after tutorial completion")
+	game._close_menu()
+	var playable := Rules.first_physical_move(game.game.board,game.game.piece())
+	game.cells = playable.cells
+	game.selected = playable.anchor
+	game.has_hover = true
+	game._preview()
+	check(not game.place_button.disabled,"Place activates for a valid floating piece after handoff")
+	game.has_hover = false
+	game._preview()
+
 	for button in [game.erase_button,game.undo_button,game.skip_button]: check(button.visible,"Jokers remain in the real UI")
 	game._start_introduction()
 	intro = game.introduction
@@ -302,7 +355,9 @@ func run() -> void:
 		if game.introduction == null: break
 		game.board_view.advance_growth(0.25)
 		intro._process(0.25)
-	check(game.introduction == null and game.game.board == Model.repair_base(),"Automatic replay completes through real growth and delayed-reveal clocks without settling shortcuts")
+	check(game.introduction == null and game.game.board == Model.repair_board(7),"Automatic replay completes through real growth and delayed-reveal clocks without settling shortcuts")
+	check(not game.palette_button.disabled and not game.replay_button.disabled and not game.flip_button.disabled and not game.blue_button.disabled,"Natural replay completion leaves the full normal UI active")
+
 	await process_frame
 
 	game.queue_free()

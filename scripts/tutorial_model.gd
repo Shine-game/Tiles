@@ -85,11 +85,26 @@ static func seed_board(count: int) -> Array:
 		board = placed(board,step.cells,step.anchor,1)
 	return board
 
+# Replay the successful route through the exercise, including its second color.
+static func replay_steps() -> Array:
+	var steps := seed_steps().duplicate(true)
+	steps.append({"name":"Domino","cells":[Vector2i.ZERO,Vector2i.RIGHT],"anchor":Vector2i(1,2),"color":2})
+	steps.append({"name":"Domino","cells":[Vector2i.ZERO,Vector2i.RIGHT],"anchor":Vector2i(6,2),"color":2})
+	return steps
+
+static func replay_board(count: int) -> Array:
+	var board := Rules.create_board(9)
+	var steps := replay_steps()
+	for i in range(mini(count,steps.size())):
+		var step: Dictionary = steps[i]
+		board = placed(board,step.cells,step.anchor,step.get("color",1))
+	return board
+
 static func progress(path: String = PATH) -> Dictionary:
 	var config := ConfigFile.new()
 	if config.load(path) != OK: return {"done":false,"step":1,"started":false,"seed_index":0}
 	return {"started":bool(config.get_value("intro","started",false)),"done":bool(config.get_value("intro","done",false)),
-		"step":clampi(int(config.get_value("intro","step",1)),1,11),"seed_index":clampi(int(config.get_value("intro","seed_index",0)),0,seed_steps().size())}
+		"step":clampi(int(config.get_value("intro","step",1)),1,11),"seed_index":clampi(int(config.get_value("intro","seed_index",0)),0,replay_steps().size())}
 
 static func save_progress(step: int, done: bool, path: String = PATH, seed_index: int = 0) -> Error:
 	var config := ConfigFile.new()

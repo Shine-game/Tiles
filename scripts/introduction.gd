@@ -6,19 +6,20 @@ const Palette = preload("res://scripts/palette.gd")
 const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
-const TEXT := ["", "[b]Create endless symmetrical patterns.[/b]", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "[b]Complete the vertical symmetry.[/b]", "[b]Complete the horizontal symmetry.[/b]", "[b]Complete the rotational symmetry.[/b]", "", "", "[b]From simple tiles to intricate worlds.[/b]"]
+const TEXT := ["", "Create endless symmetrical patterns.", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
-	"[b]Watch the axes![/b]\nBold axes show the symmetries you have now.",
-	"[b]Symmetry can be lost and restored.[/b]\nFaint axes show which symmetries are still possible.\nPlace the piece where marked.",
-	"[b]Some symmetries are lost forever.[/b]\nTheir axes disappear.\nWhen all axes are gone, the game ends.\nPlace the piece where marked.",
-	"[b]Save the pattern: Undo your last move.[/b]",
-	"[b]Save the pattern: Erase a square.[/b]\nPress Erase, then tap the marked square.",
-	"[b]Save the pattern: Get a different piece.[/b]\nPress the arrow joker.",
-	"[b]Restore vertical symmetry.[/b]\nPlace the new piece.",
-	"[b]Restore vertical symmetry.[/b]\nPlace the new piece."]
+	"Watch the axes!\nBold axes show the symmetries you have. Faint axes show those you can reach.\nMove the piece over the board to understand the hints. Then place it where marked.",
+	"Watch the axes!\nBold axes show the symmetries you have. Faint axes show those you can reach.\nMove the piece over the board to understand the hints. Then place it where marked.",
+	"Lose all axes, and the game ends.",
+	"Save the pattern: Undo your last move.",
+	"Save the pattern: Erase a square.\nPress Erase, then tap the marked square.",
+	"Save the pattern: Get a different piece.\nPress the arrow joker.",
+	"Restore vertical symmetry.\nPlace the new piece.",
+	"You don't have to fill the board!\nSave your pattern anytime, as long as at least one axis is bold."]
 const ANIMATION_SECONDS := 0.32
 var progress_path := Model.PATH
 var persist := true
+var leaving := false
 var stage := 1
 var elapsed := 0.0
 var host: Control
@@ -27,6 +28,8 @@ var normal_board_rect := Rect2()
 var adjusted_board_rect := Rect2()
 var board_rect := Rect2()
 var tray_rect := Rect2()
+var offer_over_board := false
+var offer_pending := false
 var text: RichTextLabel
 var caption_rect := Rect2()
 var progress_label: Label
@@ -142,7 +145,7 @@ func enter(step: int) -> void:
 		cells = puzzle.offered.duplicate()
 		color = 1
 	elif stage == 10:
-		repair_phase = 0
+		repair_phase = 1
 		prepare_repair()
 	elif stage == 11: start_seed()
 	if not keep_piece and stage in [6,7,8]: cells = laid_cells(cells)
@@ -193,10 +196,10 @@ func animate_pulses() -> void:
 			entry.live.bg_color = entry.base.bg_color.lerp(Color.WHITE,0.65*pulse_amount())
 
 func set_caption(value: String) -> void:
-	text.text = "[center]"+value+"[/center]"
+	text.text = "[center]"+value.replace("[b]","").replace("[/b]","").replace("**","")+"[/center]"
 
 func measure_caption(value: String, font: Font, font_size: int, width: float) -> float:
-	var plain := value.replace("[b]","").replace("[/b]","").replace("[center]","").replace("[/center]","")
+	var plain := value.replace("[b]","").replace("[/b]","").replace("**","").replace("[center]","").replace("[/center]","")
 	var measured := font.get_multiline_string_size(plain,HORIZONTAL_ALIGNMENT_CENTER,width,font_size)
 	var lines := maxi(1,ceili(measured.y/font.get_height(font_size)))
 	return measured.y+lines*3+8
@@ -213,20 +216,20 @@ func layout() -> void:
 	progress_label.add_theme_color_override("font_color",Ink.text())
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
-	var font := text.get_theme_font("bold_font")
+	var font := text.get_theme_font("normal_font")
 	var captions: Array = REPAIR_TEXT if stage == 10 else ([TEXT[11]] if stage == 11 else TEXT.slice(1,9))
 	var font_size := 2*clampi(roundi(host.size.x*0.028),12,18)
 	# Long explanatory cards still leave room for a usable nine-square field.
 	var minimum_side := minf(normal_board_rect.size.x,maxf(100,normal_board_rect.size.y*0.45))
-	var maximum_caption_height := normal_board_rect.end.y-preparation.position.y-18-minimum_side-2*maxf(0,minimum_side-rim)/n-24
+	var maximum_caption_height := preparation.size.y-18 if n == 9 else normal_board_rect.end.y-preparation.position.y-18-minimum_side-2*maxf(0,minimum_side-rim)/n-24
 	var caption_height := 0.0
 	while true:
 		caption_height = maxf(1,preparation.size.y-18)
 		for caption: String in captions:
 			caption_height = maxf(caption_height,measure_caption(caption,font,font_size,preparation.size.x))
-		if caption_height <= maximum_caption_height or font_size <= 14: break
+		if caption_height <= maximum_caption_height or font_size <= (8 if n == 9 else 14): break
 		font_size -= 1
-	for key in ["font_size","normal_font_size","bold_font_size"]: text.add_theme_font_size_override(key,font_size)
+	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
 	caption_rect = Rect2(preparation.position+Vector2(0,18),Vector2(preparation.size.x,caption_height))
@@ -239,21 +242,38 @@ func layout() -> void:
 	var content_top := maxf(normal_board_rect.position.y,caption_rect.end.y+gap)
 	var available_height := normal_board_rect.end.y-content_top
 	var side := maxf(60,minf(normal_board_rect.size.x,(available_height+2*rim/n-gap)/(1+2.0/n)))
-	adjusted_board_rect = Rect2((host.size.x-side)/2,normal_board_rect.end.y-side,side,side)
+	adjusted_board_rect = normal_board_rect if n == 9 else Rect2((host.size.x-side)/2,normal_board_rect.end.y-side,side,side)
 	host.board_view.position = adjusted_board_rect.position
 	host.board_view.size = adjusted_board_rect.size
 	host.board_view.update_geometry()
 	board_rect = Rect2(host.board_view.position+host.board_view.field.position,host.board_view.field.size)
 	var offer_height := 2*board_rect.size.x/n
 	tray_rect = Rect2(normal_board_rect.position.x,adjusted_board_rect.position.y-gap-offer_height,normal_board_rect.size.x,offer_height)
+	offer_over_board = n == 9 and tray_rect.position.y < caption_rect.end.y+gap
+	if offer_over_board:
+		tray_rect = Rect2(board_rect.position,Vector2(board_rect.size.x,offer_height))
+	if offer_pending:
+		offer_pending = false
+		if offer_over_board and not cells.is_empty(): spawn_offer_on_board()
 	queue_redraw()
 
+func spawn_offer_on_board() -> void:
+	# Present the movable piece in empty squares; include it in the axis preview.
+	for y in range(grid.size()):
+		for x in range(grid.size()):
+			var candidate := Vector2i(x,y)
+			if Model.placed(grid,cells,candidate,color).is_empty(): continue
+			anchor = candidate
+			selected = true
+			return
+
 func update_controls() -> void:
+	if leaving: return
 	var busy := not animation.is_empty()
-	flip.disabled = busy or stage not in [3,6,7,8]
-	recolor.disabled = busy or stage not in [4,6,7,8]
+	flip.disabled = busy or (stage not in [3,6,7,8] and not (stage == 10 and not cells.is_empty()))
+	recolor.disabled = busy or (stage not in [4,6,7,8] and not (stage == 10 and not cells.is_empty()))
 	var place_disabled := busy or not selected or stage not in [5,6,7,8,10]
-	if stage == 10: place_disabled = place_disabled or repair_phase not in [1,2,6]
+	if stage == 10: place_disabled = place_disabled or not repair_matches_target()
 	if stage == 11: place_disabled = place_disabled or host.board_view.growing
 	# Never transiently disable a held button before assigning its final state.
 	place.disabled = place_disabled
@@ -286,17 +306,23 @@ func update_controls() -> void:
 func grid_size() -> int: return 9 if stage in [10,11] else 5
 
 func prediction_board() -> Array:
-	if selected:
-		var predicted := Model.placed(grid,cells,anchor,color)
-		if not predicted.is_empty(): return predicted
-	return grid
+	if not selected: return grid
+	# Match what is actually drawn, even while the floating piece covers an
+	# occupied square. A colliding hover must not show the old board's axes.
+	var predicted: Array = grid.duplicate(true)
+	for offset: Vector2i in cells:
+		var cell := anchor+offset
+		if cell.x >= 0 and cell.y >= 0 and cell.x < grid.size() and cell.y < grid.size():
+			predicted[cell.y][cell.x] = color
+	return predicted
 
 func ink(index: int) -> Color:
 	return Palette.tile(index)
 
 func transform_piece(operation: String) -> void:
-	if not animation.is_empty() or stage not in [2,3,4,6,7,8]: return
-	if operation == "rotate" and stage not in [2,6,7,8]: return
+	if not animation.is_empty() or stage not in [2,3,4,6,7,8,10]: return
+	if cells.is_empty(): return
+	if operation == "rotate" and stage not in [2,6,7,8,10]: return
 	if operation == "flip" and flip.disabled: return
 	if operation == "color" and recolor.disabled: return
 	animation = operation
@@ -340,22 +366,24 @@ func next_step() -> void:
 	if stage == 1: enter(2)
 
 func _process(delta: float) -> void:
+	if leaving: return
 	elapsed += delta
 	if not animation.is_empty():
 		animation_time += delta
 		if animation_time >= ANIMATION_SECONDS: complete_transform()
 	elif stage == 1 and elapsed >= 2: enter(2)
 	elif stage == 10:
-		if repair_phase == 0 and elapsed >= 3: advance_repair()
-		elif repair_phase == 7 and elapsed >= 1.2: enter(11)
+		if repair_phase == 7 and elapsed >= 5: enter(11)
 	elif stage == 11:
 		update_replay(delta)
+	if leaving: return
 	animate_pulses()
 	update_controls()
 	queue_redraw()
 
 func prepare_repair() -> void:
 	grid = Model.repair_board(repair_phase)
+	offer_pending = true
 	selected = false
 	held = false
 	drag = false
@@ -378,12 +406,17 @@ func advance_repair() -> void:
 	update_controls()
 	queue_redraw()
 
-func place_repair() -> void:
+func repair_matches_target() -> bool:
+	if not selected: return false
 	var index: int = {1:0,2:1,6:2}.get(repair_phase,-1)
-	if index < 0: return
+	if index < 0: return false
 	var offer: Dictionary = Model.repair_offers()[index]
-	if color != offer.color or Model.placed(grid,cells,anchor,color) != Model.placed(grid,offer.cells,offer.anchor,offer.color): return
-	advance_repair()
+	if color != offer.color: return false
+	var trial := Model.placed(grid,cells,anchor,color)
+	return not trial.is_empty() and trial == Model.placed(grid,offer.cells,offer.anchor,offer.color)
+
+func place_repair() -> void:
+	if repair_matches_target(): advance_repair()
 
 func joker_action(action: String) -> void:
 	if stage != 10: return
@@ -395,7 +428,7 @@ func joker_action(action: String) -> void:
 
 func start_seed() -> void:
 	var progress := Model.progress(progress_path)
-	var resume: bool = not seed_started and progress.step == 11 and progress.seed_index > 0 and progress.seed_index <= Model.seed_steps().size() and Palette.theme_id() == "vines" and host.game.board == Model.seed_board(progress.seed_index)
+	var resume: bool = not seed_started and progress.step == 11 and progress.seed_index > 0 and progress.seed_index <= Model.replay_steps().size() and Palette.theme_id() == "vines" and host.game.board == Model.replay_board(progress.seed_index)
 	seed_index = progress.seed_index if resume else 0
 	seed_started = true
 	if not resume:
@@ -408,7 +441,7 @@ func start_seed() -> void:
 	for node: Node in [host.board_view,host.sounds]:
 		if not seed_old_modes.has(node): seed_old_modes[node] = node.process_mode
 		node.process_mode = Node.PROCESS_MODE_ALWAYS
-	replay_finishing = seed_index == Model.seed_steps().size()
+	replay_finishing = seed_index == Model.replay_steps().size()
 	replay_delay = 0
 	grid = host.game.board.duplicate(true)
 	cells = []
@@ -417,9 +450,9 @@ func start_seed() -> void:
 	if not replay_finishing: prepare_seed()
 
 func prepare_seed() -> void:
-	var step: Dictionary = Model.seed_steps()[seed_index]
+	var step: Dictionary = Model.replay_steps()[seed_index]
 	host.game.queue[host.game.index] = step.name
-	host.game.current_color = 1
+	host.game.current_color = step.get("color",1)
 	host.cells = step.cells.duplicate()
 	host.piece_view.cells = host.cells
 	host.has_hover = false
@@ -453,7 +486,7 @@ func update_replay(delta: float) -> void:
 		host._autosave()
 		finish(false)
 		return
-	var step: Dictionary = Model.seed_steps()[seed_index]
+	var step: Dictionary = Model.replay_steps()[seed_index]
 	var before: Array = host.game.board.duplicate(true)
 	var result: Dictionary = host.game.place(step.cells,step.anchor)
 	assert(result.ok,"Tutorial replay placement must remain legal")
@@ -464,10 +497,12 @@ func update_replay(delta: float) -> void:
 	if persist: Model.save_progress(11,false,progress_path,seed_index)
 	host._autosave()
 	replay_delay = 0
-	if seed_index == Model.seed_steps().size(): replay_finishing = true
+	if seed_index == Model.replay_steps().size(): replay_finishing = true
 	else: prepare_seed()
 
 func finish(_skipped: bool) -> void:
+	if leaving: return
+	leaving = true
 	set_process(false)
 	set_process_input(false)
 	hide()
@@ -575,7 +610,7 @@ func clamp_anchor() -> void:
 	anchor = Vector2i(clampi(anchor.x,0,grid_size()-extent.x),clampi(anchor.y,0,grid_size()-extent.y))
 
 func select_at(point: Vector2) -> void:
-	if tray_rect.has_point(point):
+	if tray_rect.has_point(point) and not offer_over_board:
 		selected = false
 	elif board_rect.has_point(point):
 		var relative := (point-board_rect.position)/(board_rect.size.x/grid_size())
