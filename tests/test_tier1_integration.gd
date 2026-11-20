@@ -113,7 +113,7 @@ func run() -> void:
 	var geometry: String = sample.fingerprint
 	Palette.select(1)
 	view._restyle()
-	check(base.material.get_shader_parameter("palette_target") == Palette.pigment(1), "Settled artwork follows selected palette")
+	check(base.material == null, "Settled artwork keeps original sprite colors without a recoloring shader")
 	check(view.tier1_layer.plans[sample.component_id].fingerprint == geometry, "Palette changes preserve generated layout")
 	view.queue_free()
 	Palette.select(0)

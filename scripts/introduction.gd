@@ -11,12 +11,13 @@ const REPAIR_TEXT := [
 	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
 	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
 	"Lose all axes, and the game ends.",
-	"Save the pattern: Undo your last move.",
-	"Save the pattern: Erase a square.\nPress Erase, then tap the marked square.",
-	"Save the pattern: Get a different piece.\nPress the arrow joker.",
+	"Undo your last move.",
+	"Erase a square.\nPress Erase, then tap the marked square.",
+	"Get a different piece.\nPress the arrow joker.",
 	"Restore vertical symmetry.\nPlace the new piece.",
 	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
 const ANIMATION_SECONDS := 0.32
+const PULSE_SECONDS := 1.4
 var progress_path := Model.PATH
 var persist := true
 var leaving := false
@@ -33,6 +34,8 @@ var offer_pending := false
 var text: RichTextLabel
 var caption_rect := Rect2()
 var progress_label: Label
+var repair_header: RichTextLabel
+var piece_overlay: Control
 var skip: Button
 var forward: Button
 var flip: Button
@@ -86,6 +89,19 @@ func _ready() -> void:
 	progress_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	progress_label.add_theme_color_override("font_color",Ink.text())
 	add_child(progress_label)
+	repair_header = RichTextLabel.new()
+	repair_header.bbcode_enabled = true
+	repair_header.fit_content = false
+	repair_header.scroll_active = false
+	repair_header.text = "[center]Save the pattern[/center]"
+	repair_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	repair_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(repair_header)
+	piece_overlay = Control.new()
+	piece_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	piece_overlay.z_index = 1
+	piece_overlay.draw.connect(_draw_piece)
+	add_child(piece_overlay)
 	assert(host != null)
 	skip = host.replay_button
 	forward = host.palette_button
@@ -186,13 +202,13 @@ func reset_pulses() -> void:
 	pulsing.clear()
 
 func pulse_amount() -> float:
-	return (1-cos(TAU*elapsed/2.6))*0.5
+	return (1-cos(TAU*elapsed/PULSE_SECONDS))*0.5
 
 func animate_pulses() -> void:
 	for control: Button in pulse_bases:
 		for state: String in pulse_bases[control]:
 			var entry: Dictionary = pulse_bases[control][state]
-			entry.live.bg_color = entry.base.bg_color.lerp(Color.WHITE,0.65*pulse_amount())
+			entry.live.bg_color = entry.base.bg_color.lerp(Color.WHITE,pulse_amount())
 
 func set_caption(value: String) -> void:
 	text.text = "[center]"+value.replace("[b]","").replace("[/b]","").replace("**","")+"[/center]"
@@ -209,7 +225,8 @@ func layout() -> void:
 	if not current.is_equal_approx(adjusted_board_rect): normal_board_rect = current
 	# The central header belongs entirely to the caption; side controls never move.
 	var preparation: Rect2 = host.piece_view.get_rect()
-	progress_label.position = preparation.position
+	progress_label.position = preparation.position+Vector2(0,-18) if stage == 10 else preparation.position
+	progress_label.z_index = 2
 	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",12)
 	progress_label.add_theme_color_override("font_color",Ink.text())
@@ -221,23 +238,30 @@ func layout() -> void:
 	# Long explanatory cards still leave room for a usable nine-square field.
 	var minimum_side := minf(normal_board_rect.size.x,maxf(100,normal_board_rect.size.y*0.45))
 	var maximum_caption_height := preparation.size.y-18 if n == 9 else normal_board_rect.end.y-preparation.position.y-18-minimum_side-2*maxf(0,minimum_side-rim)/n-24
-	if stage == 10:
-		# Share the header between text and the offered pieces; keep one preview
-		# scale for the L, single square, and replacement piece throughout the lesson.
-		maximum_caption_height = maxf(1,(normal_board_rect.position.y-preparation.position.y-18-12)*0.55)
 	var caption_height := 0.0
 	while true:
 		caption_height = 1 if stage == 10 else maxf(1,preparation.size.y-18)
 		for caption: String in captions:
-			caption_height = maxf(caption_height,measure_caption(caption,font,font_size,preparation.size.x))
-		if caption_height <= maximum_caption_height or font_size <= (8 if n == 9 else 14): break
+			var height := measure_caption(caption,font,font_size,preparation.size.x)
+			if stage == 10 and caption in REPAIR_TEXT.slice(3,7): height += measure_caption("Save the pattern",font,font_size,preparation.size.x)+6
+			caption_height = maxf(caption_height,height)
+		if stage == 10 or caption_height <= maximum_caption_height or font_size <= (8 if n == 9 else 14): break
 		font_size -= 1
 	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
 	caption_rect = Rect2(preparation.position+Vector2(0,18),Vector2(preparation.size.x,caption_height))
+	var body_rect := caption_rect
+	repair_header.visible = stage == 10 and repair_phase in [3,4,5,6]
+	repair_header.add_theme_font_size_override("normal_font_size",font_size)
+	repair_header.add_theme_color_override("default_color",Ink.text())
+	if repair_header.visible:
+		var header_height := measure_caption("Save the pattern",font,font_size,preparation.size.x)
+		repair_header.position = caption_rect.position
+		repair_header.size = Vector2(preparation.size.x,header_height)
+		body_rect = Rect2(caption_rect.position+Vector2(0,header_height+6),Vector2(preparation.size.x,maxf(1,caption_height-header_height-6)))
 	var current_height := measure_caption(text.text,font,font_size,preparation.size.x)
-	text.position = caption_rect.position+Vector2(0,maxf(0,(caption_height-current_height)/2))
+	text.position = body_rect.position+Vector2(0,maxf(0,(body_rect.size.y-current_height)/2))
 	text.size = Vector2(preparation.size.x,current_height)
 	# Split the remaining height into two offer rows and a square board.
 	# Include the board frame in the calculation and anchor its bottom to the game.
@@ -256,8 +280,8 @@ func layout() -> void:
 	if offer_over_board:
 		tray_rect = Rect2(board_rect.position,Vector2(board_rect.size.x,offer_height))
 	if stage == 10:
-		var tray_top := caption_rect.end.y+6
-		tray_rect = Rect2(preparation.position.x,tray_top,preparation.size.x,maxf(1,normal_board_rect.position.y-6-tray_top))
+		# This preview deliberately overlaps the caption at the normal tile size.
+		tray_rect = preparation
 		offer_over_board = false
 	if offer_pending:
 		offer_pending = false
@@ -541,7 +565,6 @@ func tray_geometry() -> Dictionary:
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
 	var unit := board_rect.size.x/grid_size()
-	if stage == 10: unit = minf(unit,minf(tray_rect.size.y/2,tray_rect.size.x/3))
 	var drawn_size := Vector2(extent)*unit
 	var origin := tray_rect.position+(tray_rect.size-drawn_size)/2
 	# Match the main game: full-size rotations extend down over the board.
@@ -684,9 +707,12 @@ func _draw() -> void:
 			draw_rect(marker.grow(-5),Color.WHITE.lerp(Color("477D76"),pulse_amount()),false,4)
 			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Color.WHITE,3,true)
 			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Color.WHITE,3,true)
-	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,10]:
-		draw_exercise_axes()
-		return
+	draw_exercise_axes()
+	piece_overlay.queue_redraw()
+
+func _draw_piece() -> void:
+	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,10]: return
+	var unit := board_rect.size.x/grid_size()
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
 	var geometry := tray_geometry()
@@ -700,8 +726,10 @@ func _draw() -> void:
 	if not selected:
 		var half_height := piece_unit*(absf(sin(angle))*extent.x+absf(cos(angle))*extent.y)/2
 		center.y = maxf(center.y,tray_rect.position.y+half_height)
-	draw_set_transform(center,angle,Vector2(flip_scale,1))
+	piece_overlay.draw_set_transform(center,angle,Vector2(flip_scale,1))
 	for cell: Vector2i in cells:
-		tile(Rect2(Vector2(cell)*piece_unit-Vector2(extent)*piece_unit/2,Vector2.ONE*piece_unit),piece_ink())
-	draw_set_transform(Vector2.ZERO)
-	draw_exercise_axes()
+		var style := StyleBoxFlat.new()
+		style.bg_color = piece_ink()
+		style.set_corner_radius_all(4)
+		piece_overlay.draw_style_box(style,Rect2(Vector2(cell)*piece_unit-Vector2(extent)*piece_unit/2,Vector2.ONE*piece_unit).grow(-1.5))
+	piece_overlay.draw_set_transform(Vector2.ZERO)

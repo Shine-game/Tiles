@@ -33,9 +33,11 @@ const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
+var tutorial_tile_layer: Control
 var tutorial_underlay: Array = []:
 	set(value):
 		tutorial_underlay = value.duplicate(true)
+		_sync_tutorial_underlay()
 		queue_redraw()
 var tile_floor: ColorRect
 var vines_formations: Node2D
@@ -404,6 +406,7 @@ func update_geometry() -> void:
 	if vines_formations!=null and vines_formations.visible:vines_formations.transform=_sprite_view_transform()
 	if occupied_platform != null:
 		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork or zen_garden else -1.0, not zen_garden)
+	_sync_tutorial_underlay()
 	if zen_garden and zen_visuals != null:
 		zen_visuals.position = _point(Vector2.ZERO)
 		zen_visuals.scale = Vector2.ONE * pitch / 256.0
@@ -489,18 +492,32 @@ func _draw() -> void:
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 	if flush_frame and (board_frame == null or not board_frame.is_present()):
 		draw_rect(field.grow(7), Color("999999") if Palette.zen_garden else Color(Palette.text(), 0.4), false, 14, true)
-	if not tutorial_underlay.is_empty():
-		_draw_tutorial_tiles()
-	elif show_guides:
+	if tutorial_underlay.is_empty() and show_guides:
 		_draw_guides()
 	if coral_reef or clockwork or zen_garden:
 		return
 	Vines.draw(self)
 
+func _sync_tutorial_underlay() -> void:
+	if tutorial_tile_layer == null and not tutorial_underlay.is_empty():
+		tutorial_tile_layer = Control.new()
+		tutorial_tile_layer.name = "TutorialTiles"
+		tutorial_tile_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# Vines and their junctions use -1. Keep the retained tiles below both.
+		tutorial_tile_layer.z_index = -2
+		tutorial_tile_layer.draw.connect(_draw_tutorial_tiles)
+		add_child(tutorial_tile_layer)
+	if tutorial_tile_layer != null:
+		tutorial_tile_layer.visible = not tutorial_underlay.is_empty()
+		tutorial_tile_layer.queue_redraw()
+	if occupied_platform != null:
+		occupied_platform.visible = tutorial_underlay.is_empty() and occupied_platform.occupancy_bytes.has(255)
+
 func _draw_tutorial_tiles() -> void:
+	if tutorial_underlay.is_empty(): return
 	var n := tutorial_underlay.size()
 	var unit := field.size.x/n
-	draw_rect(field,Color("FFF9F3"))
+	tutorial_tile_layer.draw_rect(field,Color("FFF9F3"))
 	var style := StyleBoxFlat.new()
 	style.set_corner_radius_all(4)
 	for y in range(n):
@@ -508,7 +525,7 @@ func _draw_tutorial_tiles() -> void:
 			var pigment: int = tutorial_underlay[y][x]
 			style.bg_color = Palette.tile(pigment) if pigment > 0 else Color("F1E7EB")
 			var rect := Rect2(field.position+Vector2(x,y)*unit,Vector2.ONE*unit)
-			draw_style_box(style,rect.grow(-1.5))
+			tutorial_tile_layer.draw_style_box(style,rect.grow(-1.5))
 
 func _draw_guides() -> void:
 	var n: int = board.size()

@@ -98,12 +98,13 @@ func run() -> void:
 	intro._process(Intro.ANIMATION_SECONDS/2+0.01)
 	check(intro.stage == 3 and intro.cells == Rules.rotate(stationary) and intro.grid == preparation_board,"Same L and pattern persist into Flip")
 	var normal: Color = intro.pulse_bases[intro.flip].normal.base.bg_color
-	intro.elapsed = 1.3
+	intro.elapsed = Intro.PULSE_SECONDS/2
 	intro.animate_pulses()
 	check(intro.flip.get_theme_stylebox("normal").bg_color.get_luminance() > normal.get_luminance(),"Highlight lightens button background")
-	intro.elapsed = 2.6
+	check(intro.flip.get_theme_stylebox("normal").bg_color.is_equal_approx(Color.WHITE) and Intro.PULSE_SECONDS < 2.6,"Button pulse reaches white and runs faster")
+	intro.elapsed = Intro.PULSE_SECONDS
 	intro.animate_pulses()
-	check(intro.flip.get_theme_stylebox("normal").bg_color.is_equal_approx(normal),"Slow pulse returns to normal background")
+	check(intro.flip.get_theme_stylebox("normal").bg_color.is_equal_approx(normal),"Faster pulse returns to normal background")
 	var unflipped: Array = intro.cells.duplicate()
 	intro.transform_piece("rotate")
 	check(intro.animation.is_empty(),"Rotate is locked while Flip is taught")
@@ -192,13 +193,18 @@ func run() -> void:
 		var normal_field: Rect2 = Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		var shared_preview_unit := -1.0
+		var stable_header := Rect2()
 		for phase in range(Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
+			if phase in [3,4,5,6]:
+				if stable_header == Rect2(): stable_header = intro.repair_header.get_rect()
+				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern" and intro.repair_header.get_rect() == stable_header,"Save the pattern stays fixed as the actions change underneath")
+				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"Each repair body sits beneath the persistent header without repeating it")
 			if shared_preview_unit < 0: shared_preview_unit = intro.tray_geometry().unit
-			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"L, single square, and replacement previews shrink by exactly the same factor")
-			check(intro.caption_rect.end.y <= normal_frame.position.y+0.1,"Caption above normal field %s: end %f board top %f font %d" % [dimensions,intro.caption_rect.end.y,normal_frame.position.y,intro.text.get_theme_font_size("font_size")])
+			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
+			check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18),"Exercise text uses its normal readable size")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
@@ -206,10 +212,10 @@ func run() -> void:
 				var extent := Vector2i.ONE
 				for cell: Vector2i in intro.cells: extent = extent.max(cell+Vector2i.ONE)
 				check(not intro.offer_over_board and not intro.selected,"Each piece is presented outside the playing field")
-				check(geometry.origin.y >= intro.text.get_rect().end.y and geometry.origin.y+extent.y*geometry.unit <= normal_frame.position.y-5.9,"Preview fits below the full cue and clears the outer frame")
-				check(is_equal_approx(geometry.unit,minf(intro.board_rect.size.x/9,minf(intro.tray_rect.size.y/2,intro.tray_rect.size.x/3))),"Preview uses the largest uniform scale that fits the shared tray")
+				check(intro.piece_overlay.z_index > intro.text.z_index and intro.piece_overlay.z_index > intro.repair_header.z_index,"Live piece draws above the caption and repair header")
+				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/9),"Preview uses standard board-square size instead of shrinking")
 			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
-			check(intro.tray_rect.size.y+0.1 >= 2*intro.tray_geometry().unit,"Shared tray fits both preview rows at the common scale")
+			check(intro.tray_rect.is_equal_approx(game.piece_view.get_rect()),"Preview is deliberately positioned over the central header")
 	game.size = Vector2(540,825)
 	game._layout()
 	intro.enter(10)
@@ -302,6 +308,9 @@ func run() -> void:
 	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
 	check(game.game.board == Model.replay_board(0) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
 	check(game.board_view.tutorial_underlay == Model.repair_board(7),"Replay retains the full simple two-color tile arrangement from the exercise")
+	check(game.board_view.tutorial_tile_layer.z_index < game.board_view.tier1_layer.z_index and game.board_view.tutorial_tile_layer.z_index < game.board_view.junction_layer.z_index,"Retained tile background draws beneath tier-one vines and junctions")
+	check(not game.board_view.occupied_platform.visible,"Normal platform cannot cover the retained simple tiles")
+
 	check(intro.prediction_board() == Model.repair_board(7),"Replay axes describe the retained visible tiles while artwork is built")
 
 	intro._process(0)
@@ -334,6 +343,7 @@ func run() -> void:
 	await process_frame
 	check(game.introduction == null and not paused,"Completed automatic replay hands control to the player")
 	check(game.board_view.tutorial_underlay.is_empty(),"Normal board presentation is restored at handoff")
+	check(not game.board_view.tutorial_tile_layer.visible and game.board_view.occupied_platform.visible,"Normal platform visibility returns at handoff")
 
 	check(game.board_view.get_rect().is_equal_approx(full_replay_frame),"Handoff does not resize the nine-square playing field")
 
