@@ -848,7 +848,7 @@ func _layout_palette_menu(pad: float) -> void:
 	var inset := Vector4(12, 12, 12, 12)
 	var row_units := options.size() + (1 if menu_page == "Game Presets" else 0)
 	var desired_height: float = (38 + 70 * row_units + 12) * 1.5
-	var width: float = minf(540, size.x - 2 * pad)
+	var width: float = size.x * 0.70
 	var height: float = minf(desired_height, size.y - 2 * pad)
 	var scale_factor: float = minf(1, minf(width / 540, height / desired_height))
 	var content_width: float = width - inset.x - inset.z
@@ -930,7 +930,9 @@ func _refresh_menu_style() -> void:
 	menu_style.content_margin_top = inset.y
 	menu_style.content_margin_right = inset.z
 	menu_style.content_margin_bottom = inset.w
-	menu_style.set_border_width_all(0)
+	menu_style.set_border_width_all(1)
+	menu_style.border_color = Color(Interface.shade(), 0.65)
+	menu_style.shadow_size = 0
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _apply_button_style(button: Button, active: bool = false, _color: int = 1) -> void:

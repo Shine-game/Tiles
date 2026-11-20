@@ -43,7 +43,7 @@ func run() -> void:
 			game._show_menu(page)
 			check(not game.menu_frame.visible and not game.menu_title.visible and game.menu_title.text.is_empty(), "Nested menus have no frame or heading")
 			var panel: StyleBoxFlat = game.palette_menu.get_theme_stylebox("panel")
-			check(panel.bg_color == normal.bg_color and panel.border_width_top == 0 and panel.shadow_size == 0, "Menu surface matches buttons without frame")
+			check(panel.bg_color == normal.bg_color and panel.border_width_top == 1 and panel.shadow_size == 0, "Menu surface matches buttons with flat thin border")
 		game._show_menu("Audio")
 		check(game.palette_menu.get_theme_stylebox("panel").bg_color == Interface.panel_background(), "settings retains panel background")
 		var icon = game.place_button.get_child(0)
