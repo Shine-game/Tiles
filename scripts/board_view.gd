@@ -33,6 +33,10 @@ const CoralLayer = preload("res://scripts/coral_visuals.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
+var tutorial_underlay: Array = []:
+	set(value):
+		tutorial_underlay = value.duplicate(true)
+		queue_redraw()
 var tile_floor: ColorRect
 var vines_formations: Node2D
 var fountain_water: Node2D
@@ -485,11 +489,26 @@ func _draw() -> void:
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
 	if flush_frame and (board_frame == null or not board_frame.is_present()):
 		draw_rect(field.grow(7), Color("999999") if Palette.zen_garden else Color(Palette.text(), 0.4), false, 14, true)
-	if show_guides:
+	if not tutorial_underlay.is_empty():
+		_draw_tutorial_tiles()
+	elif show_guides:
 		_draw_guides()
 	if coral_reef or clockwork or zen_garden:
 		return
 	Vines.draw(self)
+
+func _draw_tutorial_tiles() -> void:
+	var n := tutorial_underlay.size()
+	var unit := field.size.x/n
+	draw_rect(field,Color("FFF9F3"))
+	var style := StyleBoxFlat.new()
+	style.set_corner_radius_all(4)
+	for y in range(n):
+		for x in range(n):
+			var pigment: int = tutorial_underlay[y][x]
+			style.bg_color = Palette.tile(pigment) if pigment > 0 else Color("F1E7EB")
+			var rect := Rect2(field.position+Vector2(x,y)*unit,Vector2.ONE*unit)
+			draw_style_box(style,rect.grow(-1.5))
 
 func _draw_guides() -> void:
 	var n: int = board.size()

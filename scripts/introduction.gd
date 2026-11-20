@@ -8,14 +8,14 @@ const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TEXT := ["", "Create endless symmetrical patterns.", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
-	"Watch the axes!\nBold axes show the symmetries you have. Faint axes show those you can reach.\nMove the piece over the board to understand the hints. Then place it where marked.",
-	"Watch the axes!\nBold axes show the symmetries you have. Faint axes show those you can reach.\nMove the piece over the board to understand the hints. Then place it where marked.",
+	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
+	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
 	"Lose all axes, and the game ends.",
 	"Save the pattern: Undo your last move.",
 	"Save the pattern: Erase a square.\nPress Erase, then tap the marked square.",
 	"Save the pattern: Get a different piece.\nPress the arrow joker.",
 	"Restore vertical symmetry.\nPlace the new piece.",
-	"You don't have to fill the board!\nSave your pattern anytime, as long as at least one axis is bold."]
+	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
 const ANIMATION_SECONDS := 0.32
 var progress_path := Model.PATH
 var persist := true
@@ -62,7 +62,6 @@ var repair_phase := 0
 var repair_erasing := false
 var seed_started := false
 var seed_index := 0
-var replay_delay := 0.0
 var replay_finishing := false
 var seed_old_modes := {}
 
@@ -222,9 +221,13 @@ func layout() -> void:
 	# Long explanatory cards still leave room for a usable nine-square field.
 	var minimum_side := minf(normal_board_rect.size.x,maxf(100,normal_board_rect.size.y*0.45))
 	var maximum_caption_height := preparation.size.y-18 if n == 9 else normal_board_rect.end.y-preparation.position.y-18-minimum_side-2*maxf(0,minimum_side-rim)/n-24
+	if stage == 10:
+		# Share the header between text and the offered pieces; keep one preview
+		# scale for the L, single square, and replacement piece throughout the lesson.
+		maximum_caption_height = maxf(1,(normal_board_rect.position.y-preparation.position.y-18-12)*0.55)
 	var caption_height := 0.0
 	while true:
-		caption_height = maxf(1,preparation.size.y-18)
+		caption_height = 1 if stage == 10 else maxf(1,preparation.size.y-18)
 		for caption: String in captions:
 			caption_height = maxf(caption_height,measure_caption(caption,font,font_size,preparation.size.x))
 		if caption_height <= maximum_caption_height or font_size <= (8 if n == 9 else 14): break
@@ -252,6 +255,10 @@ func layout() -> void:
 	offer_over_board = n == 9 and tray_rect.position.y < caption_rect.end.y+gap
 	if offer_over_board:
 		tray_rect = Rect2(board_rect.position,Vector2(board_rect.size.x,offer_height))
+	if stage == 10:
+		var tray_top := caption_rect.end.y+6
+		tray_rect = Rect2(preparation.position.x,tray_top,preparation.size.x,maxf(1,normal_board_rect.position.y-6-tray_top))
+		offer_over_board = false
 	if offer_pending:
 		offer_pending = false
 		if offer_over_board and not cells.is_empty(): spawn_offer_on_board()
@@ -306,6 +313,7 @@ func update_controls() -> void:
 func grid_size() -> int: return 9 if stage in [10,11] else 5
 
 func prediction_board() -> Array:
+	if stage == 11 and not host.board_view.tutorial_underlay.is_empty(): return host.board_view.tutorial_underlay
 	if not selected: return grid
 	# Match what is actually drawn, even while the floating piece covers an
 	# occupied square. A colliding hover must not show the old board's axes.
@@ -438,11 +446,11 @@ func start_seed() -> void:
 		# Reset installs the Vines UI; navigation still belongs to this tutorial.
 		forward.get_child(0).kind = "skip"
 		skip.get_child(0).kind = "close"
+	host.board_view.tutorial_underlay = Model.repair_board(7)
 	for node: Node in [host.board_view,host.sounds]:
 		if not seed_old_modes.has(node): seed_old_modes[node] = node.process_mode
 		node.process_mode = Node.PROCESS_MODE_ALWAYS
 	replay_finishing = seed_index == Model.replay_steps().size()
-	replay_delay = 0
 	grid = host.game.board.duplicate(true)
 	cells = []
 	selected = false
@@ -462,7 +470,6 @@ func prepare_seed() -> void:
 	selected = false
 	anchor = step.anchor
 	set_caption(TEXT[11])
-	replay_delay = 0
 	if persist: Model.save_progress(11,false,progress_path,seed_index)
 	host._autosave()
 
@@ -475,12 +482,8 @@ func replay_busy() -> bool:
 			if not event.old and host.board_view.clock < event.start+event.duration: return true
 	return false
 
-func update_replay(delta: float) -> void:
-	if replay_busy():
-		replay_delay = 0
-		return
-	replay_delay += delta
-	if replay_delay < 0.65: return
+func update_replay(_delta: float) -> void:
+	if replay_busy(): return
 	if replay_finishing:
 		host.cells = host._offered_cells()
 		host._autosave()
@@ -496,7 +499,6 @@ func update_replay(delta: float) -> void:
 	seed_index += 1
 	if persist: Model.save_progress(11,false,progress_path,seed_index)
 	host._autosave()
-	replay_delay = 0
 	if seed_index == Model.replay_steps().size(): replay_finishing = true
 	else: prepare_seed()
 
@@ -507,6 +509,7 @@ func finish(_skipped: bool) -> void:
 	set_process_input(false)
 	hide()
 	reset_pulses()
+	if seed_started: host.board_view.tutorial_underlay = []
 	if persist: Model.save_progress(stage,true,progress_path,seed_index)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
@@ -538,6 +541,7 @@ func tray_geometry() -> Dictionary:
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
 	var unit := board_rect.size.x/grid_size()
+	if stage == 10: unit = minf(unit,minf(tray_rect.size.y/2,tray_rect.size.x/3))
 	var drawn_size := Vector2(extent)*unit
 	var origin := tray_rect.position+(tray_rect.size-drawn_size)/2
 	# Match the main game: full-size rotations extend down over the board.

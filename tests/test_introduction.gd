@@ -191,17 +191,25 @@ func run() -> void:
 		var normal_frame: Rect2 = game.board_view.get_rect()
 		var normal_field: Rect2 = Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
+		var shared_preview_unit := -1.0
 		for phase in range(Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
+			if shared_preview_unit < 0: shared_preview_unit = intro.tray_geometry().unit
+			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"L, single square, and replacement previews shrink by exactly the same factor")
 			check(intro.caption_rect.end.y <= normal_frame.position.y+0.1,"Caption above normal field %s: end %f board top %f font %d" % [dimensions,intro.caption_rect.end.y,normal_frame.position.y,intro.text.get_theme_font_size("font_size")])
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
-				check(intro.offer_over_board and intro.selected and not Model.placed(intro.grid,intro.cells,intro.anchor,intro.color).is_empty(),"Offer spawns in empty board squares when the header has no room")
+				var geometry: Dictionary = intro.tray_geometry()
+				var extent := Vector2i.ONE
+				for cell: Vector2i in intro.cells: extent = extent.max(cell+Vector2i.ONE)
+				check(not intro.offer_over_board and not intro.selected,"Each piece is presented outside the playing field")
+				check(geometry.origin.y >= intro.text.get_rect().end.y and geometry.origin.y+extent.y*geometry.unit <= normal_frame.position.y-5.9,"Preview fits below the full cue and clears the outer frame")
+				check(is_equal_approx(geometry.unit,minf(intro.board_rect.size.x/9,minf(intro.tray_rect.size.y/2,intro.tray_rect.size.x/3))),"Preview uses the largest uniform scale that fits the shared tray")
 			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
-			check(is_equal_approx(intro.tray_rect.size.y,2*intro.board_rect.size.x/9),"Expanded field keeps exactly two offer rows")
+			check(intro.tray_rect.size.y+0.1 >= 2*intro.tray_geometry().unit,"Shared tray fits both preview rows at the common scale")
 	game.size = Vector2(540,825)
 	game._layout()
 	intro.enter(10)
@@ -287,13 +295,16 @@ func run() -> void:
 	drag_piece(intro,Model.repair_offers()[2].anchor)
 	await click_control(intro.place)
 	check(intro.repair_phase == 7 and Rules.symmetry_states(intro.grid)[0].complete and game.indicators[0].icon.complete[0],"Replacement domino restores and highlights vertical symmetry")
-	check("You don't have to fill the board!" in intro.text.text and "Save your pattern anytime" in intro.text.text,"Recovered pattern explains saving without filling the field")
+	check("Bold axis! Your board is symmetrical right now." in intro.text.text and "Save a picture and continue playing." in intro.text.text,"Recovered pattern explains the bold axis and saving a picture")
 
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
 	intro._process(5.1)
 	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
 	check(game.game.board == Model.replay_board(0) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
-	intro._process(0.7)
+	check(game.board_view.tutorial_underlay == Model.repair_board(7),"Replay retains the full simple two-color tile arrangement from the exercise")
+	check(intro.prediction_board() == Model.repair_board(7),"Replay axes describe the retained visible tiles while artwork is built")
+
+	intro._process(0)
 	check(game.game.moves == 1 and game.game.board == Model.replay_board(1) and intro.seed_index == 1,"Replay automatically commits its first legal placement")
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Replay creates real 2x2 artwork")
 	check(Model.progress(path).seed_index == 1,"Automatic replay progress is saved")
@@ -309,8 +320,10 @@ func run() -> void:
 	check(intro.stage == 11 and intro.seed_index == 1 and game.game == partial_game,"Automatic replay resumes its saved construction")
 	for index in range(1,Model.replay_steps().size()):
 		game.board_view.show_settled(game.game.board)
-		intro.update_replay(0.7)
+		intro.update_replay(0)
 		check(game.game.board == Model.replay_board(index+1),"Every replayed move matches the intended construction")
+		check(game.board_view.tutorial_underlay == Model.repair_board(7),"The retained tiles remain unchanged under each artwork reveal")
+
 	check(game.introduction != null and intro.replay_finishing,"Replay does not hand off before final artwork finishes")
 	var full_replay_frame: Rect2 = game.board_view.get_rect()
 	check(full_replay_frame == intro.normal_board_rect and game.game.board[2][1] == 2 and game.game.board[2][7] == 2,"Replay retains normal field size and reaches the two-color restored pattern")
@@ -320,6 +333,8 @@ func run() -> void:
 	check(not game.palette_button.disabled,"Final tutorial update cannot disable Settings again")
 	await process_frame
 	check(game.introduction == null and not paused,"Completed automatic replay hands control to the player")
+	check(game.board_view.tutorial_underlay.is_empty(),"Normal board presentation is restored at handoff")
+
 	check(game.board_view.get_rect().is_equal_approx(full_replay_frame),"Handoff does not resize the nine-square playing field")
 
 	check(game.game.moves == Model.replay_steps().size() and game.game.board == Model.repair_board(7) and not game.game.over,"Exact demonstration pattern becomes the playable game")

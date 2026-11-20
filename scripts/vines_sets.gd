@@ -63,9 +63,10 @@ static func center_scale(view, cell: Vector2i, spec: Dictionary) -> float:
 
 static func draw(view) -> void:
 	install()
-	for cell: Vector2i in view.pattern.arrivals:
-		var loaded: Dictionary = tier0 if Topology.neighbor_mask(view.board, cell) == 0 else tier1
-		renderer.draw_parts(Cells.parts_for_role(loaded, "surface"), view, {"cell": cell})
+	if view.tutorial_underlay.is_empty():
+		for cell: Vector2i in view.pattern.arrivals:
+			var loaded: Dictionary = tier0 if Topology.neighbor_mask(view.board, cell) == 0 else tier1
+			renderer.draw_parts(Cells.parts_for_role(loaded, "surface"), view, {"cell": cell})
 	for edge: Dictionary in ([] if view.generative_tier1 else view.pattern.edges):
 		renderer.draw_parts(Cells.parts_for_role(tier1, "vine"), view, {"edge": edge})
 	# Higher-tier art stays in its existing providers and painter order.
