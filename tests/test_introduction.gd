@@ -2,6 +2,8 @@ extends SceneTree
 const Model = preload("res://scripts/tutorial_model.gd")
 const Intro = preload("res://scripts/introduction.gd")
 const Rules = preload("res://scripts/rules.gd")
+const Palette = preload("res://scripts/palette.gd")
+const Session = preload("res://scripts/game_session.gd")
 const Main = preload("res://scripts/main.gd")
 var failures := 0
 var checks := 0
@@ -10,8 +12,26 @@ func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error(message)
-func click_place(intro) -> void:
-	var point: Vector2 = intro.place.get_global_rect().get_center()
+func drag_piece(intro, destination: Vector2i) -> void:
+	var point: Vector2
+	var grabbed: Vector2i = intro.cells[0]
+	var unit: float = intro.board_rect.size.x/intro.grid_size()
+	if intro.selected: point = intro.board_rect.position+(Vector2(intro.anchor+grabbed)+Vector2.ONE/2)*unit
+	else:
+		var geometry: Dictionary = intro.tray_geometry()
+		point = geometry.origin+(Vector2(grabbed)+Vector2.ONE/2)*geometry.unit
+	var touch := InputEventScreenTouch.new()
+	touch.position = point
+	touch.pressed = true
+	intro._gui_input(touch)
+	var movement := InputEventScreenDrag.new()
+	movement.position = intro.board_rect.position+(Vector2(destination+grabbed)+Vector2.ONE/2)*unit
+	intro._gui_input(movement)
+	touch.position = movement.position
+	touch.pressed = false
+	intro._gui_input(touch)
+func click_control(button: Button, expect_press: bool = true) -> void:
+	var point := button.get_global_rect().get_center()
 	var motion := InputEventMouseMotion.new()
 	motion.position = point
 	motion.global_position = point
@@ -25,211 +45,173 @@ func click_place(intro) -> void:
 	click.pressed = true
 	root.push_input(click,true)
 	await process_frame
-	intro.update_controls()
-	check(intro.place.is_pressed(), "Tutorial refresh preserves a held Place press")
+	check(button.is_pressed() == expect_press,"Held native press survives refresh, or stays disabled")
 	click.pressed = false
 	click.button_mask = 0
 	root.push_input(click,true)
 	await process_frame
-
-func drag_piece(intro, destination: Vector2i) -> void:
-	var point: Vector2
-	var grabbed: Vector2i = intro.cells[0]
-	if intro.selected:
-		point = intro.board_rect.position+(Vector2(intro.anchor+grabbed)+Vector2.ONE/2)*intro.board_rect.size.x/5
-	else:
-		var geometry: Dictionary = intro.tray_geometry()
-		point = geometry.origin+(Vector2(grabbed)+Vector2.ONE/2)*geometry.unit
-	var touch := InputEventScreenTouch.new()
-	touch.position = point
-	touch.pressed = true
-	intro._gui_input(touch)
-	var movement := InputEventScreenDrag.new()
-	movement.position = intro.board_rect.position+(Vector2(destination+grabbed)+Vector2.ONE/2)*intro.board_rect.size.x/5
-	intro._gui_input(movement)
-	touch.position = movement.position
-	touch.pressed = false
-	intro._gui_input(touch)
-
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
-	var path := "user://intro-test.cfg"
+	var path := "user://intro-sequence-test.cfg"
 	DirAccess.remove_absolute(path)
-	check(not Model.progress(path).done, "Fresh installation needs tutorial")
-	for stage in [5,6,7,8,9,10]:
+	check(not Model.progress(path).done,"First launch needs introduction")
+	for stage in [2,6,7,8]:
 		var puzzle := Model.recipe(stage)
-		check(Rules.symmetry_states(puzzle.target)[puzzle.symmetry].complete, "Target has promised symmetry")
-		check(Model.accepts(puzzle,puzzle.solution,puzzle.anchor,2), "Authored placement solves puzzle")
-		check(not Model.accepts(puzzle,puzzle.solution,puzzle.anchor,1), "Wrong color cannot solve puzzle")
-		check(not Model.accepts(puzzle,puzzle.solution,Vector2i(-1,-1),2), "Out of bounds rejected")
-		check(not Model.accepts(puzzle,puzzle.solution,Vector2i.ZERO,2), "Wrong location rejected")
+		check(Model.accepts(puzzle,puzzle.solution,puzzle.anchor,puzzle.color),"Puzzle has a verified solution")
+		check(not Model.accepts(puzzle,puzzle.solution,puzzle.anchor,3-puzzle.color),"Wrong color fails")
+		check(not Model.accepts(puzzle,puzzle.solution,Vector2i(-1,-1),puzzle.color),"Out-of-bounds fails")
 		var reachable := false
 		for variant: Dictionary in Rules.orientations(puzzle.offered):
-			if Model.accepts(puzzle,variant.cells,puzzle.anchor,2): reachable = true
-		check(reachable, "Available rotations and flips can solve puzzle")
-	for stage in [9,10]:
-		check(Model.recipe(stage).board == Model.recipe(8).board and Model.recipe(stage).offered == Model.recipe(8).offered, "Independent exercises share starting tiles and offered shape")
-		check(Model.recipe(stage).target != Model.recipe(8).target, "Requested symmetry changes the solution")
-	for stage in [8,9,10]:
-		var exercise := Model.recipe(stage)
-		var solutions := {}
-		for variant: Dictionary in Rules.orientations(exercise.offered):
-			for y in range(5):
-				for x in range(5):
-					for pigment in [1,2]:
-						var trial: Array = exercise.board.duplicate(true)
-						var fits := true
-						for offset: Vector2i in variant.cells:
-							var cell := Vector2i(x,y)+offset
-							if cell.x >= 5 or cell.y >= 5 or trial[cell.y][cell.x] != 0:
-								fits = false
-								break
-							trial[cell.y][cell.x] = pigment
-						if fits and Rules.symmetry_states(trial)[exercise.symmetry].complete:
-							solutions[JSON.stringify(trial)] = true
-		check(solutions.size() == 1 and solutions.has(JSON.stringify(exercise.target)), "Requested symmetry has exactly one completed board")
-	var demonstration := Model.recipe(5)
-	var unflipped: Array = demonstration.solution.duplicate()
-	var mirrored: Array = Rules.flip(unflipped)
-	var same_by_rotation := false
-	for turn in range(4):
-		if unflipped.all(func(cell):return mirrored.has(cell)): same_by_rotation = true
-		unflipped = Rules.rotate(unflipped)
-	check(not same_by_rotation, "Flip demonstration uses a genuinely chiral piece")
+			if Model.accepts(puzzle,variant.cells,puzzle.anchor,puzzle.color): reachable = true
+		check(reachable,"Rotate and flip can reach the solution")
+	var fixture := Model.axis_demo_board()
+	check(Rules.symmetry_states(fixture)[0].complete,"Axes demonstration starts with vertical symmetry")
+	var half := Model.placed(fixture,[Vector2i.ZERO,Vector2i.RIGHT],Vector2i(1,1),1)
+	check(Rules.symmetry_states(half)[0].possible and not Rules.symmetry_states(half)[0].complete,"Unfinished symmetry remains possible")
+	var broken := Model.placed(half,[Vector2i.ZERO],Vector2i(3,1),2)
+	check(not Rules.symmetry_states(broken).any(func(state):return state.possible),"Bad placement breaks every remaining symmetry")
+	root.size = Vector2i(540,825)
+	Palette.select_theme("clockwork")
 	var game = Main.new()
 	root.add_child(game)
+	game.size = Vector2(540,825)
+	game._layout()
 	await process_frame
-	var board: Array = game.game.board.duplicate(true)
 	var original_game = game.game
+	var original_board: Array = game.game.board.duplicate(true)
 	game.intro_progress_path = path
 	game._start_introduction()
 	var intro = game.introduction
-	game.size = Vector2(390,844)
-	game._layout()
-	intro.layout()
-	check(paused, "Tutorial pauses underlying game")
-	check(not game.erase_button.visible and not game.undo_button.visible and not game.skip_button.visible, "Tutorial hides all jokers")
-	check(intro.forward == game.palette_button and intro.skip == game.replay_button and intro.place == game.place_button, "Navigation reuses existing button positions")
-	check(intro.place.text == "" and intro.place.get_child(0).visible, "Place retains its normal hand icon")
-	intro._process(7.1)
-	check(intro.text.text == Intro.RESTORE_TEXT and intro.restore_prompt and intro.cells == [Vector2i.ZERO] and intro.guide_cells() == [Vector2i(1,1)], "Restore prompt immediately offers its matching tile and fixed target")
-	drag_piece(intro,Vector2i(1,1))
-	await click_place(intro)
-	check(intro.succeeding and intro.grid == intro.puzzle.target, "Introductory missing tile can actually be restored")
-	intro._process(2.4)
-	check(intro.stage == 2, "Restoration hands off to rotation lesson")
-	intro._process(3.1)
-	drag_piece(intro,Vector2i(1,1))
-	check(intro.selected, "Piece can enter board before learning transforms")
-	var tap := InputEventMouseButton.new()
-	tap.button_index = MOUSE_BUTTON_LEFT
-	tap.position = intro.board_rect.position+(Vector2(intro.anchor+intro.cells[0])+Vector2.ONE/2)*intro.board_rect.size.x/5
-	tap.pressed = true
-	intro._gui_input(tap)
-	tap.pressed = false
-	intro._gui_input(tap)
-	check(intro.stage == 3 and intro.selected, "Tap rotates the live board piece without sending it back to tray")
-	intro._process(2.1)
+	check(paused,"Practice pauses the real game")
+	for button in [game.erase_button,game.undo_button,game.skip_button]:
+		check(button.visible and button.disabled,"Jokers remain visible but disabled")
+	check(intro.forward == game.palette_button and intro.skip == game.replay_button,"Tutorial reuses navigation positions")
+	var static_grid: Array = intro.grid.duplicate(true)
+	intro._process(0.8)
+	check(intro.stage == 1 and intro.grid == static_grid and intro.cells.is_empty(),"First step is a static symmetric pattern")
+	intro._process(1.3)
+	check(intro.stage == 2 and intro.cells == [Vector2i.ZERO] and intro.place in intro.pulsing,"Step two offers a tile and pulses Place")
+	drag_piece(intro,intro.puzzle.anchor)
+	await click_control(intro.place)
+	check(intro.stage == 3,"Correct placement advances immediately on release")
+	var stationary: Array = intro.cells.duplicate()
+	intro._process(3)
+	check(intro.stage == 3 and intro.cells == stationary and intro.animation.is_empty(),"Tile never rotates automatically")
+	intro.transform_piece("rotate")
+	check(intro.stage == 3 and intro.animation == "rotate","Player starts a rotation animation")
+	intro._process(Intro.ANIMATION_SECONDS/2)
+	check(intro.stage == 3 and intro.cells == stationary,"Rotation completes before moving on")
+	intro._process(Intro.ANIMATION_SECONDS/2+0.01)
+	check(intro.stage == 4 and intro.cells == Rules.rotate(stationary),"Finished rotation advances to flip")
+	var normal: Color = intro.pulse_bases[intro.flip].normal.base.bg_color
+	intro.elapsed = 1.3
+	intro.animate_pulses()
+	check(intro.flip.get_theme_stylebox("normal").bg_color.get_luminance() > normal.get_luminance(),"Highlight lightens button background")
+	intro.elapsed = 2.6
+	intro.animate_pulses()
+	check(intro.flip.get_theme_stylebox("normal").bg_color.is_equal_approx(normal),"Slow pulse returns to normal background")
+	var unflipped: Array = intro.cells.duplicate()
 	intro.flip.pressed.emit()
-	check(intro.stage == 4 and intro.selected, "Flip keeps the exercise piece on the board")
-	intro._process(2.1)
+	check(intro.stage == 4 and intro.animation == "flip","Flip starts only on player action")
+	intro._process(Intro.ANIMATION_SECONDS+0.01)
+	check(intro.stage == 5 and intro.cells == Rules.flip(unflipped),"Flip animation finishes before advancing")
+	var old_color: int = intro.color
+	intro._process(3)
+	check(intro.color == old_color and intro.stage == 5,"Color never changes automatically")
 	intro.recolor.pressed.emit()
-	intro._process(1.4)
-	check(intro.stage == 5, "Player color change unlocks first puzzle")
+	intro._process(Intro.ANIMATION_SECONDS+0.01)
+	check(intro.stage == 6 and intro.recolor in game._controls(),"Color animation leads to the first symmetry exercise")
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
 		game.size = dimensions
 		game._layout()
 		intro.layout()
-		check(intro.board_rect.is_equal_approx(Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)), "Five-by-five occupies the existing grid opening")
-		check(intro.text.position.y >= intro.progress_label.get_rect().end.y and intro.text.get_rect().end.y <= intro.tray_rect.position.y, "Comments sit below step count and above offered piece")
-		check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18), "Tutorial font remains doubled at every phone size")
-		var bounds := Rect2(Vector2.ZERO,dimensions)
-		check(bounds.encloses(intro.board_rect) and bounds.encloses(intro.tray_rect), "Phone layout fits")
-		for control in [intro.skip,intro.flip,intro.place,intro.recolor]: check(bounds.encloses(control.get_rect()), "Tutorial controls fit phone")
-	intro.selected = true
-	intro.anchor = Vector2i.ZERO
-	var instruction: String = intro.text.text
-	intro.try_place()
-	intro.try_place()
-	check(not intro.hint_offered and intro.text.text == instruction and intro.grid == intro.puzzle.board, "Wrong Place presses have no visible reaction")
-	intro.idle = 18.1
-	intro._process(0.1)
-	check(intro.hint_offered, "Inactivity can still offer a hint")
-	intro.hint.pressed.emit()
-	check(intro.hint_visible, "Hint reveals missing footprint")
-	intro.enter(5)
-	intro.demo = false
-	intro.color = 1
-	intro.cells = intro.puzzle.offered.duplicate()
-	var guide: Array = intro.guide_cells()
-	var original_cells: Array = intro.cells.duplicate()
-	var click := InputEventMouseButton.new()
-	click.button_index = MOUSE_BUTTON_LEFT
-	click.position = intro.board_rect.position+(Vector2(guide[0])+Vector2.ONE/2)*intro.board_rect.size.x/5
-	click.pressed = true
-	intro._gui_input(click)
-	click.pressed = false
-	intro._gui_input(click)
-	check(not intro.selected and intro.cells == original_cells and intro.guide_cells() == guide, "Clicking fixed target does not select or transform anything")
-	drag_piece(intro,Vector2i(1,0))
-	check(intro.selected and intro.anchor == Vector2i(1,0) and intro.color == 1, "Unprepared piece can move onto arbitrary board position")
-	drag_piece(intro,Vector2i(0,2))
-	check(intro.anchor == Vector2i(0,2), "Piece can be picked up and moved again on board")
-	intro.transform_piece("rotate")
-	intro.flip.pressed.emit()
-	intro.recolor.pressed.emit()
-	check(intro.selected and intro.color == 2 and intro.grid == intro.puzzle.board, "On-board transforms preserve piece and do not commit grid")
-	check(intro.guide_cells() == guide, "Target guide never moves with the exercise tile")
-	for stage in [5,6,7,8,9,10]:
-		intro.enter(stage)
-		intro.demo = false
-		if stage == 8: check(not intro.hint_visible and intro.puzzle.symmetry == 0, "Independent puzzle requests a specific symmetry")
+		check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18),"Tutorial text stays doubled")
+		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
+		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
+	# Restore actual viewport size before exercising native controls.
+	game.size = Vector2(540,825)
+	game._layout()
+	intro.layout()
+	for stage in [6,7,8]:
+		if intro.stage != stage: intro.enter(stage)
+		check(intro.guide_cells().is_empty() and intro.hint in intro.pulsing,"Symmetry button pulses without giving away the placement")
+		intro.show_hint()
+		check(intro.guide_cells().is_empty(),"No shadow before a wrong placement")
+		drag_piece(intro,Vector2i.ZERO)
+		var before: Array = intro.grid.duplicate(true)
+		intro.try_place()
+		check(intro.stage == stage and intro.hint_visible and intro.guide_cells() == intro.puzzle.missing and intro.grid == before,"Wrong placement reveals a fixed hatched hint")
 		intro.cells = intro.puzzle.solution.duplicate()
-		intro.anchor = intro.puzzle.anchor
-		intro.color = 2
+		intro.color = intro.puzzle.color
 		drag_piece(intro,intro.puzzle.anchor)
+		check(game.indicators[0].icon.complete[intro.puzzle.symmetry],"Symmetry indicator responds to correct hover")
 		intro.place.pressed.emit()
-		check(intro.succeeding and intro.grid == intro.puzzle.target, "Correct player placement completes exercise")
-		check(game.indicators[0].icon.complete[intro.puzzle.symmetry], "Existing symmetry button responds to placement")
-		intro._process(2.4)
-		check(intro.stage == stage+1, "Success advances exercise")
-	check(intro.showcase != null and intro.showcase.board.size() == 9, "Final step uses actual theme artwork")
-	check(Model.progress(path).step == 11 and not Model.progress(path).done, "Progress resumes unfinished introduction")
-	var restored_board: Rect2 = intro.normal_board_rect
-	intro.next_step()
+		check(intro.stage == stage+1,"Correct symmetry placement advances instantly")
+	intro.elapsed = 1.1
+	intro.update_axis_demo()
+	intro.update_controls()
+	check(game.indicators[0].icon.complete[0],"Demonstration lights an existing axis")
+	intro.elapsed = 3.2
+	intro.update_axis_demo()
+	intro.update_controls()
+	check(not game.indicators[0].icon.complete[0] and game.indicators[0].icon.available[0],"Hover/rotation changes active axes")
+	intro.elapsed = 6.5
+	intro.update_axis_demo()
+	intro.update_controls()
+	check(not game.indicators[0].icon.available.any(func(value):return value),"Irrevocably broken axes disappear")
+	intro.elapsed = 7.9
+	intro.update_axis_demo()
+	check(intro.demo_lost and intro.desaturation > 0.8,"Bad placement decolors the ended field")
+	intro._process(2.2)
+	check(intro.stage == 10 and intro.pulsing.size() == 3 and "undo" in intro.text.text,"Step ten names and highlights all jokers without a demo")
+	for button in [game.erase_button,game.undo_button,game.skip_button]:
+		await click_control(button,false)
+	check(game.game == original_game and game.game.board == original_board,"Disabled joker examples cannot alter the real game")
+	intro.forward.pressed.emit()
+	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
+	check(game.game.board == Model.seed_board(0) and game.game.queue[game.game.index] == "L3" and intro.forward.disabled,"Real seed forces the next piece and cannot be skipped with Forward")
+	var first: Dictionary = Model.seed_steps()[0]
+	check(intro.guide_cells().size() == 3,"Seed placement is explicitly marked")
+	drag_piece(intro,Vector2i.ZERO)
+	intro.try_place()
+	check(game.game.moves == 0,"Wrong seed placement does not commit")
+	intro.cells = first.cells.duplicate()
+	drag_piece(intro,first.anchor)
+	intro.place.pressed.emit()
+	check(game.game.moves == 1 and game.game.board == Model.seed_board(1) and intro.seed_index == 1,"First forced placement is committed to the real game")
+	check(not game.board_view.pattern.tier2_records().is_empty(),"First forced placement creates a 2x2 artwork formation")
+	check(Model.progress(path).seed_index == 1,"Seed progress is saved")
+	# Simulate reopening an in-progress seed using the restored real-game state.
+	intro.finish(true)
 	await process_frame
-	check(game.board_view.get_rect().is_equal_approx(restored_board), "Ending tutorial restores normal playing field geometry")
-	check(not paused and Model.progress(path).done, "Begin marks complete and releases game")
-	check(game.game == original_game and game.game.board == board, "Tutorial never overwrites game state")
+	Model.save_progress(11,false,path,1)
+	game.game = Session.unpack(JSON.parse_string(JSON.stringify(Session.pack(game.game))))
+	var partial_game = game.game
+	game._maybe_introduction(true)
+	intro = game.introduction
+	check(intro.stage == 11 and intro.seed_index == 1 and game.game == partial_game,"Partial real-game seed resumes without resetting the board")
+	for index in [1,2]:
+		game.board_view.show_settled(game.game.board)
+		var step: Dictionary = Model.seed_steps()[index]
+		intro.cells = step.cells.duplicate()
+		intro.color = 1
+		drag_piece(intro,step.anchor)
+		intro.try_place()
+	await process_frame
+	check(game.introduction == null and not paused,"Completing the seed hands control to the real game")
+	check(game.game.moves == 3 and game.game.board == Model.seed_board(3) and not game.game.over,"Small design remains playable")
+	var final_states := Rules.symmetry_states(game.game.board)
+	check(final_states[0].complete and final_states[1].complete and final_states[5].complete,"Seeded design is perfectly symmetric")
+	check(Session.valid_game(Session.pack(game.game)),"Seeded game is valid for normal save/resume")
+	check(Model.progress(path).done,"Tutorial completion is saved")
+	check(game.palette_button.get_child(0).kind == "settings" and game.replay_button.get_child(0).kind == "replay","Real-game controls are restored")
+	for button in [game.erase_button,game.undo_button,game.skip_button]: check(button.visible,"Jokers remain in the real UI")
 	game._start_introduction()
-	var replay = game.introduction
-	check(replay.stage == 1, "Replay starts at beginning")
-	replay.forward.pressed.emit()
-	check(replay.stage == 2, "Forward advances even without completing the current exercise")
-	replay.skip.pressed.emit()
+	intro = game.introduction
+	check(intro.stage == 1,"Replay starts from the beginning")
+	intro.skip.pressed.emit()
 	await process_frame
-	check(not paused and Model.progress(path).done, "Skip works during demonstration")
-	check(game.erase_button.visible and game.undo_button.visible and game.skip_button.visible and game.palette_button.text == "" and game.replay_button.text == "" and game.palette_button.get_child(0).kind == "settings" and game.replay_button.get_child(0).kind == "replay" and game.replay_button.tooltip_text == "Start new game", "Ending tutorial restores normal controls")
-	game.intro_progress_path = path
-	DirAccess.remove_absolute(path)
-	game._maybe_introduction(false)
-	check(game.introduction != null and game.introduction.stage == 1, "First launch opens introduction")
-	game.introduction.finish(true)
-	await process_frame
-	game._maybe_introduction(false)
-	check(game.introduction == null, "Completed or skipped introduction stays dismissed")
-	Model.save_progress(6,false,path)
-	game._maybe_introduction(true)
-	check(game.introduction != null and game.introduction.stage == 6, "Unfinished introduction resumes after closing")
-	game.introduction.finish(true)
-	await process_frame
-	DirAccess.remove_absolute(path)
-	game._maybe_introduction(true)
-	check(game.introduction == null and Model.progress(path).done, "Existing players continue normally")
-	game.settings_options[4].pressed.emit()
-	check(game.introduction != null and game.introduction.stage == 1, "Tutorial is replayable from Settings")
-	game.introduction.finish(true)
-	await process_frame
+	check(not paused and game.introduction == null,"End tutorial exits at any time")
 	game.queue_free()
 	await process_frame
 	DirAccess.remove_absolute(path)
