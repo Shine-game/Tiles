@@ -10,6 +10,28 @@ func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error(message)
+func click_place(intro) -> void:
+	var point: Vector2 = intro.place.get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	motion.global_position = point
+	root.push_input(motion,true)
+	await process_frame
+	var click := InputEventMouseButton.new()
+	click.position = point
+	click.global_position = point
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.button_mask = MOUSE_BUTTON_MASK_LEFT
+	click.pressed = true
+	root.push_input(click,true)
+	await process_frame
+	intro.update_controls()
+	check(intro.place.is_pressed(), "Tutorial refresh preserves a held Place press")
+	click.pressed = false
+	click.button_mask = 0
+	root.push_input(click,true)
+	await process_frame
+
 func drag_piece(intro, destination: Vector2i) -> void:
 	var point: Vector2
 	var grabbed: Vector2i = intro.cells[0]
@@ -90,9 +112,9 @@ func run() -> void:
 	check(intro.forward == game.palette_button and intro.skip == game.replay_button and intro.place == game.place_button, "Navigation reuses existing button positions")
 	check(intro.place.text == "" and intro.place.get_child(0).visible, "Place retains its normal hand icon")
 	intro._process(7.1)
-	check(intro.text.text == "Can you restore it?" and intro.restore_prompt and intro.cells == [Vector2i.ZERO] and intro.guide_cells() == [Vector2i(1,1)], "Restore prompt immediately offers its matching tile and fixed target")
+	check(intro.text.text == Intro.RESTORE_TEXT and intro.restore_prompt and intro.cells == [Vector2i.ZERO] and intro.guide_cells() == [Vector2i(1,1)], "Restore prompt immediately offers its matching tile and fixed target")
 	drag_piece(intro,Vector2i(1,1))
-	intro.place.pressed.emit()
+	await click_place(intro)
 	check(intro.succeeding and intro.grid == intro.puzzle.target, "Introductory missing tile can actually be restored")
 	intro._process(2.4)
 	check(intro.stage == 2, "Restoration hands off to rotation lesson")
@@ -120,6 +142,7 @@ func run() -> void:
 		intro.layout()
 		check(intro.board_rect.is_equal_approx(Rect2(game.board_view.position+game.board_view.field.position,game.board_view.field.size)), "Five-by-five occupies the existing grid opening")
 		check(intro.text.position.y >= intro.progress_label.get_rect().end.y and intro.text.get_rect().end.y <= intro.tray_rect.position.y, "Comments sit below step count and above offered piece")
+		check(intro.text.get_theme_font_size("font_size") == 2*clampi(roundi(dimensions.x*0.028),12,18), "Tutorial font remains doubled at every phone size")
 		var bounds := Rect2(Vector2.ZERO,dimensions)
 		check(bounds.encloses(intro.board_rect) and bounds.encloses(intro.tray_rect), "Phone layout fits")
 		for control in [intro.skip,intro.flip,intro.place,intro.recolor]: check(bounds.encloses(control.get_rect()), "Tutorial controls fit phone")
@@ -172,8 +195,10 @@ func run() -> void:
 		check(intro.stage == stage+1, "Success advances exercise")
 	check(intro.showcase != null and intro.showcase.board.size() == 9, "Final step uses actual theme artwork")
 	check(Model.progress(path).step == 11 and not Model.progress(path).done, "Progress resumes unfinished introduction")
+	var restored_board: Rect2 = intro.normal_board_rect
 	intro.next_step()
 	await process_frame
+	check(game.board_view.get_rect().is_equal_approx(restored_board), "Ending tutorial restores normal playing field geometry")
 	check(not paused and Model.progress(path).done, "Begin marks complete and releases game")
 	check(game.game == original_game and game.game.board == board, "Tutorial never overwrites game state")
 	game._start_introduction()

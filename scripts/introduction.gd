@@ -6,6 +6,7 @@ const Palette = preload("res://scripts/palette.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const Board = preload("res://scripts/board_view.gd")
 const TEXT := ["", "The beauty of symmetry.", "Rotate your tile.\nTap the tile.", "Or flip it.", "Change its colors.", "Make both sides match.\nDrag your tile, then tap Place.", "Now match top and bottom.", "Some patterns match after a half-turn.", "Your turn: restore vertical symmetry.", "Same tiles: restore horizontal symmetry.", "Same tiles: restore half-turn symmetry.", "Every move matters.\nPreserve the symmetry."]
+const RESTORE_TEXT := "Can you restore it?\nDrag the piece to its position, then press the \"place\" button."
 var progress_path := Model.PATH
 var persist := true
 var stage := 1
@@ -43,6 +44,8 @@ var forward: Button
 var hint: Button
 var tray: Control
 var showcase: Control
+var normal_board_rect := Rect2()
+var adjusted_board_rect := Rect2()
 var previous_pause := false
 var host: Control
 var saved_controls: Array = []
@@ -58,7 +61,7 @@ func _ready() -> void:
 	theme = UI.build()
 	text = Label.new()
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	text.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.add_theme_color_override("font_color",Color("303C39"))
 	add_child(text)
@@ -138,19 +141,32 @@ func enter(step: int) -> void:
 
 func layout() -> void:
 	if text == null or host == null: return
-	var field: Rect2 = host.board_view.field
-	board_rect = Rect2(host.board_view.position+field.position,field.size)
+	var current: Rect2 = host.board_view.get_rect()
+	if not current.is_equal_approx(adjusted_board_rect): normal_board_rect = current
 	var preparation: Rect2 = host.piece_view.get_rect()
 	var top := maxf(4,preparation.position.y-24)
 	progress_label.position = Vector2(preparation.position.x,top)
 	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",12)
-	var font_size := clampi(roundi(host.size.x*0.028),12,18)
-	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
-	text.size = Vector2(preparation.size.x,font_size*2.4)
+	var font_size := 2*clampi(roundi(host.size.x*0.028),12,18)
 	text.add_theme_font_size_override("font_size",font_size)
+	var font := text.get_theme_font("font")
+	var text_height := 0.0
+	# Reserve the longest caption for every step: size stays doubled and the board stays still.
+	for caption: String in TEXT+[RESTORE_TEXT,"Need a hint? Tap the symmetry button.","Match the hatched spaces.\nTap to rotate; flip and change color as needed."]:
+		text_height = maxf(text_height,font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,preparation.size.x,font_size).y)
+	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
+	text.size = Vector2(preparation.size.x,text_height+8)
 	var tray_top := text.get_rect().end.y+4
-	tray_rect = Rect2(preparation.position.x,tray_top,preparation.size.x,maxf(24,host.board_view.position.y-tray_top-4))
+	tray_rect = Rect2(preparation.position.x,tray_top,preparation.size.x,48)
+	var board_top := maxf(normal_board_rect.position.y,tray_rect.end.y+8)
+	var side := maxf(60,minf(normal_board_rect.size.x,normal_board_rect.end.y-board_top))
+	adjusted_board_rect = Rect2((host.size.x-side)/2,board_top,side,side)
+	host.board_view.position = adjusted_board_rect.position
+	host.board_view.size = adjusted_board_rect.size
+	host.board_view.update_geometry()
+	var field: Rect2 = host.board_view.field
+	board_rect = Rect2(host.board_view.position+field.position,field.size)
 	if showcase != null:
 		showcase.position = host.board_view.position
 		showcase.size = host.board_view.size
@@ -160,9 +176,11 @@ func layout() -> void:
 func update_controls() -> void:
 	flip.disabled = demo or succeeding or stage < 3 or stage == 11
 	recolor.disabled = demo or succeeding or stage < 4 or stage == 11
-	place.disabled = demo or succeeding or stage < 5 or not selected
-	if stage == 1: place.disabled = not restore_prompt or not selected or succeeding
-	if stage == 11: place.disabled = false
+	var place_disabled := demo or succeeding or stage < 5 or not selected
+	if stage == 1: place_disabled = not restore_prompt or not selected or succeeding
+	elif stage == 11: place_disabled = false
+	# Assign once: a transient disabled=true cancels a mouse/touch press.
+	place.disabled = place_disabled
 	place.text = saved_place_text
 	place.get_child(0).show()
 	forward.disabled = false
@@ -252,6 +270,7 @@ func finish(_skipped: bool) -> void:
 	place.get_child(0).show()
 	get_tree().paused = previous_pause
 	finished.emit()
+	host._layout()
 	host._refresh()
 	queue_free()
 
@@ -273,7 +292,7 @@ func _process(delta: float) -> void:
 			color = 2
 			puzzle = {"board":grid.duplicate(true),"target":target,"missing":[Vector2i(1,1)],"anchor":Vector2i(1,1),"solution":cells.duplicate(),"symmetry":0,"color":2}
 			restore_prompt = true
-			text.text = "Can you restore it?"
+			text.text = RESTORE_TEXT
 		if restore_prompt: board_angle = 0
 		demo = not restore_prompt
 	elif stage == 2 and demo and elapsed >= 3:
@@ -298,7 +317,7 @@ func _process(delta: float) -> void:
 func tray_geometry() -> Dictionary:
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)
-	var unit := minf(tray_rect.size.x/maxi(4,extent.x),tray_rect.size.y/maxi(2,extent.y))*0.85
+	var unit := minf(tray_rect.size.x/maxi(4,extent.x),tray_rect.size.y/maxi(1,extent.y))*0.85
 	return {"unit":unit,"origin":tray_rect.get_center()-Vector2(extent)*unit/2}
 
 func _input(event: InputEvent) -> void:
@@ -448,6 +467,8 @@ func _draw() -> void:
 	if stage in [3,4] and not succeeding:
 		var control: Button = flip if stage == 3 else recolor
 		draw_rect(control.get_rect().grow(3),Color("477D76",0.6+sin(elapsed*4)*0.3),false,2)
+	if restore_prompt and not succeeding:
+		draw_rect(place.get_rect().grow(4),Color("477D76",0.7+0.2*sin(elapsed*5)),false,3)
 	if stage in range(5,11) and (selected or succeeding):
 		draw_rect(hint.get_rect().grow(3),Color("477D76",0.7+0.2*sin(elapsed*5)),false,3)
 	if (stage == 5 and elapsed < 3) or (stage == 7 and demo) or (stage == 6 and succeeding):
