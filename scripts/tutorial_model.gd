@@ -47,6 +47,25 @@ static func accepts(puzzle: Dictionary, cells: Array, anchor: Vector2i, color: i
 static func axis_demo_board() -> Array:
 	return [[1,0,2,0,1],[2,0,0,0,2],[0,0,0,0,0],[1,0,0,0,1],[2,0,1,0,2]]
 
+# The player makes two mistakes, then repairs the same board with all three jokers.
+static func repair_base() -> Array:
+	return [[0,0,1,0,0],[0,0,1,0,0],[0,1,1,1,0],[0,0,1,0,0],[0,0,1,0,0]]
+
+static func repair_offers() -> Array:
+	return [
+		{"cells":[Vector2i.ZERO,Vector2i.DOWN,Vector2i(1,1)],"anchor":Vector2i.ZERO},
+		{"cells":[Vector2i.ZERO],"anchor":Vector2i(3,3)},
+		{"cells":[Vector2i.ZERO,Vector2i.RIGHT],"anchor":Vector2i(3,1)}]
+
+static func repair_board(phase: int) -> Array:
+	var board := repair_base()
+	var offers := repair_offers()
+	if phase >= 1: board = placed(board,offers[0].cells,offers[0].anchor,1)
+	if phase == 2: board = placed(board,offers[1].cells,offers[1].anchor,1)
+	if phase >= 4: board[0][0] = 0
+	if phase >= 6: board = placed(board,offers[2].cells,offers[2].anchor,1)
+	return board
+
 static func seed_steps() -> Array:
 	return [
 		{"name":"L3","cells":[Vector2i(0,0),Vector2i(1,0),Vector2i(0,1)],"anchor":Vector2i(3,3)},

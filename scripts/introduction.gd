@@ -5,6 +5,14 @@ const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TEXT := ["", "The beauty of symmetry.", "Drag the piece to its position,\nthen press the place button.", "Tap the tile to rotate it.", "Press to flip.", "Press to change color.", "Find the vertical symmetry.", "Find the horizontal symmetry.", "Find the rotational symmetry.", "Watch the axes for hints.\nA completed symmetry lights its axis.\nA broken symmetry loses its axis.", "Save a wrong placement:\nerase one tile, undo a move,\nor get a new piece.", "Enjoy infinite creations.\nFollow the marked placements."]
+const REPAIR_TEXT := [
+	"Break the symmetry:\nplace the L as marked.",
+	"Add a wrong move:\nplace the single square as marked.",
+	"Undo placement.\nRemove your last move.",
+	"Erase one square.\nPress erase, then tap the marked square.",
+	"Get a different piece.\nPress the arrow joker.",
+	"Place the new piece\nto restore vertical symmetry.",
+	"Vertical symmetry restored!"]
 const ANIMATION_SECONDS := 0.32
 var progress_path := Model.PATH
 var persist := true
@@ -43,6 +51,8 @@ var attempts := 0
 var animation := ""
 var animation_time := 0.0
 var animation_color := 1
+var repair_phase := 0
+var repair_erasing := false
 var demo_lost := false
 var desaturation := 0.0
 var seed_started := false
@@ -125,10 +135,8 @@ func enter(step: int) -> void:
 		grid = Model.axis_demo_board()
 		cells = []
 	elif stage == 10:
-		grid = Model.placed(Model.axis_demo_board(),[Vector2i.ZERO,Vector2i.RIGHT],Vector2i(1,1),1)
-		grid = Model.placed(grid,[Vector2i.ZERO],Vector2i(3,1),2)
-		cells = []
-		desaturation = 1
+		repair_phase = 0
+		prepare_repair()
 	elif stage == 11: start_seed()
 	if persist: Model.save_progress(stage,false,progress_path,seed_index)
 	choose_pulses()
@@ -142,7 +150,13 @@ func choose_pulses() -> void:
 		4: pulsing = [flip]
 		5: pulsing = [recolor]
 		6,7,8,9: pulsing = [hint]
-		10: pulsing = [host.erase_button,host.undo_button,host.skip_button]
+		10:
+			match repair_phase:
+				0,1,5: pulsing = [place]
+				2: pulsing = [host.undo_button]
+				3: pulsing = [host.erase_button]
+				4: pulsing = [host.skip_button]
+				_: pulsing = [hint]
 		11: pulsing = [place]
 		_: pulsing = []
 	for control: Button in pulsing:
@@ -182,7 +196,7 @@ func layout() -> void:
 	text.add_theme_font_size_override("font_size",font_size)
 	var font := text.get_theme_font("font")
 	var text_height := 0.0
-	for caption: String in TEXT+["No symmetry remains.\nThe game has ended.",TEXT[11]+"\n3 / 3"]:
+	for caption: String in TEXT+REPAIR_TEXT+["No symmetry remains.\nThe game has ended.",TEXT[11]+"\n3 / 3"]:
 		text_height = maxf(text_height,font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,preparation.size.x,font_size).y)
 	text.position = Vector2(preparation.position.x,progress_label.get_rect().end.y+2)
 	text.size = Vector2(preparation.size.x,text_height+8)
@@ -200,16 +214,26 @@ func update_controls() -> void:
 	var busy := not animation.is_empty()
 	flip.disabled = busy or stage not in [4,6,7,8,11]
 	recolor.disabled = busy or stage not in [5,6,7,8,11]
-	var place_disabled := busy or not selected or stage not in [2,6,7,8,11]
+	var place_disabled := busy or not selected or stage not in [2,6,7,8,10,11]
+	if stage == 10: place_disabled = place_disabled or repair_phase not in [0,1,5]
 	if stage == 11: place_disabled = place_disabled or host.board_view.growing
 	# Never transiently disable a held button before assigning its final state.
 	place.disabled = place_disabled
-	forward.disabled = stage == 11
+	forward.disabled = stage in [10,11]
 	skip.disabled = false
-	hint.disabled = stage not in [6,7,8,9,11]
-	for control: Button in [host.erase_button,host.undo_button,host.skip_button]:
+	hint.disabled = stage not in [6,7,8,9,10,11]
+	var jokers := [host.undo_button,host.erase_button,host.skip_button]
+	for i in range(jokers.size()):
+		var control: Button = jokers[i]
 		control.show()
-		control.disabled = true
+		control.disabled = stage != 10 or repair_phase != i+2
+	if stage == 10:
+		for button: Button in [host.undo_button,host.erase_button,host.skip_button]:
+			button.get_child(0).count = 3
+		if repair_phase >= 3: host.undo_button.get_child(0).count = 2
+		if repair_phase >= 4: host.erase_button.get_child(0).count = 2
+		if repair_phase >= 5: host.skip_button.get_child(0).count = 2
+	for control: Button in jokers: control.get_child(0).queue_redraw()
 	recolor.get_child(0).color = color
 	recolor.get_child(0).queue_redraw()
 	var prediction := prediction_board()
@@ -260,6 +284,9 @@ func show_hint() -> void:
 
 func try_place() -> void:
 	if not animation.is_empty() or not selected: return
+	if stage == 10:
+		place_repair()
+		return
 	if stage == 11:
 		place_seed()
 		return
@@ -274,7 +301,7 @@ func try_place() -> void:
 	enter(stage+1)
 
 func next_step() -> void:
-	if stage < 11: enter(stage+1)
+	if stage < 11 and stage != 10: enter(stage+1)
 
 func _process(delta: float) -> void:
 	elapsed += delta
@@ -285,6 +312,7 @@ func _process(delta: float) -> void:
 	elif stage == 9:
 		update_axis_demo()
 		if elapsed >= 10: enter(10)
+	elif stage == 10 and repair_phase == 6 and elapsed >= 1.2: enter(11)
 	animate_pulses()
 	update_controls()
 	queue_redraw()
@@ -313,8 +341,44 @@ func update_axis_demo() -> void:
 			grid = Model.placed(grid,cells,anchor,color)
 			selected = false
 			demo_lost = true
-			desaturation = clampf(elapsed-7,0,1)
-			text.text = "No symmetry remains.\nThe game has ended."
+			text.text = "No symmetry remains.\nLet’s learn how to repair it."
+
+func prepare_repair() -> void:
+	grid = Model.repair_board(repair_phase)
+	selected = false
+	held = false
+	drag = false
+	repair_erasing = false
+	color = 1
+	elapsed = 0
+	text.text = REPAIR_TEXT[repair_phase]
+	var index: int = {0:0,1:1,5:2}.get(repair_phase,-1)
+	cells = Model.repair_offers()[index].cells.duplicate() if index >= 0 else []
+	# The player sees the unsuitable next piece before using the replacement joker.
+	if repair_phase == 4: cells = [Vector2i.ZERO,Vector2i.RIGHT,Vector2i(2,0)]
+
+func advance_repair() -> void:
+	reset_pulses()
+	repair_phase += 1
+	prepare_repair()
+	choose_pulses()
+	update_controls()
+	queue_redraw()
+
+func place_repair() -> void:
+	var index: int = {0:0,1:1,5:2}.get(repair_phase,-1)
+	if index < 0: return
+	var offer: Dictionary = Model.repair_offers()[index]
+	if color != 1 or Model.placed(grid,cells,anchor,color) != Model.placed(grid,offer.cells,offer.anchor,1): return
+	advance_repair()
+
+func joker_action(action: String) -> void:
+	if stage != 10: return
+	if action == "undo" and repair_phase == 2: advance_repair()
+	elif action == "erase" and repair_phase == 3:
+		repair_erasing = not repair_erasing
+		text.text = "Tap the marked square\nto erase it." if repair_erasing else REPAIR_TEXT[3]
+	elif action == "skip" and repair_phase == 4: advance_repair()
 
 func start_seed() -> void:
 	var progress := Model.progress(progress_path)
@@ -407,7 +471,7 @@ func _input(event: InputEvent) -> void:
 		if held or board_rect.has_point(point) or tray_rect.has_point(point): _gui_input(event)
 
 func _gui_input(event: InputEvent) -> void:
-	if not animation.is_empty() or stage not in [2,3,4,5,6,7,8,11]: return
+	if not animation.is_empty() or stage not in [2,3,4,5,6,7,8,10,11]: return
 	var point := Vector2.ZERO
 	var pressed := false
 	var motion := false
@@ -427,6 +491,12 @@ func _gui_input(event: InputEvent) -> void:
 		point = event.position
 		motion = true
 	else: return
+	if stage == 10 and repair_phase == 3:
+		if pressed and not motion and repair_erasing and board_rect.has_point(point):
+			var target := Vector2i((point-board_rect.position)/(board_rect.size.x/5))
+			if target == Vector2i.ZERO: advance_repair()
+		accept_event()
+		return
 	if motion:
 		if held and point.distance_to(drag_start) > 10:
 			drag = true
@@ -474,6 +544,12 @@ func select_at(point: Vector2) -> void:
 
 func guide_cells() -> Array:
 	if stage == 2 or (stage in [6,7,8] and hint_visible): return puzzle.missing.duplicate()
+	if stage == 10:
+		if repair_phase == 3: return [Vector2i.ZERO]
+		var index: int = {0:0,1:1,5:2}.get(repair_phase,-1)
+		if index >= 0:
+			var offer: Dictionary = Model.repair_offers()[index]
+			return offer.cells.map(func(cell: Vector2i): return cell+offer.anchor)
 	if stage == 11:
 		var step: Dictionary = Model.seed_steps()[seed_index]
 		return step.cells.map(func(cell: Vector2i): return cell+step.anchor)
@@ -530,12 +606,17 @@ func _draw() -> void:
 	if stage in [6,7,8]:
 		var index: int = puzzle.symmetry
 		draw_axis(index,Rules.symmetry_states(prediction_board())[index])
-	elif stage == 9:
+	elif stage in [9,10]:
 		var states := Rules.symmetry_states(prediction_board())
 		for index in [0,1,2,3,5]: draw_axis(index,states[index])
 	for cell: Vector2i in guide_cells():
-		hatched_guide(Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit))
-	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,9,11]: return
+		var marker := Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit)
+		hatched_guide(marker)
+		if stage == 10 and repair_phase == 3:
+			draw_rect(marker.grow(-5),Color.WHITE.lerp(Color("477D76"),pulse_amount()),false,4)
+			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Color.WHITE,3,true)
+			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Color.WHITE,3,true)
+	if cells.is_empty() or stage not in [2,3,4,5,6,7,8,9,10,11]: return
 	if stage == 9 and not selected: return
 	var extent := Vector2i.ONE
 	for cell: Vector2i in cells: extent = extent.max(cell+Vector2i.ONE)

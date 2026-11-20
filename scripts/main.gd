@@ -653,7 +653,7 @@ func _choose_color(color: int) -> void:
 
 func _skip() -> void:
 	if introduction != null:
-		introduction.finish(true)
+		introduction.joker_action("skip")
 		return
 	if game.skip():
 		cells = _offered_cells()
@@ -661,6 +661,9 @@ func _skip() -> void:
 		_refresh()
 
 func _toggle_erase() -> void:
+	if introduction != null:
+		introduction.joker_action("erase")
+		return
 	if game.erase_left <= 0:
 		return
 	erase_mode = not erase_mode
@@ -677,6 +680,9 @@ func _erase(cell: Vector2i) -> void:
 		_refresh()
 
 func _undo() -> void:
+	if introduction != null:
+		introduction.joker_action("undo")
+		return
 	if game.undo():
 		erase_mode = false
 		board_view.show_settled(game.board, true)
