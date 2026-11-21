@@ -2,6 +2,7 @@ class_name GardenGallery
 extends RefCounted
 
 # App-private storage needs no Android photo/storage permission.
+const PREVIEW_SIZE := 900
 var directory := "user://gallery"
 
 func entries() -> Array:
@@ -47,36 +48,63 @@ func save_design(board: Array, palette_index: int, image: Image, theme: String =
 	var id := "%020d-%s" % [int(Time.get_unix_time_from_system()*1000),design_key.left(8)]
 	var path := directory.path_join(id)
 	var png_temp := path+".png.tmp"
+	var preview_temp := path+".preview.png.tmp"
 	var json_temp := path+".json.tmp"
+	var temporary := [png_temp,preview_temp,json_temp]
 	if image.save_png(png_temp) != OK:
-		DirAccess.remove_absolute(png_temp)
+		_discard(temporary)
 		return {"ok":false,"error":"image_write"}
+	var has_preview := maxi(image.get_width(),image.get_height()) > PREVIEW_SIZE
+	if has_preview:
+		var preview := _preview(image)
+		if preview.save_png(preview_temp) != OK:
+			_discard(temporary)
+			return {"ok":false,"error":"preview_write"}
 	var file := FileAccess.open(json_temp,FileAccess.WRITE)
 	if file == null:
-		DirAccess.remove_absolute(png_temp)
+		_discard(temporary)
 		return {"ok":false,"error":"metadata_write"}
-	file.store_string(JSON.stringify({"id":id,"fingerprint":design_key,"board":board,"palette":palette_index,"theme":theme,"theme_version":theme_version,"surface_revision":surface_revision}))
+	file.store_string(JSON.stringify({"id":id,"fingerprint":design_key,"board":board,"palette":palette_index,"theme":theme,"theme_version":theme_version,"surface_revision":surface_revision,"image_size":[image.get_width(),image.get_height()]}))
 	file.flush()
 	var error := file.get_error()
 	file.close()
 	if error != OK:
-		DirAccess.remove_absolute(png_temp)
-		DirAccess.remove_absolute(json_temp)
+		_discard(temporary)
 		return {"ok":false,"error":"metadata_write"}
 	if DirAccess.rename_absolute(png_temp,path+".png") != OK:
-		DirAccess.remove_absolute(png_temp)
-		DirAccess.remove_absolute(json_temp)
+		_discard(temporary)
 		return {"ok":false,"error":"image_commit"}
+	var committed := [path+".png"]
+	if has_preview:
+		if DirAccess.rename_absolute(preview_temp,path+".preview.png") != OK:
+			_discard(temporary+committed)
+			return {"ok":false,"error":"preview_commit"}
+		committed.append(path+".preview.png")
 	# JSON is the commit marker: Gallery never lists a half-written record.
 	if DirAccess.rename_absolute(json_temp,path+".json") != OK:
-		DirAccess.remove_absolute(path+".png")
-		DirAccess.remove_absolute(json_temp)
+		_discard(temporary+committed)
 		return {"ok":false,"error":"metadata_commit"}
 	return {"ok":true,"id":id}
 
+static func _discard(paths: Array) -> void:
+	for path: String in paths:
+		if FileAccess.file_exists(path): DirAccess.remove_absolute(path)
+
+static func _preview(image: Image) -> Image:
+	var preview := image.duplicate()
+	var factor := minf(1,float(PREVIEW_SIZE)/maxi(image.get_width(),image.get_height()))
+	preview.resize(maxi(1,roundi(image.get_width()*factor)),maxi(1,roundi(image.get_height()*factor)),Image.INTERPOLATE_LANCZOS)
+	return preview
+
+# Browsing uses the preview; Save and Share always use image_path(), the original.
 func picture(record: Dictionary) -> ImageTexture:
-	var image := Image.load_from_file(directory.path_join(str(record.id) + ".png"))
-	return null if image == null or image.is_empty() else ImageTexture.create_from_image(image)
+	var path := image_path(record)
+	if path.is_empty(): return null
+	var preview_path := path.get_basename()+".preview.png"
+	var image := Image.load_from_file(preview_path if FileAccess.file_exists(preview_path) else path)
+	if image == null or image.is_empty(): return null
+	if maxi(image.get_width(),image.get_height()) > PREVIEW_SIZE: image = _preview(image)
+	return ImageTexture.create_from_image(image)
 
 func image_path(record: Dictionary) -> String:
 	var id := str(record.get("id", ""))

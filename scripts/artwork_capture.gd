@@ -1,4 +1,6 @@
 extends RefCounted
+const EXPORT_SIZE := 2160
+const CANVAS_SIZE := 900
 const BoardView = preload("res://scripts/board_view.gd")
 
 # Shared clean artwork renderer. The viewport belongs to the caller's scene, so
@@ -6,12 +8,17 @@ const BoardView = preload("res://scripts/board_view.gd")
 func render(owner: Control, live_view: Control, snapshot: Array, theme_id: String) -> Image:
 	if DisplayServer.get_name() == "headless": return null
 	var viewport := SubViewport.new()
-	viewport.size = Vector2i(900,900)
+	viewport.size = Vector2i.ONE*EXPORT_SIZE
 	viewport.disable_3d = true
+	viewport.transparent_bg = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	owner.add_child(viewport)
 	var artwork = BoardView.new()
-	artwork.size = Vector2(900,900)
+	artwork.size = Vector2.ONE*CANVAS_SIZE
+	# Render the same scene at a higher pixel density, preserving frame proportions
+	# and display-space effects while sampling the original sprite textures.
+	artwork.scale = Vector2.ONE*(float(EXPORT_SIZE)/CANVAS_SIZE)
+	artwork.flush_frame = true
 	artwork.show_guides = false
 	artwork.show_axes = false
 	artwork.complete_background = true
@@ -19,7 +26,8 @@ func render(owner: Control, live_view: Control, snapshot: Array, theme_id: Strin
 	viewport.add_child(artwork)
 	artwork.show_settled(snapshot)
 	if live_view.board_frame != null and live_view.board_frame.is_present():
-		artwork.board_frame.apply_theme(theme_id,live_view.board_frame.texture)
+		artwork.board_frame.thin_rim = live_view.board_frame.rim_at_width(artwork.size.x)
+		artwork.board_frame.apply_theme(theme_id,live_view.board_frame.artwork_texture())
 		artwork.update_geometry()
 	artwork.direction_by_edge = live_view.direction_by_edge.duplicate(true)
 	artwork._adopt_directions(true)

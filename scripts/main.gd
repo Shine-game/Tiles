@@ -14,6 +14,7 @@ const Introduction = preload("res://scripts/introduction.gd")
 const IntroModel = preload("res://scripts/tutorial_model.gd")
 var introduction: Control
 var intro_progress_path := IntroModel.PATH
+const TouchSlider = preload("res://scripts/touch_slider.gd")
 const InterfaceTheme = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const PlayerActions = preload("res://scripts/player_actions.gd")
@@ -463,7 +464,7 @@ func _update_summaries(board: Array) -> void:
 	_apply_button_style(indicator.panel)
 
 func _surface_revision(theme: String) -> String:
-	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1"
+	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1/flush-frame-v2/hires2160-v1"
 	if Themes.profile(theme).get("tier1_artwork", {}).get("status") == "active": revision += "/tier1-generative-v1"
 	if board_view.board_frame != null and board_view.board_frame.is_present():
 		revision += "/frame-" + board_view.board_frame.appearance
@@ -794,13 +795,13 @@ func _volume_control(title: String, value: float, changed: Callable) -> VBoxCont
 	label.text = "%s volume: %d%%" % [title,roundi(value*100)]
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	row.add_child(label)
-	var slider := HSlider.new()
+	var slider := TouchSlider.new()
 	slider.min_value=0
 	slider.max_value=100
 	slider.step=1
 	slider.value=value*100
 	slider.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	slider.custom_minimum_size.y=32
+	slider.custom_minimum_size.y=44
 	slider.tooltip_text=title+" volume"
 	slider.value_changed.connect(func(amount):
 		label.text="%s volume: %d%%" % [title,roundi(amount)]

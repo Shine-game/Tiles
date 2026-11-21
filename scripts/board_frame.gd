@@ -91,6 +91,16 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 		appearance = style.appearance
 	return is_present()
 
+# The visible artwork may be held by either of the frame renderers.
+func artwork_texture() -> Texture2D:
+	if thin_texture != null: return thin_texture
+	if full_frame != null: return full_frame
+	return texture
+
+func rim_at_width(width: float) -> float:
+	var rim := thin_rim if thin_rim > 0 else margins().x
+	return rim*width/maxf(1,size.x)
+
 func is_present() -> bool:
 	return visible and (texture != null or full_frame != null or thin_texture != null)
 

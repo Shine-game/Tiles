@@ -167,12 +167,17 @@ godot --headless --audio-driver Dummy --path . --script tests/test_reef_water.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_board_frame.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_clockwork.gd
 godot --headless --path . --script tests/test_ui.gd
+godot --headless --path . --script tests/test_touch_volume.gd
 godot --headless --path . --script tests/test_gallery.gd
 godot --headless --path . --script tests/test_coral.gd
 godot --headless --path . --script tests/test_platform.gd
 ```
 
 The runners cover generation, symmetry orbits, placement, independent helper budgets, exact-piece Undo, non-refunding erasures, recovery from empty/finished gardens, routed touch and mouse gestures, committed symmetry indicators, the growth gate, audio, and non-scrolling portrait/landscape layouts from 240×320 through 844×390. On a graphical display `tests/test_ui.gd` also writes `/tmp/tiles-godot.png`.
+
+Saved artwork keeps a 2160×2160 PNG original for Save Image and Share, with a
+separate 900×900 gallery preview. Existing older images retain their original
+resolution; saving the design again creates the new high-resolution version.
 
 Run `tests/test_gallery.gd` on a graphical display to additionally test real clean artwork capture, repeated-save deduplication, gallery navigation, and saving a 100% filled board. It writes `build/helpers-preview.png`, `build/gallery-artwork-preview.png`, and `build/gallery-browser-preview.png` for visual review. Tests use isolated temporary gallery directories and remove only their own records.
 

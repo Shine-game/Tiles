@@ -63,6 +63,8 @@ func _run() -> void:
 			scene.size = dimensions
 			scene._layout()
 			check(Rect2(Vector2.ZERO, view.size).grow(0.001).encloses(view.board_frame.get_rect()), "frame fits without overlapping controls at " + str(dimensions))
+			check(view.grid_inset == 0 and view._point(Vector2.ZERO).is_equal_approx(view.field.position) and view._point(Vector2.ONE*board_size).is_equal_approx(view.field.end),"Live grid reaches all four inner frame edges")
+			check(view.board_frame.get_rect().grow(-view.board_frame.thin_rim).is_equal_approx(view.field),"Live frame has no gap before the grid")
 			check(view.reef_water.floor_plane.get_rect().is_equal_approx(view.field) and view.reef_water.light_plane.get_rect().is_equal_approx(view.board_frame.get_rect()), "one caustic field covers board and frame while lagoon fills only the opening")
 			check(view.reef_water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - view.board_frame.position), "frame and board share the exact lighting coordinate origin")
 			scene.grabbed_cell = Vector2i.ZERO

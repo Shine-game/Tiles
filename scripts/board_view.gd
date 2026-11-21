@@ -207,6 +207,7 @@ func _sync_blank_ground() -> void:
 			ink.set_shader_parameter("cell_center", Vector2(cell) + Vector2.ONE * 0.5)
 			ink.set_shader_parameter("quarter_turn", float(turn))
 			ink.set_shader_parameter("cell_pixels", 256.0)
+			ink.set_shader_parameter("corner_ratio",0.0)
 			ink.set_shader_parameter("submerged", coral_reef)
 			ink.set_shader_parameter("metal_surface", clockwork)
 			if clockwork:
@@ -400,6 +401,8 @@ func update_geometry() -> void:
 	if vines_formations!=null and vines_formations.visible:vines_formations.transform=_sprite_view_transform()
 	if occupied_platform != null:
 		occupied_platform.configure(_point(Vector2.ZERO), pitch, Palette.platform_color(), coral_reef, 4.0 if clockwork or zen_garden else -1.0, not zen_garden)
+		# A completed photograph fills the rectangular opening, including corners.
+		occupied_platform.material.set_shader_parameter("corner_ratio",0.0 if complete_background else 0.16)
 		occupied_platform.visible = occupied_platform.occupancy_bytes.has(255)
 	if zen_garden and zen_visuals != null:
 		zen_visuals.position = _point(Vector2.ZERO)

@@ -31,9 +31,16 @@ func _run() -> void:
 			var capture = Board.new()
 			capture.size = Vector2(900, 900)
 			capture.complete_background = true
+			capture.flush_frame = true
 			capture.show_guides = false
 			root.add_child(capture)
 			capture.show_settled(snapshot)
+			capture.board_frame.thin_rim = scene.board_view.board_frame.rim_at_width(900)
+			capture.update_geometry()
+			check(capture.board_frame.get_rect().is_equal_approx(Rect2(0,0,900,900)),"Photo contains the frame and opening without an outer margin")
+			check(capture.grid_inset == 0 and capture._point(Vector2.ZERO).is_equal_approx(capture.field.position) and capture._point(Vector2.ONE*n).is_equal_approx(capture.field.end),"Capture tiles meet every inner frame edge")
+			check(is_equal_approx(capture.board_frame.thin_rim/900,scene.board_view.board_frame.thin_rim/scene.board_view.board_frame.size.x),"Capture and live frame have identical proportions")
+			check(capture.occupied_platform.material.get_shader_parameter("corner_ratio") == 0.0,"Completed photo has no empty rounded corner cutouts")
 			capture.advance_growth(100)
 			check(capture.board == snapshot and snapshot[0][0] == 0, "capture leaves logical empty cells unchanged")
 			check(capture.pattern.arrivals.size() == 1, "blank fill generates no new plants, coral or mechanisms")
@@ -51,9 +58,19 @@ func _run() -> void:
 				if not matches.is_empty():
 					var record: Dictionary = matches[0]
 					check(record.board == snapshot, "saved metadata keeps the original colored pattern")
-					check(record.surface_revision.contains("complete-background-v1"), "completed captures have a distinct appearance identity")
+					check(record.surface_revision.contains("complete-background-v1") and record.surface_revision.contains("flush-frame-v2"), "completed captures have a distinct appearance identity")
 					check(record.fingerprint != Gallery.fingerprint(snapshot, Palette.selected_index, theme, Palette.theme_version(), record.surface_revision.replace("/complete-background-v1", "")), "old partial images do not deduplicate the completed artwork")
+					check(record.fingerprint != Gallery.fingerprint(snapshot,Palette.selected_index,theme,Palette.theme_version(),record.surface_revision.replace("/flush-frame-v2","")),"Corrected framing is saved anew instead of reusing old padded photos")
 					var picture: Image = scene.gallery.picture(record).get_image()
+					var original: Image = Image.load_from_file(scene.gallery.image_path(record))
+					check(original.get_size() == Vector2i(2160,2160) and picture.get_size() == Vector2i(900,900),"Real rendering stores high-resolution exports and compact gallery previews")
+					check(original.get_used_rect() == Rect2i(0,0,2160,2160),"High-resolution export preserves the tight frame crop")
+					check(picture.get_used_rect() == Rect2i(0,0,900,900),"Actual saved PNG is tight to the outer frame bounds")
+					if theme == "coral_reef":
+						var a: Vector2 = capture.field.position+Vector2.ONE*2
+						var b: Vector2 = capture.field.end-Vector2.ONE*2
+						var corners: Array = [a,Vector2(b.x,a.y),Vector2(a.x,b.y),b]
+						check(corners.all(func(p):return picture.get_pixelv(Vector2i(p)).r > picture.get_pixelv(Vector2i(p)).b),"Sand fills all four inner corners without lagoon gaps")
 					var point: Vector2i = Vector2i(capture._point(Vector2(1.5, 1.5)))
 					var sample: Color = picture.get_pixelv(point)
 					check(sample.a > 0.99, "empty saved cells contain an opaque background tile")

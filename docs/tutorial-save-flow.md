@@ -15,7 +15,7 @@ terminal attempts, with `ok`, `status`, `fingerprint`, `session_id`, and a galle
 `id` when saved. Duplicate requests return `busy` without another completion
 event or capture; the active job continues normally.
 
-`ArtworkCapture.render` owns clean 900×900 rendering, including the frame,
+`ArtworkCapture.render` owns clean 2160×2160 rendering, including the frame,
 complete background, established leaf directions, construction state, and
 theme-specific artwork ordering/motion. Its viewport is a child of the requesting
 scene. Removing the owner cancels the capture and its temporary viewport.
@@ -80,3 +80,7 @@ symmetry checks; zero assertion failures. Real capture-owner and main-scene
 deletion were included, with no script errors on cancellation.
 
 [Step 8](tutorial-cleanup.md) removes the obsolete replay renderer and runtime numeric adapters.
+
+High-resolution originals are retained for Save Image and Share. Gallery browsing
+uses a separately stored 900×900 preview. Both PNGs are committed before the JSON
+record becomes visible, and preview generation never resizes the original.

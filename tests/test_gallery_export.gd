@@ -19,12 +19,18 @@ func run():
 	var folder := "/tmp/tiles-export-test-%d" % Time.get_ticks_usec()
 	var gallery = Gallery.new()
 	gallery.directory = folder
-	var image := Image.create(8,8,false,Image.FORMAT_RGBA8)
+	var image := Image.create(2160,2160,false,Image.FORMAT_RGBA8)
 	image.fill(Color.MAGENTA)
 	var saved: Dictionary = gallery.save_design(Rules.create_board(9),0,image)
 	var record: Dictionary = gallery.entries()[0]
 	var source: String = gallery.image_path(record)
 	check(saved.ok and not source.is_empty(),"Saved artwork has an exportable PNG path")
+	check(Image.load_from_file(source).get_size() == Vector2i(2160,2160),"Save and Share retain the 2160-pixel original")
+	check(gallery.picture(record).get_image().get_size() == Vector2i(900,900),"Gallery browsing loads the smaller preview")
+	var preview_path := source.get_basename()+".preview.png"
+	check(FileAccess.file_exists(preview_path),"Preview is stored separately from the export original")
+	DirAccess.remove_absolute(preview_path)
+	check(gallery.picture(record).get_image().get_size() == Vector2i(900,900) and Image.load_from_file(source).get_size() == Vector2i(2160,2160),"A missing preview never damages or downscales the original")
 	check(gallery.image_path({"id":"../private"}).is_empty(),"Export paths cannot escape the gallery")
 	var copied: Dictionary = Export.export_copy(source,folder+"/export.png")
 	check(copied.ok and FileAccess.get_file_as_bytes(source)==FileAccess.get_file_as_bytes(folder+"/export.png"),"Desktop export preserves the exact original PNG")
@@ -35,6 +41,7 @@ func run():
 	root.add_child(service)
 	service.share_image(source,str(record.id))
 	check(service.busy and backend.calls[0]==["share",ProjectSettings.globalize_path(source),str(record.id)],"Share hands the chosen saved image to the native plugin")
+	check(Image.load_from_file(backend.calls[0][1]).get_size() == Vector2i(2160,2160),"Native Share receives the high-resolution PNG")
 	service.save_image(source,str(record.id))
 	check(backend.calls.size()==1,"Duplicate exports are blocked while busy")
 	backend.operation_completed.emit("share",true,"Choose an app")
@@ -54,6 +61,7 @@ func run():
 	check(scene.gallery_file_dialog.visible and scene.gallery_export_busy,"Desktop Save opens a file chooser")
 	scene._save_gallery_file(folder+"/from-ui.png")
 	check(FileAccess.file_exists(folder+"/from-ui.png") and not scene.gallery_export_busy,"Gallery Save exports and restores controls")
+	check(Image.load_from_file(folder+"/from-ui.png").get_size() == Vector2i(2160,2160),"Desktop Save exports 2160 pixels rather than the preview")
 	scene.gallery_file_dialog.hide()
 	scene.gallery_entries=[]
 	scene._show_gallery_page()

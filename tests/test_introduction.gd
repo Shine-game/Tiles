@@ -433,7 +433,7 @@ func run() -> void:
 		if not pictures.is_empty():
 			check(pictures[0].board == Model.repair_board("save") and pictures[0].theme == prior_theme,"Save still writes the complete pattern in the current theme")
 			var image := Image.load_from_file(game.gallery.image_path(pictures[0]))
-			check(image != null and image.get_size() == Vector2i(900,900),"Gallery contains a readable full-resolution artwork PNG")
+			check(image != null and image.get_size() == Vector2i(2160,2160),"Gallery keeps a readable high-resolution original PNG for Save and Share")
 		check(game.saved_fingerprint == game._design_fingerprint(),"Normal save indicator marks the tutorial design as saved")
 	check(not Model.progress(path).done,"Tutorial is not complete before theme selection")
 	check(game.palette_button in intro.pulsing and game.palette_button.modulate == Color.WHITE,"Card eight restores full brightness and highlights Settings")

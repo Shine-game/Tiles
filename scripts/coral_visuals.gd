@@ -137,11 +137,13 @@ func _process(delta: float) -> void:
 			sprite.texture = Fingers.frame_texture(chosen, animation_seconds)
 
 func configure_surface(platform) -> void:
-	var signature: Array = [platform.mask_texture, platform.mask_revision, platform.grid_size, platform.cell_pixels]
+	var corner_ratio: float = platform.material.get_shader_parameter("corner_ratio")
+	var signature: Array = [corner_ratio,platform.mask_texture, platform.mask_revision, platform.grid_size, platform.cell_pixels]
 	if signature == surface_signature:
 		return
 	surface_signature = signature
 	for sprite: Sprite2D in ground_sprites:
+		sprite.material.set_shader_parameter("corner_ratio",corner_ratio)
 		sprite.material.set_shader_parameter("occupancy_mask", platform.mask_texture)
 		sprite.material.set_shader_parameter("grid_size", platform.grid_size)
 		sprite.material.set_shader_parameter("cell_pixels", 256.0)
