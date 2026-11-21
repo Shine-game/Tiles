@@ -682,11 +682,9 @@ func _ask_reset(n: int) -> void:
 		_reset())
 
 func _replay_game() -> void:
-	if introduction != null:
-		introduction.finish(true)
-		return
 	if saving: return
 	_confirm_new_game("Start new game", func():
+		if introduction != null: introduction.finish(true)
 		menu_history.clear()
 		_reset(game.board.size(), game.difficulty))
 

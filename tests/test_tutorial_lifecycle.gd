@@ -77,7 +77,7 @@ func run() -> void:
 	var replacement = game.introduction
 	await process_frame
 	check(game.introduction == replacement and replacement != intro and game.board_view.process_mode == Node.PROCESS_MODE_DISABLED,"Old cleanup cannot release a newer tutorial's scope")
-	check(game.button_icon(game.palette_button).kind == "skip","New tutorial retains its own navigation override")
+	check(game.button_icon(game.palette_button).kind == "settings" and game.palette_button.disabled and game.palette_button.modulate.a < 0.6,"New tutorial keeps Settings dimmed without an old scope restoring it")
 	replacement.finish(true)
 	await process_frame
 	check(game.introduction == null and game.player_actions.completed.get_connections().size() == original_actions,"Repeated normal cleanup is idempotent")

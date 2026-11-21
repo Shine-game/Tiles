@@ -43,6 +43,7 @@ func capture_removed_owner(capture, owner, view, board) -> void:
 	capture_results.append(image)
 
 func run() -> void:
+	Palette.select_theme("vines")
 	root.size = Vector2i(540,825)
 	var folder := "/tmp/tutorial-save-flow-%d" % Time.get_ticks_usec()
 	var game = Main.new()

@@ -93,6 +93,9 @@ func run() -> void:
 	for button in [game.erase_button,game.undo_button,game.skip_button]:
 		check(button.visible and button.disabled,"Jokers remain visible but disabled")
 	check(intro.forward == game.palette_button and intro.skip == game.replay_button,"Tutorial reuses navigation positions")
+	check(game.button_icon(intro.forward).kind == "settings" and intro.forward.disabled and intro.forward.modulate.a < 0.6,"Settings keeps its normal icon and is visibly dimmed until enabled")
+	check(game.button_icon(intro.skip).kind == "replay","New Game keeps its normal icon")
+	check(intro.guide_cells().is_empty(),"Destination pulse does not start during rotation")
 	check(intro.lesson_id == "rotate" and intro.cells.size() == 3 and intro.place.disabled and intro.progress_label.text == "1 / 8","Tutorial opens directly on rotation as the first of eight cards")
 	var preparation_board: Array = intro.grid.duplicate(true)
 	var prepared_session = intro.practice_game
@@ -136,6 +139,7 @@ func run() -> void:
 	check(completed_actions.size() == 1 and completed_actions[0].action == "rotate","Tutorial rotation completes through the shared command interface exactly once")
 	check(intro.progress_label.text == "1 / 8","Flip retains the combined first-card number")
 	check(intro.lesson_id == "flip" and intro.cells == Rules.rotate(stationary) and intro.grid == preparation_board,"Same L and pattern persist into Flip")
+	check(intro.guide_cells().is_empty(),"Destination pulse stays off during Flip")
 	var normal: Color = intro.pulse_bases[intro.flip].normal.base.bg_color
 	intro.elapsed = Intro.PULSE_SECONDS/2
 	intro.animate_pulses()
@@ -150,12 +154,14 @@ func run() -> void:
 	await click_control(intro.flip)
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	check(intro.lesson_id == "color" and intro.cells == Rules.flip(unflipped) and intro.grid == preparation_board,"Same L and board persist into Color")
+	check(intro.guide_cells().is_empty(),"Destination pulse stays off during Color")
 	var old_color: int = intro.color
 	intro._process(1)
 	check(intro.color == old_color and intro.lesson_id == "color","Color changes only on player action")
 	await click_control(intro.recolor)
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	check(intro.lesson_id == "place" and intro.grid == preparation_board and intro.color == 2,"Color lesson advances to Place without replacing the L or pattern")
+	check(intro.guide_cells() == intro.puzzle.missing,"Destination starts pulsing only when Drag and Place is taught")
 	check(intro.practice_game == prepared_session and intro.practice_game.current_color == intro.color,"The same practice game survives all preparation operations")
 	check(Model.accepts(intro.puzzle,intro.cells,intro.puzzle.anchor,intro.color),"One rotation, mirror, and recolor prepare the exact fitting L")
 	drag_piece(intro,intro.puzzle.anchor)
@@ -260,7 +266,7 @@ func run() -> void:
 			intro.layout()
 			intro.update_controls()
 			check(intro.progress_label.text == "%d / 8" % Intro.Lessons.definition("repair",checkpoint).number,"Repair substeps show their grouped card number")
-			check((intro.hint in intro.pulsing) == (checkpoint == "save"),"Replacement placement waits to highlight Hint until committed")
+			check((intro.hint in intro.pulsing) == (checkpoint in ["wrong_placement","save"]),"Hint pulses in the hint explanation and saved-symmetry cue")
 			if checkpoint == "undo":
 				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern","Only the first repair step shows Save the pattern")
 				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"The first repair instruction sits under its header without repeating it")
@@ -312,7 +318,7 @@ func run() -> void:
 	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
 	intro.set_caption(Intro.Lessons.REPAIR.wrong_placement.caption)
 	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
-	check(intro.hint not in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint and Place stay quiet before the required placement")
+	check(intro.hint in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint explanation pulses Hint while Place waits for the required placement")
 
 	var repair_session = intro.practice_game
 	var saved_repair: Array = intro.grid.duplicate(true)
@@ -320,7 +326,7 @@ func run() -> void:
 	check(not Rules.symmetry_states(intro.prediction_board())[0].complete and not game.indicators[0].icon.complete[0],"Colliding floating piece no longer shows the committed board's present symmetry")
 	check(intro.grid == saved_repair and intro.place.disabled,"Colliding preview never changes committed tiles or enables Place")
 	intro.transform_piece("rotate")
-	check(intro.hint not in intro.pulsing,"Hint stays quiet during tile transformations before the bold-axis cue")
+	check(intro.hint in intro.pulsing,"Hint continues pulsing during transformations in the hint explanation")
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	check(intro.lesson_id == "repair" and intro.repair_checkpoint == "wrong_placement","Free rotation does not advance the axes lesson")
 	await click_control(intro.flip)
@@ -344,7 +350,7 @@ func run() -> void:
 
 	drag_piece(intro,offer.anchor)
 	check(not intro.place.disabled,"Place enables only at the required geometry, location, and color")
-	check(intro.hint not in intro.pulsing and intro.place in intro.pulsing,"Only Place highlights for the required second-piece placement")
+	check(intro.hint in intro.pulsing and intro.place in intro.pulsing,"Hint and correctly configured Place both highlight on card five")
 
 	await click_control(intro.place)
 	check(intro.repair_checkpoint == "undo" and intro.grid == Model.repair_board("undo"),"Player must commit the forced wrong piece")
@@ -409,9 +415,10 @@ func run() -> void:
 	intro._process(30)
 	check(intro.lesson_id == "repair" and intro.repair_checkpoint == "save" and not intro.hint.disabled,"Bold-axis card waits indefinitely for the symmetry button")
 	var full_design_frame: Rect2 = game.board_view.get_rect()
+	var prior_theme: String = Palette.theme_id()
 	await click_control(intro.hint)
 	await process_frame
-	check(Palette.theme_id() == "vines" and game.game.board == Model.repair_board("save"),"Hint click reveals the whole Vines design with both colors immediately")
+	check(Palette.theme_id() == prior_theme and game.game.board == Model.repair_board("save"),"Entering theme choice keeps the current palette and canonical plain-tile board")
 	check(not game.board_view.growing and game.board_view.occupied_platform.visible,"The reveal uses settled artwork and normal pale tile backgrounds")
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Instant design includes its 2x2 artwork")
 	check(game.introduction == intro and intro.lesson_id == "reveal" and not paused and intro.progress_label.text == "8 / 8","Instant reveal opens the new eighth card and waits for theme choice")
@@ -424,12 +431,18 @@ func run() -> void:
 		var pictures: Array = game.gallery.entries()
 		check(pictures.size() == 1,"Hint press actually writes one gallery entry")
 		if not pictures.is_empty():
-			check(pictures[0].board == Model.repair_board("save") and pictures[0].theme == "vines","Saved gallery record contains the complete tutorial Vines pattern")
+			check(pictures[0].board == Model.repair_board("save") and pictures[0].theme == prior_theme,"Save still writes the complete pattern in the current theme")
 			var image := Image.load_from_file(game.gallery.image_path(pictures[0]))
 			check(image != null and image.get_size() == Vector2i(900,900),"Gallery contains a readable full-resolution artwork PNG")
 		check(game.saved_fingerprint == game._design_fingerprint(),"Normal save indicator marks the tutorial design as saved")
 	check(not Model.progress(path).done,"Tutorial is not complete before theme selection")
-	check(game.palette_button in intro.pulsing,"Card eight highlights the existing Settings button")
+	check(game.palette_button in intro.pulsing and game.palette_button.modulate == Color.WHITE,"Card eight restores full brightness and highlights Settings")
+	await process_frame
+	await process_frame
+	if DisplayServer.get_name() != "headless":
+		var screenshot: Image = root.get_texture().get_image()
+		var sample := Vector2i(intro.board_rect.position+Vector2(3.25,3.4)*intro.board_rect.size.x/9)
+		check(screenshot.get_pixelv(sample).is_equal_approx(Palette.tile(1)),"Card eight displays plain colored tiles until a theme is chosen")
 	var demonstrated_game = game.game
 	var demonstrated_history: Array = game.game.history.duplicate(true)
 	await click_control(game.palette_button)
@@ -442,7 +455,7 @@ func run() -> void:
 		if option.get_meta("theme_id") == "vines": vines_option = option
 	await click_control(vines_option)
 	await process_frame
-	check(game.introduction == null and not paused and not game.palette_menu.visible,"Choosing a theme completes tutorial and resumes play")
+	check(game.introduction == null and Palette.theme_id() == "vines" and not paused and not game.palette_menu.visible,"Only choosing a theme reveals its artwork and resumes play")
 	check(game.game == demonstrated_game and game.game.history == demonstrated_history and not game.confirmation.visible,"Theme choice preserves the completed game and needs no reset confirmation")
 	check(game.board_view.get_rect().is_equal_approx(full_design_frame),"Handoff does not resize the nine-square playing field")
 
@@ -470,9 +483,18 @@ func run() -> void:
 	game._start_introduction()
 	intro = game.introduction
 	check(intro.lesson_id == "rotate" and intro.progress_label.text == "1 / 8","Replay starts directly on the rotation card")
+	var before_restart = game.game
+	var checkpoint_before_restart: String = intro.lesson_id
+	await click_control(intro.skip)
+	check(game.confirmation.visible and game.introduction == intro and game.game == before_restart,"New Game opens confirmation without exiting or resetting the tutorial")
+	game.confirmation.hide()
+	game.confirmation.canceled.emit()
+	check(game.introduction == intro and intro.lesson_id == checkpoint_before_restart and game.game == before_restart,"Go back preserves the current tutorial and live game")
 	intro.skip.pressed.emit()
+	game.confirmation.hide()
+	game.confirmation.confirmed.emit()
 	await process_frame
-	check(not paused and game.introduction == null,"End tutorial exits at any time")
+	check(not paused and game.introduction == null and game.game != before_restart and game.game.moves == 0,"Confirm exits the tutorial and starts a genuinely new game")
 	for checkpoint: String in Intro.Lessons.REPAIR_ORDER:
 		check(Model.save_checkpoint("repair",false,path,checkpoint) == OK,"Repair checkpoint is saved before relaunch")
 		game._maybe_introduction(true)

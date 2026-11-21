@@ -67,3 +67,18 @@ The general UI suite also passes its headless branch (496 checks). Real image
 persistence is verified with a graphical display, not inferred from headless
 runs. The known Godot audio-resource shutdown warnings remain; these runs have
 no script errors or failed assertions. `git diff --check` passes.
+
+## Subsequent design adjustments
+
+The first destination pulse starts at the Drag/Place cue; the Hint explanation
+on card 5 pulses Hint throughout. On card 8 the simple-tile presentation persists
+until theme choice; entering the card does not select Vines. The existing save
+pipeline still saves an actual artwork image in the current theme. Settings is
+visibly disabled until enabled on that card. New Game remains available and uses
+the normal confirmation; cancel retains the tutorial, confirm starts a new game.
+The temporary Settings tint is restored with the rest of the tutorial UI scope.
+
+Verified with Godot 4.6.3: 1,265 native introduction checks, 861 Settings checks,
+28 headless save-flow checks, 22 lifecycle checks, and 162 progress checks; no
+failed assertions. The native introduction includes a framebuffer color check
+that plain tiles remain visible before theme selection.

@@ -125,11 +125,11 @@ func _ready() -> void:
 	host.player_actions.completed.connect(_on_action_completed)
 	host.interface_changed.connect(invalidate_guidance)
 	host.design_save_finished.connect(_on_design_save_finished)
-	host.button_icon(forward).kind = "skip"
+	host.button_icon(forward).kind = "settings"
 	host.button_icon(forward).count = -1
-	forward.tooltip_text = "Forward"
-	host.button_icon(skip).kind = "close"
-	skip.tooltip_text = "End tutorial"
+	forward.tooltip_text = "Settings"
+	host.button_icon(skip).kind = "replay"
+	skip.tooltip_text = "Start new game"
 	host.resized.connect(layout)
 	resized.connect(layout)
 	enter(lesson_id)
@@ -193,7 +193,7 @@ func desired_pulses() -> Array:
 		if not host.palette_menu.visible: return [forward]
 		return [host.settings_options[0]] if host.menu_page == "Settings" else []
 	if lesson_id == "repair":
-		var targets: Array = [hint] if repair_checkpoint == "save" else []
+		var targets: Array = [hint] if repair_checkpoint in ["wrong_placement","save"] else []
 		if not animation.is_empty(): return targets
 		match repair_checkpoint:
 			"wrong_placement","place_replacement":
@@ -337,6 +337,8 @@ func update_controls() -> void:
 	# Never transiently disable a held button before assigning its final state.
 	place.disabled = place_disabled
 	forward.disabled = lesson_id != "reveal" or reveal_save_state != "saved" or host.saving
+	forward.modulate = Color(0.7,0.7,0.7,0.55) if forward.disabled else Color.WHITE
+	host.button_icon(forward).queue_redraw()
 	skip.disabled = false
 	hint.disabled = lesson_id not in ["repair","reveal"] or (lesson_id == "reveal" and reveal_save_state != "failed")
 	var jokers := [host.undo_button,host.erase_button,host.skip_button]
@@ -503,11 +505,11 @@ func joker_action(action: String) -> void:
 func reveal_design() -> void:
 	# Rebuild the canonical design atomically. Old partial-replay saves resume here
 	# rather than maintaining a second, incremental rendering path.
-	Palette.select_theme("vines")
+	# Keep the current palette and the tutorial's flat tiles until theme choice.
 	host.requested_size = 9
 	host._reset(9,host.game.difficulty)
-	host.button_icon(forward).kind = "skip"
-	host.button_icon(skip).kind = "close"
+	host.button_icon(forward).kind = "settings"
+	host.button_icon(skip).kind = "replay"
 	for step: Dictionary in Model.final_steps():
 		var offered: bool = host.player_actions.offer(host.game,step.name,step.get("color",1))
 		assert(offered,"Tutorial design offer must remain available")
@@ -609,7 +611,7 @@ func _local_pointer(point: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse()*point
 
 func _pick_gesture_target(point: Vector2) -> Dictionary:
-	if not animation.is_empty() or host.palette_menu.visible: return {}
+	if not animation.is_empty() or host.palette_menu.visible or host.confirmation.visible: return {}
 	for control: Control in host._controls():
 		if control.visible and control.get_global_rect().has_point(point): return {}
 	var local := _local_pointer(point)
@@ -621,6 +623,9 @@ func _pick_gesture_target(point: Vector2) -> Dictionary:
 	return {} if hit.x < 0 else {"cell":hit,"from_tray":not selected}
 
 func _gui_input(event: InputEvent) -> void:
+	if host.confirmation.visible:
+		piece_gesture.cancel()
+		return
 	if leaving or lesson_id not in ["rotate","flip","color","place","vertical","horizontal","rotational","repair"]: return
 	var result := piece_gesture.handle(event,_pick_gesture_target)
 	if result.is_empty(): return
@@ -647,7 +652,7 @@ func select_at(point: Vector2) -> void:
 	queue_redraw()
 
 func guide_cells() -> Array:
-	if lesson_id in ["rotate","flip","color","place"] or (lesson_id in ["vertical","horizontal","rotational"] and hint_visible): return puzzle.missing.duplicate()
+	if lesson_id == "place" or (lesson_id in ["vertical","horizontal","rotational"] and hint_visible): return puzzle.missing.duplicate()
 	if lesson_id == "repair":
 		if repair_checkpoint == "erase": return [Vector2i(1,1)]
 		var index: int = Lessons.definition(lesson_id,repair_checkpoint).get("offer",-1)
@@ -684,13 +689,12 @@ func _draw() -> void:
 	if grid.is_empty(): return
 	var n := grid_size()
 	var unit := board_rect.size.x/n
-	if lesson_id != "reveal":
-		draw_rect(board_rect,Color("FFF9F3"))
-		for y in range(n):
-			for x in range(n):
-				var rect := Rect2(board_rect.position+Vector2(x,y)*unit,Vector2.ONE*unit)
-				tile(rect,Color("F1E7EB"))
-				if grid[y][x] > 0: tile(rect,ink(grid[y][x]))
+	draw_rect(board_rect,Color("FFF9F3"))
+	for y in range(n):
+		for x in range(n):
+			var rect := Rect2(board_rect.position+Vector2(x,y)*unit,Vector2.ONE*unit)
+			tile(rect,Color("F1E7EB"))
+			if grid[y][x] > 0: tile(rect,ink(grid[y][x]))
 	for cell: Vector2i in guide_cells():
 		var marker := Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit)
 		tile(marker,target_color(cell))

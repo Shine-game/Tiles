@@ -1,9 +1,11 @@
 # Coordinated reveal, save, and handoff (refactor step 7)
 
-Card 7 still requires Hint/Save. It assembles the matching Vines pattern through
-shared game commands, reveals settled artwork immediately, and requests a real
-gallery save. Card 8 enables Settings → Themes only after that save succeeds.
-Theme choice preserves the board and move history and resumes normal play.
+Card 7 still requires Hint/Save. It assembles the matching pattern through
+shared game commands and requests a real gallery save in the current theme.
+Card 8 keeps the plain colored tiles visible and enables Settings → Themes only
+after that save succeeds. Selecting a theme reveals its artwork, preserves the
+board and move history, and resumes normal play. No theme is selected
+automatically when entering card 8.
 
 ## Shared save API
 

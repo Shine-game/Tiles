@@ -35,16 +35,23 @@ other interaction and fixture requirements remain unchanged.
    placement. The header still appears only on Undo.
 7. “Bold axis! Your board is symmetrical right now. You can save a picture here
    if you want.” Hint/Save remains the required action, as confirmed by the user;
-   only here does it pulse.
+   it also pulses throughout card 5’s Hint explanation.
 8. “Choose your theme and create intricate worlds.” This is an interactive
-   card. After the Vines reveal and gallery save, Settings pulses. Opening it
+   card. The simple colored tiles remain visible. After the gallery save, Settings
+   becomes fully enabled and pulses. Opening it
    pulses the existing Themes button. Opening Themes offers the normal three
    available themes. Selecting one renders the completed board in that theme
    without resetting tiles, history, or the offered piece, then finishes the
    tutorial and restores normal play. No new-game confirmation appears.
    Closing or going back in the menu retains the card; relaunching resumes at
    its Settings prompt. The tutorial is marked complete only after theme choice
-   (or explicit End Tutorial).
+   (or confirming New Game).
+
+The destination marker first pulses on “Drag the piece into position and press
+Place,” after rotation, reflection, and color preparation. Settings retains its
+normal icon but is visibly dimmed and disabled until card 8. New Game retains its
+normal icon throughout and uses the normal Confirm / Go back dialog. Cancel
+leaves the tutorial and live game intact; Confirm exits and resets the game.
 
 Display numbers are presentation metadata, not persisted keys. Combining the
 first four operations does not unlock them all at once or replace their shared L.
