@@ -130,7 +130,7 @@ func run() -> void:
 		game._layout()
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
-		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 16,"Tutorial type stays fixed at sixteen pixels on every screen")
+		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 20,"Tutorial type stays fixed at twenty pixels on every screen")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
 		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
@@ -237,7 +237,7 @@ func run() -> void:
 			check(shared_font_size == intro.text.get_theme_font_size("font_size"),"Every cue uses the same font fitted to the longest text")
 			check(intro.caption_rect.encloses(intro.text.get_rect()),"Cue fit %s phase %d window %s text %s" % [dimensions,phase,intro.caption_rect,intro.text.get_rect()])
 			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
-			check(intro.text.get_theme_font_size("font_size") == 16,"Shared cue formatting fits the reserved text window")
+			check(intro.text.get_theme_font_size("font_size") == 20,"Shared cue formatting fits the reserved text window")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
@@ -340,9 +340,11 @@ func run() -> void:
 	tap.position = intro.board_rect.position+Vector2(1.5,1.5)*intro.board_rect.size.x/9
 	intro._gui_input(tap)
 	check(intro.repair_phase == 5 and intro.grid[1][1] == 0,"Tapping marked square erases exactly that square")
+	var replacement_cue: String = intro.text.get_parsed_text()
 	check(intro.cells.size() == 3 and not game.skip_button.disabled and game.skip_button in intro.pulsing,"Replacement joker is enabled with unsuitable three-square offer")
 	await click_control(game.skip_button)
 	check(intro.repair_phase == 6 and intro.cells == Model.repair_offers()[2].cells,"Replacement joker provides the fitting domino")
+	check(intro.text.get_parsed_text() == replacement_cue and "Restore vertical symmetry" not in intro.text.get_parsed_text(),"Replacement placement keeps the previous cue instead of showing the removed text")
 	check(intro.guide_cells() == [Vector2i(6,2),Vector2i(7,2)],"Replacement destination is marked")
 	drag_piece(intro,Vector2i(0,4))
 	intro.try_place()
@@ -353,10 +355,14 @@ func run() -> void:
 	check("Bold axis! Your board is symmetrical right now." in intro.text.text and "Save a picture and continue playing." in intro.text.text,"Recovered pattern explains the bold axis and saving a picture")
 
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
-	intro._process(5.1)
-	check(intro.stage == 11 and Palette.theme_id() == "vines" and intro.seed_index == 0,"Final step opens a real Vines game")
-	check(game.game.board == Model.replay_board(0) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
+	intro._process(30)
+	check(intro.stage == 10 and intro.repair_phase == 7 and not intro.hint.disabled,"Bold-axis card waits indefinitely for the symmetry button")
+	await click_control(intro.hint)
+	check(intro.stage == 11 and Palette.theme_id() == "vines","Symmetry button starts the real Vines replay")
+	check(game.game.board == Model.replay_board(intro.seed_index) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
 	check(game.board_view.tutorial_underlay == Model.repair_board(7),"Replay retains the full simple two-color tile arrangement from the exercise")
+	check(game.board_view.growth_speed == 2.0,"Tutorial artwork runs at exactly twice normal speed")
+
 	check(game.board_view.tutorial_tile_layer.z_index < game.board_view.tier1_layer.z_index and game.board_view.tutorial_tile_layer.z_index < game.board_view.junction_layer.z_index,"Retained tile background draws beneath tier-one vines and junctions")
 	check(not game.board_view.occupied_platform.visible,"Normal platform cannot cover the retained simple tiles")
 
@@ -364,6 +370,10 @@ func run() -> void:
 
 	intro._process(0)
 	check(game.game.moves == 1 and game.game.board == Model.replay_board(1) and intro.seed_index == 1,"Replay automatically commits its first legal placement")
+	var prior_clock: float = game.board_view.clock
+	game.board_view._process(0.05)
+	check(is_equal_approx(game.board_view.clock-prior_clock,0.1),"Actual animation clock advances twice as fast")
+
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Replay creates real 2x2 artwork")
 	check(Model.progress(path).seed_index == 1,"Automatic replay progress is saved")
 	intro.update_replay(10)
@@ -391,6 +401,7 @@ func run() -> void:
 	check(not game.palette_button.disabled,"Final tutorial update cannot disable Settings again")
 	await process_frame
 	check(game.introduction == null and not paused,"Completed automatic replay hands control to the player")
+	check(game.board_view.growth_speed == 1.0,"Normal gameplay speed is restored after the tutorial")
 	check(game.board_view.tutorial_underlay.is_empty(),"Normal board presentation is restored at handoff")
 	check(not game.board_view.tutorial_tile_layer.visible and game.board_view.occupied_platform.visible,"Normal platform visibility returns at handoff")
 
@@ -427,7 +438,7 @@ func run() -> void:
 	intro = game.introduction
 	for tick in range(1600):
 		if game.introduction == null: break
-		game.board_view.advance_growth(0.25)
+		game.board_view._process(0.25)
 		intro._process(0.25)
 	check(game.introduction == null and game.game.board == Model.repair_board(7),"Automatic replay completes through real growth and delayed-reveal clocks without settling shortcuts")
 	check(not game.palette_button.disabled and not game.replay_button.disabled and not game.flip_button.disabled and not game.blue_button.disabled,"Natural replay completion leaves the full normal UI active")

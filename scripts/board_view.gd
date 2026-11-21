@@ -70,6 +70,7 @@ var show_axes := false:
 		show_axes = enabled
 		_sync_axes()
 var show_guides := true
+var growth_speed := 1.0
 var growth_before: Array = []
 var coral_reef := false
 var coral_visuals: CoralVisuals
@@ -375,7 +376,7 @@ func advance_growth(delta: float) -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
-	advance_growth(delta)
+	advance_growth(delta*growth_speed)
 
 func update_geometry() -> void:
 	if board.is_empty():

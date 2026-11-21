@@ -7,19 +7,20 @@ const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TUTORIAL_FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
-const FONT_SIZE := 16
+const FONT_SIZE := 20
 const TEXT := ["", "", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
 	"",
 	"",
-	"The hint button shows achievable symmetries.\nMake an asymmetric placement and the game ends.",
+	"The hint button shows achievable symmetries. Make an asymmetric placement and the game ends.",
 	"Undo your last move.",
 	"Erase a square.",
 	"Get a different piece.\nPress the arrow joker.",
-	"Restore vertical symmetry.\nPlace the new piece.",
+	"Get a different piece.\nPress the arrow joker.",
 	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
 const ANIMATION_SECONDS := 0.32
 const PULSE_SECONDS := 1.4
+const REPLAY_SPEED := 2.0
 var progress_path := Model.PATH
 var persist := true
 var leaving := false
@@ -69,6 +70,7 @@ var seed_started := false
 var seed_index := 0
 var replay_finishing := false
 var seed_old_modes := {}
+var previous_growth_speed := 1.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -249,26 +251,32 @@ func layout() -> void:
 	progress_label.add_theme_color_override("font_color",Ink.text())
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
-	var font := text.get_theme_font("normal_font")
 	var font_size := FONT_SIZE
 	var reserved := preparation.grow(-2)
-	var caption_height := reserved.size.y
 	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
+	# Keep every cue at the requested size, with one shared area tall enough
+	# for the longest instruction on this screen. The board keeps its geometry.
+	for cue: String in TEXT+REPAIR_TEXT:
+		reserved.size.y = maxf(reserved.size.y,measure_caption(cue,TUTORIAL_FONT,font_size,reserved.size.x))
+	var caption_height := reserved.size.y
 	caption_rect = reserved
 	var body_rect := caption_rect
 	repair_header.visible = stage == 10 and repair_phase == 3
 	repair_header.add_theme_font_size_override("normal_font_size",font_size)
 	repair_header.add_theme_color_override("default_color",Ink.text())
 	if repair_header.visible:
-		var header_height := measure_caption("Save the pattern",font,font_size,reserved.size.x)
-		var body_height := measure_caption(text.text,font,font_size,reserved.size.x)
+		repair_header.size.x = reserved.size.x
+		text.size.x = reserved.size.x
+		var header_height := float(repair_header.get_content_height())+2
+		var body_height := float(text.get_content_height())+2
 		var group_top := caption_rect.position.y+maxf(0,(caption_height-header_height-body_height)/2)
 		repair_header.position = Vector2(caption_rect.position.x,group_top)
 		repair_header.size = Vector2(reserved.size.x,header_height)
 		body_rect = Rect2(caption_rect.position.x,group_top+header_height,reserved.size.x,body_height)
-	var current_height := measure_caption(text.text,font,font_size,reserved.size.x)
+	text.size.x = reserved.size.x
+	var current_height := float(text.get_content_height())+2
 	text.position = body_rect.position+Vector2(0,maxf(0,(body_rect.size.y-current_height)/2))
 	text.size = Vector2(reserved.size.x,current_height)
 	# Split the remaining height into two offer rows and a square board.
@@ -389,6 +397,9 @@ func complete_transform() -> void:
 	else: update_controls()
 
 func show_hint() -> void:
+	if stage == 10 and repair_phase == 7:
+		enter(11)
+		return
 	if stage in [6,7,8] and attempts > 0:
 		hint_visible = true
 		queue_redraw()
@@ -417,8 +428,6 @@ func _process(delta: float) -> void:
 	if not animation.is_empty():
 		animation_time += delta
 		if animation_time >= ANIMATION_SECONDS: complete_transform()
-	elif stage == 10:
-		if repair_phase == 7 and elapsed >= 5: enter(11)
 	elif stage == 11:
 		update_replay(delta)
 	if leaving: return
@@ -484,6 +493,8 @@ func start_seed() -> void:
 		forward.get_child(0).kind = "skip"
 		skip.get_child(0).kind = "close"
 	host.board_view.tutorial_underlay = Model.repair_board(7)
+	if not seed_old_modes.has(host.board_view): previous_growth_speed = host.board_view.growth_speed
+	host.board_view.growth_speed = REPLAY_SPEED
 	for node: Node in [host.board_view,host.sounds]:
 		if not seed_old_modes.has(node): seed_old_modes[node] = node.process_mode
 		node.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -546,7 +557,9 @@ func finish(_skipped: bool) -> void:
 	set_process_input(false)
 	hide()
 	reset_pulses()
-	if seed_started: host.board_view.tutorial_underlay = []
+	if seed_started:
+		host.board_view.tutorial_underlay = []
+		host.board_view.growth_speed = previous_growth_speed
 	if persist: Model.save_progress(stage,true,progress_path,seed_index)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
