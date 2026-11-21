@@ -1,5 +1,7 @@
 extends RefCounted
 const Rules = preload("res://scripts/rules.gd")
+const Lessons = preload("res://scripts/tutorial_lessons.gd")
+const PROGRESS_VERSION := 2
 const PATH := "user://introduction.cfg"
 
 static func principle() -> Array:
@@ -100,16 +102,49 @@ static func replay_board(count: int) -> Array:
 		board = placed(board,step.cells,step.anchor,step.get("color",1))
 	return board
 
+static func _progress(lesson_id: String = "rotate", done: bool = false, started: bool = false, checkpoint: String = "", seed_index: int = 0) -> Dictionary:
+	return {"version":PROGRESS_VERSION,"lesson_id":lesson_id,"checkpoint":Lessons.checkpoint(checkpoint) if lesson_id == "repair" else "",
+		"started":started,"done":done,"step":Lessons.legacy(lesson_id),"seed_index":seed_index}
+
 static func progress(path: String = PATH) -> Dictionary:
 	var config := ConfigFile.new()
-	if config.load(path) != OK: return {"done":false,"step":1,"started":false,"seed_index":0}
-	return {"started":bool(config.get_value("intro","started",false)),"done":bool(config.get_value("intro","done",false)),
-		"step":clampi(int(config.get_value("intro","step",1)),1,11),"seed_index":clampi(int(config.get_value("intro","seed_index",0)),0,replay_steps().size())}
+	if config.load(path) != OK: return _progress()
+	var version: Variant = config.get_value("intro","version",1)
+	var done: Variant = config.get_value("intro","done",false)
+	var started: Variant = config.get_value("intro","started",false)
+	if not version is int or version not in [1,PROGRESS_VERSION] or not done is bool or not started is bool: return _progress()
+	var seed_index: Variant = config.get_value("intro","seed_index",0)
+	if not seed_index is int or seed_index < 0 or seed_index > replay_steps().size(): return _progress()
+	if version == 1:
+		var step: Variant = config.get_value("intro","step",1)
+		if not step is int or step < 1 or step > 11: return _progress()
+		# Removed cards migrate once at the boundary, never into lesson flow.
+		return _progress(Lessons.id(step),done,started,"",seed_index)
+	var lesson_id: Variant = config.get_value("intro","lesson_id","")
+	var checkpoint: Variant = config.get_value("intro","checkpoint","")
+	if not lesson_id is String or not Lessons.LESSONS.has(lesson_id) or not checkpoint is String: return _progress()
+	if lesson_id == "repair" and checkpoint not in Lessons.REPAIR_ORDER: return _progress()
+	if lesson_id != "repair" and not checkpoint.is_empty(): return _progress()
+	return _progress(lesson_id,done,started,checkpoint,seed_index)
 
-static func save_progress(step: int, done: bool, path: String = PATH, seed_index: int = 0) -> Error:
+static func save_checkpoint(lesson_id: String, done: bool, path: String = PATH, checkpoint: String = "", seed_index: int = 0) -> Error:
+	if not Lessons.LESSONS.has(lesson_id) or seed_index < 0 or seed_index > replay_steps().size(): return ERR_INVALID_PARAMETER
+	if lesson_id == "repair":
+		if checkpoint not in Lessons.REPAIR_ORDER: return ERR_INVALID_PARAMETER
+	elif not checkpoint.is_empty(): return ERR_INVALID_PARAMETER
 	var config := ConfigFile.new()
+	config.set_value("intro","version",PROGRESS_VERSION)
 	config.set_value("intro","started",true)
-	config.set_value("intro","step",step)
+	config.set_value("intro","lesson_id",lesson_id)
+	config.set_value("intro","checkpoint",checkpoint)
 	config.set_value("intro","done",done)
+	# Retained solely to finish old interrupted final-design assembly safely.
 	config.set_value("intro","seed_index",seed_index)
-	return config.save(path)
+	var error := config.save(path+".tmp")
+	if error != OK: return error
+	return DirAccess.rename_absolute(path+".tmp",path)
+
+# Transitional adapter for existing callers; new code persists named checkpoints.
+static func save_progress(step: int, done: bool, path: String = PATH, seed_index: int = 0) -> Error:
+	var lesson_id := Lessons.id(step)
+	return save_checkpoint(lesson_id,done,path,"wrong_placement" if lesson_id == "repair" else "",seed_index)

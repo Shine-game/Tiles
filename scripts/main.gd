@@ -150,17 +150,19 @@ func _maybe_introduction(returning_player: bool) -> void:
 	var progress := IntroModel.progress(intro_progress_path)
 	if progress.done: return
 	if returning_player and not progress.started:
-		IntroModel.save_progress(1,true,intro_progress_path)
+		var error := IntroModel.save_checkpoint("rotate",true,intro_progress_path)
+		if error != OK: push_warning("Could not save tutorial progress: "+error_string(error))
 		return
-	_start_introduction(progress.step)
+	_start_introduction(progress.lesson_id,progress.checkpoint)
 
-func _start_introduction(step: int = 1) -> void:
+func _start_introduction(step: Variant = "rotate", checkpoint: String = "") -> void:
 	if introduction != null: return
 	palette_menu.hide()
 	dragging = false
 	introduction = Introduction.new()
 	introduction.host = self
-	introduction.stage = step
+	introduction.stage = IntroModel.Lessons.legacy(step)
+	introduction.initial_checkpoint = checkpoint
 	introduction.progress_path = intro_progress_path
 	introduction.finished.connect(func(): introduction = null)
 	add_child(introduction)

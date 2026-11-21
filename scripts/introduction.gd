@@ -8,22 +8,14 @@ const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TUTORIAL_FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
 const FONT_SIZE := 20
-const TEXT := ["", "", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
-const REPAIR_TEXT := [
-	"",
-	"",
-	"The hint button shows achievable symmetries. Make an asymmetric placement and the game ends.",
-	"Undo your last move.",
-	"Erase a square.",
-	"Get a different piece.",
-	"Get a different piece.",
-	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
+const Lessons = preload("res://scripts/tutorial_lessons.gd")
 const ANIMATION_SECONDS := 0.32
 const PULSE_SECONDS := 1.4
 var progress_path := Model.PATH
 var persist := true
 var leaving := false
 var stage := 1
+var initial_checkpoint := ""
 var elapsed := 0.0
 var host: Control
 var previous_pause := false
@@ -133,11 +125,11 @@ func _ready() -> void:
 	resized.connect(layout)
 	enter(stage)
 
-func enter(step: int) -> void:
+func enter(step: Variant) -> void:
 	reset_pulses()
-	var keep_piece := stage in [2,3,4] and step == stage+1
-	# Keep saved stage IDs compatible; the removed card forwards to the repair lesson.
-	stage = 2 if step == 1 else (10 if step == 9 else step)
+	var keep_piece := stage in [2,3,4] and Lessons.legacy(step) == stage+1
+	# Numeric stage is a temporary adapter for the current rendering controller.
+	stage = Lessons.legacy(step)
 	elapsed = 0
 	animation = ""
 	animation_time = 0
@@ -146,8 +138,7 @@ func enter(step: int) -> void:
 	hint_visible = false
 	attempts = 0
 	if not keep_piece: selected = false
-	set_caption(TEXT[stage])
-	progress_label.text = "%d / 9" % (stage-2 if stage >= 10 else stage-1)
+	set_caption(Lessons.definition(stage).caption)
 	if stage in [2,3,4,5]:
 		if not keep_piece:
 			puzzle = Model.recipe(5)
@@ -164,15 +155,25 @@ func enter(step: int) -> void:
 		cells = puzzle.offered.duplicate()
 		color = 1
 	elif stage == 10:
-		repair_phase = 2
+		repair_phase = Lessons.phase(initial_checkpoint)
+		initial_checkpoint = ""
 		prepare_repair()
 	elif stage == 11: start_seed()
 	if not keep_piece and stage in [6,7,8]: cells = laid_cells(cells)
-	if persist: Model.save_progress(stage,false,progress_path,seed_index)
+	save_checkpoint()
 	choose_pulses()
 	layout()
 	update_controls()
 	queue_redraw()
+
+func save_checkpoint(done: bool = false) -> void:
+	if not persist: return
+	var checkpoint := Lessons.checkpoint_for_phase(repair_phase) if stage == 10 else ""
+	var error := Model.save_checkpoint(Lessons.id(stage),done,progress_path,checkpoint,seed_index)
+	if error != OK: push_warning("Could not save tutorial progress: "+error_string(error))
+
+func allowed(action: String) -> bool:
+	return action in Lessons.definition(stage,repair_phase).actions
 
 func desired_pulses() -> Array:
 	if leaving: return []
@@ -238,6 +239,7 @@ func layout() -> void:
 	if text == null or host == null: return
 	var current: Rect2 = host.board_view.get_rect()
 	if not current.is_equal_approx(adjusted_board_rect): normal_board_rect = current
+	progress_label.text = "%d / %d" % [Lessons.definition(stage,repair_phase).number,Lessons.CARD_COUNT]
 	# The central header belongs entirely to the caption; side controls never move.
 	var preparation: Rect2 = host.piece_view.get_rect()
 	progress_label.position = preparation.position+Vector2(0,-18)
@@ -254,12 +256,14 @@ func layout() -> void:
 	text.add_theme_color_override("default_color",Ink.text())
 	# Keep every cue at the requested size, with one shared area tall enough
 	# for the longest instruction on this screen. The board keeps its geometry.
-	for cue: String in TEXT+REPAIR_TEXT:
+	for cue: String in Lessons.captions():
 		reserved.size.y = maxf(reserved.size.y,measure_caption(cue,TUTORIAL_FONT,font_size,reserved.size.x))
 	var caption_height := reserved.size.y
 	caption_rect = reserved
 	var body_rect := caption_rect
-	repair_header.visible = stage == 10 and repair_phase == 3
+	var heading: String = Lessons.definition(stage,repair_phase).get("header","")
+	repair_header.text = "[center]"+heading+"[/center]"
+	repair_header.visible = not heading.is_empty()
 	repair_header.add_theme_font_size_override("normal_font_size",font_size)
 	repair_header.add_theme_color_override("default_color",Ink.text())
 	if repair_header.visible:
@@ -316,9 +320,9 @@ func spawn_offer_on_board() -> void:
 func update_controls() -> void:
 	if leaving: return
 	var busy := not animation.is_empty()
-	flip.disabled = busy or (stage not in [3,6,7,8] and not (stage == 10 and not cells.is_empty()))
-	recolor.disabled = busy or (stage not in [4,6,7,8] and not (stage == 10 and not cells.is_empty()))
-	var place_disabled := busy or not selected or stage not in [5,6,7,8,10]
+	flip.disabled = busy or not allowed("flip") or cells.is_empty()
+	recolor.disabled = busy or not allowed("color") or cells.is_empty()
+	var place_disabled := busy or not selected or not allowed("place")
 	if stage == 10: place_disabled = place_disabled or not repair_matches_target()
 	if stage == 11: place_disabled = place_disabled or host.board_view.growing
 	# Never transiently disable a held button before assigning its final state.
@@ -370,9 +374,8 @@ func ink(index: int) -> Color:
 	return Palette.tile(index)
 
 func transform_piece(operation: String) -> void:
-	if not animation.is_empty() or stage not in [2,3,4,6,7,8,10]: return
+	if operation not in ["rotate","flip","color"] or not animation.is_empty() or not allowed(operation): return
 	if cells.is_empty(): return
-	if operation == "rotate" and stage not in [2,6,7,8,10]: return
 	if operation == "flip" and flip.disabled: return
 	if operation == "color" and recolor.disabled: return
 	animation = operation
@@ -389,7 +392,7 @@ func complete_transform() -> void:
 	animation = ""
 	if selected: clamp_anchor()
 	if (stage == 2 and operation == "rotate") or (stage == 3 and operation == "flip") or (stage == 4 and operation == "color"):
-		enter(stage+1)
+		enter(Lessons.LESSONS[Lessons.id(stage)].next)
 	else: update_controls()
 
 func show_hint() -> void:
@@ -413,7 +416,7 @@ func try_place() -> void:
 		return
 	# Placement feedback is immediate; only explicit transform animations wait.
 	grid = puzzle.target.duplicate(true)
-	enter(stage+1)
+	enter(Lessons.LESSONS[Lessons.id(stage)].next)
 
 func next_step() -> void:
 	if stage == 1: enter(2)
@@ -440,8 +443,8 @@ func prepare_repair() -> void:
 	repair_erasing = false
 	color = 1
 	elapsed = 0
-	set_caption(REPAIR_TEXT[repair_phase])
-	var index: int = {1:0,2:1,6:2}.get(repair_phase,-1)
+	set_caption(Lessons.definition(stage,repair_phase).caption)
+	var index: int = Lessons.definition(stage,repair_phase).get("offer",-1)
 	cells = laid_cells(Model.repair_offers()[index].cells) if index >= 0 else []
 	color = Model.repair_offers()[index].color if index >= 0 else 2
 	# The player sees the unsuitable next piece before using the replacement joker.
@@ -449,8 +452,9 @@ func prepare_repair() -> void:
 
 func advance_repair() -> void:
 	reset_pulses()
-	repair_phase += 1
+	repair_phase = Lessons.phase(Lessons.definition(stage,repair_phase).next)
 	prepare_repair()
+	save_checkpoint()
 	layout()
 	choose_pulses()
 	update_controls()
@@ -458,7 +462,7 @@ func advance_repair() -> void:
 
 func repair_matches_target() -> bool:
 	if not selected: return false
-	var index: int = {1:0,2:1,6:2}.get(repair_phase,-1)
+	var index: int = Lessons.definition(stage,repair_phase).get("offer",-1)
 	if index < 0: return false
 	var offer: Dictionary = Model.repair_offers()[index]
 	if color != offer.color: return false
@@ -473,7 +477,7 @@ func joker_action(action: String) -> void:
 	if action == "undo" and repair_phase == 3: advance_repair()
 	elif action == "erase" and repair_phase == 4:
 		repair_erasing = not repair_erasing
-		set_caption(REPAIR_TEXT[4])
+		set_caption(Lessons.REPAIR.erase.caption)
 	elif action == "skip" and repair_phase == 5: advance_repair()
 
 func start_seed() -> void:
@@ -503,8 +507,8 @@ func start_seed() -> void:
 	grid = host.game.board.duplicate(true)
 	cells = []
 	selected = false
-	set_caption(TEXT[11])
-	if persist: Model.save_progress(11,false,progress_path,seed_index)
+	set_caption(Lessons.LESSONS.reveal.caption)
+	save_checkpoint()
 	host._autosave()
 
 func update_replay(_delta: float) -> void:
@@ -524,7 +528,7 @@ func finish(_skipped: bool) -> void:
 	reset_pulses()
 	if seed_started:
 		host.board_view.tutorial_underlay = []
-	if persist: Model.save_progress(stage,true,progress_path,seed_index)
+	save_checkpoint(true)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
 		record.node.disabled = record.disabled
@@ -641,7 +645,7 @@ func guide_cells() -> Array:
 	if stage in [2,3,4,5] or (stage in [6,7,8] and hint_visible): return puzzle.missing.duplicate()
 	if stage == 10:
 		if repair_phase == 4: return [Vector2i(1,1)]
-		var index: int = {1:0,2:1,6:2}.get(repair_phase,-1)
+		var index: int = Lessons.definition(stage,repair_phase).get("offer",-1)
 		if index >= 0:
 			var offer: Dictionary = Model.repair_offers()[index]
 			return offer.cells.map(func(cell: Vector2i): return cell+offer.anchor)
@@ -671,7 +675,7 @@ func exercise_axis_state() -> Dictionary:
 func draw_exercise_axes(canvas: CanvasItem = null) -> void:
 	if stage not in [2,3,4,5,6,7,8,10]: return
 	var states := Rules.symmetry_states(prediction_board())
-	var indices: Array = [puzzle.symmetry] if stage < 10 else [0,1,2,3,4,5,6]
+	var indices: Array = [puzzle.symmetry] if Lessons.LESSONS[Lessons.id(stage)].axis_mode == "teaching" else [0,1,2,3,4,5,6]
 	if stage < 10: states[puzzle.symmetry] = exercise_axis_state()
 	Axes.paint(self if canvas == null else canvas,board_rect,states,indices)
 

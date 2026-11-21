@@ -85,12 +85,12 @@ func run() -> void:
 		check(label.get_theme_constant("line_separation") == 0 and label.get_theme_constant("paragraph_separation") == 0,"Text uses plain line breaks without added paragraph spacing")
 	intro.set_caption("Line one\n\nLine two")
 	check(intro.text.get_parsed_text() == "Line one\nLine two","Blank paragraph jumps are normalized to single line breaks")
-	intro.set_caption(Intro.TEXT[intro.stage])
+	intro.set_caption(Intro.Lessons.definition(intro.stage).caption)
 
 	for button in [game.erase_button,game.undo_button,game.skip_button]:
 		check(button.visible and button.disabled,"Jokers remain visible but disabled")
 	check(intro.forward == game.palette_button and intro.skip == game.replay_button,"Tutorial reuses navigation positions")
-	check(intro.stage == 2 and intro.cells.size() == 3 and intro.place.disabled and intro.progress_label.text == "1 / 9","Tutorial opens directly on rotation as the first of nine cards")
+	check(intro.stage == 2 and intro.cells.size() == 3 and intro.place.disabled and intro.progress_label.text == "1 / 8","Tutorial opens directly on rotation as the first of eight cards")
 	var preparation_board: Array = intro.grid.duplicate(true)
 	var stationary: Array = intro.cells.duplicate()
 	intro._process(1)
@@ -102,6 +102,7 @@ func run() -> void:
 	intro._process(Intro.ANIMATION_SECONDS/2)
 	check(intro.stage == 2,"Rotation finishes before advancing")
 	intro._process(Intro.ANIMATION_SECONDS/2+0.01)
+	check(intro.progress_label.text == "1 / 8","Flip retains the combined first-card number")
 	check(intro.stage == 3 and intro.cells == Rules.rotate(stationary) and intro.grid == preparation_board,"Same L and pattern persist into Flip")
 	var normal: Color = intro.pulse_bases[intro.flip].normal.base.bg_color
 	intro.elapsed = Intro.PULSE_SECONDS/2
@@ -140,11 +141,11 @@ func run() -> void:
 		check(controls == game._controls().map(func(button):return button.get_rect()),"Tutorial proportions never move any original button")
 		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x+2) and is_equal_approx(intro.text.size.x,game.piece_view.size.x-4) and is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Caption is centered between the two button columns")
 		check(intro.text.get_theme_color("font_color") == intro.Ink.text(),"Caption uses the button drawing color")
-		for caption: String in Intro.TEXT.slice(1,9):
+		for caption: String in Intro.Lessons.ORDER.slice(0,7).map(func(key):return Intro.Lessons.LESSONS[key].caption):
 			intro.set_caption(caption)
 			intro.layout()
 			check(intro.text.get_rect().end.y <= intro.tray_rect.position.y+0.1,"Caption fit %s %s text end %s tray top %s" % [dimensions,caption,intro.text.get_rect().end.y,intro.tray_rect.position.y])
-		intro.set_caption(Intro.TEXT[intro.stage])
+		intro.set_caption(Intro.Lessons.definition(intro.stage).caption)
 
 
 		var fixed_board: Rect2 = intro.board_rect
@@ -210,7 +211,7 @@ func run() -> void:
 		drag_piece(intro,intro.puzzle.anchor)
 		intro.place.pressed.emit()
 		check(intro.stage == (10 if stage == 8 else stage+1),"Correct symmetry placement advances instantly and skips removed card")
-	check(intro.stage == 10 and intro.repair_phase == 2 and intro.progress_label.text == "8 / 9","Axes lesson follows the three exercises with nine-card numbering")
+	check(intro.stage == 10 and intro.repair_phase == 2 and intro.progress_label.text == "5 / 8","Axes lesson follows the three exercises with regrouped eight-card numbering")
 	intro.enter(9)
 	check(intro.stage == 10 and intro.repair_phase == 2,"Old saved axes-card progress resumes at destruction lesson")
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
@@ -222,11 +223,12 @@ func run() -> void:
 		var shared_preview_unit := -1.0
 		var shared_font_size := -1
 		var single_square_center := Vector2.ZERO
-		for phase in range(2,Intro.REPAIR_TEXT.size()):
+		for phase in range(2,Intro.Lessons.REPAIR_ORDER.size()+2):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
 			intro.update_controls()
+			check(intro.progress_label.text == "%d / 8" % Intro.Lessons.definition(10,phase).number,"Repair substeps show their grouped card number")
 			check((intro.hint in intro.pulsing) == (phase == 7),"Replacement placement waits to highlight Hint until committed")
 			if phase == 3:
 				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern","Only the first repair step shows Save the pattern")
@@ -274,10 +276,10 @@ func run() -> void:
 	intro._process(3.1)
 	check(intro.repair_phase == 2,"Axes exploration waits for the player instead of advancing automatically")
 
-	check("[b]" not in intro.text.text and "[b]" not in str(Intro.TEXT) and "[b]" not in str(Intro.REPAIR_TEXT),"All tutorial wording uses regular text")
+	check("[b]" not in intro.text.text and "[b]" not in str(Intro.Lessons.LESSONS) and "[b]" not in str(Intro.Lessons.REPAIR),"All tutorial wording uses regular text")
 	intro.set_caption("[b]Regular lettering[/b]")
 	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
-	intro.set_caption(Intro.REPAIR_TEXT[2])
+	intro.set_caption(Intro.Lessons.REPAIR.wrong_placement.caption)
 	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
 	check(intro.hint not in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint and Place stay quiet before the required placement")
 
@@ -325,6 +327,7 @@ func run() -> void:
 	intro.joker_action("erase")
 	check(intro.repair_phase == 3,"Out-of-order joker does nothing")
 	await click_control(game.undo_button)
+	check(Model.progress(path).checkpoint == "erase","Undo persists the next named checkpoint")
 	check(intro.repair_phase == 4 and intro.grid[2][6] == 0 and intro.grid[1][1] == 2,"Undo removes only the last single-square placement")
 	var recovered: Array = Rules.symmetry_states(intro.grid)
 	check(recovered[0].possible and not recovered[0].complete and recovered.filter(func(state):return state.possible).size() == 1,"Undo brings back only the thin possible vertical axis")
@@ -359,7 +362,7 @@ func run() -> void:
 	await click_control(intro.place)
 	check(intro.repair_phase == 7 and Rules.symmetry_states(intro.grid)[0].complete and game.indicators[0].icon.complete[0],"Replacement domino restores and highlights vertical symmetry")
 	check(intro.hint in intro.pulsing,"Hint highlights once correct placement starts the Bold-axis cue")
-	check("Bold axis! Your board is symmetrical right now." in intro.text.text and "Save a picture and continue playing." in intro.text.text,"Recovered pattern explains the bold axis and saving a picture")
+	check("Bold axis! Your board is symmetrical right now." in intro.text.text and "You can save a picture here if you want." in intro.text.text,"Recovered pattern explains the bold axis and saving a picture")
 
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
 	intro._process(30)
@@ -408,10 +411,20 @@ func run() -> void:
 	for button in [game.erase_button,game.undo_button,game.skip_button]: check(button.visible,"Jokers remain in the real UI")
 	game._start_introduction()
 	intro = game.introduction
-	check(intro.stage == 2 and intro.progress_label.text == "1 / 9","Replay starts directly on the rotation card")
+	check(intro.stage == 2 and intro.progress_label.text == "1 / 8","Replay starts directly on the rotation card")
 	intro.skip.pressed.emit()
 	await process_frame
 	check(not paused and game.introduction == null,"End tutorial exits at any time")
+	for checkpoint: String in Intro.Lessons.REPAIR_ORDER:
+		check(Model.save_checkpoint("repair",false,path,checkpoint) == OK,"Repair checkpoint is saved before relaunch")
+		game._maybe_introduction(true)
+		intro = game.introduction
+		var phase: int = Intro.Lessons.phase(checkpoint)
+		check(intro != null and intro.stage == 10 and intro.repair_phase == phase,"Startup resumes the exact named repair checkpoint")
+		check(intro.grid == Model.repair_board(phase) and intro.text.get_parsed_text() == Intro.Lessons.REPAIR[checkpoint].caption,"Resume reconstructs the matching board and caption")
+		check(Model.progress(path).checkpoint == checkpoint,"Entering a checkpoint preserves its persisted identity")
+		intro.finish(true)
+		await process_frame
 	Model.save_progress(11,false,path,0)
 	game._start_introduction(11)
 	intro = game.introduction
