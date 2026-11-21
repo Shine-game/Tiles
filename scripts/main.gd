@@ -15,6 +15,7 @@ const IntroModel = preload("res://scripts/tutorial_model.gd")
 var introduction: Control
 var intro_progress_path := IntroModel.PATH
 const TouchSlider = preload("res://scripts/touch_slider.gd")
+const MenuConfirmation = preload("res://scripts/menu_confirmation.gd")
 const InterfaceTheme = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const PlayerActions = preload("res://scripts/player_actions.gd")
@@ -130,7 +131,9 @@ var background_button: Button
 var effects_button: Button
 var axes_button: Button
 var menu_title: Label
-var confirmation: ConfirmationDialog
+var confirmation: MenuConfirmation
+var confirmation_blocker: Control
+var game_over_message: Label
 var pending_change: Callable
 var themed_buttons: Array = []
 var reef_background: ColorRect
@@ -287,18 +290,32 @@ func _build_interface() -> void:
 	water.shader = preload("res://shaders/reef_lagoon.gdshader")
 	reef_background.material = water
 	add_child(reef_background)
-	confirmation = ConfirmationDialog.new()
-	confirmation.title = ""
-	confirmation.ok_button_text = "Confirm"
-	confirmation.cancel_button_text = "Go back"
+	game_over_message = Label.new()
+	game_over_message.text = "No symmetries left."
+	game_over_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	game_over_message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	game_over_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	game_over_message.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	game_over_message.z_index = 40
+	add_child(game_over_message)
+	confirmation_blocker = Control.new()
+	confirmation_blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	confirmation_blocker.z_index = 299
+	confirmation_blocker.hide()
+	add_child(confirmation_blocker)
+	confirmation = MenuConfirmation.new()
+	confirmation.z_index = 300
+	confirmation.visibility_changed.connect(func(): confirmation_blocker.visible = confirmation.visible)
 	confirmation.confirmed.connect(func():
-		if pending_change.is_valid(): pending_change.call()
-		pending_change = Callable())
+		var action := pending_change
+		pending_change = Callable()
+		if action.is_valid(): action.call())
 	confirmation.canceled.connect(func(): pending_change = Callable())
 	add_child(confirmation)
 	themed_buttons.append_array([confirmation.get_ok_button(), confirmation.get_cancel_button()])
 	for button: Button in [confirmation.get_ok_button(), confirmation.get_cancel_button()]:
-		button.custom_minimum_size = Vector2(100, 36)
+		button.button_down.connect(InterfaceTheme.press_children.bind(button, true))
+		button.button_up.connect(InterfaceTheme.press_children.bind(button, false))
 	_build_gallery()
 	floating_piece = FloatingPiece.new()
 	floating_piece.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -408,6 +425,7 @@ func _layout() -> void:
 	_set_rect(replay_button, Rect2(controls_right, top + (header_height - control_side) / 2, control_side, control_side))
 	_set_rect(flip_button, Rect2(controls_right, top + header_height - control_side, control_side, control_side))
 	_set_rect(piece_view, Rect2(preview_left, top, preview_width, header_height))
+	_set_rect(game_over_message, piece_view.get_rect())
 	var board_top := top + header_height + gap
 	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
@@ -419,6 +437,7 @@ func _layout() -> void:
 		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26))
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
 	_layout_palette_menu(gap)
+	_layout_confirmation(gap)
 	_layout_gallery(gap)
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
@@ -430,6 +449,7 @@ func _refresh() -> void:
 	_refresh_theme()
 	board_view.sync_board(game.board)
 	_layout()
+	game_over_message.visible = game.over and game.lost and introduction == null
 	piece_view.cells = [] if game.over or tray_moved else cells
 	piece_view.color = game.current_color
 	piece_view.queue_redraw()
@@ -563,7 +583,10 @@ func _erase_cell_at(point: Vector2) -> Vector2i:
 
 func _input(event: InputEvent) -> void:
 	if introduction != null: return
-	if saving or confirmation.visible:
+	if confirmation.visible:
+		piece_gesture.cancel()
+		return
+	if saving:
 		piece_gesture.cancel()
 		get_viewport().set_input_as_handled()
 		return
@@ -979,6 +1002,13 @@ func _refresh_menu_style() -> void:
 	menu_style.border_color = Color(Interface.shade(), 0.65)
 	menu_style.shadow_size = 0
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
+	confirmation.add_theme_stylebox_override("panel", menu_style)
+
+func _layout_confirmation(pad: float) -> void:
+	var width := size.x * 0.70
+	var height := minf((38 + 70 * 3 + 12) * 1.5, size.y - 2 * pad)
+	var y := minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
+	_set_rect(confirmation, Rect2((size.x - width) / 2, maxf(pad, y), width, height))
 
 func _apply_button_style(button: Button) -> void:
 	InterfaceTheme.sync_highlight(button)
@@ -994,6 +1024,9 @@ func _apply_button_style(button: Button) -> void:
 func _refresh_theme() -> void:
 	theme = InterfaceTheme.build()
 	confirmation.theme = theme
+	game_over_message.add_theme_font_override("font", InterfaceTheme.FONT)
+	game_over_message.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
+	game_over_message.add_theme_color_override("font_color", Interface.text())
 	if save_error_dialog != null: save_error_dialog.theme = theme
 	if gallery_file_dialog != null: gallery_file_dialog.theme = theme
 	if gallery_panel != null: gallery_panel.remove_theme_stylebox_override("panel")
@@ -1024,7 +1057,8 @@ func _confirm_new_game(_message: String, action: Callable) -> void:
 	dragging = false
 	pending_change = action
 	confirmation.dialog_text = "Start new game"
-	confirmation.popup_centered(Vector2i(mini(360, int(size.x - 24)), 160))
+	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
+	confirmation.open()
 
 func _request_theme(id: String) -> void:
 	if id not in MENU_THEMES or id == Palette.theme_id(): return

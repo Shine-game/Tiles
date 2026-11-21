@@ -87,7 +87,7 @@ func _run() -> void:
 		var old_theme: String = Palette.theme_id()
 		var old_axes: bool = scene.board_view.show_axes
 		click(control)
-		check(scene.confirmation.visible and scene.confirmation.dialog_text == "Start new game" and scene.confirmation.ok_button_text == "Confirm" and scene.confirmation.cancel_button_text == "Go back", "Started game requires shared confirmation")
+		check(scene.confirmation.visible and scene.confirmation.dialog_text == "Start new game" and scene.confirmation.ok_button_text == "OK" and scene.confirmation.cancel_button_text == "Go back", "Started game requires shared confirmation")
 		check(scene.game == previous and scene.game.board == board and Palette.theme_id() == old_theme and scene.board_view.show_axes == old_axes, "Changes wait for confirmation")
 		scene.confirmation.hide()
 		scene.confirmation.canceled.emit()
@@ -151,6 +151,30 @@ func _run() -> void:
 	check(scene.game.board.size() == active_size and scene.game.difficulty == active_level and Palette.theme_id() == active_theme,"Replay keeps the active game theme, size and difficulty")
 	check(scene.requested_size == preset_size and scene.difficulty == preset_level,"Replay preserves pending New Game presets")
 	check(scene.replay_button.position.x == scene.palette_button.position.x and scene.replay_button.position.y > scene.palette_button.position.y and scene.replay_button.position.y < scene.flip_button.position.y,"Replay sits between Settings and Flip in the upper-right column")
+	# Exercise the actual in-game panel buttons, including GUI event routing.
+	scene.replay_button.pressed.emit()
+	await process_frame
+	var prior_game = scene.game
+	check(is_equal_approx(scene.confirmation.size.x, scene.size.x * 0.7), "Confirmation uses the menu width")
+	var surface: StyleBoxFlat = scene.confirmation.get_theme_stylebox("panel")
+	check(surface.bg_color == scene.palette_menu.get_theme_stylebox("panel").bg_color and surface.shadow_size == 0 and surface.border_width_top == 1, "Confirmation uses the flat menu surface")
+	check(scene.confirmation.get_ok_button().text == "OK" and scene.confirmation.get_cancel_button().text == "Go back", "Confirmation presents both choices")
+	click(scene.confirmation.get_cancel_button())
+	check(not scene.confirmation.visible and not scene.confirmation_blocker.visible and scene.game == prior_game, "Go back closes confirmation and preserves the game")
+	scene.replay_button.pressed.emit()
+	await process_frame
+	click(scene.confirmation.get_ok_button())
+	check(not scene.confirmation.visible and not scene.confirmation_blocker.visible and scene.game != prior_game, "OK starts the new game and removes the modal shield")
+
+	scene.game = easy
+	scene._refresh()
+	check(scene.game_over_message.visible and scene.game_over_message.text == "No symmetries left.", "Symmetry loss displays the requested message")
+	check(scene.game_over_message.get_rect() == scene.piece_view.get_rect(), "Loss message is centered between upper button columns")
+	check(scene.game_over_message.get_theme_font("font") == scene.menu_close.get_theme_font("font") and scene.game_over_message.get_theme_font_size("font_size") == scene.menu_close.get_theme_font_size("font_size"), "Loss message uses the menu font and size")
+	check(easy.undo(), "Loss can be undone")
+	scene._refresh()
+	check(not scene.game_over_message.visible, "Restoring symmetry clears the loss message")
+
 	scene.queue_free()
 	await process_frame
 	print("Settings/difficulty: %d checks, %d failures" % [checks,failures])
