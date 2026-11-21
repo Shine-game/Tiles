@@ -88,8 +88,7 @@ controller failures are reported as warnings.
 
 The controller still uses numeric stages/phases for some rendering and guidance
 conditions. These are transitional adapters; do not use them in new persisted
-data. Gesture sharing, shared previews, lifecycle
-cleanup, and obsolete replay rendering removal remain later refactor steps.
+data. Obsolete replay rendering removal remains the final refactor step.
 This step resolves the baseline's missing repair-checkpoint persistence; its
 other audit gaps remain open.
 
@@ -97,6 +96,13 @@ The shared command interface is implemented in
 [refactor step 3](tutorial-actions.md), and
 [step 4](tutorial-practice.md) replaces its temporary fixture backend with an
 isolated real practice game.
+
+[Step 5](tutorial-interaction.md) shares pointer handling and piece geometry and
+resolves the invalid-hover prediction difference using visible clipped overlays.
+[Step 6](tutorial-guidance.md) centralizes cleanup and progresses guidance from
+scoped action-completion events without pausing the application.
+[Step 7](tutorial-save-flow.md) requires confirmed gallery persistence before theme
+selection, provides a visible retry path, and cancels stale captures.
 
 ## Verification
 

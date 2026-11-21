@@ -53,8 +53,10 @@ practice restores the existing game. The deliberate final reveal still creates
 the demonstrated normal 9×9 Vines game, saves its artwork, and guides Settings →
 Themes selection before resuming play in the chosen theme.
 
-Gesture/preview sharing, tutorial lifecycle cleanup, and obsolete replay-renderer
-removal remain later refactor steps.
+[Gesture/preview sharing](tutorial-interaction.md) is implemented in step 5.
+[Tutorial lifecycle cleanup](tutorial-guidance.md) is implemented in step 6.
+[Save-result coordination](tutorial-save-flow.md) is implemented in step 7.
+Obsolete replay-renderer removal remains the final step.
 
 ## Verification
 

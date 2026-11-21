@@ -29,6 +29,7 @@ func run() -> void:
 	check(flipped.ok and flipped.cells == [Vector2i.RIGHT,Vector2i.ONE,Vector2i.DOWN],"Shared flip mirrors the L")
 	check(actions.execute("color",game,{"color":1}).color == 2 and actions.execute("color",game,{"color":2,"choice":1}).color == 1,"Shared color command supports toggle and explicit color")
 	check(events.size() == 4 and events.all(func(event):return event.result.source == "player"),"Each successful player command emits one result")
+	check(events.all(func(event):return event.result.session_id == game.get_instance_id()),"Completion events identify the exact active session")
 	var policy := func(_action,_request): return false
 	for action: String in Actions.COMMANDS:
 		check(not actions.execute(action,game,{"cells":cells,"color":1,"anchor":Vector2i.ZERO},policy).ok,"Tutorial policy can block every command before execution")

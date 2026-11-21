@@ -81,7 +81,7 @@ func run() -> void:
 	game.intro_progress_path = path
 	game._start_introduction()
 	var intro = game.introduction
-	check(paused,"Practice pauses the real game")
+	check(not paused and game.board_view.process_mode == Node.PROCESS_MODE_DISABLED,"Practice freezes only existing artwork, without pausing the app")
 	check(intro.text.get_theme_font("normal_font") == Intro.TUTORIAL_FONT and Intro.TUTORIAL_FONT.get_font_name() == "Lora" and Intro.TUTORIAL_FONT.get_font_style_name() == "Regular","Tutorial uses the bundled Lora Regular face")
 	check(intro.progress_label.get_theme_font("font") == Intro.TUTORIAL_FONT and intro.repair_header.get_theme_font("normal_font") == Intro.TUTORIAL_FONT,"Step counter and persistent header share Lora Regular")
 	for label in [intro.text,intro.repair_header]:
@@ -98,6 +98,31 @@ func run() -> void:
 	var prepared_session = intro.practice_game
 	check(prepared_session != game.game and prepared_session.board == intro.grid,"Early exercise uses an isolated real game")
 	var stationary: Array = intro.cells.duplicate()
+	var source_geometry: Dictionary = intro.tray_geometry()
+	var source_point: Vector2 = source_geometry.origin+(Vector2(intro.cells[0])+Vector2.ONE/2)*source_geometry.unit
+	var first_touch := InputEventScreenTouch.new()
+	first_touch.index = 3
+	first_touch.position = source_point
+	first_touch.pressed = true
+	root.push_input(first_touch,true)
+	check(intro.held,"Tutorial native input accepts a first pointer with a nonzero ID")
+	var other_release := InputEventScreenTouch.new()
+	other_release.index = 7
+	other_release.position = source_point
+	other_release.pressed = false
+	root.push_input(other_release,true)
+	check(intro.held,"Another finger cannot release the tutorial piece")
+	first_touch.pressed = false
+	first_touch.canceled = true
+	root.push_input(first_touch,true)
+	check(not intro.held and intro.animation.is_empty() and intro.cells == stationary,"System-canceled tutorial touch never rotates")
+	first_touch.canceled = false
+	first_touch.pressed = true
+	root.push_input(first_touch,true)
+	intro._process(Intro.Gesture.TAP_LIMIT+0.1)
+	first_touch.pressed = false
+	root.push_input(first_touch,true)
+	check(intro.animation.is_empty() and intro.cells == stationary,"Tutorial long hold follows the same non-rotation rule as the game")
 	intro._process(1)
 	check(intro.stage == 2 and intro.cells == stationary and intro.animation.is_empty(),"L stays stationary before a player tap")
 	intro.transform_piece("flip")
@@ -351,8 +376,14 @@ func run() -> void:
 	await click_control(game.erase_button)
 	tap.position = intro.board_rect.get_center()
 	intro._gui_input(tap)
+	tap.pressed = false
+	intro._gui_input(tap)
 	check(intro.repair_phase == 4 and intro.grid[4][4] == 1,"Wrong erase target does not damage the pattern")
 	tap.position = intro.board_rect.position+Vector2(1.5,1.5)*intro.board_rect.size.x/9
+	tap.pressed = true
+	intro._gui_input(tap)
+	check(intro.repair_phase == 4,"Erase waits for release like the normal game")
+	tap.pressed = false
 	intro._gui_input(tap)
 	check(intro.repair_phase == 5 and intro.grid[1][1] == 0,"Tapping marked square erases exactly that square")
 	var replacement_cue: String = intro.text.get_parsed_text()
@@ -386,7 +417,7 @@ func run() -> void:
 	check(Palette.theme_id() == "vines" and game.game.board == Model.repair_board(7),"Hint click reveals the whole Vines design with both colors immediately")
 	check(not game.board_view.growing and game.board_view.tutorial_underlay.is_empty(),"The reveal uses settled artwork and normal pale tile backgrounds")
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Instant design includes its 2x2 artwork")
-	check(game.introduction == intro and intro.stage == 11 and paused and intro.progress_label.text == "8 / 8","Instant reveal opens the new eighth card and waits for theme choice")
+	check(game.introduction == intro and intro.stage == 11 and not paused and intro.progress_label.text == "8 / 8","Instant reveal opens the new eighth card and waits for theme choice")
 	check(game.palette_button.get_child(0).kind == "settings","Eighth card restores the Settings icon instead of Forward")
 	check(game.saving or game.saved_fingerprint == game._design_fingerprint(),"Tutorial Hint press invokes the real gallery capture")
 	if DisplayServer.get_name() != "headless":

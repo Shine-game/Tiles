@@ -1,7 +1,7 @@
 extends Control
 
 const Surface = preload("res://scripts/tile_surface.gd")
-const Rules = preload("res://scripts/rules.gd")
+const Geometry = preload("res://scripts/piece_geometry.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var color := 1
@@ -20,27 +20,12 @@ func display_cell(cell: Vector2i) -> Vector2i:
 	return display_cells()[index] if index >= 0 else Vector2i(-1, -1)
 
 func geometry() -> Dictionary:
-	var extent := Vector2i.ZERO
-	for cell: Vector2i in display_cells():
-		extent = extent.max(cell + Vector2i.ONE)
-	if extent == Vector2i.ZERO:
-		return {"origin": size / 2, "unit": maxf(1, cell_pitch), "scale": 1.0}
-	var unit: float = cell_pitch if cell_pitch > 0 else minf(51, minf(size.x / extent.x, size.y / extent.y))
-	var scale: float = 1.0
-	var drawn_size: Vector2 = Vector2(extent) * unit
-	var origin := (size - drawn_size) / 2
-	# Tall rotations extend downward over the board instead of off the screen.
-	origin.y = maxf(0, origin.y)
-	return {"origin": origin, "unit": unit, "scale": scale}
+	return Geometry.tray(display_cells(),Rect2(Vector2.ZERO,size),cell_pitch)
 
 func cell_at(point: Vector2) -> Vector2i:
-	if cells.is_empty():
-		return Vector2i(-1, -1)
-	var layout: Dictionary = geometry()
-	var local: Vector2 = (point - layout.origin) / layout.unit
-	var cell := Vector2i(floori(local.x), floori(local.y))
-	var index: int = display_cells().find(cell)
-	return cells[index] if index >= 0 else Vector2i(-1, -1)
+	var layout := geometry()
+	var cell := Geometry.hit(display_cells(),point,layout.origin,layout.unit)
+	return cells[display_cells().find(cell)] if cell.x >= 0 else cell
 
 func _draw() -> void:
 	Surface.begin(self)

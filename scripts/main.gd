@@ -1,6 +1,12 @@
 extends Control
+signal interface_changed(restyled: bool)
+signal design_save_finished(result: Dictionary)
 
 const ThemeAssets = preload("res://scripts/pattern/asset_library.gd")
+const Geometry = preload("res://scripts/piece_geometry.gd")
+const Gesture = preload("res://scripts/piece_gesture.gd")
+const Preview = preload("res://scripts/placement_preview.gd")
+var piece_gesture = Gesture.new()
 const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Palette = preload("res://scripts/palette.gd")
@@ -39,16 +45,22 @@ var session_store = Session.new()
 var session_ready := false
 var cells: Array = []
 var has_hover := false
-var dragging := false
-const TAP_LIMIT := 0.25
-const GESTURE_SLOP := 10.0
-var gesture_age := 0.0
-var gesture_mode := "pending"
-var gesture_start := Vector2.ZERO
-var gesture_from_tray := false
+var dragging: bool:
+	get: return piece_gesture.active and piece_gesture.tool == "piece"
+	set(value):
+		if not value: piece_gesture.cancel()
+const TAP_LIMIT := Gesture.TAP_LIMIT
+const GESTURE_SLOP := Gesture.SLOP
+var gesture_age: float:
+	get: return piece_gesture.age
+	set(value): piece_gesture.age = value
+
 var tray_moved := false
 var erase_mode := false
 var erase_target := Vector2i(-1, -1)
+const ArtworkCapture = preload("res://scripts/artwork_capture.gd")
+var artwork_capture = ArtworkCapture.new()
+var save_error_dialog: AcceptDialog
 var saving := false
 var saved_fingerprint := ""
 var gallery = Gallery.new()
@@ -69,8 +81,9 @@ var gallery_entries: Array = []
 var gallery_index := 0
 var skip_button: Button
 var erase_button: Button
-var pointer_id := -1
-var grabbed_cell := Vector2i.ZERO
+var grabbed_cell: Vector2i:
+	get: return piece_gesture.grabbed
+	set(value): piece_gesture.grabbed = value
 var last_pointer := Vector2.ZERO
 var selected := Vector2i(-1, -1)
 var floating_piece: Control
@@ -166,7 +179,9 @@ func _start_introduction(step: Variant = "rotate", checkpoint: String = "") -> v
 	introduction.stage = IntroModel.Lessons.legacy(step)
 	introduction.initial_checkpoint = checkpoint
 	introduction.progress_path = intro_progress_path
-	introduction.finished.connect(func(): introduction = null)
+	var active_tutorial: Control = introduction
+	introduction.finished.connect(func():
+		if introduction == active_tutorial: introduction = null)
 	add_child(introduction)
 	introduction.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
@@ -209,6 +224,7 @@ func _build_interface() -> void:
 	var panel := _button("", _save_design)
 	panel.tooltip_text = "Show symmetries / save a symmetric design"
 	var icon = SymmetryIcon.new()
+	icon.name = "ControlIcon"
 	icon.combined = true
 	panel.add_child(icon)
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -232,6 +248,7 @@ func _build_interface() -> void:
 	blue_button = _button("", func(): _choose_color(Rules.CORAL if game.current_color == Rules.BLUE else Rules.BLUE))
 	for color_button: Button in [blue_button]:
 		var mark := ColorMark.new()
+		mark.name = "ControlIcon"
 		mark.color = game.current_color
 		color_button.add_child(mark)
 		mark.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -249,6 +266,7 @@ func _build_interface() -> void:
 	replay_button = _button("", _replay_game)
 	for pair: Array in [[erase_button,"erase"],[undo_button,"undo"],[skip_button,"skip"],[palette_button,"settings"],[replay_button,"replay"],[flip_button,"flip"],[place_button,"place"]]:
 		var action = ActionIcon.new()
+		action.name = "ControlIcon"
 		action.kind = pair[1]
 		pair[0].text = ""
 		pair[0].tooltip_text = {"erase":"Erase a tile", "undo":"Undo", "skip":"Skip this piece", "settings":"Settings", "replay":"Start new game", "flip":"Flip the piece", "place":"Place the piece"}[pair[1]]
@@ -289,6 +307,14 @@ func _build_interface() -> void:
 	add_child(floating_piece)
 	for control: Control in _controls():
 		control.z_index = 50
+
+func button_icon(button: Button) -> Control:
+	return button.get_node("ControlIcon")
+
+func _refresh_after_tutorial() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or introduction != null: return
+	_layout()
+	_refresh()
 
 func _controls() -> Array:
 	return [place_button, undo_button, skip_button, erase_button, flip_button, blue_button, palette_button, replay_button, indicators[0].panel]
@@ -355,9 +381,7 @@ func _layout() -> void:
 	var preview_width := maxf(1, controls_right - gap - preview_left)
 	var extent := Vector2i.ONE
 	for definition: Dictionary in Rules.PIECES.values():
-		var bounds := Vector2i.ONE
-		for cell: Vector2i in definition.cells:
-			bounds = bounds.max(cell + Vector2i.ONE)
+		var bounds := Geometry.extent(definition.cells)
 		extent = extent.max(Vector2i(maxi(bounds.x,bounds.y),mini(bounds.x,bounds.y)))
 	# New offers lie horizontally. Rotation may extend over the board without
 	# changing the board geometry or the tile scale.
@@ -427,6 +451,7 @@ func _refresh() -> void:
 	blue_button.get_child(0).color = game.current_color
 	_preview()
 	_autosave()
+	interface_changed.emit(true)
 
 func _update_summaries(board: Array) -> void:
 	var states: Array = Rules.symmetry_states(board)
@@ -437,7 +462,7 @@ func _update_summaries(board: Array) -> void:
 	indicator.icon.complete = states.map(func(state: Dictionary): return occupied and state.complete)
 	indicator.icon.saved = board == game.board and saved_fingerprint == _design_fingerprint()
 	indicator.icon.queue_redraw()
-	indicator.panel.disabled = not _can_save() or saving
+	indicator.panel.disabled = not _can_save() or saving or board_view.growing
 	_apply_button_style(indicator.panel, indicator.icon.complete.any(func(value): return value))
 
 func _surface_revision(theme: String) -> String:
@@ -476,12 +501,7 @@ func _preview() -> void:
 
 # Preview symmetry on a copy; saving and game rules still use the committed board.
 func _prediction_board() -> Array:
-	if not has_hover or game.over or erase_mode or cells.is_empty() or not game.physical_placement(cells, selected).ok:
-		return game.board
-	var predicted: Array = game.board.duplicate(true)
-	for cell: Vector2i in cells:
-		predicted[selected.y + cell.y][selected.x + cell.x] = game.current_color
-	return predicted
+	return Preview.board(game.board,cells,selected,game.current_color,has_hover and not game.over and not erase_mode)
 
 func _update_floating_position() -> void:
 	floating_piece.pitch = board_view.pitch
@@ -493,113 +513,81 @@ func _drag_to(point: Vector2) -> void:
 	last_pointer = point
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
 	local += Vector2(0, board_view.surface_depth())
-	var relative: Vector2 = (local - board_view._floor_point(Vector2.ZERO)) / board_view.pitch
-	selected = Vector2i(floori(relative.x), floori(relative.y)) - grabbed_cell
+	selected = Geometry.anchor(local,board_view._floor_point(Vector2.ZERO),board_view.pitch,grabbed_cell)
 	has_hover = true
 	_preview()
 
-func _start_drag(point: Vector2, id: int) -> bool:
-	if game.over or dragging or confirmation.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving:
-		return false
+func _pick_piece(point: Vector2) -> Dictionary:
+	if game.over or dragging or confirmation.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving: return {}
 	for control: Control in _controls():
-		if control.get_global_rect().has_point(point):
-			return false
-	var hit := Vector2i(-1, -1)
-	gesture_from_tray = false
-	if has_hover:
-		hit = floating_piece.cell_at(point)
+		if control.visible and control.get_global_rect().has_point(point): return {}
+	var hit: Vector2i = floating_piece.cell_at(point) if has_hover else Vector2i(-1,-1)
+	var from_tray := false
 	if hit.x < 0:
-		hit = piece_view.cell_at(piece_view.get_global_transform_with_canvas().affine_inverse() * point)
-		gesture_from_tray = hit.x >= 0
-	if hit.x < 0:
-		return false
-	grabbed_cell = hit
-	pointer_id = id
-	dragging = true
-	gesture_age = 0
-	gesture_mode = "pending"
-	gesture_start = point
-	last_pointer = point
-	return true
+		hit = piece_view.cell_at(piece_view.get_global_transform_with_canvas().affine_inverse()*point)
+		from_tray = hit.x >= 0
+	return {} if hit.x < 0 else {"cell":hit,"from_tray":from_tray}
 
-func _move_gesture(point: Vector2) -> void:
-	if gesture_mode == "pending":
-		if point.distance_to(gesture_start) < GESTURE_SLOP:
-			return
-		gesture_mode = "move"
-		if gesture_from_tray:
+func _pick_gesture_target(point: Vector2) -> Dictionary:
+	if erase_mode and board_view.get_global_rect().has_point(point):
+		erase_target = _erase_cell_at(point)
+		return {"cell":erase_target,"tool":"erase"}
+	return _pick_piece(point)
+
+func _start_drag(point: Vector2, id: int) -> bool:
+	return piece_gesture.begin(point,id,_pick_piece(point))
+
+func _consume_gesture(result: Dictionary) -> void:
+	if result.is_empty(): return
+	if result.tool == "erase":
+		if result.released:
+			if not result.canceled and _erase_cell_at(result.point) == result.grabbed: _erase(result.grabbed)
+			erase_target = Vector2i(-1,-1)
+		return
+	if result.moving:
+		if result.started and result.from_tray:
 			var grabbed_index: int = cells.find(grabbed_cell)
 			cells = piece_view.display_cells()
 			tray_moved = true
 			grabbed_cell = cells[grabbed_index]
 			_refresh()
-	_drag_to(point)
+		_drag_to(result.point)
+	if result.tap: _rotate()
+	if result.released: _autosave()
+
+func _move_gesture(point: Vector2) -> void:
+	_consume_gesture(piece_gesture.move(point,piece_gesture.pointer_id))
 
 func _finish_gesture(point: Vector2) -> void:
-	_move_gesture(point)
-	if gesture_mode == "pending" and gesture_age <= TAP_LIMIT:
-		_rotate()
-	dragging = false
-	_autosave()
+	_consume_gesture(piece_gesture.finish(point,piece_gesture.pointer_id))
 
 func _erase_cell_at(point: Vector2) -> Vector2i:
-	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
-	local += Vector2(0, board_view.surface_depth())
-	var relative: Vector2 = (local - board_view._floor_point(Vector2.ZERO)) / board_view.pitch
-	return Vector2i(floori(relative.x), floori(relative.y))
+	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse()*point
+	local += Vector2(0,board_view.surface_depth())
+	return Geometry.board_cell(local,board_view._floor_point(Vector2.ZERO),board_view.pitch)
 
 func _input(event: InputEvent) -> void:
 	if introduction != null: return
 	if saving or confirmation.visible:
+		piece_gesture.cancel()
 		get_viewport().set_input_as_handled()
 		return
-	if gallery_panel.visible:
-		return
-	var pointer_event: bool = event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT)
+	if gallery_panel.visible: return
+	var p := Gesture.pointer(event)
 	if palette_menu.visible:
-		if pointer_event and event.pressed and not palette_menu.get_global_rect().has_point(event.position) and not palette_button.get_global_rect().has_point(event.position):
+		if not p.is_empty() and p.kind == "press" and not palette_menu.get_global_rect().has_point(p.point) and not palette_button.get_global_rect().has_point(p.point):
 			palette_menu.hide()
 			get_viewport().set_input_as_handled()
 		return
-	if erase_mode and pointer_event and board_view.get_global_rect().has_point(event.position):
-		if event.pressed:
-			erase_target = _erase_cell_at(event.position)
-			pointer_id = event.index if event is InputEventScreenTouch else -1
-		elif (event.index if event is InputEventScreenTouch else -1) == pointer_id:
-			if not (event is InputEventScreenTouch and event.canceled) and _erase_cell_at(event.position) == erase_target:
-				_erase(erase_target)
-			erase_target = Vector2i(-1, -1)
-		get_viewport().set_input_as_handled()
-		return
-	if event is InputEventScreenTouch:
-		if event.pressed:
-			if _start_drag(event.position, event.index):
-				get_viewport().set_input_as_handled()
-		elif dragging and event.index == pointer_id:
-			if event.canceled:
-				dragging = false
-			else:
-				_finish_gesture(event.position)
-			get_viewport().set_input_as_handled()
-	elif event is InputEventScreenDrag and dragging and event.index == pointer_id:
-		_move_gesture(event.position)
-		get_viewport().set_input_as_handled()
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			if _start_drag(event.position, -1):
-				get_viewport().set_input_as_handled()
-		elif dragging and pointer_id == -1:
-			_finish_gesture(event.position)
-			get_viewport().set_input_as_handled()
-	elif event is InputEventMouseMotion and dragging and pointer_id == -1:
-		_move_gesture(event.position)
+	var result := piece_gesture.handle(event,_pick_gesture_target)
+	if not result.is_empty():
+		_consume_gesture(result)
 		get_viewport().set_input_as_handled()
 
 func _process(delta: float) -> void:
-	if dragging:
-		gesture_age += delta
-	if has_hover:
-		_update_floating_position()
+	if introduction != null: return
+	piece_gesture.tick(delta)
+	if has_hover: _update_floating_position()
 
 # Every button, keyboard shortcut, and tap uses this same command entry point.
 func _request_player_action(action: String, parameters: Dictionary = {}) -> Dictionary:
@@ -632,12 +620,7 @@ func _clear_selection() -> void:
 	selected = Vector2i(-1, -1)
 
 func _offered_cells() -> Array:
-	if game.over: return []
-	var offered: Array = game.piece().cells
-	var bounds := Vector2i.ONE
-	for cell: Vector2i in offered:
-		bounds = bounds.max(cell + Vector2i.ONE)
-	return Rules.rotate(offered) if bounds.y > bounds.x else offered
+	return [] if game.over else Geometry.laying(game.piece().cells)
 
 func _rotate() -> void:
 	var result := _request_player_action("rotate")
@@ -833,6 +816,7 @@ func _volume_control(title: String, value: float, changed: Callable) -> VBoxCont
 func _close_menu() -> void:
 	palette_menu.hide()
 	menu_history.clear()
+	interface_changed.emit(false)
 
 func _back_menu() -> void:
 	if menu_history.is_empty():
@@ -852,6 +836,7 @@ func _show_menu(page: String, remember: bool = true) -> void:
 	_layout_palette_menu(clampf(minf(size.x, size.y) * 0.018, 4, 12))
 	_refresh_theme()
 	_update_summaries(_prediction_board())
+	interface_changed.emit(true)
 
 func _review_new_game(theme: String) -> void:
 	if introduction != null and introduction.stage == 11:
@@ -1007,6 +992,7 @@ func _apply_button_style(button: Button, active: bool = false, _color: int = 1) 
 func _refresh_theme() -> void:
 	theme = InterfaceTheme.build()
 	confirmation.theme = theme
+	if save_error_dialog != null: save_error_dialog.theme = theme
 	if gallery_file_dialog != null: gallery_file_dialog.theme = theme
 	if gallery_panel != null: gallery_panel.remove_theme_stylebox_override("panel")
 	reef_background.visible = Palette.coral_reef
@@ -1103,7 +1089,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				_gallery_back()
 			get_viewport().set_input_as_handled()
 			return
-		if event.keycode == KEY_ESCAPE and erase_mode:
+		if event.keycode == KEY_ESCAPE and erase_mode and introduction == null:
 			erase_mode = false
 			_refresh()
 			get_viewport().set_input_as_handled()
@@ -1240,55 +1226,56 @@ func _gallery_export_completed(_operation: String, _success: bool, message: Stri
 	gallery_status.text = message
 	_refresh_gallery_actions()
 
-func _save_design() -> void:
+func _save_design() -> Dictionary:
 	if introduction != null:
 		introduction.show_hint()
-		return
-	save_current_design()
+		return {"ok":false,"status":"tutorial_redirect"}
+	return await save_current_design()
 
 # Shared capture entry point; the tutorial can save without routing its button again.
-func save_current_design() -> void:
-	if saving or board_view.growing or not _can_save():
-		return
+func save_current_design() -> Dictionary:
+	if saving: return {"ok":false,"status":"busy"}
+	var fingerprint := _design_fingerprint()
+	var session_id: int = game.get_instance_id()
+	if board_view.growing or not _can_save():
+		return _complete_design_save({"ok":false,"status":"unavailable"},fingerprint,session_id)
 	saving = true
+	interface_changed.emit(false)
 	var snapshot: Array = game.board.duplicate(true)
 	var palette_index: int = Palette.selected_index
-	var theme: String = Palette.theme_id()
+	var theme_id: String = Palette.theme_id()
 	var theme_version: String = Palette.theme_version()
-	var fingerprint := _design_fingerprint()
-	var surface_revision := _surface_revision(theme)
-	var viewport := SubViewport.new()
-	viewport.size = Vector2i(900, 900)
-	viewport.disable_3d = true
-	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	add_child(viewport)
-	var artwork = BoardView.new()
-	artwork.size = Vector2(900, 900)
-	artwork.show_guides = false
-	artwork.show_axes = false
-	artwork.complete_background = true
-	artwork.paper_background = Palette.clockwork
-	viewport.add_child(artwork)
-	artwork.show_settled(snapshot)
-	if board_view.board_frame != null and board_view.board_frame.is_present():
-		artwork.board_frame.apply_theme(theme, board_view.board_frame.texture)
-		artwork.update_geometry()
-	# Preserve established leaf direction in the clean artwork capture.
-	artwork.direction_by_edge = board_view.direction_by_edge.duplicate(true)
-	artwork._adopt_directions(true)
-	if board_view.coral_visuals != null and artwork.coral_visuals != null:
-		artwork.coral_visuals.copy_order(board_view.coral_visuals)
-	if board_view.clockwork_visuals != null and artwork.clockwork_visuals != null:
-		artwork.clockwork_visuals.copy_motion(board_view.clockwork_visuals)
-	if board_view.zen_visuals != null and artwork.zen_visuals != null:
-		artwork.zen_visuals.copy_landmark_order(board_view.zen_visuals)
-	artwork.construction_state.copy_from(board_view.construction_state)
-	await RenderingServer.frame_post_draw
-	var result: Dictionary = gallery.save_design(snapshot, palette_index, viewport.get_texture().get_image(), theme, theme_version, surface_revision)
-	viewport.queue_free()
-	saving = false
-	if result.ok:
-		saved_fingerprint = fingerprint
+	var surface_revision := _surface_revision(theme_id)
+	var image: Image = await artwork_capture.render(self,board_view,snapshot,theme_id)
+	if not is_inside_tree() or is_queued_for_deletion():
+		saving = false
+		return {"ok":false,"status":"cancelled","fingerprint":fingerprint,"session_id":session_id}
+	if game.get_instance_id() != session_id or _design_fingerprint() != fingerprint:
+		return _complete_design_save({"ok":false,"status":"cancelled"},fingerprint,session_id)
+	var result: Dictionary
+	if image == null or image.is_empty(): result = {"ok":false,"status":"capture_failed"}
 	else:
-		push_error("Could not save the garden to the local gallery.")
+		result = gallery.save_design(snapshot,palette_index,image,theme_id,theme_version,surface_revision)
+		result.status = "saved" if result.ok else "storage_failed"
+	return _complete_design_save(result,fingerprint,session_id)
+
+func _complete_design_save(result: Dictionary, fingerprint: String, session_id: int) -> Dictionary:
+	saving = false
+	result.fingerprint = fingerprint
+	result.session_id = session_id
+	if result.ok and game.get_instance_id() == session_id and _design_fingerprint() == fingerprint:
+		saved_fingerprint = fingerprint
 	_refresh()
+	if not result.ok and result.status not in ["cancelled","unavailable"] and introduction == null:
+		_show_design_save_failure()
+	design_save_finished.emit(result.duplicate(true))
+	return result
+
+func _show_design_save_failure() -> void:
+	if save_error_dialog == null:
+		save_error_dialog = AcceptDialog.new()
+		save_error_dialog.title = ""
+		save_error_dialog.dialog_text = "Couldn't save the picture. Please try again."
+		add_child(save_error_dialog)
+	save_error_dialog.theme = theme
+	save_error_dialog.popup_centered(Vector2i(mini(360,int(size.x*0.7)),120))

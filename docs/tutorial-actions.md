@@ -23,6 +23,8 @@ Results include `ok` and `action`, plus command-specific fields and any domain
 failure reason. Successful commands emit `completed(action, result)` once, with
 a copied result. `source` defaults to `player`; final design assembly explicitly
 uses `scenario`, so later guidance can distinguish setup from player input.
+`session_id` identifies the runtime game that completed the command; tutorial
+guidance filters events against its active practice session.
 
 Transforms return presentation state: the caller applies the returned cells or
 color to its active view/session. A completion event reports the command result;
@@ -51,7 +53,8 @@ early placement can reveal its target without committing any tiles.
 
 The tutorial now uses an [isolated real practice game](tutorial-practice.md)
 following step 4. The temporary backend hook and fixture-based mutations have
-been removed. Step 5 still needs to share gestures and preview geometry.
+been removed. [Step 5](tutorial-interaction.md) now shares gestures and preview
+geometry as well.
 
 Card 8's Settings → Themes selection and the real gallery save from card 7 remain
 the behavior described in [tutorial progress](tutorial-progress.md).

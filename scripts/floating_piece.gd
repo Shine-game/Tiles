@@ -1,6 +1,7 @@
 extends Control
 
 const Surface = preload("res://scripts/tile_surface.gd")
+const Geometry = preload("res://scripts/piece_geometry.gd")
 const Palette = preload("res://scripts/palette.gd")
 var cells: Array = []
 var origin := Vector2.ZERO
@@ -17,9 +18,7 @@ func _ready() -> void:
 	z_index = 30
 
 func cell_at(point: Vector2) -> Vector2i:
-	var face_origin: Vector2 = origin - Vector2(0, lift())
-	var cell := Vector2i(floori((point.x - face_origin.x) / pitch), floori((point.y - face_origin.y) / pitch))
-	return cell if cells.has(cell) else Vector2i(-1, -1)
+	return Geometry.hit(cells,point,origin-Vector2(0,lift()),pitch)
 
 func _draw() -> void:
 	Surface.begin(self)

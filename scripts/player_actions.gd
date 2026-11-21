@@ -26,6 +26,7 @@ func execute(action: String, game, request: Dictionary = {}, policy: Callable = 
 		_: result = _apply_game(action,game,request)
 	result["action"] = action
 	result["source"] = request.get("source","player")
+	result["session_id"] = game.get_instance_id() if game != null else 0
 	if result.ok: completed.emit(action,result.duplicate(true))
 	return result
 

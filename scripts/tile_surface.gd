@@ -65,8 +65,17 @@ static func draw(canvas: CanvasItem, face: Rect2, color: Color, thickness: float
 
 # A piece is one occupied union, just like placed ground: no gaps, repeated
 # internal walls, or stacked shadows along the joins between its squares.
-static func draw_piece(canvas: CanvasItem, cells: Array, origin: Vector2, pitch: float, color: Color) -> void:
+static func draw_flat_tile(canvas: CanvasItem, rect: Rect2, color: Color) -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.set_corner_radius_all(4)
+	canvas.draw_style_box(style,rect.grow(-1.5))
+
+static func draw_piece(canvas: CanvasItem, cells: Array, origin: Vector2, pitch: float, color: Color, flat: bool = false) -> void:
 	if cells.is_empty():
+		return
+	if flat:
+		for cell: Vector2i in cells: draw_flat_tile(canvas,Rect2(origin+Vector2(cell)*pitch,Vector2.ONE*pitch),color)
 		return
 	var extent := 1
 	for cell: Vector2i in cells:

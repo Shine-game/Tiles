@@ -51,8 +51,13 @@ func run() -> void:
 		scene.selected = anchor
 		scene._preview()
 		check(scene.place_button.disabled,"Out-of-bounds and overlapping placements deactivate Place")
-		check(icon.available.all(func(value):return value) and not icon.complete.any(func(value):return value),"Impossible placement falls back to committed-board symmetry")
+		check(icon.available.all(func(value):return value) and not icon.complete.any(func(value):return value),"An off-board cell or same-color overlap leaves visible symmetry unchanged")
 		check(scene.floating_piece.color == Rules.BLUE,"Impossible placement preserves selected color")
+	scene.selected = Vector2i.ZERO
+	scene._choose_color(Rules.CORAL)
+	check(scene.place_button.disabled and not icon.available[0] and not icon.available[1],"Invalid overlapping hover still predicts its visible conflicting color")
+	check(scene.game.board[0][0] == Rules.BLUE and scene.game.moves == 0,"Invalid overlay prediction never commits a tile")
+	scene._choose_color(Rules.BLUE)
 	scene.selected = Vector2i(2,1)
 	scene.has_hover = false
 	scene._preview()
