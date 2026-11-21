@@ -27,8 +27,7 @@
             "rotation_range_degrees": [
               0,
               360
-            ],
-            "duration_from_sound_tier": 2
+            ]
           }
         }
       }

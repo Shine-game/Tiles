@@ -39,6 +39,4 @@ func reschedule_formations(sprite_events:Dictionary)->void:
 
 func formation_complete(event:Dictionary)->float:
 	if event.old:return -100.0
-	var clip:Dictionary=preload("res://scripts/pattern/theme_registry.gd").profile("vines").soundscape.tiers["2"]
-	var audio_seconds:float=maxf(0.0,load(clip.path).get_length()-float(clip.get("seek_seconds",0.0)))+float(clip.get("offset_seconds",0.0))
-	return float(event.start)+maxf(flower_seconds(),audio_seconds)
+	return float(event.start)+flower_seconds()

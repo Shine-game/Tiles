@@ -107,17 +107,20 @@ Placed cells keep their logical colors but lose their solid backgrounds. Curved 
 
 `tests/test_growth.gd` runs 100 checks covering travel times, multiple sources, independent pieces, side-midpoint meetings, corner/color isolation, loop timing, inverted palettes, flower bounds, flowering rings, preservation, resolution, cancellation, forward/reverse leaf direction, retained directions after undo, and local grid fading/restoration.
 
-To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 90 frames, a sound-event schedule, and a settled PNG under the ignored `build/` directory. Add `-- --dense --palette=1` to capture the blue/snow pair, or `-- --dense` for the default rose/violet pair on an 11×11 near-filled example with separate neighboring colors, sparse pockets, and isolated centers; those outputs use the `dense-growth` prefix. It is a development tool and is excluded from Android export. To create the matching sound track, run `python3 tools/mix_growth_preview.py dense-growth`, then mux `build/dense-growth-audio.wav` with the captured frames. All preview and tool files are excluded from the APK.
+To capture a reproducible graphical preview, run `godot --path . --script tests/render_growth.gd` on a graphical display. It presses Place on a prepared board and writes 90 frames and a settled PNG under the ignored `build/` directory. Add `-- --dense --palette=1` to capture the blue/snow pair, or `-- --dense` for the default rose/violet pair on an 11×11 near-filled example with separate neighboring colors, sparse pockets, and isolated centers; those outputs use the `dense-growth` prefix. It is a development tool and is excluded from Android export. All preview and tool files are excluded from the APK.
 
 ## Sound and shallow depth
 
-Vines growth has a soft, original stereo foliage whisper. Each new flower produces a quiet bell note when its petals begin opening; established flowers stay silent. Five pentatonic pitches keep simultaneous blooms harmonious, with per-note rate limiting and bounded polyphony. The whisper fades out when the visual growth resolves; bell tails decay naturally without delaying Place. Back, reset, and scene exit stop active sounds. Vines remains silent while the board is idle. Coral Reef uses the supplied looping reef ambience, three growth textures, three short colony bubbles and two long anemone bubbles. Cues follow the visual timeline, coalesce nearby feature starts and fade safely on cancellation. See [Coral audio integration](docs/coral-audio.md) for levels, routing and provenance.
-
-`assets/audio/shared/shared_tier_1.wav` and `flower_bell.wav` are small original PCM samples, reproducible with `python3 tools/synthesize_growth_audio.py`. They use no external assets or network service. Phone speakers/headphones still need listening validation.
+Each active theme has one unchanged looping ambience and one placement click
+from the supplied `audio.rar`. Only a successfully placed player tile clicks,
+exactly once per piece. Growth, flowers, higher tiers, restores and scripted
+assembly are silent. Both channels retain independent volume controls.
+All runtime recordings are OGG; there are no fallback or growth-sound libraries.
+See [audio design](docs/theme-soundscapes.md).
 
 The surrounding screen stays white in all palettes. The field frame is vertically centered, with safely inset top controls and four equal square bottom buttons. Filled cells form one raised surface with a board-wide edge shader. Placed cells have rounded exposed corners and merge without internal seams. Adjacent filled cells share one surface regardless of color; unfilled cells stay lower. Plants are drawn on the elevated surface. Incoming, hovering and placed tiles share one slab renderer with the same thickness, corner rounding, bevel and shadow rules. Reef shading uses a softer underwater treatment. Depth changes neither legal positions nor the grid footprint, and raised rims retain correct drag hit testing.
 
-`tests/test_sound_and_depth.gd` runs 29 checks for idle silence, growth whispers, bell timing, duplicate suppression, cancellation, audio fade races, raised surfaces, stable placement coordinates, and raised-rim dragging.
+`tests/test_sound_and_depth.gd` checks silent growth, persistent ambience, raised surfaces, placement coordinates and drag hit testing.
 
 ## Android export
 
@@ -162,7 +165,7 @@ godot --headless --editor --path . --import --quit
 godot --headless --path . --script tests/test_rules.gd
 godot --headless --path . --script tests/test_growth.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_sound_and_depth.gd
-godot --headless --audio-driver Dummy --path . --script tests/test_coral_audio.gd
+godot --headless --audio-driver Dummy --path . --script tests/test_theme_soundscape.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_reef_water.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_board_frame.gd
 godot --headless --audio-driver Dummy --path . --script tests/test_clockwork.gd
@@ -194,7 +197,7 @@ Run `tests/render_platform.gd` on a graphical display for shader assertions and 
 - `scripts/gallery.gd`: persistent local artwork and metadata storage.
 - `scripts/main.gd`: native responsive controls, drag interactions, and placement gating.
 - `scripts/growth.gd`: deterministic propagation, directional leaf events, and bloom schedule, separate from rendering.
-- `scripts/growth_audio.gd`: synchronized foliage and flower sounds.
+- `scripts/theme_audio.gd`: unchanged theme ambience and one click per accepted tile placement.
 - `scripts/occupied_platform.gd` and `shaders/occupied_platform.gdshader`: board-wide occupancy, raised outline, lip, and transparent contact shadow.
 - `scripts/tile_surface.gd`: shallow depth for draggable pieces.
 - `scripts/botanical_brush.gd`: a cached, tintable watercolor brush with root-to-tip leaf veins.

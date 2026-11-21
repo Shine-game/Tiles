@@ -1,7 +1,6 @@
 class_name ClockworkVisuals
 extends Node2D
 
-signal cue(kind: String)
 const Junctions = preload("res://scripts/pattern/junction_layer.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
@@ -44,8 +43,6 @@ var puffs: Array = []
 var fx: FXLayer
 var shadows: FXLayer
 var last_exhaust := -10.0
-var last_click := -10.0
-var last_clunk := -10.0
 
 class FXLayer extends Node2D:
 	var items: Array = []
@@ -99,8 +96,6 @@ func clear() -> void:
 	puffs.clear()
 	motion_clock = 0
 	fx_clock = 0
-	last_click = -10
-	last_clunk = -10
 	last_exhaust = -10
 
 static func layer(id: String) -> int:
@@ -362,12 +357,6 @@ func advance(clock: float) -> void:
 			announced[event.key] = true
 			if event.id == "T03":
 				puff(event.center, true)
-			if (event.id in ["T03", "H00_plain_hatch"] or event.get("terminal", false)) and fx_clock - last_click > 0.075:
-				last_click = fx_clock
-				cue.emit("click")
-			if event.id == "L01" and fx_clock - last_clunk > 0.10:
-				last_clunk = fx_clock
-				cue.emit("clunk")
 	for entry: Dictionary in chain_nodes.values():
 		var progress: float = _progress(entry.event, clock)
 		if progress >= 0.999 and entry.moving_since < 0:
@@ -430,7 +419,6 @@ func puff(center: Vector2, seal: bool = false) -> void:
 	if puffs.size() >= 2:
 		return
 	puffs.append({"center": center * 256, "born": fx_clock, "seal": seal})
-	cue.emit("steam")
 
 func _process(delta: float) -> void:
 	if not is_visible_in_tree() or model == null:

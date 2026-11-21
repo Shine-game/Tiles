@@ -51,7 +51,7 @@ func _run() -> void:
 		if i == 6:
 			scene._place()
 			scene.board_view.set_process(false)
-			_write_audio_events(scene, prefix)
+
 		await process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://build/%s-frames/%03d.png" % [prefix, i])
@@ -107,15 +107,3 @@ func _dense_board() -> Array:
 	grid[5][0] = Rules.BLUE
 	grid[5][10] = Rules.BLUE
 	return grid
-
-func _write_audio_events(scene, prefix: String) -> void:
-	var bells: Array = []
-	for corner: Vector2i in scene.board_view.pattern.flowers:
-		var flower: Dictionary = scene.board_view.pattern.flowers[corner]
-		if not flower.old:
-			var slot: int = posmod(corner.x + corner.y * 3, scene.sounds.PITCHES.size())
-			bells.append({"time": 0.2 + flower.start + Growth.FLOWER_POP * 0.12, "pitch": scene.sounds.PITCHES[slot]})
-	var data := {"duration": 3.0, "whisper_start": 0.2, "whisper_stop": 0.2 + scene.board_view.pattern.duration, "whisper_db": scene.sounds.WHISPER_DB, "bell_db": scene.sounds.BELL_DB, "bells": bells}
-	var file := FileAccess.open("res://build/" + prefix + "-audio-events.json", FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
-	file.close()

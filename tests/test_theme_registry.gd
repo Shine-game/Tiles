@@ -5,7 +5,6 @@ const Palette = preload("res://scripts/palette.gd")
 const Frame = preload("res://scripts/board_frame.gd")
 const Clock = preload("res://scripts/clockwork_sets.gd")
 const Coral = preload("res://scripts/coral_sets.gd")
-const Zen = preload("res://scripts/zen_sets.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
 var checks := 0
 var failures := 0
@@ -17,9 +16,9 @@ func check(ok: bool, message: String) -> void:
 func _initialize() -> void:
 	var original := Themes.specification()
 	check(Themes.validate(original).is_empty(), "production registry validates")
-	check(Palette.theme_id() == "zen_garden" and Themes.ids() == ["zen_garden", "clockwork", "vines", "coral_reef"], "Zen stays default and first; no archived theme selectable")
+	check(Palette.theme_id() == "vines" and Themes.ids() == ["clockwork", "vines", "coral_reef"] and not Palette.select_theme("zen_garden"), "Vines is default and unfinished Zen remains archived")
 	check(Themes.label("labyrinth") == "Labyrinth (archived)" and not Palette.select_theme("labyrinth"), "archived gallery label does not reactivate the theme")
-	for installer in [Clock, Coral, Zen, Vines]: installer.install()
+	for installer in [Clock, Coral, Vines]: installer.install()
 	for id: String in Themes.ids():
 		check(Palette.select_theme(id) and Palette.theme_name() == Themes.label(id), "theme selection reads registry")
 		check(Palette.theme_version() == {"zen_garden": "0.18", "clockwork": "1.7", "vines": "1.8", "coral_reef": "3.0"}[id], "Generative artwork has a distinct appearance version")
@@ -48,19 +47,19 @@ func _initialize() -> void:
 	for index in range(Palette.PAIRS.size()):
 		check(Palette.select(index), "all existing palette pairs remain selectable")
 		check(Palette.tile(1) == Palette.PAIRS[index].colors[0] and Palette.tile(2) == Palette.PAIRS[index].colors[1], "Vines preserves both palette pigments")
-		check(Palette.floor_color() == Palette.PAIRS[index].floor, "palette-specific floor preserved")
+		check(Palette.floor_color() == Color("FFF9F3"), "Authored empty-tile color is independent of palette")
 		var garden: Color = Palette.floor_color().lightened(0.09) if Palette.dark() else Palette.floor_color().darkened(0.035)
 		check(Palette.garden() == garden, "dark/light garden derivation preserved")
 	for field: String in ["themes", "order", "frame_geometry", "palette_pairs"]:
 		changed = original.duplicate(true)
 		changed[field] = null
 		check(not Themes.validate(changed).is_empty(), "missing required registry field is diagnosed: " + field)
-	for path: Array in [["ui"], ["sets"], ["frame"], ["hooks"], ["preview"], ["environment"]]:
+	for path: Array in [["ui"], ["sets"], ["frame"], ["hooks"], ["preview"], ["environment"], ["soundscape"]]:
 		changed = original.duplicate(true)
 		changed.themes.clockwork[path[0]] = null
 		check(not Themes.validate(changed).is_empty(), "malformed theme field is diagnosed")
 	changed = original.duplicate(true)
-	changed.order.append("zen_garden")
+	changed.order.append("clockwork")
 	check(not Themes.validate(changed).is_empty(), "duplicate theme entries rejected")
 	changed = original.duplicate(true)
 	changed.default = "labyrinth"
@@ -77,11 +76,14 @@ func _initialize() -> void:
 	changed = original.duplicate(true)
 	changed.themes.clockwork.ui.controls = "not a color"
 	check(not Themes.validate(changed).is_empty(), "invalid UI colors diagnosed")
+	changed = original.duplicate(true)
+	changed.themes.vines.soundscape.place.path = "res://missing.ogg"
+	check(not Themes.validate(changed).is_empty(),"Missing placement recording is diagnosed")
 	var preset := ConfigFile.new()
 	check(preset.load("res://export_presets.cfg") == OK, "export configuration loads")
 	var included: String = preset.get_value("preset.0", "include_filter")
 	check(Themes.PATH.trim_prefix("res://") in included and "frames.json" not in included and "theme.json" not in included, "export includes active registry without obsolete manifests")
 	Palette.select(0)
-	Palette.select_theme("zen_garden")
+	Palette.select_theme("vines")
 	print("Theme registry: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

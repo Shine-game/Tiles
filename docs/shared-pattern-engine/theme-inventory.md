@@ -159,7 +159,7 @@ refactor. Keep canonical artwork reuse without accidentally treating every
 junction's mask as identical.
 
 Checks to retain: `test_coral.gd`, `test_coral_arm_rotation.gd`,
-`test_reef_water.gd`, `test_coral_audio.gd`, plus gallery/theme-switch checks.
+`test_reef_water.gd`, `test_theme_soundscape.gd`, plus gallery/theme-switch checks.
 
 ## Vines
 

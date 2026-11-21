@@ -1,73 +1,78 @@
 extends SceneTree
-const Audio=preload("res://scripts/growth_audio.gd")
-const Board=preload("res://scripts/board_view.gd")
-const Palette=preload("res://scripts/palette.gd")
-const Rules=preload("res://scripts/rules.gd")
-const Themes=preload("res://scripts/pattern/theme_registry.gd")
-const Soundscape=preload("res://scripts/theme_soundscape.gd")
-var checks:=0
-func check(ok:bool,label:String):
- checks+=1
- assert(ok,label)
-func _initialize():run.call_deferred()
-func run():
- var sound=Audio.new()
- root.add_child(sound)
- var view=Board.new()
- root.add_child(view)
- view.size=Vector2(600,600)
- sound.attach_board(view)
- view.growth_canceled.connect(sound.cancel)
- view.growth_finished.connect(sound.finish)
- for theme in ["vines","clockwork"]:
-  Palette.select_theme(theme)
-  var empty=Rules.empty_board(7)
-  var board=empty.duplicate(true)
-  for y in range(2,4):
-   for x in range(2,5):board[y][x]=1
-  view.show_settled(empty)
-  check(sound.soundscape.ambience.playing,"Ambience plays without growth")
-  check(sound.soundscape.ambience.stream.loop if sound.soundscape.ambience.stream is AudioStreamOggVorbis else sound.soundscape.ambience.stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,"Ambience loops")
-  check(is_equal_approx(sound.soundscape.ambience.stream.get_length(),15 if theme=="vines" else 72),"Full supplied bed")
-  check(sound.soundscape.ambience.bus==sound.background_bus,"Ambience uses existing settings bus")
-  view.animate_growth(empty,board)
-  view.set_process(false)
-  var plan=Soundscape.plan(view.pattern,Themes.profile(theme).soundscape)
-  var tiers=[]
-  for cue in plan:
-   if not tiers.has(cue.tier):tiers.append(cue.tier)
-  check((1 in tiers and 23 in tiers) or (1 in tiers and 2 in tiers and 3 in tiers),"All three visual tiers have sound cues, including combined")
-  for tier in [1,2,3]:check(sound.soundscape.voices[tier].bus==sound.effects_bus,"Every effect uses effects settings bus")
-  sound.set_background_enabled(false)
-  check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.background_bus)),"Background toggle mutes supplied ambience")
-  check(not AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.effects_bus)),"Effects remain independent")
-  sound.set_effects_enabled(false)
-  check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.effects_bus)),"Effects toggle mutes supplied cues")
-  sound.set_background_enabled(true)
-  sound.set_effects_enabled(true)
-  for cue in plan:
-   view.advance_growth(maxf(0, cue.time-view.clock)+0.001)
-  view.advance_growth(100)
-  check(not view.growing,"Audio does not delay construction")
-  check(not sound.soundscape.event_log.is_empty(),"Cues dispatched by visual clock")
-  for event in sound.soundscape.event_log:check(event.clock+0.001>=event.scheduled,"No cue before its visual event")
-  var count=sound.soundscape.event_log.size()
-  view.show_settled(board,true)
-  check(sound.soundscape.pending.is_empty() and count==sound.soundscape.event_log.size(),"Settled restore never replays growth cues")
-  check(sound.soundscape.ambience.playing,"Ambience persists after construction")
-  check(not sound.workshop.active and not sound.whisper.playing,"Old theme audio does not double playback")
-  view.animate_growth(empty,board)
-  sound.cancel()
-  check(sound.soundscape.pending.is_empty(),"Cancellation clears pending effects")
- Palette.select_theme("coral_reef")
- view.show_settled(Rules.empty_board(7))
- check(sound.soundscape.theme.is_empty() and not sound.soundscape.ambience.playing,"Changing to coral stops supplied ambience")
- check(sound.reef.theme_active,"Existing coral soundscape remains active")
- sound.soundscape.deactivate()
- sound.reef.deactivate()
- await create_timer(0.7).timeout
- view.queue_free()
- sound.queue_free()
- await create_timer(0.15).timeout
- print("Theme soundscape: %d checks pass"%checks)
- quit()
+const Palette = preload("res://scripts/palette.gd")
+const Rules = preload("res://scripts/rules.gd")
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
+var checks := 0
+var failures := 0
+
+func check(ok: bool, message: String) -> void:
+	checks += 1
+	if not ok:
+		failures += 1
+		push_error(message)
+
+func _initialize() -> void: call_deferred("run")
+
+func run() -> void:
+	var buses := AudioServer.bus_count
+	var scene = load("res://main.tscn").instantiate()
+	root.add_child(scene)
+	var sound = scene.sounds
+	var settings := "/tmp/placement-audio-%d.cfg" % Time.get_ticks_usec()
+	sound.settings_path = settings
+	var clicks: Array = []
+	sound.placement_clicked.connect(func(theme_id):clicks.append(theme_id))
+	for theme_id: String in Palette.THEMES:
+		scene._select_theme(theme_id)
+		var config: Dictionary = Themes.profile(theme_id).soundscape
+		check(config.size() == 2 and config.has("ambience") and config.has("place"),"Theme has only ambience and placement audio")
+		check(sound.theme == theme_id and sound.ambience.playing and sound.ambience.stream.loop,"Unchanged ambience loops while idle")
+		check(sound.get_child_count() == 2,"No growth, tier, fallback or structure sound players are allocated")
+		check(sound.ambience.bus == sound.background_bus and sound.place_click.bus == sound.effects_bus,"Ambience and click have independent volume buses")
+		check(sound.place_click.stream is AudioStreamOggVorbis and not sound.place_click.stream.loop and sound.place_click.stream.get_length() < 1.0,"Supplied click is a short non-looping OGG")
+		var before_count := clicks.size()
+		check(scene.game.offer_piece("I3",1),"Prepare a multi-square piece through the game API")
+		var move := Rules.first_legal_move(scene.game.board,scene.game.piece(),false,false)
+		scene.cells = move.cells
+		scene.selected = move.anchor
+		scene.has_hover = true
+		scene._preview()
+		scene._place()
+		check(scene.game.moves == 1 and clicks.size() == before_count+1 and clicks.back() == theme_id,"One accepted multi-square tile produces exactly one themed click")
+		check(sound.place_click.playing,"The supplied placement recording actually starts")
+		scene.board_view.set_process(false)
+		scene.board_view.advance_growth(100)
+		check(clicks.size() == before_count+1 and sound.ambience.playing,"Finishing any tier is silent and leaves ambience running")
+		scene.player_actions.execute("place",scene.game,{"cells":[Vector2i.ZERO],"anchor":Vector2i(-1,-1)})
+		scene.player_actions.execute("rotate",scene.game,{"cells":scene.cells})
+		scene.player_actions.execute("undo",scene.game)
+		check(clicks.size() == before_count+1,"Invalid placement, manipulation, and helpers produce no sound")
+		scene.game.offer_piece("Dot",1)
+		var scripted: Dictionary = scene.player_actions.execute("place",scene.game,{"cells":[Vector2i.ZERO],"anchor":Vector2i(3,4),"source":"scenario"})
+		check(scripted.ok and clicks.size() == before_count+1,"Scripted tutorial assembly is silent")
+		scene.board_view.show_settled(scene.game.board)
+		check(clicks.size() == before_count+1,"Restoring a board never replays placement clicks")
+		var ambience_stream: AudioStream = sound.ambience.stream
+		scene.board_view.show_settled(scene.game.board)
+		check(sound.ambience.stream == ambience_stream and sound.ambience.playing,"Ordinary redraws retain the active ambience stream")
+		sound.set_background_volume(0.31)
+		sound.set_effects_volume(0.67)
+		check(is_equal_approx(db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(sound.background_bus))),0.31) and is_equal_approx(db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(sound.effects_bus))),0.67),"Both volume controls still reach their real audio buses")
+		sound.set_effects_volume(0)
+		check(AudioServer.is_bus_mute(AudioServer.get_bus_index(sound.effects_bus)),"Zero effects volume silences placement clicks")
+		sound.set_effects_volume(1)
+		scene._reset()
+		check(not sound.place_click.playing or clicks.size() == before_count+1,"Reset does not create a new click")
+	for theme_id: String in Palette.THEMES:
+		var folder := DirAccess.open("res://assets/audio/"+theme_id)
+		var recordings: Array = []
+		for name: String in folder.get_files():
+			if name.get_extension() in ["ogg","wav","mp3"]: recordings.append(name)
+		recordings.sort()
+		check(recordings == [theme_id+"_ambient.ogg",theme_id+"_place_click.ogg"],"Only the two authorized recordings remain for "+theme_id)
+	scene.queue_free()
+	await process_frame
+	check(AudioServer.bus_count == buses,"Audio cleanup removes both owned buses")
+	DirAccess.remove_absolute(settings)
+	print("Placement audio: %d checks, %d failures" % [checks,failures])
+	quit(1 if failures else 0)

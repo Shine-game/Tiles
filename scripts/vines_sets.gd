@@ -28,10 +28,6 @@ static func install() -> void:
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
 	tier3 = Assets.load_set("res://art/themes/vines/sets/tier3.json")
 	assert(tier3.ok,str(tier3.errors))
-	var sound_tier: int = int(Formations.parts(tier2).flower.params.get("duration_from_sound_tier",0))
-	if sound_tier>0:
-		var clip:Dictionary=Themes.profile("vines").soundscape.tiers[str(sound_tier)]
-		Formations.parts(tier2).flower.animation.duration_seconds=load(clip.path).get_length()-float(clip.get("seek_seconds",0))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
 

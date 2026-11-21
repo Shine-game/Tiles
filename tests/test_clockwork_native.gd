@@ -56,7 +56,7 @@ func _run() -> void:
 	await wait_frames(0.25)
 	var second: Image = await capture(root)
 	check(first.get_data() != second.get_data(), "gears, chains and steam render ongoing operation while Place is unlocked")
-	check(not view.growing and not scene.sounds.whisper.playing, "native operating motion does not reopen construction or legacy sound")
+	check(not view.growing and not scene.sounds.place_click.playing, "Native operating motion neither reopens construction nor plays placement clicks")
 	# Inspect the actual batched strip shader independently from masks/housings.
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(300, 180)

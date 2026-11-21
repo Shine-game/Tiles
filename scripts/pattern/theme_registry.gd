@@ -38,6 +38,13 @@ static func validate(data: Variant) -> Array:
 			for key: String in profile.ui:
 				var value: Variant = profile.ui[key]
 				if not value is String or not Color.html_is_valid(value): errors.append(id + ": invalid UI color " + key)
+		if profile.has("soundscape"):
+			var sounds: Variant = profile.soundscape
+			if not sounds is Dictionary: errors.append(id + ": invalid soundscape")
+			else:
+				for channel: String in ["ambience","place"]:
+					var clip: Variant = sounds.get(channel)
+					if not clip is Dictionary or not project_file(clip.get("path"),"ogg"): errors.append(id + ": missing OGG " + channel + " recording")
 		if profile.get("frame") is Dictionary:
 			if not profile.frame.get("enabled") is bool: errors.append(id + ": frame enabled must be boolean")
 			if not profile.frame.get("appearance") is String: errors.append(id + ": frame needs an appearance ID")

@@ -141,6 +141,5 @@
       "inventory": "art/themes/zen_garden/source-assets.json",
       "path": "artwork/stone_paths/zen_tier1_half_stone_w_color0_1.png"
     }
-  ],
-  "removed_missing_reference": "assets/themes/themes.json: coral_reef.audio.review.schedule"
+  ]
 }

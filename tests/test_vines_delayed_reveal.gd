@@ -4,7 +4,6 @@ const Rules=preload("res://scripts/rules.gd")
 const Palette=preload("res://scripts/palette.gd")
 const Sets=preload("res://scripts/vines_sets.gd")
 const Themes=preload("res://scripts/pattern/theme_registry.gd")
-const Sound=preload("res://scripts/theme_soundscape.gd")
 func _initialize():run.call_deferred()
 func run():
  Palette.select_theme("vines")
@@ -26,7 +25,7 @@ func run():
    var c=Vector2i(int(owner.get_slice("/",3)),int(owner.get_slice("/",2)))
    var o=Vector2i(int(owner.get_slice("/",5)),int(owner.get_slice("/",4)))
    if Rect2i(2,2,2,2).has_point(c) and Rect2i(2,2,2,2).has_point(o):assert(event.tier1_ready>=shot.end)
-  var seconds:float=load(Themes.profile("vines").soundscape.tiers["2"].path).get_length()
+  var seconds:float=3.0
   assert(is_equal_approx(Sets.flower().animation.duration_seconds,seconds))
   var node=view.vines_formations.renderer.nodes["flower/(3, 3)"]
   assert(not node.visible)
@@ -36,9 +35,6 @@ func run():
   assert(node.visible and node.material!=null)
   assert(is_equal_approx(node.material.get_shader_parameter("progress"),0.5))
   assert(view.vines_formations.renderer.nodes.values().filter(func(n):return n.z_index==1).all(func(n):return not n.visible))
-  var plan=Sound.plan(view.pattern,Themes.profile("vines").soundscape)
-  assert(plan.any(func(c):return c.tier==2 and is_equal_approx(c.time,event.start)))
-  assert(not plan.any(func(c):return c.tier==23))
   view.advance_growth(seconds/2)
   assert(node.visible and node.material==null)
   var link:Dictionary=view.pattern.links[0]
@@ -46,7 +42,6 @@ func run():
   assert(is_equal_approx(link.start,complete+0.2))
   view.advance_growth(maxf(0.0,link.start-view.clock-0.001))
   assert(view.vines_formations.renderer.nodes.values().filter(func(n):return n.z_index==1).all(func(n):return not n.visible))
-  assert(plan.any(func(c):return c.tier==3 and is_equal_approx(c.time,link.start)))
   view.advance_growth(0.002)
   assert(view.vines_formations.renderer.nodes.values().filter(func(n):return n.z_index==1).all(func(n):return n.visible))
   view.advance_growth(100)
@@ -56,5 +51,5 @@ func run():
   assert(view.vines_formations.renderer.nodes["flower/(3, 3)"].transform==saved)
   assert(view.vines_formations.renderer.nodes["flower/(3, 3)"].material==null)
  view.queue_free()
- print("Vines delayed reveal: local tier-one readiness, 0.2s waits, sound-length mask, delayed butterflies, original settled art and audio sync pass")
+ print("Vines delayed reveal: local tier-one readiness, 0.2s waits, three-second mask, delayed butterflies, original settled art pass")
  quit()

@@ -1,5 +1,5 @@
 extends SceneTree
-const Audio=preload("res://scripts/growth_audio.gd")
+const Audio=preload("res://scripts/theme_audio.gd")
 const Palette=preload("res://scripts/palette.gd")
 func _initialize():run.call_deferred()
 func run():
@@ -43,7 +43,7 @@ func run():
  assert(not scene.ambience_volume_row.visible)
  scene.sounds.set_background_volume(previous_background)
  scene.sounds.set_effects_volume(previous_effects)
- scene.sounds.soundscape.deactivate()
+ scene.sounds.deactivate()
  await create_timer(0.1).timeout
  scene.queue_free()
  await create_timer(0.15).timeout

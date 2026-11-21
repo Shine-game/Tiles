@@ -25,7 +25,7 @@ const Platform = preload("res://scripts/occupied_platform.gd")
 const BoardView = preload("res://scripts/board_view.gd")
 const PieceView = preload("res://scripts/piece_view.gd")
 const FloatingPiece = preload("res://scripts/floating_piece.gd")
-const GrowthSounds = preload("res://scripts/growth_audio.gd")
+const ThemeAudio = preload("res://scripts/theme_audio.gd")
 const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
 const GalleryExport = preload("res://scripts/gallery_export.gd")
@@ -89,7 +89,7 @@ var last_pointer := Vector2.ZERO
 var selected := Vector2i(-1, -1)
 var floating_piece: Control
 var board_view: Control
-var sounds: GrowthAudio
+var sounds: ThemeAudio
 var piece_view: Control
 var undo_button: Button
 var place_button: Button
@@ -238,13 +238,10 @@ func _build_interface() -> void:
 	add_child(board_view)
 	board_view.z_index = 3
 	board_view.growth_finished.connect(_preview)
-	sounds = GrowthSounds.new()
+	sounds = ThemeAudio.new()
 	add_child(sounds)
-	board_view.growth_started.connect(sounds.begin)
-	board_view.flower_opened.connect(sounds.bloom)
-	board_view.growth_finished.connect(sounds.finish)
-	board_view.growth_canceled.connect(sounds.cancel)
 	sounds.attach_board(board_view)
+	player_actions.completed.connect(sounds.action_completed)
 	flip_button = _button("Flip", _flip)
 	blue_button = _button("", func(): _choose_color(Rules.CORAL if game.current_color == Rules.BLUE else Rules.BLUE))
 	for color_button: Button in [blue_button]:

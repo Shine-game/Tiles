@@ -62,12 +62,6 @@
       "backend": "headless"
     },
     {
-      "test": "test_coral_audio",
-      "checks": 53,
-      "failures": 0,
-      "backend": "headless"
-    },
-    {
       "test": "test_coral_sets",
       "checks": 1365,
       "failures": 0,

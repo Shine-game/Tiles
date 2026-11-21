@@ -33,9 +33,6 @@ class GalleryAndroidExport extends EditorExportPlugin:
 	func _export_begin(features: PackedStringArray, _debug: bool, path: String, _flags: int) -> void:
 		allowed_audio.clear()
 		_collect_audio(JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json")))
-		# Shared fallback and the existing workshop compatibility player.
-		for clip: String in ["shared/shared_tier_1.wav", "shared/shared_tier_2.wav", "clockwork/clockwork_ambient_legacy.ogg", "clockwork/clockwork_tier_1_legacy.ogg", "clockwork/clockwork_tier_2_legacy.ogg", "clockwork/clockwork_tier_3_legacy.ogg"]:
-			allowed_audio["res://assets/audio/" + clip] = true
 		allowed_sprites.clear()
 		allowed_sprites["res://assets/icon.svg"] = true
 		var inventory: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/audit.json"))

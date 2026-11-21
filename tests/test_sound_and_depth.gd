@@ -24,8 +24,7 @@ func _run() -> void:
 	root.add_child(scene)
 	for i in range(4):
 		await process_frame
-	check(not scene.sounds.active and scene.sounds.soundscape.ambience.playing, "idle garden plays supplied ambience")
-	check(not scene.sounds.whisper.playing, "legacy foliage is suppressed")
+	check(scene.sounds.ambience.playing and not scene.sounds.place_click.playing,"Idle board plays ambience without a placement click")
 	var before: Array = Rules.empty_board(9)
 	for cell: Vector2i in [Vector2i(1, 1), Vector2i(2, 1), Vector2i(1, 2)]:
 		before[cell.y][cell.x] = Rules.BLUE
@@ -33,18 +32,18 @@ func _run() -> void:
 	after[2][2] = Rules.BLUE
 	scene.board_view.animate_growth(before, after)
 	scene.board_view.set_process(false)
-	check(scene.sounds.active and not scene.sounds.whisper.playing, "growth uses shared soundscape")
+	check(not scene.sounds.place_click.playing, "Growth animation alone never triggers a click")
 	var flower: Dictionary = scene.board_view.pattern.flowers[Vector2i(2, 2)]
 	scene.board_view.advance_growth(maxf(0,flower.start-0.001))
-	check(scene.sounds.soundscape.event_log.filter(func(e):return e.tier==2).is_empty(), "bloom cue waits for visible flower start")
+	check(not scene.sounds.place_click.playing, "No sound is scheduled before a flower appears")
 	scene.board_view.advance_growth(0.002)
-	check(scene.sounds.soundscape.event_log.filter(func(e):return e.tier==2).size()==1, "supplied bloom cue plays once")
+	check(not scene.sounds.place_click.playing, "Flowers form silently")
 	scene.board_view.advance_growth(100)
-	check(not scene.sounds.active and scene.sounds.soundscape.ambience.playing,"growth ends while ambience continues")
+	check(scene.sounds.ambience.playing and not scene.sounds.place_click.playing,"growth ends while ambience continues")
 	scene.board_view.show_settled(before)
-	check(scene.sounds.soundscape.pending.is_empty(), "reset clears scheduled effects")
+	check(not scene.sounds.place_click.playing, "Reset is silent")
 	scene.board_view.show_settled(after)
-	check(scene.sounds.soundscape.pending.is_empty(), "restored flowers do not replay cues")
+	check(not scene.sounds.place_click.playing, "Restored flowers are silent")
 	var cell := Vector2(1.5, 1.5)
 	scene.board_view.update_geometry()
 	var ground: Vector2 = scene.board_view._floor_point(cell)
@@ -74,8 +73,7 @@ func _run() -> void:
 	check(scene._start_drag(rim, 0), "raised top rim starts a normal drag")
 	check(scene.selected == Vector2i(2, 2), "grabbing a raised top rim does not jump up a grid row")
 	scene._clear_selection()
-	scene.sounds.cancel()
-	scene.sounds.soundscape.deactivate()
+	scene.sounds.deactivate()
 	await create_timer(0.1).timeout
 	scene.queue_free()
 	await create_timer(0.12).timeout

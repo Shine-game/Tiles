@@ -40,11 +40,11 @@ new gallery captures from earlier wheels-on-every-cell artwork.
 
 Undo/Erase update the logical board immediately, then reverse only unsupported construction in compressed order: terminal, chains, upper mechanism, axle, lower mechanism and ordinary pieces. Typical dismantling completes within 0.4 seconds. Surviving partial construction retains its progress. Place stays gated until construction/dismantling resolves, while the next piece remains movable. Continuous operation never prolongs that gate. Reset cancels old state. Entering the theme derives completed assemblies without replaying growth; surviving motion phases remain stable when returning to it. Gallery snapshots copy and freeze the live gear/chain phases.
 
-The first implementation operates completed mechanisms normally. `ClockworkVisuals.operating` is a separate policy hook; the idea of operating only while the board has committed symmetry is deliberately deferred, not silently imposed. Construction steam and sounds remain independent of that future operating policy. Scene pause freezes animation and audio together.
+The first implementation operates completed mechanisms normally. `ClockworkVisuals.operating` is a separate policy hook; the idea of operating only while the board has committed symmetry is deliberately deferred, not silently imposed. Construction steam remains independent of that future operating policy. Scene pause freezes animation and audio together.
 
 ## Sound
 
-Original, deterministic stereo PCM samples provide a quiet looping tick/tock background, soft coupling clicks, muted gear-seat clunks and short steam breaths. Generate them with `python3 tools/synthesize_clockwork_audio.py`; no external recordings are used. Tick/tock is at −24 dB player gain; click −18, clunk −16, steam −23. Four one-shot voices and per-kind rate limits bound busy assemblies. The previous foliage/bell and reef layers do not play in this theme. Rapid theme changes cancel obsolete fades, and scene cleanup stops all voices.
+Audio uses the unchanged workshop ambience and one placement click from the supplied `audio.rar`. There are no gear, chain, steam, or growth sound effects; see [shared audio design](theme-soundscapes.md).
 
 ## Validation and limits
 

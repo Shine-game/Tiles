@@ -1,7 +1,6 @@
 class_name TileBoardView
 extends Control
 
-signal workshop_cue(kind: String)
 signal growth_finished
 signal growth_started
 signal growth_canceled
@@ -281,7 +280,6 @@ func _sync_workshop(settled: bool, preserve: bool, reverse: bool = false) -> voi
 		if clockwork_visuals == null:
 			clockwork_visuals = Workshop.new()
 			add_child(clockwork_visuals)
-			clockwork_visuals.cue.connect(workshop_cue.emit)
 		clockwork_visuals.generative_tier1 = generative_tier1
 		clockwork_visuals.show()
 		clockwork_visuals.reconcile(pattern, settled, preserve, reverse)
