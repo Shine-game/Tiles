@@ -514,6 +514,16 @@ func _sync_tutorial_underlay() -> void:
 	if occupied_platform != null:
 		occupied_platform.visible = tutorial_underlay.is_empty() and occupied_platform.occupancy_bytes.has(255)
 
+func tutorial_tile_color(cell: Vector2i) -> Color:
+	var pigment: int = tutorial_underlay[cell.y][cell.x]
+	if pigment == 0: return Color("FFF9F3")
+	var original := Palette.tile(pigment)
+	if pattern == null or not pattern.arrivals.has(cell): return original
+	if Growth.value(growth_before,cell) == pigment: return Palette.platform_color()
+	# Replace the exercise color as artwork reaches this square, beneath the art.
+	var reveal := clampf((clock-float(pattern.arrivals[cell]))/0.3,0,1)
+	return original.lerp(Palette.platform_color(),reveal)
+
 func _draw_tutorial_tiles() -> void:
 	if tutorial_underlay.is_empty(): return
 	var n := tutorial_underlay.size()
@@ -523,8 +533,7 @@ func _draw_tutorial_tiles() -> void:
 	style.set_corner_radius_all(4)
 	for y in range(n):
 		for x in range(n):
-			var pigment: int = tutorial_underlay[y][x]
-			style.bg_color = Palette.tile(pigment) if pigment > 0 else Color("F1E7EB")
+			style.bg_color = tutorial_tile_color(Vector2i(x,y))
 			var rect := Rect2(field.position+Vector2(x,y)*unit,Vector2.ONE*unit)
 			tutorial_tile_layer.draw_style_box(style,rect.grow(-1.5))
 

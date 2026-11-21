@@ -225,7 +225,7 @@ func run() -> void:
 			intro.prepare_repair()
 			intro.layout()
 			intro.update_controls()
-			check(intro.hint in intro.pulsing,"Hint pulses throughout every part of card eight")
+			check((intro.hint in intro.pulsing) == (phase != 6),"Replacement placement waits to highlight Hint until committed")
 			if phase == 3:
 				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern","Only the first repair step shows Save the pattern")
 				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"The first repair instruction sits under its header without repeating it")
@@ -248,11 +248,11 @@ func run() -> void:
 				check(intro.piece_overlay.z_index > intro.text.z_index and intro.piece_overlay.z_index > intro.repair_header.z_index,"Live piece draws above the caption and repair header")
 				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/9),"Preview uses standard board-square size instead of shrinking")
 			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
-			if phase in [2,5]:
+			if phase in [2,5,6]:
 				var geometry: Dictionary = intro.tray_geometry()
 				check(is_equal_approx(geometry.origin.y+geometry.unit,normal_frame.position.y-4),"Offer sits just above the outer frame")
 				if phase == 2: single_square_center = geometry.origin+Vector2.ONE*geometry.unit/2
-				else: check((geometry.origin+Vector2(1.5,0.5)*geometry.unit).is_equal_approx(single_square_center),"Three-square offer is centered exactly where the single square appeared")
+				else: check((geometry.origin+Vector2(1.0 if phase == 6 else 1.5,0.5)*geometry.unit).is_equal_approx(single_square_center),"Three-square offer is centered exactly where the single square appeared")
 			else:
 				check(intro.tray_rect.is_equal_approx(game.piece_view.get_rect()),"Other previews retain their central header position")
 	game.size = Vector2(540,825)
@@ -341,9 +341,13 @@ func run() -> void:
 	intro._gui_input(tap)
 	check(intro.repair_phase == 5 and intro.grid[1][1] == 0,"Tapping marked square erases exactly that square")
 	var replacement_cue: String = intro.text.get_parsed_text()
+	var replacement_center: Vector2 = intro.tray_geometry().origin+Vector2(1.5,0.5)*intro.tray_geometry().unit
+	check("arrow joker" not in replacement_cue,"Removed arrow-joker instruction")
 	check(intro.cells.size() == 3 and not game.skip_button.disabled and game.skip_button in intro.pulsing,"Replacement joker is enabled with unsuitable three-square offer")
 	await click_control(game.skip_button)
 	check(intro.repair_phase == 6 and intro.cells == Model.repair_offers()[2].cells,"Replacement joker provides the fitting domino")
+	check((intro.tray_geometry().origin+Vector2(1,0.5)*intro.tray_geometry().unit).is_equal_approx(replacement_center),"Replacement domino appears at exactly the three-square piece center")
+	check(intro.hint not in intro.pulsing,"Hint stays quiet until replacement is placed")
 	check(intro.text.get_parsed_text() == replacement_cue and "Restore vertical symmetry" not in intro.text.get_parsed_text(),"Replacement placement keeps the previous cue instead of showing the removed text")
 	check(intro.guide_cells() == [Vector2i(6,2),Vector2i(7,2)],"Replacement destination is marked")
 	drag_piece(intro,Vector2i(0,4))
@@ -352,6 +356,7 @@ func run() -> void:
 	drag_piece(intro,Model.repair_offers()[2].anchor)
 	await click_control(intro.place)
 	check(intro.repair_phase == 7 and Rules.symmetry_states(intro.grid)[0].complete and game.indicators[0].icon.complete[0],"Replacement domino restores and highlights vertical symmetry")
+	check(intro.hint in intro.pulsing,"Hint highlights once correct placement starts the Bold-axis cue")
 	check("Bold axis! Your board is symmetrical right now." in intro.text.text and "Save a picture and continue playing." in intro.text.text,"Recovered pattern explains the bold axis and saving a picture")
 
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
@@ -374,6 +379,15 @@ func run() -> void:
 	game.board_view._process(0.05)
 	check(is_equal_approx(game.board_view.clock-prior_clock,0.1),"Actual animation clock advances twice as fast")
 
+	var revealed_cell := Vector2i(4,4)
+	var reveal_clock: float = game.board_view.clock
+	game.board_view.clock = 0
+	check(game.board_view.tutorial_tile_color(revealed_cell).is_equal_approx(Palette.platform_color()),"Previously built square stays pale when the next move starts")
+	game.board_view.clock = float(game.board_view.pattern.arrivals[revealed_cell])+0.3
+	check(game.board_view.tutorial_tile_color(revealed_cell).is_equal_approx(Palette.platform_color()),"Built replay square becomes pale before replay completion")
+	check(game.board_view.tutorial_tile_color(Vector2i(1,2)).is_equal_approx(Palette.tile(2)),"Future square retains its exercise color until reached")
+	check(game.board_view.tutorial_tile_color(Vector2i.ZERO) == Color("FFF9F3"),"Replay empty squares match the normal pale background")
+	game.board_view.clock = reveal_clock
 	check(not game.board_view.pattern.tier2_records().is_empty(),"Replay creates real 2x2 artwork")
 	check(Model.progress(path).seed_index == 1,"Automatic replay progress is saved")
 	intro.update_replay(10)

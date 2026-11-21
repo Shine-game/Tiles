@@ -15,8 +15,8 @@ const REPAIR_TEXT := [
 	"The hint button shows achievable symmetries. Make an asymmetric placement and the game ends.",
 	"Undo your last move.",
 	"Erase a square.",
-	"Get a different piece.\nPress the arrow joker.",
-	"Get a different piece.\nPress the arrow joker.",
+	"Get a different piece.",
+	"Get a different piece.",
 	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
 const ANIMATION_SECONDS := 0.32
 const PULSE_SECONDS := 1.4
@@ -181,7 +181,7 @@ func enter(step: int) -> void:
 func desired_pulses() -> Array:
 	if leaving: return []
 	if stage == 10:
-		var targets: Array = [hint]
+		var targets: Array = [] if repair_phase == 6 else [hint]
 		if not animation.is_empty(): return targets
 		match repair_phase:
 			1,2,6:
@@ -299,7 +299,7 @@ func layout() -> void:
 		# This preview deliberately overlaps the caption at the normal tile size.
 		tray_rect = preparation
 		offer_over_board = false
-		if repair_phase in [2,5]:
+		if repair_phase in [2,5,6]:
 			var unit := board_rect.size.x/9
 			tray_rect = Rect2(preparation.position.x,normal_board_rect.position.y-unit-4,preparation.size.x,unit)
 	if offer_pending:
