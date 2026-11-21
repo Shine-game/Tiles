@@ -20,7 +20,6 @@ const REPAIR_TEXT := [
 	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
 const ANIMATION_SECONDS := 0.32
 const PULSE_SECONDS := 1.4
-const REPLAY_SPEED := 2.0
 var progress_path := Model.PATH
 var persist := true
 var leaving := false
@@ -68,9 +67,6 @@ var repair_phase := 0
 var repair_erasing := false
 var seed_started := false
 var seed_index := 0
-var replay_finishing := false
-var seed_old_modes := {}
-var previous_growth_speed := 1.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -181,7 +177,7 @@ func enter(step: int) -> void:
 func desired_pulses() -> Array:
 	if leaving: return []
 	if stage == 10:
-		var targets: Array = [] if repair_phase == 6 else [hint]
+		var targets: Array = [hint] if repair_phase == 7 else []
 		if not animation.is_empty(): return targets
 		match repair_phase:
 			1,2,6:
@@ -492,63 +488,32 @@ func start_seed() -> void:
 		# Reset installs the Vines UI; navigation still belongs to this tutorial.
 		forward.get_child(0).kind = "skip"
 		skip.get_child(0).kind = "close"
-	host.board_view.tutorial_underlay = Model.repair_board(7)
-	if not seed_old_modes.has(host.board_view): previous_growth_speed = host.board_view.growth_speed
-	host.board_view.growth_speed = REPLAY_SPEED
-	for node: Node in [host.board_view,host.sounds]:
-		if not seed_old_modes.has(node): seed_old_modes[node] = node.process_mode
-		node.process_mode = Node.PROCESS_MODE_ALWAYS
-	replay_finishing = seed_index == Model.replay_steps().size()
+	# Build the same legal, two-color design in one action. No timed placements.
+	var steps := Model.replay_steps()
+	while seed_index < steps.size():
+		var step: Dictionary = steps[seed_index]
+		host.game.queue[host.game.index] = step.name
+		host.game.current_color = step.get("color",1)
+		var result: Dictionary = host.game.place(step.cells,step.anchor)
+		assert(result.ok,"Tutorial design placement must remain legal")
+		if not result.ok: return
+		seed_index += 1
+	host.board_view.tutorial_underlay = []
+	host.board_view.show_settled(host.game.board)
 	grid = host.game.board.duplicate(true)
 	cells = []
 	selected = false
-	set_caption(TEXT[11])
-	if not replay_finishing: prepare_seed()
-
-func prepare_seed() -> void:
-	var step: Dictionary = Model.replay_steps()[seed_index]
-	host.game.queue[host.game.index] = step.name
-	host.game.current_color = step.get("color",1)
-	host.cells = step.cells.duplicate()
-	host.piece_view.cells = host.cells
-	host.has_hover = false
-	grid = host.game.board.duplicate(true)
-	cells = []
-	color = 1
-	selected = false
-	anchor = step.anchor
 	set_caption(TEXT[11])
 	if persist: Model.save_progress(11,false,progress_path,seed_index)
 	host._autosave()
-
-func replay_busy() -> bool:
-	if host.board_view.growing: return true
-	# Let delayed tier-two shimmer/reveal and its sound finish before continuing.
-	var formations = host.board_view.vines_formations
-	if formations != null:
-		for event: Dictionary in formations.events.values():
-			if not event.old and host.board_view.clock < event.start+event.duration: return true
-	return false
 
 func update_replay(_delta: float) -> void:
-	if replay_busy(): return
-	if replay_finishing:
-		host.cells = host._offered_cells()
-		host._autosave()
-		finish(false)
-		return
-	var step: Dictionary = Model.replay_steps()[seed_index]
-	var before: Array = host.game.board.duplicate(true)
-	var result: Dictionary = host.game.place(step.cells,step.anchor)
-	assert(result.ok,"Tutorial replay placement must remain legal")
-	if not result.ok: return
-	grid = host.game.board.duplicate(true)
-	host.board_view.animate_growth(before,host.game.board)
-	seed_index += 1
-	if persist: Model.save_progress(11,false,progress_path,seed_index)
+	host.cells = host._offered_cells()
 	host._autosave()
-	if seed_index == Model.replay_steps().size(): replay_finishing = true
-	else: prepare_seed()
+	finish(false)
+	# The tutorial click is a real save: use the normal clean-artwork capture
+	# after the tutorial has released control of the symmetry/save button.
+	host._save_design()
 
 func finish(_skipped: bool) -> void:
 	if leaving: return
@@ -559,7 +524,6 @@ func finish(_skipped: bool) -> void:
 	reset_pulses()
 	if seed_started:
 		host.board_view.tutorial_underlay = []
-		host.board_view.growth_speed = previous_growth_speed
 	if persist: Model.save_progress(stage,true,progress_path,seed_index)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
@@ -571,7 +535,6 @@ func finish(_skipped: bool) -> void:
 		if record.icon_kind != null: record.node.get_child(0).kind = record.icon_kind
 		if record.icon_count != null: record.node.get_child(0).count = record.icon_count
 	for control: Control in saved_visibility: control.visible = saved_visibility[control]
-	for node: Node in seed_old_modes: node.process_mode = seed_old_modes[node]
 	get_tree().paused = previous_pause
 	finished.emit()
 	host._layout()

@@ -67,6 +67,8 @@ func run() -> void:
 	root.size = Vector2i(540,825)
 	Palette.select_theme("clockwork")
 	var game = Main.new()
+	var gallery_folder := "/tmp/tutorial-save-%d" % Time.get_ticks_usec()
+	game.gallery.directory = gallery_folder
 	root.add_child(game)
 	game.size = Vector2(540,825)
 	game._layout()
@@ -225,7 +227,7 @@ func run() -> void:
 			intro.prepare_repair()
 			intro.layout()
 			intro.update_controls()
-			check((intro.hint in intro.pulsing) == (phase != 6),"Replacement placement waits to highlight Hint until committed")
+			check((intro.hint in intro.pulsing) == (phase == 7),"Replacement placement waits to highlight Hint until committed")
 			if phase == 3:
 				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern","Only the first repair step shows Save the pattern")
 				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"The first repair instruction sits under its header without repeating it")
@@ -277,14 +279,14 @@ func run() -> void:
 	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
 	intro.set_caption(Intro.REPAIR_TEXT[2])
 	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
-	check(intro.hint in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint pulses continuously while Place stays quiet at an incorrect position")
+	check(intro.hint not in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint and Place stay quiet before the required placement")
 
 	var saved_repair: Array = intro.grid.duplicate(true)
 	drag_piece(intro,Vector2i(3,3))
 	check(not Rules.symmetry_states(intro.prediction_board())[0].complete and not game.indicators[0].icon.complete[0],"Colliding floating piece no longer shows the committed board's present symmetry")
 	check(intro.grid == saved_repair and intro.place.disabled,"Colliding preview never changes committed tiles or enables Place")
 	intro.transform_piece("rotate")
-	check(intro.hint in intro.pulsing,"Hint keeps pulsing even during a tile transformation")
+	check(intro.hint not in intro.pulsing,"Hint stays quiet during tile transformations before the bold-axis cue")
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	check(intro.stage == 10 and intro.repair_phase == 2,"Free rotation does not advance the axes lesson")
 	await click_control(intro.flip)
@@ -309,7 +311,7 @@ func run() -> void:
 
 		drag_piece(intro,offer.anchor)
 		check(not intro.place.disabled,"Place enables only at the required geometry, location, and color")
-		check(intro.hint in intro.pulsing and intro.place in intro.pulsing,"Symmetry and Place highlight together only for the required second-piece placement")
+		check(intro.hint not in intro.pulsing and intro.place in intro.pulsing,"Only Place highlights for the required second-piece placement")
 
 		await click_control(intro.place)
 		check(intro.repair_phase == phase+1 and intro.grid == Model.repair_board(phase+1),"Player must commit the forced wrong piece")
@@ -362,63 +364,26 @@ func run() -> void:
 	check(intro.ink(1) == Palette.tile(1) and game.game == original_game and game.game.board == original_board,"Repair practice preserves colors and the saved game")
 	intro._process(30)
 	check(intro.stage == 10 and intro.repair_phase == 7 and not intro.hint.disabled,"Bold-axis card waits indefinitely for the symmetry button")
-	await click_control(intro.hint)
-	check(intro.stage == 11 and Palette.theme_id() == "vines","Symmetry button starts the real Vines replay")
-	check(game.game.board == Model.replay_board(intro.seed_index) and intro.cells.is_empty() and intro.place.disabled,"Automatic replay offers no player-controlled tile")
-	check(game.board_view.tutorial_underlay == Model.repair_board(7),"Replay retains the full simple two-color tile arrangement from the exercise")
-	check(game.board_view.growth_speed == 2.0,"Tutorial artwork runs at exactly twice normal speed")
-
-	check(game.board_view.tutorial_tile_layer.z_index < game.board_view.tier1_layer.z_index and game.board_view.tutorial_tile_layer.z_index < game.board_view.junction_layer.z_index,"Retained tile background draws beneath tier-one vines and junctions")
-	check(not game.board_view.occupied_platform.visible,"Normal platform cannot cover the retained simple tiles")
-
-	check(intro.prediction_board() == Model.repair_board(7),"Replay axes describe the retained visible tiles while artwork is built")
-
-	intro._process(0)
-	check(game.game.moves == 1 and game.game.board == Model.replay_board(1) and intro.seed_index == 1,"Replay automatically commits its first legal placement")
-	var prior_clock: float = game.board_view.clock
-	game.board_view._process(0.05)
-	check(is_equal_approx(game.board_view.clock-prior_clock,0.1),"Actual animation clock advances twice as fast")
-
-	var revealed_cell := Vector2i(4,4)
-	var reveal_clock: float = game.board_view.clock
-	game.board_view.clock = 0
-	check(game.board_view.tutorial_tile_color(revealed_cell).is_equal_approx(Palette.platform_color()),"Previously built square stays pale when the next move starts")
-	game.board_view.clock = float(game.board_view.pattern.arrivals[revealed_cell])+0.3
-	check(game.board_view.tutorial_tile_color(revealed_cell).is_equal_approx(Palette.platform_color()),"Built replay square becomes pale before replay completion")
-	check(game.board_view.tutorial_tile_color(Vector2i(1,2)).is_equal_approx(Palette.tile(2)),"Future square retains its exercise color until reached")
-	check(game.board_view.tutorial_tile_color(Vector2i.ZERO) == Color("FFF9F3"),"Replay empty squares match the normal pale background")
-	game.board_view.clock = reveal_clock
-	check(not game.board_view.pattern.tier2_records().is_empty(),"Replay creates real 2x2 artwork")
-	check(Model.progress(path).seed_index == 1,"Automatic replay progress is saved")
-	intro.update_replay(10)
-	check(game.game.moves == 1,"Replay waits for running artwork animation")
-	intro.finish(true)
-	await process_frame
-	Model.save_progress(11,false,path,1)
-	game.game = Session.unpack(JSON.parse_string(JSON.stringify(Session.pack(game.game))))
-	var partial_game = game.game
-	game._maybe_introduction(true)
-	intro = game.introduction
-	check(intro.stage == 11 and intro.seed_index == 1 and game.game == partial_game,"Automatic replay resumes its saved construction")
-	for index in range(1,Model.replay_steps().size()):
-		game.board_view.show_settled(game.game.board)
-		intro.update_replay(0)
-		check(game.game.board == Model.replay_board(index+1),"Every replayed move matches the intended construction")
-		check(game.board_view.tutorial_underlay == Model.repair_board(7),"The retained tiles remain unchanged under each artwork reveal")
-
-	check(game.introduction != null and intro.replay_finishing,"Replay does not hand off before final artwork finishes")
 	var full_replay_frame: Rect2 = game.board_view.get_rect()
-	check(full_replay_frame == intro.normal_board_rect and game.game.board[2][1] == 2 and game.game.board[2][7] == 2,"Replay retains normal field size and reaches the two-color restored pattern")
-
-	game.board_view.show_settled(game.game.board)
-	intro._process(0.7)
-	check(not game.palette_button.disabled,"Final tutorial update cannot disable Settings again")
+	await click_control(intro.hint)
 	await process_frame
-	check(game.introduction == null and not paused,"Completed automatic replay hands control to the player")
-	check(game.board_view.growth_speed == 1.0,"Normal gameplay speed is restored after the tutorial")
-	check(game.board_view.tutorial_underlay.is_empty(),"Normal board presentation is restored at handoff")
-	check(not game.board_view.tutorial_tile_layer.visible and game.board_view.occupied_platform.visible,"Normal platform visibility returns at handoff")
-
+	check(Palette.theme_id() == "vines" and game.game.board == Model.repair_board(7),"Hint click reveals the whole Vines design with both colors immediately")
+	check(not game.board_view.growing and game.board_view.tutorial_underlay.is_empty(),"The reveal uses settled artwork and normal pale tile backgrounds")
+	check(not game.board_view.pattern.tier2_records().is_empty(),"Instant design includes its 2x2 artwork")
+	check(game.introduction == null and not paused,"Instant reveal hands control to the player without a replay")
+	check(not game.palette_button.disabled,"Settings is active immediately after reveal")
+	check(game.saving or game.saved_fingerprint == game._design_fingerprint(),"Tutorial Hint press invokes the real gallery capture")
+	if DisplayServer.get_name() != "headless":
+		for frame in range(120):
+			if not game.saving: break
+			await process_frame
+		var pictures: Array = game.gallery.entries()
+		check(pictures.size() == 1,"Hint press actually writes one gallery entry")
+		if not pictures.is_empty():
+			check(pictures[0].board == Model.repair_board(7) and pictures[0].theme == "vines","Saved gallery record contains the complete tutorial Vines pattern")
+			var image := Image.load_from_file(game.gallery.image_path(pictures[0]))
+			check(image != null and image.get_size() == Vector2i(900,900),"Gallery contains a readable full-resolution artwork PNG")
+		check(game.saved_fingerprint == game._design_fingerprint(),"Normal save indicator marks the tutorial design as saved")
 	check(game.board_view.get_rect().is_equal_approx(full_replay_frame),"Handoff does not resize the nine-square playing field")
 
 	check(game.game.moves == Model.replay_steps().size() and game.game.board == Model.repair_board(7) and not game.game.over,"Exact demonstration pattern becomes the playable game")
@@ -454,13 +419,17 @@ func run() -> void:
 		if game.introduction == null: break
 		game.board_view._process(0.25)
 		intro._process(0.25)
-	check(game.introduction == null and game.game.board == Model.repair_board(7),"Automatic replay completes through real growth and delayed-reveal clocks without settling shortcuts")
-	check(not game.palette_button.disabled and not game.replay_button.disabled and not game.flip_button.disabled and not game.blue_button.disabled,"Natural replay completion leaves the full normal UI active")
+	check(game.introduction == null and game.game.board == Model.repair_board(7),"Final tutorial resumes directly into the complete design")
+	check(not game.palette_button.disabled and not game.replay_button.disabled and not game.flip_button.disabled and not game.blue_button.disabled,"Instant reveal leaves the full normal UI active")
 
 	await process_frame
 
 	game.queue_free()
 	await process_frame
 	DirAccess.remove_absolute(path)
+	var folder := DirAccess.open(gallery_folder)
+	if folder != null:
+		for file: String in folder.get_files(): DirAccess.remove_absolute(gallery_folder.path_join(file))
+		DirAccess.remove_absolute(gallery_folder)
 	print("Interactive introduction: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)
