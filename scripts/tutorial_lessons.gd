@@ -14,7 +14,7 @@ const LESSONS := {
 	"horizontal": {"number":3,"legacy":7,"caption":"Complete the horizontal symmetry.","actions":["rotate","flip","color","place"],"axis_mode":"teaching","fixture":"horizontal","next":"rotational"},
 	"rotational": {"number":4,"legacy":8,"caption":"Complete the rotational symmetry.","actions":["rotate","flip","color","place"],"axis_mode":"teaching","fixture":"rotational","next":"repair"},
 	"repair": {"number":5,"legacy":10,"caption":"","actions":[],"axis_mode":"predictive","fixture":"repair","next":"reveal"},
-	"reveal": {"number":8,"legacy":11,"caption":"Choose your theme and create intricate worlds.","actions":[],"axis_mode":"predictive","fixture":"final","next":""}
+	"reveal": {"number":8,"legacy":11,"caption":"Choose your theme and create intricate worlds.","actions":["settings","themes","choose_theme"],"axis_mode":"predictive","fixture":"final","next":""}
 }
 const REPAIR := {
 	"wrong_placement": {"number":5,"caption":"The hint button shows achievable symmetries. Make an asymmetric placement and the game ends.","header":"","actions":["rotate","flip","color","place"],"offer":1,"target":"offer","next":"undo"},

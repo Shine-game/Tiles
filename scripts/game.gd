@@ -20,13 +20,16 @@ var skip_left := 3
 var erase_left := 3
 var rng := RandomNumberGenerator.new()
 
-func _init(n: int = 9, seed_value: int = -1, level: Difficulty = Difficulty.DIFFICULT) -> void:
+func _init(n: int = 9, seed_value: int = -1, level: Difficulty = Difficulty.DIFFICULT, initial_board: Array = []) -> void:
 	difficulty = level
 	if seed_value >= 0:
 		rng.seed = seed_value
 	else:
 		rng.randomize()
-	board = Rules.create_board(n)
+	# Scenario boards are copied so practice cannot alias the live session.
+	assert(initial_board.is_empty() or (initial_board.size() == n and initial_board.all(func(row): return row is Array and row.size() == n and row.all(func(value): return value is int and value in [0,1,2]))))
+	board = Rules.create_board(n) if initial_board.is_empty() else initial_board.duplicate(true)
+	if not initial_board.is_empty(): lost = not Rules.symmetry_states(board).any(func(state): return state.possible)
 	queue.append(_draw_piece())
 	_refresh_over()
 
@@ -105,10 +108,25 @@ func undo() -> bool:
 	_refresh_over()
 	return true
 
-func skip() -> bool:
+# Deterministic scenario offers use the same availability rules as ordinary draws.
+func _usable_offer(name: String) -> bool:
+	if name not in Rules.PIECES: return false
+	if difficulty != Difficulty.DIFFICULT and Rules.PIECES[name].cells.size() == 4: return false
+	return not Rules.first_physical_move(board,Rules.PIECES[name],requires_contact()).is_empty()
+
+func offer_piece(name: String, color: int = 0) -> bool:
+	if over or color not in [0,1,2] or not _usable_offer(name): return false
+	queue[index] = name
+	restored_cells = []
+	if color != 0: current_color = color
+	_refresh_over()
+	return true
+
+func skip(replacement: String = "") -> bool:
 	if over or skip_left <= 0:
 		return false
-	var replacement := _draw_piece(queue[index])
+	if not replacement.is_empty() and (replacement == queue[index] or not _usable_offer(replacement)): return false
+	if replacement.is_empty(): replacement = _draw_piece(queue[index])
 	if replacement.is_empty():
 		return false
 	queue[index] = replacement

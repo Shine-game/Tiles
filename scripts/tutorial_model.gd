@@ -1,4 +1,5 @@
 extends RefCounted
+const Game = preload("res://scripts/game.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Lessons = preload("res://scripts/tutorial_lessons.gd")
 const PROGRESS_VERSION := 2
@@ -101,6 +102,51 @@ static func replay_board(count: int) -> Array:
 		var step: Dictionary = steps[i]
 		board = placed(board,step.cells,step.anchor,step.get("color",1))
 	return board
+
+# Initial/resumed checkpoints are assembled through the real domain actions.
+# During interaction the controller keeps this same game; it never swaps boards.
+static func practice_session(stage: int, phase: int = 2):
+	if stage != 10:
+		assert(stage in [2,3,4,5,6,7,8])
+		var puzzle := recipe(stage)
+		var game = Game.new(5,0,Game.Difficulty.DIFFICULT,puzzle.board)
+		var offered: bool = game.offer_piece(piece_name(puzzle.offered),1)
+		assert(offered,"Exercise piece must physically fit")
+		return game
+	assert(phase >= 2 and phase <= 7)
+	var game = Game.new(9,0,Game.Difficulty.DIFFICULT,repair_base())
+	var offers := repair_offers()
+	var offered_l: bool = game.offer_piece("L3",2)
+	assert(offered_l)
+	var wrong_l: Dictionary = game.place(offers[0].cells,offers[0].anchor)
+	assert(wrong_l.ok)
+	var offered_dot: bool = game.offer_piece("Dot",1)
+	assert(offered_dot)
+	if phase >= 3:
+		var dot: Dictionary = game.place(offers[1].cells,offers[1].anchor)
+		assert(dot.ok and dot.lost)
+	if phase >= 4:
+		var undone: bool = game.undo()
+		assert(undone)
+	if phase >= 5:
+		var erased: bool = game.erase(Vector2i(1,1))
+		assert(erased)
+		var offered_line: bool = game.offer_piece("I3",2)
+		assert(offered_line)
+	if phase >= 6:
+		var replaced: bool = game.skip("Domino")
+		assert(replaced)
+	if phase >= 7:
+		var restored: Dictionary = game.place(offers[2].cells,offers[2].anchor)
+		assert(restored.ok and not restored.lost)
+	return game
+
+static func piece_name(cells: Array) -> String:
+	for name: String in Rules.PIECES:
+		if Rules.PIECES[name].cells.size() != cells.size(): continue
+		for variant: Dictionary in Rules.orientations(Rules.PIECES[name].cells):
+			if cells.all(func(cell):return cell in variant.cells): return name
+	return ""
 
 static func _progress(lesson_id: String = "rotate", done: bool = false, started: bool = false, checkpoint: String = "", seed_index: int = 0) -> Dictionary:
 	return {"version":PROGRESS_VERSION,"lesson_id":lesson_id,"checkpoint":Lessons.checkpoint(checkpoint) if lesson_id == "repair" else "",

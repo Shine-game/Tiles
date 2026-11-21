@@ -36,9 +36,15 @@ other interaction and fixture requirements remain unchanged.
 7. “Bold axis! Your board is symmetrical right now. You can save a picture here
    if you want.” Hint/Save remains the required action, as confirmed by the user;
    only here does it pulse.
-8. “Choose your theme and create intricate worlds.” The same immediate settled
-   Vines reveal, real gallery save, and ordinary-game handoff apply. This caption
-   does not add a theme-picker interruption to the reveal.
+8. “Choose your theme and create intricate worlds.” This is an interactive
+   card. After the Vines reveal and gallery save, Settings pulses. Opening it
+   pulses the existing Themes button. Opening Themes offers the normal three
+   available themes. Selecting one renders the completed board in that theme
+   without resetting tiles, history, or the offered piece, then finishes the
+   tutorial and restores normal play. No new-game confirmation appears.
+   Closing or going back in the menu retains the card; relaunching resumes at
+   its Settings prompt. The tutorial is marked complete only after theme choice
+   (or explicit End Tutorial).
 
 Display numbers are presentation metadata, not persisted keys. Combining the
 first four operations does not unlock them all at once or replace their shared L.
@@ -82,10 +88,15 @@ controller failures are reported as warnings.
 
 The controller still uses numeric stages/phases for some rendering and guidance
 conditions. These are transitional adapters; do not use them in new persisted
-data. Gesture sharing, real practice-game commands, shared previews, lifecycle
+data. Gesture sharing, shared previews, lifecycle
 cleanup, and obsolete replay rendering removal remain later refactor steps.
 This step resolves the baseline's missing repair-checkpoint persistence; its
 other audit gaps remain open.
+
+The shared command interface is implemented in
+[refactor step 3](tutorial-actions.md), and
+[step 4](tutorial-practice.md) replaces its temporary fixture backend with an
+isolated real practice game.
 
 ## Verification
 
@@ -95,6 +106,7 @@ read-only migration, and rejected-write preservation. The graphics-enabled
 `tests/test_introduction.gd` additionally checks startup resume at each repair
 checkpoint, the unchanged lesson flow, UI handoff, and actual gallery output.
 
-Verified on 2026-11-21 with Godot 4.6.3: 162 progress checks and 1,204
+Verified on 2026-11-21 with Godot 4.6.3: 162 progress checks and 1,251
 graphics-enabled tutorial checks, zero failures. The latter includes all eight
-display numbers, repair-checkpoint restoration, and the real gallery PNG save.
+display numbers, repair-checkpoint restoration, the real gallery PNG save, and
+native Settings → Themes → selection flows for all three available themes.

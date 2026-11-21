@@ -41,6 +41,7 @@ var saved_visibility := {}
 var pulse_bases := {}
 var pulsing: Array = []
 var grid: Array = []
+var practice_game
 var puzzle := {}
 var cells: Array = []
 var color := 1
@@ -59,6 +60,9 @@ var repair_phase := 0
 var repair_erasing := false
 var seed_started := false
 var seed_index := 0
+var saved_menu_controls: Array = []
+var saved_menu_mode := Node.PROCESS_MODE_INHERIT
+var saved_menu_z := 80
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -142,7 +146,8 @@ func enter(step: Variant) -> void:
 	if stage in [2,3,4,5]:
 		if not keep_piece:
 			puzzle = Model.recipe(5)
-			grid = puzzle.board.duplicate(true)
+			practice_game = Model.practice_session(stage)
+			grid = practice_game.board.duplicate(true)
 			cells = puzzle.offered.duplicate()
 			color = 1
 			# Direct navigation/resume reconstructs the operations already taught.
@@ -151,7 +156,8 @@ func enter(step: Variant) -> void:
 			if stage >= 5: color = 2
 	elif stage in [6,7,8]:
 		puzzle = Model.recipe(stage)
-		grid = puzzle.board.duplicate(true)
+		practice_game = Model.practice_session(stage)
+		grid = practice_game.board.duplicate(true)
 		cells = puzzle.offered.duplicate()
 		color = 1
 	elif stage == 10:
@@ -160,6 +166,7 @@ func enter(step: Variant) -> void:
 		prepare_repair()
 	elif stage == 11: start_seed()
 	if not keep_piece and stage in [6,7,8]: cells = laid_cells(cells)
+	if practice_game != null and stage != 11: practice_game.current_color = color
 	save_checkpoint()
 	choose_pulses()
 	layout()
@@ -177,6 +184,10 @@ func allowed(action: String) -> bool:
 
 func desired_pulses() -> Array:
 	if leaving: return []
+	if stage == 11:
+		if host.saving: return []
+		if not host.palette_menu.visible: return [forward]
+		return [host.settings_options[0]] if host.menu_page == "Settings" else []
 	if stage == 10:
 		var targets: Array = [hint] if repair_phase == 7 else []
 		if not animation.is_empty(): return targets
@@ -327,7 +338,7 @@ func update_controls() -> void:
 	if stage == 11: place_disabled = place_disabled or host.board_view.growing
 	# Never transiently disable a held button before assigning its final state.
 	place.disabled = place_disabled
-	forward.disabled = true
+	forward.disabled = stage != 11 or host.saving
 	skip.disabled = false
 	hint.disabled = stage not in [10,11]
 	var jokers := [host.undo_button,host.erase_button,host.skip_button]
@@ -335,12 +346,10 @@ func update_controls() -> void:
 		var control: Button = jokers[i]
 		control.show()
 		control.disabled = stage != 10 or repair_phase != i+3
-	if stage == 10:
-		for button: Button in [host.undo_button,host.erase_button,host.skip_button]:
-			button.get_child(0).count = 3
-		if repair_phase >= 4: host.undo_button.get_child(0).count = 2
-		if repair_phase >= 5: host.erase_button.get_child(0).count = 2
-		if repair_phase >= 6: host.skip_button.get_child(0).count = 2
+	if practice_game != null and stage != 11:
+		host.undo_button.get_child(0).count = practice_game.undo_left
+		host.erase_button.get_child(0).count = practice_game.erase_left
+		host.skip_button.get_child(0).count = practice_game.skip_left
 	for control: Button in jokers: control.get_child(0).queue_redraw()
 	recolor.get_child(0).color = color
 	recolor.get_child(0).queue_redraw()
@@ -373,23 +382,54 @@ func prediction_board() -> Array:
 func ink(index: int) -> Color:
 	return Palette.tile(index)
 
+func request_action(action: String, parameters: Dictionary = {}) -> Dictionary:
+	var request := {"cells":cells.duplicate(),"color":color,"anchor":anchor}
+	if parameters.has("cell"): request.cell = parameters.cell
+	if action in ["rotate","flip","color"]:
+		if not _practice_action_available(action,request): return host.player_actions.failure(action,"Action is not available.")
+		animation = action
+		animation_time = 0
+		animation_color = color
+		update_controls()
+		# Execution/completion is deferred until the teaching animation finishes.
+		return {"ok":true,"tutorial":true,"pending":true}
+	if action == "place" and stage in [5,6,7,8] and selected and allowed("place") and animation.is_empty() and not Model.accepts(puzzle,cells,anchor,color):
+		attempts += 1
+		if stage in [6,7,8]: hint_visible = true
+		queue_redraw()
+	# Lesson gates run before synchronizing even the practice color.
+	if not _practice_action_available(action,request): return host.player_actions.failure(action,"Use the required action or target.")
+	if action == "place": practice_game.current_color = color
+	if action == "skip": request.replacement = "Domino"
+	var result: Dictionary = host.player_actions.execute(action,practice_game,request,_practice_action_available)
+	result.tutorial = true
+	if result.ok:
+		grid = practice_game.board.duplicate(true)
+		if stage == 10: advance_repair()
+		else: enter(Lessons.LESSONS[Lessons.id(stage)].next)
+	return result
+
+func _practice_action_available(action: String, request: Dictionary) -> bool:
+	if leaving or practice_game == null or not animation.is_empty() or not allowed(action): return false
+	if action in ["rotate","flip","color"]: return not cells.is_empty()
+	if action == "place": return selected and (repair_matches_target() if stage == 10 else Model.accepts(puzzle,cells,anchor,color))
+	if action == "erase": return repair_erasing and request.get("cell") == Vector2i(1,1)
+	return true
+
 func transform_piece(operation: String) -> void:
-	if operation not in ["rotate","flip","color"] or not animation.is_empty() or not allowed(operation): return
-	if cells.is_empty(): return
-	if operation == "flip" and flip.disabled: return
-	if operation == "color" and recolor.disabled: return
-	animation = operation
-	animation_time = 0
-	animation_color = color
-	update_controls()
+	if operation in ["rotate","flip","color"]: request_action(operation)
 
 func complete_transform() -> void:
 	var operation := animation
-	match operation:
-		"rotate": cells = Rules.rotate(cells)
-		"flip": cells = Rules.flip(cells)
-		"color": color = 3-color
 	animation = ""
+	var result: Dictionary = host.player_actions.execute(operation,practice_game,{"cells":cells,"color":color},_practice_action_available)
+	if not result.ok:
+		update_controls()
+		return
+	if result.has("cells"): cells = result.cells
+	if result.has("color"):
+		color = result.color
+		practice_game.current_color = color
 	if selected: clamp_anchor()
 	if (stage == 2 and operation == "rotate") or (stage == 3 and operation == "flip") or (stage == 4 and operation == "color"):
 		enter(Lessons.LESSONS[Lessons.id(stage)].next)
@@ -404,19 +444,8 @@ func show_hint() -> void:
 		queue_redraw()
 
 func try_place() -> void:
-	if not animation.is_empty() or not selected: return
-	if stage == 10:
-		place_repair()
-		return
-	if stage not in [5,6,7,8]: return
-	if not Model.accepts(puzzle,cells,anchor,color):
-		attempts += 1
-		if stage in [6,7,8]: hint_visible = true
-		queue_redraw()
-		return
-	# Placement feedback is immediate; only explicit transform animations wait.
-	grid = puzzle.target.duplicate(true)
-	enter(Lessons.LESSONS[Lessons.id(stage)].next)
+	request_action("place")
+
 
 func next_step() -> void:
 	if stage == 1: enter(2)
@@ -427,33 +456,35 @@ func _process(delta: float) -> void:
 	if not animation.is_empty():
 		animation_time += delta
 		if animation_time >= ANIMATION_SECONDS: complete_transform()
-	elif stage == 11:
-		update_replay(delta)
 	if leaving: return
 	animate_pulses()
 	update_controls()
 	queue_redraw()
 
-func prepare_repair() -> void:
-	grid = Model.repair_board(repair_phase)
+func prepare_repair(reset_session: bool = true) -> void:
+	if reset_session: practice_game = Model.practice_session(10,repair_phase)
+	# The lesson offers I3 after the real erase; replacement itself uses real Skip.
+	elif Lessons.checkpoint_for_phase(repair_phase) == "replace":
+		var offered: bool = host.player_actions.offer(practice_game,"I3",2)
+		assert(offered)
+	grid = practice_game.board.duplicate(true)
 	offer_pending = true
 	selected = false
 	held = false
 	drag = false
 	repair_erasing = false
-	color = 1
+	color = practice_game.current_color
 	elapsed = 0
 	set_caption(Lessons.definition(stage,repair_phase).caption)
 	var index: int = Lessons.definition(stage,repair_phase).get("offer",-1)
-	cells = laid_cells(Model.repair_offers()[index].cells) if index >= 0 else []
-	color = Model.repair_offers()[index].color if index >= 0 else 2
+	cells = laid_cells(practice_game.piece().cells) if index >= 0 else []
 	# The player sees the unsuitable next piece before using the replacement joker.
-	if repair_phase == 5: cells = [Vector2i.ZERO,Vector2i.RIGHT,Vector2i(2,0)]
+	if repair_phase == 5: cells = laid_cells(practice_game.piece().cells)
 
 func advance_repair() -> void:
 	reset_pulses()
 	repair_phase = Lessons.phase(Lessons.definition(stage,repair_phase).next)
-	prepare_repair()
+	prepare_repair(false)
 	save_checkpoint()
 	layout()
 	choose_pulses()
@@ -469,16 +500,13 @@ func repair_matches_target() -> bool:
 	var trial := Model.placed(grid,cells,anchor,color)
 	return not trial.is_empty() and trial == Model.placed(grid,offer.cells,offer.anchor,offer.color)
 
-func place_repair() -> void:
-	if repair_matches_target(): advance_repair()
-
 func joker_action(action: String) -> void:
-	if stage != 10: return
-	if action == "undo" and repair_phase == 3: advance_repair()
-	elif action == "erase" and repair_phase == 4:
-		repair_erasing = not repair_erasing
-		set_caption(Lessons.REPAIR.erase.caption)
-	elif action == "skip" and repair_phase == 5: advance_repair()
+	if action == "erase":
+		# Selecting the erase tool is UI state, not a square-erasure command.
+		if not leaving and animation.is_empty() and allowed("erase"):
+			repair_erasing = not repair_erasing
+		return
+	if action in ["undo","skip"]: request_action(action)
 
 func start_seed() -> void:
 	var progress := Model.progress(progress_path)
@@ -496,9 +524,10 @@ func start_seed() -> void:
 	var steps := Model.replay_steps()
 	while seed_index < steps.size():
 		var step: Dictionary = steps[seed_index]
-		host.game.queue[host.game.index] = step.name
-		host.game.current_color = step.get("color",1)
-		var result: Dictionary = host.game.place(step.cells,step.anchor)
+		var offered: bool = host.player_actions.offer(host.game,step.name,step.get("color",1))
+		assert(offered,"Tutorial design offer must remain available")
+		if not offered: return
+		var result: Dictionary = host.player_actions.execute("place",host.game,{"cells":step.cells,"anchor":step.anchor,"source":"scenario"})
 		assert(result.ok,"Tutorial design placement must remain legal")
 		if not result.ok: return
 		seed_index += 1
@@ -509,15 +538,36 @@ func start_seed() -> void:
 	selected = false
 	set_caption(Lessons.LESSONS.reveal.caption)
 	save_checkpoint()
-	host._autosave()
-
-func update_replay(_delta: float) -> void:
 	host.cells = host._offered_cells()
 	host._autosave()
+	# Use the existing menu while keeping the tutorial active until a theme is chosen.
+	saved_menu_mode = host.palette_menu.process_mode
+	saved_menu_z = host.palette_menu.z_index
+	host.palette_menu.process_mode = Node.PROCESS_MODE_ALWAYS
+	host.palette_menu.z_index = z_index+2
+	for button: Control in host.menu_buttons:
+		if button is BaseButton:
+			saved_menu_controls.append({"node":button,"disabled":button.disabled})
+			button.disabled = button not in host.theme_options and button not in [host.settings_options[0],host.menu_close,host.back_button]
+	forward.get_child(0).kind = "settings"
+	forward.tooltip_text = "Settings"
+	host.save_current_design()
+
+func open_settings() -> void:
+	if stage != 11 or host.saving: return
+	reset_pulses()
+	if host.palette_menu.visible: host._close_menu()
+	else: host._show_menu("Settings")
+	update_controls()
+
+func choose_theme(theme_id: String) -> void:
+	if stage != 11 or host.saving or theme_id not in host.MENU_THEMES: return
+	if not Palette.select_theme(theme_id): return
+	reset_pulses()
+	host._close_menu()
+	host._refresh_theme()
+	host.board_view.show_settled(host.game.board)
 	finish(false)
-	# The tutorial click is a real save: use the normal clean-artwork capture
-	# after the tutorial has released control of the symmetry/save button.
-	host._save_design()
 
 func finish(_skipped: bool) -> void:
 	if leaving: return
@@ -528,6 +578,10 @@ func finish(_skipped: bool) -> void:
 	reset_pulses()
 	if seed_started:
 		host.board_view.tutorial_underlay = []
+		host.palette_menu.process_mode = saved_menu_mode
+		host.palette_menu.z_index = saved_menu_z
+		host._close_menu()
+		for record: Dictionary in saved_menu_controls: record.node.disabled = record.disabled
 	save_checkpoint(true)
 	for record: Dictionary in saved_controls:
 		record.node.process_mode = record.mode
@@ -593,7 +647,7 @@ func _gui_input(event: InputEvent) -> void:
 	if stage == 10 and repair_phase == 4:
 		if pressed and not motion and repair_erasing and board_rect.has_point(point):
 			var target := Vector2i((point-board_rect.position)/(board_rect.size.x/grid_size()))
-			if target == Vector2i(1,1): advance_repair()
+			request_action("erase",{"cell":target})
 		accept_event()
 		return
 	if motion:

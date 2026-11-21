@@ -10,6 +10,8 @@ var introduction: Control
 var intro_progress_path := IntroModel.PATH
 const InterfaceTheme = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
+const PlayerActions = preload("res://scripts/player_actions.gd")
+var player_actions = PlayerActions.new()
 const Game = preload("res://scripts/game.gd")
 const Session = preload("res://scripts/game_session.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
@@ -599,16 +601,23 @@ func _process(delta: float) -> void:
 	if has_hover:
 		_update_floating_position()
 
+# Every button, keyboard shortcut, and tap uses this same command entry point.
+func _request_player_action(action: String, parameters: Dictionary = {}) -> Dictionary:
+	if introduction != null: return introduction.request_action(action,parameters)
+	var request := {"cells":cells,"color":game.current_color}
+	request.merge(parameters,true)
+	return player_actions.execute(action,game,request,_action_available)
+
+func _action_available(action: String, _request: Dictionary) -> bool:
+	if saving: return false
+	if action not in ["undo","erase"] and game.over: return false
+	if action == "place": return has_hover and not board_view.growing and not erase_mode
+	return true
+
 func _place() -> void:
-	if introduction != null:
-		introduction.try_place()
-		return
-	if not has_hover or board_view.growing or erase_mode or saving:
-		return
 	var before: Array = game.board
-	var result: Dictionary = game.place(cells, selected)
-	if not result.ok:
-		return
+	var result := _request_player_action("place",{"anchor":selected})
+	if not result.ok or result.get("tutorial",false): return
 	board_view.animate_growth(before, game.board)
 	cells = _offered_cells()
 	_clear_selection()
@@ -631,37 +640,29 @@ func _offered_cells() -> Array:
 	return Rules.rotate(offered) if bounds.y > bounds.x else offered
 
 func _rotate() -> void:
-	if introduction != null:
-		introduction.transform_piece("rotate")
-		return
-	if not game.over:
-		cells = Rules.rotate(cells)
-		_refresh()
+	var result := _request_player_action("rotate")
+	if not result.ok or result.get("tutorial",false): return
+	cells = result.cells
+	_refresh()
 
 func _flip() -> void:
-	if introduction != null:
-		introduction.transform_piece("flip")
-		return
-	if not game.over:
-		cells = Rules.flip(cells)
-		_refresh()
+	var result := _request_player_action("flip")
+	if not result.ok or result.get("tutorial",false): return
+	cells = result.cells
+	_refresh()
 
 func _choose_color(color: int) -> void:
-	if introduction != null:
-		introduction.transform_piece("color")
-		return
-	if not game.over:
-		game.current_color = color
-		_refresh()
+	var result := _request_player_action("color",{"choice":color})
+	if not result.ok or result.get("tutorial",false): return
+	game.current_color = result.color
+	_refresh()
 
 func _skip() -> void:
-	if introduction != null:
-		introduction.joker_action("skip")
-		return
-	if game.skip():
-		cells = _offered_cells()
-		_clear_selection()
-		_refresh()
+	var result := _request_player_action("skip")
+	if not result.ok or result.get("tutorial",false): return
+	cells = _offered_cells()
+	_clear_selection()
+	_refresh()
 
 func _toggle_erase() -> void:
 	if introduction != null:
@@ -675,23 +676,22 @@ func _toggle_erase() -> void:
 	_refresh()
 
 func _erase(cell: Vector2i) -> void:
-	if game.erase(cell):
-		erase_mode = false
-		board_view.show_settled(game.board, true)
-		cells = _offered_cells()
-		_clear_selection()
-		_refresh()
+	var result := _request_player_action("erase",{"cell":cell})
+	if not result.ok or result.get("tutorial",false): return
+	erase_mode = false
+	board_view.show_settled(game.board, true)
+	cells = _offered_cells()
+	_clear_selection()
+	_refresh()
 
 func _undo() -> void:
-	if introduction != null:
-		introduction.joker_action("undo")
-		return
-	if game.undo():
-		erase_mode = false
-		board_view.show_settled(game.board, true)
-		cells = game.restored_cells
-		_clear_selection()
-		_refresh()
+	var result := _request_player_action("undo")
+	if not result.ok or result.get("tutorial",false): return
+	erase_mode = false
+	board_view.show_settled(game.board, true)
+	cells = game.restored_cells
+	_clear_selection()
+	_refresh()
 
 func _ask_reset(n: int) -> void:
 	_confirm_new_game("Start a new game on a %d × %d board?" % [n, n], func():
@@ -841,6 +841,7 @@ func _back_menu() -> void:
 		_show_menu(menu_history.pop_back(), false)
 
 func _show_menu(page: String, remember: bool = true) -> void:
+	if introduction != null and introduction.stage == 11 and page not in ["Settings","Themes"]: return
 	if page == "Settings":
 		menu_history.clear()
 	elif remember and palette_menu.visible and page != menu_page:
@@ -853,6 +854,9 @@ func _show_menu(page: String, remember: bool = true) -> void:
 	_update_summaries(_prediction_board())
 
 func _review_new_game(theme: String) -> void:
+	if introduction != null and introduction.stage == 11:
+		introduction.choose_theme(theme)
+		return
 	_request_theme(theme)
 
 func _cycle_difficulty_preset() -> void:
@@ -1037,6 +1041,9 @@ func _refresh_theme() -> void:
 
 func _toggle_palette_menu() -> void:
 	if introduction != null:
+		if introduction.stage == 11:
+			introduction.open_settings()
+			return
 		introduction.next_step()
 		return
 	dragging = false
@@ -1237,6 +1244,10 @@ func _save_design() -> void:
 	if introduction != null:
 		introduction.show_hint()
 		return
+	save_current_design()
+
+# Shared capture entry point; the tutorial can save without routing its button again.
+func save_current_design() -> void:
 	if saving or board_view.growing or not _can_save():
 		return
 	saving = true
