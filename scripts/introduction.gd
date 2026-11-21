@@ -7,14 +7,14 @@ const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TUTORIAL_FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
-const FONT_SIZE := 12
+const FONT_SIZE := 16
 const TEXT := ["", "", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
 	"",
 	"",
 	"The hint button shows achievable symmetries.\nMake an asymmetric placement and the game ends.",
 	"Undo your last move.",
-	"Erase a square.\nPress Erase, then tap the marked square.",
+	"Erase a square.",
 	"Get a different piece.\nPress the arrow joker.",
 	"Restore vertical symmetry.\nPlace the new piece.",
 	"Bold axis! Your board is symmetrical right now. Save a picture and continue playing."]
@@ -177,19 +177,22 @@ func enter(step: int) -> void:
 	queue_redraw()
 
 func desired_pulses() -> Array:
-	if leaving or not animation.is_empty(): return []
+	if leaving: return []
+	if stage == 10:
+		var targets: Array = [hint]
+		if not animation.is_empty(): return targets
+		match repair_phase:
+			1,2,6:
+				if repair_matches_target(): targets.append(place)
+			3: targets.append(host.undo_button)
+			4: targets.append(host.erase_button)
+			5: targets.append(host.skip_button)
+		return targets
+	if not animation.is_empty(): return []
 	match stage:
 		3: return [flip]
 		4: return [recolor]
-		5,6,7,8:
-			return [place] if exercise_placement_correct() else []
-		10:
-			match repair_phase:
-				2: return [hint,place] if repair_matches_target() else []
-				1,6: return [place] if repair_matches_target() else []
-				3: return [host.undo_button]
-				4: return [host.erase_button]
-				5: return [host.skip_button]
+		5,6,7,8: return [place] if exercise_placement_correct() else []
 	return []
 
 func exercise_placement_correct() -> bool:
@@ -205,6 +208,7 @@ func choose_pulses() -> void:
 			states[state] = {"base":base,"live":live}
 			control.add_theme_stylebox_override(state,live)
 		pulse_bases[control] = states
+	animate_pulses()
 
 func reset_pulses() -> void:
 	for control: Button in pulse_bases:
@@ -241,26 +245,25 @@ func layout() -> void:
 	progress_label.position = preparation.position+Vector2(0,-18)
 	progress_label.z_index = 2
 	progress_label.size = Vector2(preparation.size.x,16)
-	progress_label.add_theme_font_size_override("font_size",12)
+	progress_label.add_theme_font_size_override("font_size",FONT_SIZE)
 	progress_label.add_theme_color_override("font_color",Ink.text())
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
 	var font := text.get_theme_font("normal_font")
 	var font_size := FONT_SIZE
-	var reserved := preparation.grow(-4)
+	var reserved := preparation.grow(-2)
 	var caption_height := reserved.size.y
 	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
 	caption_rect = reserved
 	var body_rect := caption_rect
-	repair_header.visible = stage == 10 and repair_phase in [3,4,5,6]
+	repair_header.visible = stage == 10 and repair_phase == 3
 	repair_header.add_theme_font_size_override("normal_font_size",font_size)
 	repair_header.add_theme_color_override("default_color",Ink.text())
 	if repair_header.visible:
 		var header_height := measure_caption("Save the pattern",font,font_size,reserved.size.x)
-		var body_height := 0.0
-		for caption: String in REPAIR_TEXT.slice(3,7): body_height = maxf(body_height,measure_caption(caption,font,font_size,reserved.size.x))
+		var body_height := measure_caption(text.text,font,font_size,reserved.size.x)
 		var group_top := caption_rect.position.y+maxf(0,(caption_height-header_height-body_height)/2)
 		repair_header.position = Vector2(caption_rect.position.x,group_top)
 		repair_header.size = Vector2(reserved.size.x,header_height)
@@ -288,7 +291,7 @@ func layout() -> void:
 		# This preview deliberately overlaps the caption at the normal tile size.
 		tray_rect = preparation
 		offer_over_board = false
-		if repair_phase == 2:
+		if repair_phase in [2,5]:
 			var unit := board_rect.size.x/9
 			tray_rect = Rect2(preparation.position.x,normal_board_rect.position.y-unit-4,preparation.size.x,unit)
 	if offer_pending:
@@ -668,15 +671,10 @@ func guide_cells() -> Array:
 			return offer.cells.map(func(cell: Vector2i): return cell+offer.anchor)
 	return []
 
-func hatched_guide(rect: Rect2) -> void:
-	var bounds := rect.grow(-4)
-	draw_rect(bounds,Color("477D76",0.3),false,1)
-	var diagonal := 0.0
-	while diagonal <= bounds.size.x+bounds.size.y:
-		var a := Vector2(maxf(0,diagonal-bounds.size.y),minf(bounds.size.y,diagonal))
-		var b := Vector2(minf(bounds.size.x,diagonal),maxf(0,diagonal-bounds.size.x))
-		draw_line(bounds.position+a,bounds.position+b,Color("477D76",0.2),1,true)
-		diagonal += 9
+func target_color(cell: Vector2i) -> Color:
+	var pigment: int = grid[cell.y][cell.x]
+	var base := ink(pigment) if pigment > 0 else Color("F1E7EB")
+	return base.lerp(Color.WHITE,pulse_amount())
 
 func tile(rect: Rect2, color_value: Color) -> void:
 	var style := StyleBoxFlat.new()
@@ -714,11 +712,11 @@ func _draw() -> void:
 				if grid[y][x] > 0: tile(rect,ink(grid[y][x]))
 	for cell: Vector2i in guide_cells():
 		var marker := Rect2(board_rect.position+Vector2(cell)*unit,Vector2.ONE*unit)
-		hatched_guide(marker)
+		tile(marker,target_color(cell))
 		if stage == 10 and repair_phase == 4:
 			draw_rect(marker.grow(-5),Color.WHITE.lerp(Color("477D76"),pulse_amount()),false,4)
-			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Color.WHITE,3,true)
-			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Color.WHITE,3,true)
+			draw_line(marker.position+Vector2(12,12),marker.end-Vector2(12,12),Ink.text(),3,true)
+			draw_line(Vector2(marker.end.x-12,marker.position.y+12),Vector2(marker.position.x+12,marker.end.y-12),Ink.text(),3,true)
 	if not selected or cells.is_empty(): draw_exercise_axes()
 	piece_overlay.queue_redraw()
 

@@ -130,13 +130,13 @@ func run() -> void:
 		game._layout()
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
-		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 12,"Tutorial type stays fixed at twelve pixels on every screen")
+		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 16,"Tutorial type stays fixed at sixteen pixels on every screen")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
 		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
 		check(is_equal_approx(intro.tray_rect.size.y,2*intro.board_rect.size.x/5),"Exactly two tile heights are reserved for the offer")
 		check(controls == game._controls().map(func(button):return button.get_rect()),"Tutorial proportions never move any original button")
-		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x+4) and is_equal_approx(intro.text.size.x,game.piece_view.size.x-8) and is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Caption is centered between the two button columns")
+		check(is_equal_approx(intro.text.position.x,game.piece_view.position.x+2) and is_equal_approx(intro.text.size.x,game.piece_view.size.x-4) and is_equal_approx(intro.text.get_rect().get_center().y,intro.caption_rect.get_center().y),"Caption is centered between the two button columns")
 		check(intro.text.get_theme_color("font_color") == intro.Ink.text(),"Caption uses the button drawing color")
 		for caption: String in Intro.TEXT.slice(1,9):
 			intro.set_caption(caption)
@@ -197,7 +197,7 @@ func run() -> void:
 		drag_piece(intro,Vector2i.ZERO)
 		var before: Array = intro.grid.duplicate(true)
 		intro.try_place()
-		check(intro.stage == stage and intro.hint_visible and intro.guide_cells() == intro.puzzle.missing and intro.grid == before,"Wrong placement reveals a fixed hatched hint")
+		check(intro.stage == stage and intro.hint_visible and intro.guide_cells() == intro.puzzle.missing and intro.grid == before,"Wrong placement reveals the fixed pulsing target")
 		intro.cells = intro.puzzle.solution.duplicate()
 		intro.color = intro.puzzle.color
 		drag_piece(intro,intro.puzzle.anchor)
@@ -219,21 +219,25 @@ func run() -> void:
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		var shared_preview_unit := -1.0
 		var shared_font_size := -1
-		var stable_header := Rect2()
+		var single_square_center := Vector2.ZERO
 		for phase in range(2,Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
-			if phase in [3,4,5,6]:
-				if stable_header == Rect2(): stable_header = intro.repair_header.get_rect()
-				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern" and intro.repair_header.get_rect() == stable_header,"Save the pattern stays fixed as the actions change underneath")
-				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"Each repair body sits beneath the persistent header without repeating it")
+			intro.update_controls()
+			check(intro.hint in intro.pulsing,"Hint pulses throughout every part of card eight")
+			if phase == 3:
+				check(intro.repair_header.visible and intro.repair_header.get_parsed_text() == "Save the pattern","Only the first repair step shows Save the pattern")
+				check("Save the pattern" not in intro.text.get_parsed_text() and intro.text.position.y >= intro.repair_header.get_rect().end.y,"The first repair instruction sits under its header without repeating it")
+			else:
+				check(not intro.repair_header.visible,"Save the pattern is not repeated on subsequent repair steps")
+			if phase == 4: check(intro.text.get_parsed_text() == "Erase a square.","Erase cue omits the removed instruction sentence")
 			if shared_preview_unit < 0: shared_preview_unit = intro.tray_geometry().unit
 			if shared_font_size < 0: shared_font_size = intro.text.get_theme_font_size("font_size")
 			check(shared_font_size == intro.text.get_theme_font_size("font_size"),"Every cue uses the same font fitted to the longest text")
-			check(intro.caption_rect.encloses(intro.text.get_rect()),"Every cue fits entirely within the reserved text window")
+			check(intro.caption_rect.encloses(intro.text.get_rect()),"Cue fit %s phase %d window %s text %s" % [dimensions,phase,intro.caption_rect,intro.text.get_rect()])
 			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
-			check(intro.text.get_theme_font_size("font_size") == 12,"Shared cue formatting fits the reserved text window")
+			check(intro.text.get_theme_font_size("font_size") == 16,"Shared cue formatting fits the reserved text window")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
@@ -244,9 +248,11 @@ func run() -> void:
 				check(intro.piece_overlay.z_index > intro.text.z_index and intro.piece_overlay.z_index > intro.repair_header.z_index,"Live piece draws above the caption and repair header")
 				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/9),"Preview uses standard board-square size instead of shrinking")
 			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
-			if phase == 2:
+			if phase in [2,5]:
 				var geometry: Dictionary = intro.tray_geometry()
-				check(is_equal_approx(geometry.origin.y+geometry.unit,normal_frame.position.y-4),"Single-square offer sits just above the outer frame")
+				check(is_equal_approx(geometry.origin.y+geometry.unit,normal_frame.position.y-4),"Offer sits just above the outer frame")
+				if phase == 2: single_square_center = geometry.origin+Vector2.ONE*geometry.unit/2
+				else: check((geometry.origin+Vector2(1.5,0.5)*geometry.unit).is_equal_approx(single_square_center),"Three-square offer is centered exactly where the single square appeared")
 			else:
 				check(intro.tray_rect.is_equal_approx(game.piece_view.get_rect()),"Other previews retain their central header position")
 	game.size = Vector2(540,825)
@@ -254,6 +260,14 @@ func run() -> void:
 	intro.enter(10)
 	check(intro.grid == Model.repair_board(2) and Rules.symmetry_states(intro.grid)[0].possible and not Rules.symmetry_states(intro.grid)[0].complete,"Merged hint lesson starts with the first wrong piece already placed")
 	check(intro.grid.size() == 9 and intro.guide_cells().size() == 1 and intro.cells == [Vector2i.ZERO],"Merged hint card offers the second, single-square piece directly")
+	var target: Vector2i = intro.guide_cells()[0]
+	intro.elapsed = 0
+	check(intro.target_color(target) == Color("F1E7EB"),"Placement target starts at its normal tile color")
+	intro.elapsed = Intro.PULSE_SECONDS/2
+	check(intro.target_color(target).is_equal_approx(Color.WHITE),"Placement target reaches white on the same pulse as the buttons")
+	intro.elapsed = Intro.PULSE_SECONDS
+	check(intro.target_color(target).is_equal_approx(Color("F1E7EB")),"Placement target returns to its normal color without permanent shading")
+
 	check(Model.repair_board(7) == Model.replay_board(Model.replay_steps().size()),"Replay includes both colors through the correct final placement")
 	intro._process(3.1)
 	check(intro.repair_phase == 2,"Axes exploration waits for the player instead of advancing automatically")
@@ -263,13 +277,14 @@ func run() -> void:
 	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
 	intro.set_caption(Intro.REPAIR_TEXT[2])
 	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
-	check(intro.hint not in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Merged cue uses the new wording without highlighting an incorrect position")
+	check(intro.hint in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Hint pulses continuously while Place stays quiet at an incorrect position")
 
 	var saved_repair: Array = intro.grid.duplicate(true)
 	drag_piece(intro,Vector2i(3,3))
 	check(not Rules.symmetry_states(intro.prediction_board())[0].complete and not game.indicators[0].icon.complete[0],"Colliding floating piece no longer shows the committed board's present symmetry")
 	check(intro.grid == saved_repair and intro.place.disabled,"Colliding preview never changes committed tiles or enables Place")
 	intro.transform_piece("rotate")
+	check(intro.hint in intro.pulsing,"Hint keeps pulsing even during a tile transformation")
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	check(intro.stage == 10 and intro.repair_phase == 2,"Free rotation does not advance the axes lesson")
 	await click_control(intro.flip)
