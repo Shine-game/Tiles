@@ -77,4 +77,4 @@ gallery-export checks, 22 lifecycle checks, 18 session checks, and 25 predictive
 symmetry checks; zero assertion failures. Real capture-owner and main-scene
 deletion were included, with no script errors on cancellation.
 
-Obsolete replay code and remaining legacy adapters are the final step 8.
+[Step 8](tutorial-cleanup.md) removes the obsolete replay renderer and runtime numeric adapters.

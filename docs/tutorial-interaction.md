@@ -70,3 +70,6 @@ failures were not changed or concealed as part of this refactor.
 [Step 6](tutorial-guidance.md) implements lesson/event coordination and lifecycle
 cleanup. [Step 7](tutorial-save-flow.md) coordinates save results. Obsolete
 rendering removal remains the final refactor step.
+
+The obsolete broad UI expectations described above were replaced in
+[step 8](tutorial-cleanup.md); both native and headless UI runs now pass.

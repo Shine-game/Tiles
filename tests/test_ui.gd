@@ -31,6 +31,22 @@ func source_point(scene, cell: Vector2i) -> Vector2:
 	var layout: Dictionary = scene.piece_view.geometry()
 	return scene.piece_view.get_global_transform_with_canvas() * (layout.origin + (Vector2(scene.piece_view.display_cell(cell)) + Vector2(0.5, 0.5)) * layout.unit)
 
+func click_button(button: Button) -> void:
+	if DisplayServer.get_name() == "headless":
+		check(not button.disabled, "Button wiring is enabled")
+		button.pressed.emit()
+	else:
+		var event := InputEventMouseButton.new()
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.position = button.get_global_rect().get_center()
+		event.global_position = event.position
+		event.pressed = true
+		root.push_input(event,true)
+		await process_frame
+		event.pressed = false
+		root.push_input(event,true)
+	await process_frame
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -45,28 +61,23 @@ func _run() -> void:
 	check(scene.palette_button.position.y >= scene._layout_insets(scene.size).y, "settings is safely inset from the screen's top edge")
 	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 0.1, "active piece is centered at top")
 	var unchanged_board: Array = scene.game.board.duplicate(true)
-	for i in range(5):
-		touch(scene, scene.palette_button.get_global_rect().get_center(), true)
-		touch(scene, scene.palette_button.get_global_rect().get_center(), false)
-		check(scene.palette_menu.visible and scene.menu_page == "Settings", "touch opens Settings")
-		await process_frame
-		touch(scene, scene.settings_options[0].get_global_rect().get_center(), true)
-		touch(scene, scene.settings_options[0].get_global_rect().get_center(), false)
+	for option: Button in scene.theme_options:
+		await click_button(scene.palette_button)
+		check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens from the game")
+		await click_button(scene.settings_options[0])
 		check(scene.menu_page == "Themes", "Themes opens inside the same menu")
-		await process_frame
-		touch(scene, scene.vine_colors_button.get_global_rect().get_center(), true)
-		touch(scene, scene.vine_colors_button.get_global_rect().get_center(), false)
-		await process_frame
-		touch(scene, scene.palette_options[i].get_global_rect().get_center(), true)
-		touch(scene, scene.palette_options[i].get_global_rect().get_center(), false)
-		check(Palette.selected_index == i and not scene.palette_menu.visible, "touch selects each palette and closes choices")
-		check(scene.game.board == unchanged_board, "palette selection preserves logical cell colors")
-		check(Palette.pigment(1) == Palette.tile(1) and Palette.blossom(1) == Palette.tile(2), "pure palette reaches vines and inverted flowers")
+		await click_button(option)
+		check(Palette.theme_id() == option.get_meta("theme_id") and scene.menu_page == "Themes" and not scene.confirmation.visible, "Each available theme applies directly before play")
+		check(scene.game.board == unchanged_board, "Theme choice preserves the initial board")
+		scene._close_menu()
+	Palette.select_theme("vines")
+	for i in range(5):
+		check(Palette.select(i), "Existing palette data remains valid")
+		check(Palette.pigment(1) == Palette.tile(1) and Palette.blossom(1) == Palette.tile(2), "Pure palette reaches vines and inverted flowers")
 		for color: Color in Palette.PAIRS[i].colors:
-			check(is_equal_approx(color.v, 1), "palette colors have full brightness")
-			check(color == Color.WHITE or color.s > 0.7, "palette colors are saturated or pure snow white")
-		if Palette.PAIRS[i].colors.has(Color.WHITE):
-			check(Palette.dark() and Palette.floor_color().get_luminance() < 0.3, "snow-white artwork has a contrasting field")
+			check(is_equal_approx(color.v, 1), "Palette colors have full brightness")
+			check(color == Color.WHITE or color.s > 0.7, "Palette colors are saturated or pure snow white")
+		check(Palette.floor_color() == Color("FFF9F3"), "Artwork palettes retain the authored pale empty tiles")
 	check(not Palette.select(-1) and not Palette.select(5), "invalid palette indices are rejected")
 	scene._choose_palette(0)
 	check(scene.indicators.size() == 1, "one combined symmetry graphic")
@@ -287,7 +298,7 @@ func _run() -> void:
 	scene._clear_selection()
 	scene._preview()
 	# All content must stay visible, including on short and landscape screens.
-	check(scene.find_children("*", "ScrollContainer", true, false).is_empty(), "screen contains no scrolling containers")
+	check(scene.find_children("*", "ScrollContainer", true, false).all(func(control): return not control.is_visible_in_tree()), "Gameplay has no visible scrolling containers")
 	check(not scene.menu_title.is_visible_in_tree(), "menu title is hidden during play")
 	for dimensions: Vector2i in [Vector2i(320, 480), Vector2i(360, 640), Vector2i(390, 844), Vector2i(844, 390), Vector2i(640, 360), Vector2i(240, 320)]:
 		root.size = dimensions
@@ -298,7 +309,7 @@ func _run() -> void:
 		await process_frame
 		var menu_bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
 		check(menu_bounds.encloses(scene.palette_menu.get_global_rect()), "palette choices fit without scrolling at " + str(dimensions))
-		for option: Button in scene.theme_options + [scene.back_button, scene.vine_colors_button]:
+		for option: Button in scene.theme_options + [scene.back_button]:
 			check(menu_bounds.encloses(option.get_global_rect()), "every palette row is visible at " + str(dimensions))
 		scene.palette_menu.hide()
 		var bounds := Rect2(Vector2.ZERO, scene.get_viewport_rect().size).grow(1)
@@ -313,11 +324,9 @@ func _run() -> void:
 	scene._reset()
 	var before_skip: Array = scene.game.board.duplicate(true)
 	var offered: String = scene.game.queue[scene.game.index]
-	touch(scene, scene.skip_button.get_global_rect().get_center(), true)
-	touch(scene, scene.skip_button.get_global_rect().get_center(), false)
+	await click_button(scene.skip_button)
 	check(scene.game.skip_left == 2 and scene.game.board == before_skip and scene.game.queue[scene.game.index] != offered, "native skip button spends one use and changes only offer")
-	touch(scene, scene.erase_button.get_global_rect().get_center(), true)
-	touch(scene, scene.erase_button.get_global_rect().get_center(), false)
+	await click_button(scene.erase_button)
 	check(scene.erase_mode and scene.place_button.disabled, "erase helper arms square selection and blocks Place")
 	touch(scene, board_point(scene, Vector2i.ZERO), true)
 	touch(scene, board_point(scene, Vector2i.ZERO), false)

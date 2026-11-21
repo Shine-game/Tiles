@@ -54,8 +54,19 @@ func run() -> void:
 	game.gallery.directory = folder
 	var results: Array = []
 	game.design_save_finished.connect(func(result):results.append(result))
-	game._start_introduction("reveal")
+	# An old interrupted assembly must rebuild the full design, without reviving
+	# the retired partial replay renderer or persisting its cursor again.
+	var old_save := ConfigFile.new()
+	old_save.set_value("intro","step",11)
+	old_save.set_value("intro","started",true)
+	old_save.set_value("intro","seed_index",4)
+	check(old_save.save(game.intro_progress_path) == OK,"Old partial assembly fixture writes")
+	game._maybe_introduction(true)
 	var intro = game.introduction
+	check(game.game.board == Model.final_board() and game.game.moves == Model.final_steps().size(),"Old partial assembly resumes as the complete canonical playable design")
+	var migrated := ConfigFile.new()
+	migrated.load(game.intro_progress_path)
+	check(migrated.get_value("intro","lesson_id") == "reveal" and not migrated.has_section_key("intro","seed_index"),"Resuming removes the obsolete assembly cursor from saved progress")
 	check(intro.reveal_save_state == "failed" and not game.saving,"Storage failure leaves a retryable reveal")
 	check(game.gallery.entries().is_empty() and not Model.progress(game.intro_progress_path).done,"Failed save creates no gallery entry or tutorial completion")
 	check(intro.forward.disabled and not intro.hint.disabled and intro.hint in intro.pulsing,"Failure highlights Save and blocks Settings")
@@ -67,7 +78,7 @@ func run() -> void:
 	intro.hint.pressed.emit()
 	check(intro.reveal_save_state == "saved" and not intro.forward.disabled,"Existing Save button retries and unlocks Settings on success")
 	var entries: Array = game.gallery.entries()
-	check(entries.size() == 1 and entries[0].board == Model.repair_board(7) and entries[0].theme == "vines","Successful retry writes the exact revealed board and theme")
+	check(entries.size() == 1 and entries[0].board == Model.repair_board("save") and entries[0].theme == "vines","Successful retry writes the exact revealed board and theme")
 	var image := Image.load_from_file(game.gallery.image_path(entries[0]))
 	check(image != null and image.get_size() == Vector2i(900,900),"Retry writes a readable full-size PNG")
 	check(game.saved_fingerprint == game._design_fingerprint() and game.indicators[0].icon.saved,"Save indicator reflects confirmed persistence")
@@ -135,8 +146,8 @@ func run() -> void:
 		root.add_child(owner)
 		var view = Board.new()
 		owner.add_child(view)
-		view.show_settled(Model.repair_board(7))
-		capture_removed_owner(Capture.new(),owner,view,Model.repair_board(7))
+		view.show_settled(Model.repair_board("save"))
+		capture_removed_owner(Capture.new(),owner,view,Model.repair_board("save"))
 		owner.queue_free()
 		for frame in range(10):
 			if not capture_results.is_empty(): break

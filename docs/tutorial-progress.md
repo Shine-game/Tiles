@@ -50,7 +50,7 @@ Display numbers are presentation metadata, not persisted keys. Combining the
 first four operations does not unlock them all at once or replace their shared L.
 
 Repair checkpoints, in order: `wrong_placement`, `undo`, `erase`, `replace`,
-`place_replacement`, `save`. They map to legacy phases 2–7 only inside the adapter.
+`place_replacement`, `save`. The controller and fixture factory use these names directly.
 Resume restores the checkpoint's board, offer, caption, permitted controls, and
 target. An unfinished drag or transform is intentionally reset to that
 checkpoint's starting offer; pointer state is not persisted.
@@ -66,31 +66,31 @@ started=true
 lesson_id="repair"
 checkpoint="place_replacement"
 done=false
-seed_index=0
 ```
 
-Non-repair lessons use an empty checkpoint. `seed_index` remains only for old
-interrupted final-design assembly compatibility. New progress never stores a
-numeric `step`; the loader derives that field for the existing controller.
+Non-repair lessons use an empty checkpoint. New writes contain neither a numeric
+`step` nor an assembly cursor. The runtime uses the same named IDs as storage.
 
 Loading an unversioned file maps its stage to a stable lesson. Old repair saves
-start at `wrong_placement` because those files did not contain a substep. The
-next successful checkpoint write replaces the legacy representation with v2.
-Reading alone does not alter the file. Completion and old final-design cursors
-survive migration.
+start at `wrong_placement` because those files did not contain a substep. Old
+partial final-design saves resume at `reveal`, which reconstructs the complete
+canonical design through shared game commands. Their cursor is validated and
+then discarded. The next successful checkpoint write replaces the legacy
+representation with v2. Reading alone does not alter the file; completion is
+preserved.
 
 Malformed types, unknown versions/IDs, invalid checkpoint combinations, or
 out-of-range cursors fall back to an unstarted Rotate lesson. Rejected writes
 leave the existing save intact. Valid writes use a temporary file and rename;
 controller failures are reported as warnings.
 
-## Scope boundary
+## Completed cleanup
 
-The controller still uses numeric stages/phases for some rendering and guidance
-conditions. These are transitional adapters; do not use them in new persisted
-data. Obsolete replay rendering removal remains the final refactor step.
-This step resolves the baseline's missing repair-checkpoint persistence; its
-other audit gaps remain open.
+The controller, fixture factory, and tests use named lessons and checkpoints.
+Only the progress loader understands old numeric stages and partial-assembly
+cursors. The obsolete opening card, Forward transition, on-board offer fallback,
+and replay underlay renderer have been removed. See
+[the final cleanup](tutorial-cleanup.md).
 
 The shared command interface is implemented in
 [refactor step 3](tutorial-actions.md), and
@@ -112,7 +112,4 @@ read-only migration, and rejected-write preservation. The graphics-enabled
 `tests/test_introduction.gd` additionally checks startup resume at each repair
 checkpoint, the unchanged lesson flow, UI handoff, and actual gallery output.
 
-Verified on 2026-11-21 with Godot 4.6.3: 162 progress checks and 1,251
-graphics-enabled tutorial checks, zero failures. The latter includes all eight
-display numbers, repair-checkpoint restoration, the real gallery PNG save, and
-native Settings → Themes → selection flows for all three available themes.
+Current verification results are recorded in [step 8](tutorial-cleanup.md).

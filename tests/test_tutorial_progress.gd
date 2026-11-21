@@ -25,12 +25,12 @@ func run() -> void:
 		write({"step":stage,"started":true,"done":false,"seed_index":0})
 		var old := FileAccess.get_file_as_bytes(path)
 		var progress := Model.progress(path)
-		check(progress.lesson_id == Lessons.id(stage) and progress.started and not progress.done,"Every old stage maps to its named lesson")
+		check(progress.lesson_id == ["rotate","rotate","flip","color","place","vertical","horizontal","rotational","repair","repair","reveal"][stage-1] and progress.started and not progress.done,"Every old stage maps to its named lesson")
 		check(FileAccess.get_file_as_bytes(path) == old,"Reading old saves does not rewrite them")
 		check(Model.save_checkpoint(progress.lesson_id,progress.done,path,progress.checkpoint) == OK,"Next checkpoint migrates legacy save")
 		var stored := ConfigFile.new()
 		stored.load(path)
-		check(stored.get_value("intro","version") == 2 and not stored.has_section_key("intro","step"),"Migrated file contains versioned names rather than stage numbers")
+		check(stored.get_value("intro","version") == 2 and not stored.has_section_key("intro","step") and not stored.has_section_key("intro","seed_index"),"Migrated file contains versioned names rather than stage numbers")
 	for lesson: String in Lessons.ORDER:
 		var checkpoints: Array = Lessons.REPAIR_ORDER if lesson == "repair" else [""]
 		for checkpoint: String in checkpoints:
@@ -42,7 +42,7 @@ func run() -> void:
 		write({"step":9,"started":true,"done":done})
 		check(Model.progress(path).lesson_id == "repair" and Model.progress(path).checkpoint == "wrong_placement" and Model.progress(path).done == done,"Removed axes card preserves completion and opens repair")
 	write({"step":11,"started":true,"seed_index":4})
-	check(Model.progress(path).lesson_id == "reveal" and Model.progress(path).seed_index == 4,"Old partial final assembly retains its compatibility cursor")
+	check(Model.progress(path).lesson_id == "reveal" and not Model.progress(path).has("seed_index"),"Old partial final assembly resumes at atomic reveal without a runtime cursor")
 	for invalid: Dictionary in [
 		{"version":99}, {"version":"2"}, {"done":"false"}, {"started":1},
 		{"step":"9"}, {"step":100}, {"seed_index":-1},

@@ -71,4 +71,4 @@ Clockwork ambient/tier-3 Ogg playback references; it did not report leaked
 tutorial scopes or UI nodes. Audio-engine shutdown cleanup is outside this step.
 
 [Step 7](tutorial-save-flow.md) coordinates gallery success/failure and handoff.
-Obsolete replay rendering and remaining legacy adapters are removed in step 8.
+[Step 8](tutorial-cleanup.md) removes obsolete replay rendering and runtime numeric adapters, and updates the outdated broad UI tests.

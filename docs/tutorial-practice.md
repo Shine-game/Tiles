@@ -56,7 +56,7 @@ Themes selection before resuming play in the chosen theme.
 [Gesture/preview sharing](tutorial-interaction.md) is implemented in step 5.
 [Tutorial lifecycle cleanup](tutorial-guidance.md) is implemented in step 6.
 [Save-result coordination](tutorial-save-flow.md) is implemented in step 7.
-Obsolete replay-renderer removal remains the final step.
+[Step 8](tutorial-cleanup.md) removes the obsolete replay renderer and runtime numeric adapters.
 
 ## Verification
 

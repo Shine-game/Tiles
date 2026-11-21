@@ -170,13 +170,13 @@ func _maybe_introduction(returning_player: bool) -> void:
 		return
 	_start_introduction(progress.lesson_id,progress.checkpoint)
 
-func _start_introduction(step: Variant = "rotate", checkpoint: String = "") -> void:
+func _start_introduction(lesson_id: String = "rotate", checkpoint: String = "") -> void:
 	if introduction != null: return
 	palette_menu.hide()
 	dragging = false
 	introduction = Introduction.new()
 	introduction.host = self
-	introduction.stage = IntroModel.Lessons.legacy(step)
+	introduction.lesson_id = lesson_id
 	introduction.initial_checkpoint = checkpoint
 	introduction.progress_path = intro_progress_path
 	var active_tutorial: Control = introduction
@@ -825,7 +825,7 @@ func _back_menu() -> void:
 		_show_menu(menu_history.pop_back(), false)
 
 func _show_menu(page: String, remember: bool = true) -> void:
-	if introduction != null and introduction.stage == 11 and page not in ["Settings","Themes"]: return
+	if introduction != null and introduction.lesson_id == "reveal" and page not in ["Settings","Themes"]: return
 	if page == "Settings":
 		menu_history.clear()
 	elif remember and palette_menu.visible and page != menu_page:
@@ -839,7 +839,7 @@ func _show_menu(page: String, remember: bool = true) -> void:
 	interface_changed.emit(true)
 
 func _review_new_game(theme: String) -> void:
-	if introduction != null and introduction.stage == 11:
+	if introduction != null and introduction.lesson_id == "reveal":
 		introduction.choose_theme(theme)
 		return
 	_request_theme(theme)
@@ -1027,10 +1027,9 @@ func _refresh_theme() -> void:
 
 func _toggle_palette_menu() -> void:
 	if introduction != null:
-		if introduction.stage == 11:
+		if introduction.lesson_id == "reveal":
 			introduction.open_settings()
 			return
-		introduction.next_step()
 		return
 	dragging = false
 	if palette_menu.visible:
