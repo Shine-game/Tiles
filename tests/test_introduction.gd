@@ -77,6 +77,14 @@ func run() -> void:
 	game._start_introduction()
 	var intro = game.introduction
 	check(paused,"Practice pauses the real game")
+	check(intro.text.get_theme_font("normal_font") == Intro.TUTORIAL_FONT and Intro.TUTORIAL_FONT.get_font_name() == "Lora" and Intro.TUTORIAL_FONT.get_font_style_name() == "Regular","Tutorial uses the bundled Lora Regular face")
+	check(intro.progress_label.get_theme_font("font") == Intro.TUTORIAL_FONT and intro.repair_header.get_theme_font("normal_font") == Intro.TUTORIAL_FONT,"Step counter and persistent header share Lora Regular")
+	for label in [intro.text,intro.repair_header]:
+		check(label.get_theme_constant("line_separation") == 0 and label.get_theme_constant("paragraph_separation") == 0,"Text uses plain line breaks without added paragraph spacing")
+	intro.set_caption("Line one\n\nLine two")
+	check(intro.text.get_parsed_text() == "Line one\nLine two","Blank paragraph jumps are normalized to single line breaks")
+	intro.set_caption(Intro.TEXT[intro.stage])
+
 	for button in [game.erase_button,game.undo_button,game.skip_button]:
 		check(button.visible and button.disabled,"Jokers remain visible but disabled")
 	check(intro.forward == game.palette_button and intro.skip == game.replay_button,"Tutorial reuses navigation positions")
@@ -122,7 +130,7 @@ func run() -> void:
 		game._layout()
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
-		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") >= 6,"Caption keeps large type where space permits and fits smaller screens")
+		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 12,"Tutorial type stays fixed at twelve pixels on every screen")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
 		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
@@ -200,9 +208,9 @@ func run() -> void:
 		drag_piece(intro,intro.puzzle.anchor)
 		intro.place.pressed.emit()
 		check(intro.stage == (10 if stage == 8 else stage+1),"Correct symmetry placement advances instantly and skips removed card")
-	check(intro.stage == 10 and intro.repair_phase == 1 and intro.progress_label.text == "8 / 9","Axes lesson follows the three exercises with nine-card numbering")
+	check(intro.stage == 10 and intro.repair_phase == 2 and intro.progress_label.text == "8 / 9","Axes lesson follows the three exercises with nine-card numbering")
 	intro.enter(9)
-	check(intro.stage == 10 and intro.repair_phase == 1,"Old saved axes-card progress resumes at destruction lesson")
+	check(intro.stage == 10 and intro.repair_phase == 2,"Old saved axes-card progress resumes at destruction lesson")
 	for dimensions in [Vector2(320,568),Vector2(390,844),Vector2(540,825),Vector2(720,1100)]:
 		game.size = dimensions
 		game._layout()
@@ -212,7 +220,7 @@ func run() -> void:
 		var shared_preview_unit := -1.0
 		var shared_font_size := -1
 		var stable_header := Rect2()
-		for phase in range(Intro.REPAIR_TEXT.size()):
+		for phase in range(2,Intro.REPAIR_TEXT.size()):
 			intro.repair_phase = phase
 			intro.prepare_repair()
 			intro.layout()
@@ -225,7 +233,7 @@ func run() -> void:
 			check(shared_font_size == intro.text.get_theme_font_size("font_size"),"Every cue uses the same font fitted to the longest text")
 			check(intro.caption_rect.encloses(intro.text.get_rect()),"Every cue fits entirely within the reserved text window")
 			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
-			check(intro.text.get_theme_font_size("font_size") >= 6,"Shared cue formatting fits the reserved text window")
+			check(intro.text.get_theme_font_size("font_size") == 12,"Shared cue formatting fits the reserved text window")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
@@ -236,41 +244,47 @@ func run() -> void:
 				check(intro.piece_overlay.z_index > intro.text.z_index and intro.piece_overlay.z_index > intro.repair_header.z_index,"Live piece draws above the caption and repair header")
 				check(is_equal_approx(geometry.unit,intro.board_rect.size.x/9),"Preview uses standard board-square size instead of shrinking")
 			check(intro.text.get_content_height() <= intro.text.size.y+1,"Plain cue fits: %s phase %d content %d height %f" % [dimensions,phase,intro.text.get_content_height(),intro.text.size.y])
-			check(intro.tray_rect.is_equal_approx(game.piece_view.get_rect()),"Preview is deliberately positioned over the central header")
+			if phase == 2:
+				var geometry: Dictionary = intro.tray_geometry()
+				check(is_equal_approx(geometry.origin.y+geometry.unit,normal_frame.position.y-4),"Single-square offer sits just above the outer frame")
+			else:
+				check(intro.tray_rect.is_equal_approx(game.piece_view.get_rect()),"Other previews retain their central header position")
 	game.size = Vector2(540,825)
 	game._layout()
 	intro.enter(10)
-	check(Rules.symmetry_states(intro.grid)[0].complete,"Repair pattern starts with vertical symmetry")
-	check(intro.grid.size() == 9 and intro.guide_cells().size() == 3 and intro.cells.size() == 3,"Watch-axes cue immediately offers a movable piece on the expanded field")
+	check(intro.grid == Model.repair_board(2) and Rules.symmetry_states(intro.grid)[0].possible and not Rules.symmetry_states(intro.grid)[0].complete,"Merged hint lesson starts with the first wrong piece already placed")
+	check(intro.grid.size() == 9 and intro.guide_cells().size() == 1 and intro.cells == [Vector2i.ZERO],"Merged hint card offers the second, single-square piece directly")
 	check(Model.repair_board(7) == Model.replay_board(Model.replay_steps().size()),"Replay includes both colors through the correct final placement")
 	intro._process(3.1)
-	check(intro.repair_phase == 1,"Axes exploration waits for the player instead of advancing automatically")
+	check(intro.repair_phase == 2,"Axes exploration waits for the player instead of advancing automatically")
 
 	check("[b]" not in intro.text.text and "[b]" not in str(Intro.TEXT) and "[b]" not in str(Intro.REPAIR_TEXT),"All tutorial wording uses regular text")
 	intro.set_caption("[b]Regular lettering[/b]")
 	check("[b]" not in intro.text.text,"Future cues cannot introduce bold markup")
-	intro.set_caption(Intro.REPAIR_TEXT[1])
+	intro.set_caption(Intro.REPAIR_TEXT[2])
 	check(not intro.flip.disabled and not intro.recolor.disabled and intro.place.disabled,"Piece controls are unlocked while Place waits for the required configuration")
+	check(intro.hint not in intro.pulsing and intro.place not in intro.pulsing and "The hint button shows achievable symmetries." in intro.text.get_parsed_text(),"Merged cue uses the new wording without highlighting an incorrect position")
+
 	var saved_repair: Array = intro.grid.duplicate(true)
 	drag_piece(intro,Vector2i(3,3))
 	check(not Rules.symmetry_states(intro.prediction_board())[0].complete and not game.indicators[0].icon.complete[0],"Colliding floating piece no longer shows the committed board's present symmetry")
 	check(intro.grid == saved_repair and intro.place.disabled,"Colliding preview never changes committed tiles or enables Place")
 	intro.transform_piece("rotate")
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
-	check(intro.stage == 10 and intro.repair_phase == 1,"Free rotation does not advance the axes lesson")
+	check(intro.stage == 10 and intro.repair_phase == 2,"Free rotation does not advance the axes lesson")
 	await click_control(intro.flip)
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
 	await click_control(intro.recolor)
 	intro._process(Intro.ANIMATION_SECONDS+0.01)
-	check(intro.repair_phase == 1 and intro.color == 1 and intro.place.disabled,"Mirroring and recoloring are free and incorrect configuration stays disabled")
-	intro.cells = Model.repair_offers()[0].cells.duplicate()
-	intro.color = Model.repair_offers()[0].color
+	check(intro.repair_phase == 2 and intro.color == 2 and intro.place.disabled,"Mirroring and recoloring are free and incorrect configuration stays disabled")
+	intro.cells = Model.repair_offers()[1].cells.duplicate()
+	intro.color = Model.repair_offers()[1].color
 	intro.selected = false
 	intro.update_controls()
 	check(intro.forward.disabled,"Forward cannot bypass the repair exercise")
 	intro.next_step()
 	check(intro.stage == 10,"Forward handler cannot skip repair")
-	for phase in [1,2]:
+	for phase in [2]:
 		var offer: Dictionary = Model.repair_offers()[phase-1]
 		check(intro.guide_cells().size() == offer.cells.size(),"Wrong placement is marked explicitly")
 		drag_piece(intro,Vector2i(4,4))
@@ -280,11 +294,10 @@ func run() -> void:
 
 		drag_piece(intro,offer.anchor)
 		check(not intro.place.disabled,"Place enables only at the required geometry, location, and color")
+		check(intro.hint in intro.pulsing and intro.place in intro.pulsing,"Symmetry and Place highlight together only for the required second-piece placement")
+
 		await click_control(intro.place)
 		check(intro.repair_phase == phase+1 and intro.grid == Model.repair_board(phase+1),"Player must commit the forced wrong piece")
-		if phase == 1:
-			var intermediate := Rules.symmetry_states(intro.grid)
-			check(intermediate[0].possible and not intermediate[0].complete and intermediate.filter(func(state):return state.possible).size() == 1,"First wrong piece removes other axes and leaves vertical faint")
 
 	check(not Rules.symmetry_states(intro.grid).any(func(state):return state.complete),"Player's two wrong moves leave no completed symmetry")
 	check(not Rules.symmetry_states(intro.grid).any(func(state):return state.possible),"Broken pattern cannot be repaired by adding tiles, regardless of remaining jokers")

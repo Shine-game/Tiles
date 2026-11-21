@@ -6,11 +6,13 @@ const Palette = preload("res://scripts/palette.gd")
 const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
+const TUTORIAL_FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
+const FONT_SIZE := 12
 const TEXT := ["", "", "Tap the piece to rotate it.", "Press Flip to mirror it.", "Press Color to choose its color.", "Drag the piece into position and press Place.", "Complete the vertical symmetry.", "Complete the horizontal symmetry.", "Complete the rotational symmetry.", "", "", "From simple tiles to intricate worlds."]
 const REPAIR_TEXT := [
-	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
-	"Faint axes show symmetries you can reach.\nWatch them change as you position your piece.",
-	"Lose all axes, and the game ends.",
+	"",
+	"",
+	"The hint button shows achievable symmetries.\nMake an asymmetric placement and the game ends.",
 	"Undo your last move.",
 	"Erase a square.\nPress Erase, then tap the marked square.",
 	"Get a different piece.\nPress the arrow joker.",
@@ -83,11 +85,15 @@ func _ready() -> void:
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
+	text.add_theme_font_override("normal_font",TUTORIAL_FONT)
+	text.add_theme_constant_override("line_separation",0)
+	text.add_theme_constant_override("paragraph_separation",0)
 	add_child(text)
 	progress_label = Label.new()
 	progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	progress_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	progress_label.add_theme_color_override("font_color",Ink.text())
+	progress_label.add_theme_font_override("font",TUTORIAL_FONT)
 	add_child(progress_label)
 	repair_header = RichTextLabel.new()
 	repair_header.bbcode_enabled = true
@@ -96,6 +102,9 @@ func _ready() -> void:
 	repair_header.text = "[center]Save the pattern[/center]"
 	repair_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	repair_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	repair_header.add_theme_font_override("normal_font",TUTORIAL_FONT)
+	repair_header.add_theme_constant_override("line_separation",0)
+	repair_header.add_theme_constant_override("paragraph_separation",0)
 	add_child(repair_header)
 	piece_overlay = Control.new()
 	piece_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -157,7 +166,7 @@ func enter(step: int) -> void:
 		cells = puzzle.offered.duplicate()
 		color = 1
 	elif stage == 10:
-		repair_phase = 1
+		repair_phase = 2
 		prepare_repair()
 	elif stage == 11: start_seed()
 	if not keep_piece and stage in [6,7,8]: cells = laid_cells(cells)
@@ -176,7 +185,8 @@ func desired_pulses() -> Array:
 			return [place] if exercise_placement_correct() else []
 		10:
 			match repair_phase:
-				1,2,6: return [place] if repair_matches_target() else []
+				2: return [hint,place] if repair_matches_target() else []
+				1,6: return [place] if repair_matches_target() else []
 				3: return [host.undo_button]
 				4: return [host.erase_button]
 				5: return [host.skip_button]
@@ -213,13 +223,14 @@ func animate_pulses() -> void:
 			entry.live.bg_color = entry.base.bg_color.lerp(Color.WHITE,pulse_amount())
 
 func set_caption(value: String) -> void:
-	text.text = "[center]"+value.replace("[b]","").replace("[/b]","").replace("**","")+"[/center]"
+	var plain := value.replace("[b]","").replace("[/b]","").replace("**","").replace("\r\n","\n").replace("\r","\n")
+	while "\n\n" in plain: plain = plain.replace("\n\n","\n")
+	text.text = "[center]"+plain+"[/center]"
 
 func measure_caption(value: String, font: Font, font_size: int, width: float) -> float:
 	var plain := value.replace("[b]","").replace("[/b]","").replace("**","").replace("[center]","").replace("[/center]","")
-	var measured := font.get_multiline_string_size(plain,HORIZONTAL_ALIGNMENT_CENTER,width,font_size)
-	var lines := maxi(1,ceili(measured.y/font.get_height(font_size)))
-	return measured.y+lines*3+8
+	while "\n\n" in plain: plain = plain.replace("\n\n","\n")
+	return ceilf(font.get_multiline_string_size(plain,HORIZONTAL_ALIGNMENT_CENTER,width,font_size).y)+2
 
 func layout() -> void:
 	if text == null or host == null: return
@@ -235,19 +246,9 @@ func layout() -> void:
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)
 	var font := text.get_theme_font("normal_font")
-	var captions: Array = TEXT.slice(2,9)+[TEXT[11]]+REPAIR_TEXT
-	var font_size := 2*clampi(roundi(host.size.x*0.028),12,18)
-	# Fit the longest complete cue once, then reuse its type size and window.
+	var font_size := FONT_SIZE
 	var reserved := preparation.grow(-4)
 	var caption_height := reserved.size.y
-	while true:
-		var longest := 0.0
-		for caption: String in captions:
-			var height := measure_caption(caption,font,font_size,reserved.size.x)
-			if caption in REPAIR_TEXT.slice(3,7): height += measure_caption("Save the pattern",font,font_size,reserved.size.x)+4
-			longest = maxf(longest,height)
-		if longest <= caption_height or font_size <= 6: break
-		font_size -= 1
 	for key in ["font_size","normal_font_size"]: text.add_theme_font_size_override(key,font_size)
 	text.add_theme_color_override("font_color",Ink.text())
 	text.add_theme_color_override("default_color",Ink.text())
@@ -260,10 +261,10 @@ func layout() -> void:
 		var header_height := measure_caption("Save the pattern",font,font_size,reserved.size.x)
 		var body_height := 0.0
 		for caption: String in REPAIR_TEXT.slice(3,7): body_height = maxf(body_height,measure_caption(caption,font,font_size,reserved.size.x))
-		var group_top := caption_rect.position.y+maxf(0,(caption_height-header_height-4-body_height)/2)
+		var group_top := caption_rect.position.y+maxf(0,(caption_height-header_height-body_height)/2)
 		repair_header.position = Vector2(caption_rect.position.x,group_top)
 		repair_header.size = Vector2(reserved.size.x,header_height)
-		body_rect = Rect2(caption_rect.position.x,group_top+header_height+4,reserved.size.x,body_height)
+		body_rect = Rect2(caption_rect.position.x,group_top+header_height,reserved.size.x,body_height)
 	var current_height := measure_caption(text.text,font,font_size,reserved.size.x)
 	text.position = body_rect.position+Vector2(0,maxf(0,(body_rect.size.y-current_height)/2))
 	text.size = Vector2(reserved.size.x,current_height)
@@ -287,6 +288,9 @@ func layout() -> void:
 		# This preview deliberately overlaps the caption at the normal tile size.
 		tray_rect = preparation
 		offer_over_board = false
+		if repair_phase == 2:
+			var unit := board_rect.size.x/9
+			tray_rect = Rect2(preparation.position.x,normal_board_rect.position.y-unit-4,preparation.size.x,unit)
 	if offer_pending:
 		offer_pending = false
 		if offer_over_board and not cells.is_empty(): spawn_offer_on_board()
