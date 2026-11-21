@@ -20,7 +20,7 @@ func _init(owner: Control) -> void:
 	menu_z = host.palette_menu.z_index
 	for button: Button in host._controls():
 		var icon: Control = host.button_icon(button)
-		controls.append({"node":button,"mode":button.process_mode,"disabled":button.disabled,"modulate":button.modulate,"visible":button.visible,"text":button.text,"tooltip":button.tooltip_text,"icon":icon,"icon_visible":icon.visible,"kind":icon.get("kind"),"count":icon.get("count")})
+		controls.append({"node":button,"mode":button.process_mode,"disabled":button.disabled,"pressed":button.button_pressed,"modulate":button.modulate,"visible":button.visible,"text":button.text,"tooltip":button.tooltip_text,"icon":icon,"icon_visible":icon.visible,"kind":icon.get("kind"),"count":icon.get("count")})
 		button.process_mode = Node.PROCESS_MODE_ALWAYS
 		button.show()
 		button.disabled = true
@@ -49,6 +49,7 @@ func restore() -> void:
 		UI.press_children(record.node,false)
 		record.node.process_mode = record.mode
 		record.node.disabled = record.disabled
+		if record.node.toggle_mode: record.node.set_pressed_no_signal(record.pressed)
 		record.node.modulate = record.modulate
 		record.node.visible = record.visible
 		record.node.text = record.text

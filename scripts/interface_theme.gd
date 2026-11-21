@@ -1,16 +1,18 @@
 extends RefCounted
 const Palette = preload("res://scripts/interface_palette.gd")
+const FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
+const FONT_SIZE := 24
 const RADIUS := 8
 const BEVEL := 1
 const TRAVEL := 2
 const SHADOW := 2
 static var cache: Dictionary = {}
 
-static func button_style(state: String, selected: bool = false) -> StyleBoxFlat:
+static func button_style(state: String) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Palette.controls()
 	style.set_corner_radius_all(RADIUS)
-	style.set_border_width_all(2 if selected else BEVEL)
+	style.set_border_width_all(BEVEL)
 	var pressed := state in ["pressed", "hover_pressed"]
 	style.border_color = Palette.shade() if pressed else Palette.light()
 	style.shadow_color = Color(Palette.shadow(), 0.65)
@@ -41,6 +43,8 @@ static func build() -> Theme:
 	var key: String = Palette.theme_id()
 	if cache.has(key): return cache[key]
 	var result := Theme.new()
+	result.default_font = FONT
+	result.default_font_size = FONT_SIZE
 	for type: String in ["Button", "CheckButton", "CheckBox", "OptionButton", "MenuButton"]:
 		for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
 			result.set_stylebox(state, type, button_style(state))

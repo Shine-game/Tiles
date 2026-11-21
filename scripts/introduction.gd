@@ -350,6 +350,7 @@ func update_controls() -> void:
 		host.button_icon(host.undo_button).count = practice_game.undo_left
 		host.button_icon(host.erase_button).count = practice_game.erase_left
 		host.button_icon(host.skip_button).count = practice_game.skip_left
+	host.erase_button.set_pressed_no_signal(repair_erasing)
 	for control: Button in jokers: host.button_icon(control).queue_redraw()
 	host.button_icon(recolor).color = color
 	host.button_icon(recolor).queue_redraw()

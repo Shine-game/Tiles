@@ -253,13 +253,13 @@ func _build_interface() -> void:
 		color_button.add_child(mark)
 		mark.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		color_button.tooltip_text = "Color %d" % mark.color
-	blue_button.toggle_mode = true
 	blue_button.get_child(0).paired = true
 	blue_button.tooltip_text = "Switch piece color"
 	place_button = _button("Place", _place)
 	undo_button = _button("↶ 3", _undo)
 	skip_button = _button("⇥ 3", _skip)
 	erase_button = _button("⌫ 3", _toggle_erase)
+	erase_button.toggle_mode = true
 	new_button = _button("Start", _start_new_game)
 	size_picker = _button("Size", _cycle_size_preset)
 	palette_button = _button("⚙", _toggle_palette_menu)
@@ -441,13 +441,10 @@ func _refresh() -> void:
 	undo_button.disabled = game.history.is_empty() or game.undo_left <= 0 or saving
 	skip_button.disabled = game.over or game.skip_left <= 0 or saving
 	erase_button.disabled = game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)) or saving
+	erase_button.set_pressed_no_signal(erase_mode)
 	for button: Button in [flip_button, blue_button]:
 		button.disabled = game.over
-	for button: Button in [blue_button]:
-		var chosen := true
-		button.set_pressed_no_signal(chosen)
-		_apply_button_style(button, chosen, game.current_color)
-		button.get_child(0).queue_redraw()
+	blue_button.get_child(0).queue_redraw()
 	blue_button.get_child(0).color = game.current_color
 	_preview()
 	_autosave()
@@ -463,7 +460,7 @@ func _update_summaries(board: Array) -> void:
 	indicator.icon.saved = board == game.board and saved_fingerprint == _design_fingerprint()
 	indicator.icon.queue_redraw()
 	indicator.panel.disabled = not _can_save() or saving or board_view.growing
-	_apply_button_style(indicator.panel, indicator.icon.complete.any(func(value): return value))
+	_apply_button_style(indicator.panel)
 
 func _surface_revision(theme: String) -> String:
 	var revision: String = Platform.surface_revision(theme) + "/complete-background-v1"
@@ -729,6 +726,7 @@ func _draw() -> void:
 
 func _menu_button(text: String, callback: Callable) -> Button:
 	var button := _button(text, callback)
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.reparent(palette_list)
 	menu_buttons.append(button)
 	return button
@@ -794,6 +792,7 @@ func _volume_control(title: String, value: float, changed: Callable) -> VBoxCont
 	var row := VBoxContainer.new()
 	var label := Label.new()
 	label.text = "%s volume: %d%%" % [title,roundi(value*100)]
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	row.add_child(label)
 	var slider := HSlider.new()
 	slider.min_value=0
@@ -889,12 +888,14 @@ func _layout_palette_menu(pad: float) -> void:
 	var inset := Vector4(12, 12, 12, 12)
 	var row_units := options.size() + (1 if menu_page == "Game Presets" else 0)
 	var desired_height: float = (38 + 70 * row_units + 12) * 1.5
+	if menu_page == "Themes": desired_height = maxf(desired_height,420)
+	if menu_page == "Audio": desired_height = maxf(desired_height,330)
 	var width: float = size.x * 0.70
 	var height: float = minf(desired_height, size.y - 2 * pad)
 	var scale_factor: float = minf(1, minf(width / 540, height / desired_height))
 	var content_width: float = width - inset.x - inset.z
 	var content_height: float = height - inset.y - inset.w
-	var title_height: float = 57 * scale_factor
+	var title_height: float = maxf(57 * scale_factor, InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 16)
 	var gap: float = 9 * scale_factor
 	var bottom: float = 18 * scale_factor
 	var row_height: float = (content_height - title_height - bottom - gap * (options.size() - 1)) / row_units
@@ -903,14 +904,14 @@ func _layout_palette_menu(pad: float) -> void:
 	_set_rect(palette_list, Rect2(Vector2(inset.x, inset.y), Vector2(content_width, content_height)))
 	menu_title.text = ""
 	menu_title.hide()
-	menu_title.add_theme_font_size_override("font_size", maxi(12, roundi(40 * scale_factor)))
-	var close_side: float = maxf(22, 48 * scale_factor)
+	menu_title.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
+	var close_side: float = maxf(InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 8, 48 * scale_factor)
 	menu_close.show()
-	menu_close.add_theme_font_size_override("font_size", maxi(11, roundi(28 * scale_factor)))
+	menu_close.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
 	_set_rect(menu_close, Rect2(content_width - close_side, 0, close_side, close_side))
 	_set_rect(menu_title, Rect2(close_side + gap, 0, maxf(1, content_width - 2 * (close_side + gap)), title_height - gap))
 	back_button.show()
-	back_button.add_theme_font_size_override("font_size", maxi(11, roundi(28 * scale_factor)))
+	back_button.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
 	_set_rect(back_button, Rect2(0, 0, close_side, close_side))
 	new_button.text = "Start"
 	gameplay_options[0].text = "Difficulty: " + ["Easy", "Moderate", "Hard"][difficulty]
@@ -927,7 +928,10 @@ func _layout_palette_menu(pad: float) -> void:
 		var id: String = theme_options[i].get_meta("theme_id")
 		theme_options[i].text = ("✓ " if id == Palette.theme_id() else "") + MENU_THEMES[id]
 		var tile: Control = theme_options[i].get_child(0)
-		var tile_side: float = maxf(16, row_height - 16 * scale_factor)
+		var longest_word := 0.0
+		for word: String in MENU_THEMES[id].split(" "):
+			longest_word = maxf(longest_word, InterfaceTheme.FONT.get_string_size(word,HORIZONTAL_ALIGNMENT_LEFT,-1,InterfaceTheme.FONT_SIZE).x)
+		var tile_side: float = maxf(16, minf(minf(row_height - 16 * scale_factor, content_width * 0.23), content_width-longest_word-38))
 		theme_options[i].set_meta("menu_right_inset", tile_side + 20)
 		_set_rect(tile, Rect2(content_width - tile_side - 12, (row_height - tile_side) / 2, tile_side, tile_side))
 	for i in range(difficulty_options.size()):
@@ -937,7 +941,7 @@ func _layout_palette_menu(pad: float) -> void:
 		if options[i] is Label:
 			var label: Label = options[i]
 			label.show()
-			label.add_theme_font_size_override("font_size",maxi(12,roundi(26*scale_factor)))
+			label.add_theme_font_size_override("font_size",InterfaceTheme.FONT_SIZE)
 			label.add_theme_color_override("font_color",Interface.text())
 			_set_rect(label,Rect2(0,row_y,content_width,row_height*2))
 			row_y += row_height*2 + gap
@@ -946,8 +950,11 @@ func _layout_palette_menu(pad: float) -> void:
 			var row: VBoxContainer = options[i]
 			row.show()
 			var label: Label = row.get_child(0)
-			label.add_theme_font_size_override("font_size",maxi(12,roundi(28*scale_factor)))
+			label.add_theme_font_size_override("font_size",InterfaceTheme.FONT_SIZE)
 			label.add_theme_color_override("font_color",Interface.text())
+			label.size.x = content_width
+			label.update_minimum_size()
+			row.update_minimum_size()
 			_set_rect(row,Rect2(0,row_y,content_width,row_height))
 			row_y += row_height + gap
 			continue
@@ -955,12 +962,11 @@ func _layout_palette_menu(pad: float) -> void:
 		button.show()
 		if palette_options.has(button):
 			button.set_meta("menu_right_inset", row_height + 12)
-		var text_width: float = content_width - (18 if theme_options.has(button) else 6) - float(button.get_meta("menu_right_inset", 6))
-		var font_size: int = maxi(11, roundi(36 * scale_factor))
-		var font: Font = button.get_theme_font("font")
-		while font_size > 10 and font.get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > text_width:
-			font_size -= 1
-		button.add_theme_font_size_override("font_size", font_size)
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
+		_apply_button_style(button)
+		button.size.x = content_width
+		button.update_minimum_size()
 		_set_rect(button, Rect2(0, row_y, content_width, row_height))
 		row_y += row_height + gap
 
@@ -976,10 +982,10 @@ func _refresh_menu_style() -> void:
 	menu_style.shadow_size = 0
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
-func _apply_button_style(button: Button, active: bool = false, _color: int = 1) -> void:
+func _apply_button_style(button: Button) -> void:
 	InterfaceTheme.sync_highlight(button)
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
-		var style := InterfaceTheme.button_style(state, active)
+		var style := InterfaceTheme.button_style(state)
 		if theme_options.has(button):
 			style.content_margin_left = 18
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
@@ -995,26 +1001,7 @@ func _refresh_theme() -> void:
 	if gallery_panel != null: gallery_panel.remove_theme_stylebox_override("panel")
 	reef_background.visible = Palette.coral_reef
 	for button: Button in themed_buttons:
-		var active := false
-		var color := 1
-		if button in [blue_button, place_button]:
-			color = game.current_color
-			active = button == blue_button
-		elif theme_options.has(button):
-			active = button.get_meta("theme_id") == Palette.theme_id()
-		elif difficulty_options.has(button):
-			active = difficulty_options.find(button) == difficulty
-		elif size_options.has(button):
-			active = requested_size == (9 if size_options.find(button) == 0 else 11)
-		elif button == background_button:
-			active = sounds.background_enabled
-		elif button == effects_button:
-			active = sounds.effects_enabled
-		elif button == axes_button:
-			active = board_view.show_axes
-		elif button == erase_button:
-			active = erase_mode
-		_apply_button_style(button, active, color)
+		_apply_button_style(button)
 	for button: Button in [blue_button]:
 		button.get_child(0).queue_redraw()
 	for button: Button in [erase_button, undo_button, skip_button, palette_button, replay_button, flip_button, place_button]:
@@ -1158,7 +1145,7 @@ func _layout_gallery(pad: float) -> void:
 	_set_rect(gallery_image, Rect2(pad, height+2*pad, size.x-2*pad, maxf(1,actions_y-height-3*pad)))
 	_layout_row([gallery_save,gallery_share],Rect2(pad,actions_y,size.x-2*pad,height),pad)
 	_set_rect(gallery_status,Rect2(pad,status_y,size.x-2*pad,status_height))
-	gallery_status.add_theme_font_size_override("font_size",clampi(roundi(size.x*0.025),11,18))
+	gallery_status.add_theme_font_size_override("font_size",InterfaceTheme.FONT_SIZE)
 	_layout_row([gallery_previous, gallery_page, gallery_next], Rect2(pad,navigation_y,size.x-2*pad,height),pad)
 
 func _open_gallery() -> void:

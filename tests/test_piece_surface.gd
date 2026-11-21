@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Palette = preload("res://scripts/palette.gd")
+const UI = preload("res://scripts/interface_theme.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Platform = preload("res://scripts/occupied_platform.gd")
@@ -40,21 +41,21 @@ func _run() -> void:
 	for theme: String in Palette.THEMES:
 		scene._select_theme(theme)
 		for button: Button in [scene.flip_button, scene.place_button, scene.new_button, scene.size_picker, scene.skip_button]:
-			check(button.get_theme_stylebox("normal").bg_color == Interface.controls().lerp(Interface.accent(1), 0.20), "ordinary buttons share the tinted symmetry background")
+			check(button.get_theme_stylebox("normal").bg_color == Interface.controls(), "Ordinary buttons share the authored face color")
 		var active: StyleBoxFlat = scene.blue_button.get_theme_stylebox("normal")
 		var symmetry: StyleBoxFlat = scene.indicators[0].panel.get_theme_stylebox("normal")
-		check(active.border_width_left == 3 and symmetry.border_width_left >= 2, "selected color button shares active symmetry styling")
-		check(scene.blue_button.get_theme_stylebox("hover_pressed").border_width_left == 3, "selected color remains outlined while pressed")
+		check(active.border_width_left == UI.BEVEL and symmetry.border_width_left == UI.BEVEL, "Color and symmetry use the same resting edge as ordinary buttons")
+		check(scene.blue_button.get_theme_stylebox("hover_pressed").border_width_left == UI.BEVEL, "Color keeps the shared bevel while pressed")
 		for button: Button in scene.themed_buttons:
 			for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
 				var style: StyleBoxFlat = button.get_theme_stylebox(state)
-				check(style.border_width_left >= 2 and style.border_width_right >= 2 and style.border_width_top >= 2 and style.border_width_bottom >= 2, "every button has a visible border, including disabled and menu controls")
-				check(style.bg_color != Interface.controls() and style.bg_color.a == 1.0, "every button retains its theme tint in every state")
+				check(style.border_width_left == UI.BEVEL and style.border_width_top == UI.BEVEL, "Every button uses the same top and left bevel")
+				check(style.bg_color == Interface.controls() and style.bg_color.a == 1.0, "Every button retains the authored face color in every state")
 		for page: String in ["Settings", "New Game", "Game Presets", "Gameplay", "Difficulty", "Size", "Audio"]:
 			scene._show_menu(page)
 			for button: Control in scene.menu_buttons:
 				if button.visible and button is Button:
-					check(button.get_theme_stylebox("normal").border_width_left >= 2, "opening a menu preserves entry outlines")
+					check(button.get_theme_stylebox("normal").border_width_left == UI.BEVEL, "Opening menus preserves the common edge thickness")
 			scene.palette_menu.hide()
 		var source_view := viewport()
 		var floating_view := viewport()

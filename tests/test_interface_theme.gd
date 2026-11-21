@@ -4,7 +4,9 @@ const Interface = preload("res://scripts/interface_palette.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const Main = preload("res://scripts/main.gd")
 var failures := 0
+var checks := 0
 func check(value: bool, message: String) -> void:
+	checks += 1
 	if not value:
 		failures += 1
 		push_error(message)
@@ -38,6 +40,24 @@ func run() -> void:
 		check(game.theme.get_color("font_color", "Button") == Color(palettes[id][3]), id + " labels")
 		check(pressed.shadow_size < normal.shadow_size and pressed.content_margin_top - normal.content_margin_top == UI.TRAVEL, "shared press geometry")
 		check(game.confirmation.theme == game.theme, "dialog inherits shared theme")
+		# Actual controls must match the shared relief, including those whose
+		# color/symmetry/selection changes previously thickened their outlines.
+		for button: Button in game.themed_buttons:
+			for state: String in ["normal","hover","pressed","hover_pressed","disabled"]:
+				var shared: StyleBoxFlat = game.theme.get_stylebox(state,"Button")
+				var actual: StyleBoxFlat = button.get_theme_stylebox(state)
+				check([actual.border_width_left,actual.border_width_top,actual.border_width_right,actual.border_width_bottom] == [shared.border_width_left,shared.border_width_top,shared.border_width_right,shared.border_width_bottom], "Every game, menu, gallery and confirmation button uses the same bevel in "+state)
+				check(actual.shadow_size == shared.shadow_size and actual.shadow_offset == shared.shadow_offset and actual.shadow_color == shared.shadow_color, "Button shadows match the shared state")
+		check(not game.blue_button.toggle_mode and not game.blue_button.button_pressed,"Color cycles on a normal button instead of staying sunken")
+		var first_color: int = game.game.current_color
+		game.blue_button.pressed.emit()
+		check(game.game.current_color == 3-first_color and not game.blue_button.button_pressed,"Changing piece color leaves the button at rest")
+		game._toggle_erase()
+		check(game.erase_mode and game.erase_button.button_pressed,"Erase remains visibly latched only while its tool is armed")
+		game._toggle_erase()
+		check(not game.erase_mode and not game.erase_button.button_pressed,"Canceling Erase restores the common resting face")
+
+
 		check(game.gallery_panel.get_theme_stylebox("panel").bg_color == Interface.panel_background(), "gallery retains panel background")
 		for page: String in ["Settings", "Themes", "Gameplay", "Difficulty", "Size", "Audio"]:
 			game._show_menu(page)
@@ -55,5 +75,5 @@ func run() -> void:
 	Palette.select_theme("vines")
 	game.queue_free()
 	await process_frame
-	print("Shared interface theme: ", failures, " failures across all active themes")
+	print("Shared interface theme: %d checks, %d failures across all active themes" % [checks,failures])
 	quit(1 if failures else 0)
