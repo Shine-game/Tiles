@@ -101,6 +101,8 @@ var requested_size := 9
 var menu_page: String:
 	get: return palette_menu.page
 var pending_theme := ""
+const GAMEPLAY_PAGES := ["Gameplay", "Difficulty", "Size"]
+var gameplay_edits: Dictionary = {}
 var gameplay_options: Array = []
 var size_options: Array = []
 var preset_summary: Label
@@ -583,7 +585,7 @@ func _input(event: InputEvent) -> void:
 	var p := Gesture.pointer(event)
 	if palette_menu.visible:
 		if not p.is_empty() and p.kind == "press" and not palette_menu.get_global_rect().has_point(p.point) and not palette_button.get_global_rect().has_point(p.point):
-			palette_menu.hide()
+			_close_menu()
 			get_viewport().set_input_as_handled()
 		return
 	var result := piece_gesture.handle(event,_pick_gesture_target)
@@ -727,6 +729,7 @@ func _request_configuration_change(action: Callable, page: String) -> void:
 
 func _reset(board_size: int = -1, level: int = -1) -> void:
 	palette_menu.hide()
+	gameplay_edits.clear()
 	erase_mode = false
 	game = Game.new(requested_size if board_size < 0 else board_size, -1, difficulty if level < 0 else level)
 	board_view.show_settled(game.board)
@@ -880,14 +883,34 @@ func _volume_control(title: String, value: float, changed: Callable) -> VBoxCont
 	return row
 
 func _close_menu() -> void:
-	palette_menu.close()
+	_navigate_settings("", palette_menu.close)
 
 func _back_menu() -> void:
-	palette_menu.go_back()
+	var previous_page: String = "" if palette_menu.history.is_empty() else palette_menu.history.back()
+	_navigate_settings(previous_page, palette_menu.go_back)
 
 func _show_menu(page: String, remember: bool = true) -> void:
 	if introduction != null and introduction.lesson_id == "reveal" and page not in ["Settings","Themes"]: return
-	palette_menu.open_page(page, remember)
+	_navigate_settings(page, palette_menu.open_page.bind(page, remember))
+
+func _navigate_settings(next_page: String, navigate: Callable) -> void:
+	if not palette_menu.visible or menu_page not in GAMEPLAY_PAGES or next_page in GAMEPLAY_PAGES:
+		navigate.call()
+		return
+	# Keep Gameplay open with its edits until the player accepts a restart.
+	var next_size: int = gameplay_edits.get("size", requested_size)
+	var next_difficulty: Game.Difficulty = gameplay_edits.get("difficulty", difficulty) as Game.Difficulty
+	if next_size == requested_size and next_difficulty == difficulty:
+		gameplay_edits.clear()
+		navigate.call()
+		return
+	var apply := func():
+		requested_size = next_size
+		difficulty = next_difficulty
+		_reset()
+		navigate.call()
+	if _game_started(): _confirm_new_game("Start new game", apply)
+	else: apply.call()
 
 func _settings_page_changed() -> void:
 	dragging = false
@@ -933,22 +956,22 @@ func _review_new_game(theme: String) -> void:
 	_request_theme(theme)
 
 func _cycle_difficulty_preset() -> void:
-	var next_level := ((int(difficulty) + 1) % 3) as Game.Difficulty
-	_request_configuration_change(func(): difficulty = next_level, "Gameplay")
+	var current: int = gameplay_edits.get("difficulty", difficulty)
+	gameplay_edits["difficulty"] = (current + 1) % 3
+	_update_settings_labels()
 
 func _cycle_size_preset() -> void:
-	var n := 11 if requested_size == 9 else 9
-	_request_configuration_change(func(): requested_size = n, "Gameplay")
+	var current: int = gameplay_edits.get("size", requested_size)
+	gameplay_edits["size"] = 11 if current == 9 else 9
+	_update_settings_labels()
 
 func _set_difficulty_preset(level: int) -> void:
-	difficulty = level as Game.Difficulty
+	gameplay_edits["difficulty"] = level
 	_back_menu()
-	_autosave()
 
 func _set_size_preset(n: int) -> void:
-	requested_size = n
+	gameplay_edits["size"] = n
 	_back_menu()
-	_autosave()
 
 func _start_new_game() -> void:
 	if pending_theme not in MENU_THEMES: return
@@ -963,17 +986,19 @@ func _layout_palette_menu(pad: float) -> void:
 
 func _update_settings_labels() -> void:
 	new_button.text = "Start"
-	gameplay_options[0].text = "Difficulty: " + ["Easy", "Moderate", "Hard"][difficulty]
-	size_picker.text = "Size: %d × %d" % [requested_size,requested_size]
+	var edited_difficulty: int = gameplay_edits.get("difficulty", difficulty)
+	var edited_size: int = gameplay_edits.get("size", requested_size)
+	gameplay_options[0].text = "Difficulty: " + ["Easy", "Moderate", "Hard"][edited_difficulty]
+	size_picker.text = "Size: %d × %d" % [edited_size, edited_size]
 	preset_summary.text = "%s\nDifficulty: %s\nSize: %d × %d\nAxes: %s" % [MENU_THEMES.get(pending_theme, MENU_THEMES.get(Palette.theme_id(), Palette.theme_name())), ["Easy", "Moderate", "Hard"][difficulty], requested_size,requested_size,"On" if board_view.show_axes else "Off"]
 	for i in range(size_options.size()):
 		var n := 9 if i == 0 else 11
-		size_options[i].text = ("✓ " if requested_size == n else "") + "%d × %d" % [n,n]
+		size_options[i].text = ("✓ " if edited_size == n else "") + "%d × %d" % [n,n]
 	_update_axes_label()
 	background_button.text = "Background noises: " + ("On" if sounds.background_enabled else "Off")
 	effects_button.text = "Special effects: " + ("On" if sounds.effects_enabled else "Off")
 	for i in range(difficulty_options.size()):
-		difficulty_options[i].text = ("✓ " if i == difficulty else "") + ["Easy", "Moderate", "Hard"][i]
+		difficulty_options[i].text = ("✓ " if i == edited_difficulty else "") + ["Easy", "Moderate", "Hard"][i]
 
 func _refresh_menu_style() -> void:
 	var menu_style := InterfaceTheme.panel_style()
@@ -1036,7 +1061,7 @@ func _toggle_palette_menu() -> void:
 		return
 	dragging = false
 	if palette_menu.visible:
-		palette_menu.hide()
+		_close_menu()
 	else:
 		_show_menu("Settings")
 
@@ -1097,14 +1122,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				gallery_panel.go_back()
 			get_viewport().set_input_as_handled()
 			return
-		if event.keycode == KEY_ESCAPE and erase_mode and introduction == null:
-			erase_mode = false
-			_refresh()
-			get_viewport().set_input_as_handled()
-			return
 		if palette_menu.visible:
 			if event.keycode == KEY_ESCAPE:
 				_back_menu()
+			get_viewport().set_input_as_handled()
+			return
+		if event.keycode == KEY_ESCAPE and erase_mode and introduction == null:
+			erase_mode = false
+			_refresh()
 			get_viewport().set_input_as_handled()
 			return
 		match event.keycode:

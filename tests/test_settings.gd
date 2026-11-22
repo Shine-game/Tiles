@@ -13,10 +13,13 @@ func check(ok: bool, message: String) -> void:
 		push_error("FAIL: " + message)
 
 func click(button: Button) -> void:
+	click_at(button.get_global_rect().get_center())
+
+func click_at(point: Vector2) -> void:
 	for pressed: bool in [true, false]:
 		var event := InputEventMouseButton.new()
 		event.button_index = MOUSE_BUTTON_LEFT
-		event.position = button.get_global_rect().get_center()
+		event.position = point
 		event.pressed = pressed
 		root.push_input(event, true)
 
@@ -67,16 +70,19 @@ func _run() -> void:
 	check(scene.menu_page == "Themes" and scene.theme_options.all(func(button):return button.visible),"Themes lists available themes")
 	click(scene.theme_options[0])
 	check(Palette.theme_id() == "vines" and not scene.confirmation.visible and scene.menu_page == "Themes", "Before playing, theme applies immediately")
-	scene._show_menu("Gameplay", false)
-	for expected: int in [Game.Difficulty.EASY, Game.Difficulty.MODERATE, Game.Difficulty.DIFFICULT]:
-		click(scene.gameplay_options[0])
-		check(scene.game.difficulty == expected and scene.difficulty == expected and scene.menu_page == "Gameplay" and not scene.confirmation.visible, "Difficulty cycles and applies directly")
-	for expected: int in [11,9]:
-		click(scene.size_picker)
-		check(scene.game.board.size() == expected and scene.requested_size == expected and not scene.confirmation.visible, "Size applies directly")
+	scene._show_menu("Settings")
+	click(scene.settings_options[1])
+	var original = scene.game
+	click(scene.gameplay_options[0])
+	click(scene.size_picker)
+	check(scene.gameplay_options[0].text == "Difficulty: Easy" and scene.size_picker.text == "Size: 11 × 11", "Gameplay shows both pending edits")
+	check(scene.game == original and scene.difficulty == Game.Difficulty.DIFFICULT and scene.requested_size == 9 and not scene.confirmation.visible, "Editing Gameplay leaves the active game and presets alone")
 	var axes: bool = scene.board_view.show_axes
 	click(scene.axes_button)
-	check(scene.board_view.show_axes != axes and not scene.confirmation.visible, "Axes apply directly before play")
+	check(scene.board_view.show_axes != axes and not scene.confirmation.visible, "Axes apply directly")
+	click(scene.back_button)
+	check(scene.menu_page == "Settings" and not scene.confirmation.visible and scene.game != original and scene.game.difficulty == Game.Difficulty.EASY and scene.game.board.size() == 11, "Leaving Gameplay applies both edits without a prompt before playing")
+	click(scene.settings_options[1])
 	var shape: Dictionary = Rules.PIECES[scene.game.queue[scene.game.index]]
 	var move := Rules.first_physical_move(scene.game.board, shape, scene.game.requires_contact())
 	check(not move.is_empty() and scene.game.place(move.cells, move.anchor).ok and scene._game_started(), "A placed tile starts the game")
@@ -85,23 +91,52 @@ func _run() -> void:
 	axes = scene.board_view.show_axes
 	click(scene.axes_button)
 	check(scene.game == axes_game and scene.game.board == active_board and scene.board_view.show_axes != axes and not scene.confirmation.visible, "Axes apply immediately and preserve an active game")
-	for control: Button in [scene.gameplay_options[0], scene.size_picker, scene.theme_options[1]]:
-		scene._show_menu("Themes" if control == scene.theme_options[1] else "Gameplay")
-		check(scene.game.skip(), "Start playing with a joker")
-		var previous = scene.game
-		var board: Array = scene.game.board.duplicate(true)
-		var old_theme: String = Palette.theme_id()
-		var old_axes: bool = scene.board_view.show_axes
-		click(control)
-		check(scene.confirmation.visible and scene.confirmation.dialog_text == "Start new game" and scene.confirmation.ok_button_text == "OK" and scene.confirmation.cancel_button_text == "Go back", "Started game requires shared confirmation")
-		check(scene.game == previous and scene.game.board == board and Palette.theme_id() == old_theme and scene.board_view.show_axes == old_axes, "Changes wait for confirmation")
-		scene.confirmation.hide()
-		scene.confirmation.canceled.emit()
-		check(scene.game == previous and scene.game.board == board, "Go back preserves game")
-		click(control)
-		scene.confirmation.hide()
-		scene.confirmation.confirmed.emit()
-		check(scene.game != previous and not scene._game_started(), "Confirm applies change and starts a fresh board")
+	click(scene.gameplay_options[0])
+	click(scene.size_picker)
+	check(not scene.confirmation.visible and scene.game == axes_game and scene.game.board == active_board, "Multiple changes in Gameplay leave the active game running")
+	scene._show_menu("Size")
+	click(scene.size_options[0])
+	check(scene.menu_page == "Gameplay" and not scene.confirmation.visible, "Returning from a Gameplay subpage keeps editing")
+	click(scene.back_button)
+	check(scene.confirmation.visible and scene.confirmation.dialog_text == "Start new game" and scene.menu_page == "Gameplay", "Leaving Gameplay asks once before navigating")
+	await process_frame
+	click(scene.confirmation.get_cancel_button())
+	check(not scene.confirmation.visible and scene.menu_page == "Gameplay" and scene.game == axes_game and scene.size_picker.text == "Size: 9 × 9", "Go back keeps the current game and pending edits")
+	click_at(Vector2(2, scene.size.y - 2))
+	check(scene.confirmation.visible, "Tapping outside Gameplay also asks before leaving")
+	await process_frame
+	click(scene.confirmation.get_ok_button())
+	check(not scene.confirmation.visible and not scene.palette_menu.visible and scene.game != axes_game and not scene._game_started(), "Confirm applies the edits and finishes the requested navigation")
+	check(scene.game.difficulty == Game.Difficulty.MODERATE and scene.game.board.size() == 9, "The new game uses both edited presets")
+
+	check(scene.game.skip(), "Start playing with a joker")
+	var previous = scene.game
+	scene._show_menu("Gameplay")
+	click(scene.size_picker)
+	click(scene.size_picker)
+	for i in range(3): click(scene.gameplay_options[0])
+	click(scene.menu_close)
+	check(not scene.confirmation.visible and not scene.palette_menu.visible and scene.game == previous, "Returning both controls to their original values closes without a restart")
+	scene._show_menu("Gameplay")
+	click(scene.size_picker)
+	var escape := InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	root.push_input(escape, true)
+	check(scene.confirmation.visible and scene.game == previous, "Escape asks before leaving with edits")
+	await process_frame
+	click(scene.confirmation.get_ok_button())
+	check(not scene.palette_menu.visible and scene.game.board.size() == 11, "Accepting the Escape exit applies the pending size")
+
+	check(scene.game.skip(), "Start playing again")
+	scene._show_menu("Themes")
+	previous = scene.game
+	var old_theme: String = Palette.theme_id()
+	click(scene.theme_options[1])
+	check(scene.confirmation.visible and scene.game == previous and Palette.theme_id() == old_theme, "Theme changes still ask before restarting")
+	await process_frame
+	click(scene.confirmation.get_ok_button())
+	check(scene.game != previous and not scene._game_started(), "Confirming a theme starts a fresh board")
 	scene._close_menu()
 	click(scene.palette_button)
 	click(scene.settings_options[2])
