@@ -81,5 +81,35 @@ func run() -> void:
 	var clipped := Preview.board(grid,[Vector2i.ZERO,Vector2i.RIGHT],Vector2i(-1,2),2,true)
 	check(clipped == predicted,"Partially off-board pieces predict only their visible cells")
 	check(Preview.board(grid,cells,Vector2i.ZERO,2,false) == grid,"No active hover restores the committed board")
+	var scene = load("res://main.tscn").instantiate()
+	root.add_child(scene)
+	scene.size = Vector2(540, 900)
+	scene._layout()
+	scene.cells = [Vector2i.ZERO, Vector2i.RIGHT, Vector2i(2, 0)]
+	var view = scene.board_view
+	var left: Rect2 = scene.erase_button.get_global_rect()
+	var right: Rect2 = scene.palette_button.get_global_rect()
+	var gap: float = view.field.size.x / 18.0
+	for button_rect in [left, right]:
+		scene._drag_to(button_rect.get_center())
+		scene._rotate()
+		scene._flip()
+		var face: Vector2 = scene.floating_piece.origin - Vector2(0, scene.floating_piece.lift())
+		var width: float = Geometry.extent(scene.cells).x * view.pitch
+		check(face.x >= left.end.x + gap - 0.01 and face.x + width <= right.position.x - gap + 0.01,
+			"Drag, rotate and flip keep the whole piece clear of the upper buttons")
+		check(not scene.piece_on_board, "Moving through the upper zone leaves the board unlocked")
+	var board_transform: Transform2D = view.get_global_transform_with_canvas()
+	scene._drag_to(board_transform * view._point(Vector2(4.5, 1.5)))
+	check(scene.piece_on_board, "The first fully on-board move locks the offer to the board")
+	for destination in [Vector2(-2, -3), Vector2(12, 14)]:
+		scene._drag_to(board_transform * view._point(destination))
+		scene._rotate()
+		scene._flip()
+		check(scene._board_anchors(scene.cells).has_point(scene.selected),
+			"Dragging beyond a board corner and transforming keeps every square on the field")
+	scene._clear_selection()
+	check(not scene.piece_on_board, "Clearing the offer resets the board lock")
+	scene.queue_free()
 	print("Piece interaction: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)

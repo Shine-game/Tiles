@@ -36,7 +36,7 @@ func run() -> void:
 	scene.game.current_color = Rules.CORAL
 	scene.has_hover = true
 	scene.tray_moved = true
-	scene.selected = Vector2i(-1,2)
+	scene.selected = Vector2i(1,2)
 	scene.requested_size = 11
 	scene.difficulty = Game.Difficulty.EASY
 	scene.board_view.show_axes = true
@@ -58,7 +58,7 @@ func run() -> void:
 	root.add_child(restored)
 	check(Palette.theme_id()=="vines" and restored.game.board==board,"Reopening restores theme and exact board")
 	check(restored.cells==offered and restored.game.current_color==Rules.CORAL,"Offered orientation and chosen color survive reopening")
-	check(restored.has_hover and restored.tray_moved and restored.selected==Vector2i(-1,2),"Floating piece state survives reopening")
+	check(restored.has_hover and restored.tray_moved and restored.piece_on_board and restored.selected==Vector2i(1,2),"Floating piece state survives reopening")
 	check(restored.game.skip_left==2 and restored.game.undo_left==3 and restored.game.erase_left==3,"Joker counts survive reopening")
 	check(restored.game.moves==2 and restored.game.history.size()==2,"Moves and Undo history survive reopening")
 	check(restored.game.difficulty==Game.Difficulty.DIFFICULT and restored.requested_size==11 and restored.difficulty==Game.Difficulty.EASY,"Active difficulty and next-game presets stay independent")

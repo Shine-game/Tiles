@@ -60,6 +60,7 @@ var gesture_age: float:
 	set(value): piece_gesture.age = value
 
 var tray_moved := false
+var piece_on_board := false
 var erase_mode := false
 var erase_target := Vector2i(-1, -1)
 const ArtworkCapture = preload("res://scripts/artwork_capture.gd")
@@ -144,6 +145,7 @@ func _ready() -> void:
 		has_hover = restored.hover and not game.over
 		tray_moved = restored.tray_moved
 		selected = Vector2i(int(restored.selected[0]),int(restored.selected[1]))
+		piece_on_board = has_hover and _board_anchors(cells).has_point(selected)
 		board_view.show_axes = restored.axes
 		board_view.restore_session_art(game.board,restored.get("art",{}))
 	resized.connect(_layout)
@@ -394,8 +396,9 @@ func _layout() -> void:
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
 	queue_redraw()
-	if has_hover:
-		_update_floating_position()
+	if has_hover and not cells.is_empty():
+		_move_piece_to(selected)
+		_preview()
 
 func _refresh() -> void:
 	board_view.sync_board(game.board)
@@ -467,12 +470,41 @@ func _update_floating_position() -> void:
 	floating_piece.origin = board_view.get_global_transform_with_canvas() * board_view._floor_point(Vector2(selected))
 	floating_piece.queue_redraw()
 
+func _board_anchors(shape: Array) -> Rect2i:
+	return Rect2i(Vector2i.ZERO, Vector2i.ONE * (game.board.size() + 1) - Geometry.extent(shape))
+
+func _moving_zone_anchors(shape: Array) -> Rect2i:
+	var pitch: float = board_view.pitch
+	var space: float = board_view.field.size.x / 18.0
+	var canvas_transform: Transform2D = board_view.get_global_transform_with_canvas()
+	var to_board := canvas_transform.affine_inverse()
+	var origin: Vector2 = board_view._point(Vector2.ZERO)
+	var left: float = erase_button.get_global_rect().end.x
+	var right: float = palette_button.get_global_rect().position.x
+	var start := to_board * Vector2(left, get_global_rect().position.y) - origin
+	var finish := to_board * Vector2(right, 0) - origin
+	var first := Vector2i(ceili((start.x + space) / pitch), ceili(start.y / pitch))
+	var last := Vector2i(floori((finish.x - space) / pitch), game.board.size()) - Geometry.extent(shape)
+	return Rect2i(first, last - first + Vector2i.ONE)
+
+func _move_piece_to(anchor: Vector2i) -> void:
+	var board_anchors := _board_anchors(cells)
+	# The first fully on-board position keeps this offer on the board, even
+	# across separate drags and until it is placed, skipped or reset.
+	if board_anchors.has_point(anchor):
+		piece_on_board = true
+	var allowed := board_anchors if piece_on_board else _moving_zone_anchors(cells)
+	if not allowed.has_area():
+		return
+	selected = anchor.clamp(allowed.position, allowed.end - Vector2i.ONE)
+	piece_on_board = piece_on_board or board_anchors.has_point(selected)
+	has_hover = true
+
 func _drag_to(point: Vector2) -> void:
 	last_pointer = point
 	var local: Vector2 = board_view.get_global_transform_with_canvas().affine_inverse() * point
 	local += Vector2(0, board_view.surface_depth())
-	selected = Geometry.anchor(local,board_view._floor_point(Vector2.ZERO),board_view.pitch,grabbed_cell)
-	has_hover = true
+	_move_piece_to(Geometry.anchor(local,board_view._floor_point(Vector2.ZERO),board_view.pitch,grabbed_cell))
 	_preview()
 
 func _pick_piece(point: Vector2) -> Dictionary:
@@ -578,6 +610,7 @@ func _place() -> void:
 	_refresh_and_save()
 
 func _clear_selection() -> void:
+	piece_on_board = false
 	tray_moved = false
 	piece_view.cells = [] if game.over else cells
 	piece_view.queue_redraw()
@@ -591,13 +624,28 @@ func _offered_cells() -> Array:
 func _rotate() -> void:
 	var result := _request_player_action("rotate")
 	if not result.ok or result.get("tutorial",false): return
-	cells = result.cells
-	_refresh_and_save()
+	_transform_offer(result.cells)
 
 func _flip() -> void:
 	var result := _request_player_action("flip")
 	if not result.ok or result.get("tutorial",false): return
-	cells = result.cells
+	_transform_offer(result.cells)
+
+func _transform_offer(transformed: Array) -> void:
+	if has_hover:
+		piece_on_board = piece_on_board or _board_anchors(cells).has_point(selected)
+		var anchor := selected
+		var held_index := cells.find(grabbed_cell) if dragging else -1
+		if held_index >= 0:
+			anchor += grabbed_cell - Vector2i(transformed[held_index])
+		if not piece_on_board and not _board_anchors(transformed).has_point(anchor) and not _moving_zone_anchors(transformed).has_area():
+			return
+		cells = transformed
+		if held_index >= 0:
+			grabbed_cell = cells[held_index]
+		_move_piece_to(anchor)
+	else:
+		cells = transformed
 	_refresh_and_save()
 
 func _choose_color(color: int) -> void:

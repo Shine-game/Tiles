@@ -73,6 +73,7 @@ func _run() -> void:
 				and light.get_shader_parameter("frame_source_margins") == Frame.margins(),
 				"caustics sample the live frame with separate source and displayed rims")
 			check(view.reef_water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - view.board_frame.position), "frame and board share the exact lighting coordinate origin")
+			scene.cells = [Vector2i.ZERO]
 			scene.grabbed_cell = Vector2i.ZERO
 			for cell: Vector2i in [Vector2i.ZERO, Vector2i(board_size - 1, board_size - 1)]:
 				var point: Vector2 = view.get_global_transform_with_canvas() * view._point(Vector2(cell) + Vector2(0.5, 0.5))
