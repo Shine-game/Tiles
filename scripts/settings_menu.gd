@@ -49,7 +49,6 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clea
 	var options: Array = pages.get(page, pages["Settings"]).duplicate()
 	var show_offer := page == "Themes" and not christmas_owned
 	if page == "Themes":
-		christmas_button.text = "✓ Christmas joy" if christmas_owned else "Christmas joy"
 		options.append(christmas_button)
 	var section_height := 30.0 if show_offer else 0.0
 	var rim := frame.thin_rim if frame.apply_theme(Palette.theme_id()) else 0.0

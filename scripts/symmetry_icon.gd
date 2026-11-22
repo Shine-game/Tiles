@@ -7,6 +7,7 @@ var combined := false
 var available: Array = [true, true, true, true]
 var complete: Array = [false, false, false, false]
 var saved := false
+var camera_size := 16
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -42,5 +43,12 @@ func _draw() -> void:
 			var tip := center+Vector2(0,-arc_radius)
 			draw_colored_polygon(PackedVector2Array([tip,tip+Vector2(-radius*0.25,-radius*0.16),tip+Vector2(-radius*0.25,radius*0.16)]),style.color)
 	if saved:
-		var point := size * Vector2(0.75, 0.8)
-		draw_polyline(PackedVector2Array([point + Vector2(-5, 0), point + Vector2(-1, 4), point + Vector2(7, -5)]), (Palette.muted() if _disabled_authored_ink() else Palette.text()), 2, true)
+		var ink := Palette.muted() if _disabled_authored_ink() else Palette.text()
+		draw_set_transform(size * Vector2(0.75, 0.8), 0.0, Vector2.ONE * camera_size)
+		draw_polyline(PackedVector2Array([
+			Vector2(-0.44, -0.23), Vector2(-0.20, -0.23), Vector2(-0.12, -0.36),
+			Vector2(0.15, -0.36), Vector2(0.23, -0.23), Vector2(0.44, -0.23),
+			Vector2(0.44, 0.32), Vector2(-0.44, 0.32), Vector2(-0.44, -0.23),
+		]), ink, 0.08, true)
+		draw_arc(Vector2(0, 0.045), 0.16, 0, TAU, 20, ink, 0.08, true)
+		draw_set_transform(Vector2.ZERO)

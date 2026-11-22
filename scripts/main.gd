@@ -109,7 +109,8 @@ var menu_buttons: Array = []
 var theme_options: Array = []
 var christmas_store: ChristmasStore
 var christmas_button: Button
-var christmas_dialog: ConfirmationDialog
+var christmas_dialog: MenuConfirmation
+var christmas_dialog_frame: BoardFrame
 var christmas_confirm_install := false
 var difficulty_options: Array = []
 var settings_options: Array = []
@@ -294,13 +295,18 @@ func _build_interface() -> void:
 	add_child(confirmation_blocker)
 	confirmation = MenuConfirmation.new()
 	confirmation.z_index = 300
-	confirmation.visibility_changed.connect(func(): confirmation_blocker.visible = confirmation.visible)
+	confirmation.visibility_changed.connect(_update_confirmation_blocker)
 	confirmation.confirmed.connect(func():
 		var action := pending_change
 		pending_change = Callable()
 		if action.is_valid(): action.call())
 	confirmation.canceled.connect(func(): pending_change = Callable())
 	add_child(confirmation)
+	add_child(christmas_dialog)
+	add_child(christmas_store)
+	palette_menu.christmas_owned = christmas_store.owned
+	christmas_dialog.visibility_changed.connect(_update_confirmation_blocker)
+	themed_buttons.append_array([christmas_dialog.get_ok_button(), christmas_dialog.get_cancel_button()])
 	themed_buttons.append_array([confirmation.get_ok_button(), confirmation.get_cancel_button()])
 	for button: Button in [confirmation.get_ok_button(), confirmation.get_cancel_button()]:
 		button.button_down.connect(InterfaceTheme.press_children.bind(button, true))
@@ -393,11 +399,14 @@ func _layout() -> void:
 	var dock_y := board_top + side + float(layout.board_to_dock_gap)
 	for i in range(3):
 		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + dock_gap), dock_y, dock_side, dock_side))
+	indicators[0].icon.camera_size = ActionIcon.badge_size(control_side)
 	for control: Control in _controls():
 		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26) + 4)
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
 	_layout_palette_menu(gap)
 	_layout_confirmation(gap)
+	if christmas_dialog.visible:
+		_layout_christmas_dialog()
 	gallery_panel.layout(size, gap)
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
@@ -514,7 +523,7 @@ func _drag_to(point: Vector2) -> void:
 	_preview()
 
 func _pick_piece(point: Vector2) -> Dictionary:
-	if game.over or dragging or confirmation.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving: return {}
+	if game.over or dragging or confirmation.visible or christmas_dialog.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving: return {}
 	for control: Control in _controls():
 		if control.visible and control.get_global_rect().has_point(point): return {}
 	var hit: Vector2i = floating_piece.cell_at(point) if has_hover else Vector2i(-1,-1)
@@ -566,7 +575,7 @@ func _erase_cell_at(point: Vector2) -> Vector2i:
 
 func _input(event: InputEvent) -> void:
 	if introduction != null: return
-	if confirmation.visible:
+	if confirmation.visible or christmas_dialog.visible:
 		piece_gesture.cancel()
 		return
 	if saving:
@@ -786,18 +795,21 @@ func _build_settings() -> void:
 		menu_buttons.append(control)
 	palette_menu.coming_soon = heading
 	palette_menu.offer_divider = divider
-	christmas_dialog = ConfirmationDialog.new()
-	christmas_dialog.title = "Christmas joy"
+	christmas_dialog = MenuConfirmation.new()
+	christmas_dialog.z_index = 300
+	var frame_layer := Node2D.new()
+	christmas_dialog.add_child(frame_layer)
+	christmas_dialog_frame = Frame.new()
+	christmas_dialog_frame.thin_rim = menu_frame.thin_rim
+	frame_layer.add_child(christmas_dialog_frame)
 	christmas_dialog.confirmed.connect(func():
 		if christmas_confirm_install:
 			christmas_confirm_install = false
 			christmas_store.activate())
-	add_child(christmas_dialog)
 	christmas_store = ChristmasStore.new()
 	christmas_store.notice.connect(_christmas_notice)
 	christmas_store.changed.connect(_christmas_changed)
-	add_child(christmas_store)
-	palette_menu.christmas_owned = christmas_store.owned
+
 
 	for level in range(3):
 		difficulty_options.append(_menu_button(["Easy", "Moderate", "Hard"][level], _set_difficulty_preset.bind(level)))
@@ -896,17 +908,39 @@ func _open_christmas_offer() -> void:
 		christmas_store.activate()
 		return
 	christmas_confirm_install = true
-	christmas_dialog.dialog_text = "Limited offer — €0.00\nLocal test. No payment is collected."
+	christmas_dialog.dialog_text = "Christmas joy\nLimited offer — €0.00\nLocal test. No payment is collected."
 	christmas_dialog.ok_button_text = "Test install"
 	christmas_dialog.get_cancel_button().show()
-	christmas_dialog.popup_centered()
+	christmas_dialog.open()
+	_layout_christmas_dialog()
 
 func _christmas_notice(message: String) -> void:
 	christmas_confirm_install = false
 	christmas_dialog.dialog_text = message
 	christmas_dialog.ok_button_text = "OK"
 	christmas_dialog.get_cancel_button().hide()
-	christmas_dialog.popup_centered()
+	christmas_dialog.open()
+	_layout_christmas_dialog()
+
+func _update_confirmation_blocker() -> void:
+	confirmation_blocker.visible = confirmation.visible or christmas_dialog.visible
+
+func _layout_christmas_dialog() -> void:
+	var pad := clampf(size.x * 0.025, 6, 14)
+	var width := minf(size.x - 2 * pad, maxf(size.x * 0.70, 360.0))
+	var style := InterfaceTheme.panel_style()
+	var rim := christmas_dialog_frame.thin_rim if christmas_dialog_frame.apply_theme(Palette.theme_id()) else 0.0
+	var inset := rim + 16.0
+	style.set_content_margin_all(inset)
+	christmas_dialog.add_theme_stylebox_override("panel", style)
+	var prompt_height := InterfaceTheme.FONT.get_multiline_string_size(
+		christmas_dialog.dialog_text, HORIZONTAL_ALIGNMENT_CENTER, width - 2 * inset,
+		InterfaceTheme.FONT_SIZE).y
+	var actions := 2 if christmas_dialog.get_cancel_button().visible else 1
+	var height := minf(size.y - 2 * pad, 2 * inset + prompt_height + 60 * actions)
+	_set_rect(christmas_dialog, Rect2((size - Vector2(width, height)) / 2, Vector2(width, height)))
+	if christmas_dialog_frame.is_present():
+		christmas_dialog_frame.surround(Rect2(Vector2.ONE * rim, christmas_dialog.size - 2 * Vector2.ONE * rim))
 
 func _christmas_changed() -> void:
 	palette_menu.christmas_owned = christmas_store.owned
@@ -1080,7 +1114,7 @@ func _choose_palette(index: int) -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if saving or confirmation.visible:
+		if saving or confirmation.visible or christmas_dialog.visible:
 			return
 		if gallery_panel.visible:
 			if event.keycode == KEY_ESCAPE:

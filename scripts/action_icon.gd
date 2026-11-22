@@ -3,7 +3,15 @@ extends Control
 const Palette = preload("res://scripts/interface_palette.gd")
 var color := 1
 var kind := ""
-var count := -1
+var count := -1:
+	set(value):
+		if count == value:
+			return
+		count = value
+		queue_redraw()
+
+static func badge_size(button_width: float) -> int:
+	return clampi(roundi(button_width * 0.25), 12, 22) + 4
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -47,7 +55,7 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	if count >= 0:
 		var font := get_theme_default_font()
-		var font_size := clampi(roundi(size.x * 0.25),12,22) + 4
+		var font_size := badge_size(size.x)
 		var center := Vector2(size.x * 0.82,size.y * 0.19)
 		var text := str(count)
 		var extent := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size)
