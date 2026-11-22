@@ -180,6 +180,35 @@ func _run() -> void:
 	click(scene.confirmation.get_ok_button())
 	check(not scene.confirmation.visible and not scene.confirmation_blocker.visible and scene.game != prior_game, "OK starts the new game and removes the modal shield")
 
+	# Longer theme messages must not grow the modal past the action buttons.
+	scene._show_menu("Themes")
+	var offer = scene.christmas_dialog
+	var purchase_notice := "Google Play checkout is available in an enabled Android test build."
+	scene.christmas_store.owned = false
+	for dimensions: Vector2 in [Vector2(320, 568), Vector2(568, 320)]:
+		scene.size = dimensions
+		scene._layout()
+		var screen := Rect2(Vector2.ZERO, dimensions)
+		scene._christmas_notice(purchase_notice)
+		for frame in range(2): await process_frame
+		check(screen.encloses(offer.get_rect()) and offer.get_rect().encloses(offer.get_ok_button().get_global_rect()), "First checkout notice keeps OK on screen")
+		check(not offer.get_cancel_button().visible, "A checkout notice has one action")
+		click(offer.get_ok_button())
+		check(not offer.visible and not scene.confirmation_blocker.visible, "OK dismisses the checkout notice")
+		click(scene.christmas_button)
+		for frame in range(2): await process_frame
+		check(screen.encloses(offer.get_rect()) and offer.get_rect().encloses(offer.get_ok_button().get_global_rect()) and offer.get_rect().encloses(offer.get_cancel_button().get_global_rect()), "Offer keeps both actions on screen")
+		check(offer.frame.get_global_rect().is_equal_approx(offer.get_global_rect()) and offer.frame.theme_id == Palette.theme_id(), "Theme confirmation has the New Game frame")
+		click(offer.get_cancel_button())
+		check(not offer.visible and not scene.confirmation_blocker.visible and not scene.christmas_store.owned and scene.menu_page == "Themes", "Go back returns to Themes without installing")
+	scene._christmas_notice(purchase_notice)
+	scene.size = Vector2(320, 240)
+	scene._layout()
+	for frame in range(2): await process_frame
+	check(offer.prompt_scroll.get_v_scroll_bar().visible and offer.get_rect().end.y <= scene.size.y, "Long checkout notices scroll after a resize")
+	click(offer.get_ok_button())
+	scene._close_menu()
+
 	scene.game = easy
 	scene._refresh()
 	check(scene.game_over_message.visible and scene.game_over_message.text == "No symmetries left.", "Symmetry loss displays the requested message")

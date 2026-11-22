@@ -404,8 +404,6 @@ func _layout() -> void:
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
 	_layout_palette_menu(gap)
 	_layout_confirmation(gap)
-	if christmas_dialog.visible:
-		_layout_christmas_dialog()
 	gallery_panel.layout(size, gap)
 	board_view.queue_redraw()
 	piece_view.queue_redraw()
@@ -902,11 +900,11 @@ func _open_christmas_offer() -> void:
 		christmas_store.activate()
 		return
 	christmas_confirm_install = true
-	christmas_dialog.dialog_text = "Christmas joy\nLimited offer — €0.00\nLocal test. No payment is collected."
+	christmas_dialog.dialog_text = "Christmas joy\nLimited offer — €0.00\nNo payment"
 	christmas_dialog.ok_button_text = "Test install"
 	christmas_dialog.get_cancel_button().show()
 	christmas_dialog.open()
-	_layout_christmas_dialog()
+	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 
 func _christmas_notice(message: String) -> void:
 	christmas_confirm_install = false
@@ -914,7 +912,7 @@ func _christmas_notice(message: String) -> void:
 	christmas_dialog.ok_button_text = "OK"
 	christmas_dialog.get_cancel_button().hide()
 	christmas_dialog.open()
-	_layout_christmas_dialog()
+	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 
 func _update_confirmation_blocker() -> void:
 	confirmation_blocker.visible = confirmation.visible or christmas_dialog.visible
@@ -922,9 +920,6 @@ func _update_confirmation_blocker() -> void:
 func _settings_clearance() -> float:
 	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
 	return 30.0 / pixel_scale
-
-func _layout_christmas_dialog() -> void:
-	christmas_dialog.layout(size, clampf(size.x * 0.025, 6, 14), _settings_clearance())
 
 func _christmas_changed() -> void:
 	palette_menu.christmas_owned = christmas_store.owned
@@ -993,7 +988,9 @@ func _refresh_menu_style() -> void:
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _layout_confirmation(pad: float) -> void:
-	confirmation.layout(size, pad, _settings_clearance(), palette_button.get_rect().end.y)
+	for dialog: MenuConfirmation in [confirmation, christmas_dialog]:
+		if dialog.visible:
+			dialog.layout(size, pad, _settings_clearance(), palette_button.get_rect().end.y)
 
 func _apply_button_style(button: Button) -> void:
 	InterfaceTheme.sync_highlight(button)
