@@ -39,6 +39,17 @@ func run() -> void:
 		check(pressed.border_color == Color(palettes[id][2]), id + " depressed edge")
 		check(game.theme.get_color("font_color", "Button") == Color(palettes[id][3]), id + " labels")
 		check(pressed.shadow_size < normal.shadow_size and pressed.content_margin_top - normal.content_margin_top == UI.TRAVEL, "shared press geometry")
+		var disabled: StyleBoxFlat = game.theme.get_stylebox("disabled", "Button")
+		check(disabled.shadow_color == normal.shadow_color and disabled.shadow_size == normal.shadow_size and disabled.shadow_offset == normal.shadow_offset, "Disabled controls preserve the resting shadow; only their content fades")
+		var focus: StyleBoxFlat = game.theme.get_stylebox("focus", "Button")
+		check(focus.border_width_left == 0 and focus.border_width_top == 0 and focus.border_width_right == 0 and focus.border_width_bottom == 0, "Keyboard focus never adds an extra button outline")
+		check(focus.expand_margin_left < 0 and focus.expand_margin_top < 0 and focus.expand_margin_right < 0 and focus.expand_margin_bottom < 0 and focus.bg_color.a > 0, "Keyboard focus remains visible inside the face, clear of the bevel")
+		game.confirmation.open()
+		check(not game.confirmation.get_cancel_button().has_focus(), "Opening a confirmation does not force a different-looking Go back button")
+		game.confirmation.get_cancel_button().grab_focus()
+		check(game.confirmation.get_cancel_button().has_focus(), "Keyboard focus remains available on confirmation choices")
+		game.confirmation.hide()
+
 		check(game.confirmation.theme == game.theme, "dialog inherits shared theme")
 		# Actual controls must match the shared relief, including those whose
 		# color/symmetry/selection changes previously thickened their outlines.

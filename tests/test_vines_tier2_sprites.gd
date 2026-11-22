@@ -16,7 +16,7 @@ func run():
   var meta=Art.fountain_metadata(spec.params.sprites[str(color)])
   var texture=Assets.texture(meta.image)
   assert(texture.get_size()==Vector2(255,255))
-  assert(meta.image.ends_with("vines_tier2_flower_color%d_basic.png"%[3-color]))
+  assert(meta.image.ends_with("vines_tier2_flower_color%d_01.png"%[3-color]))
   var geometry=Art.fountain_geometry(spec.params,color,Vector2(400,300),64)
   assert((geometry.rect.position+Vector2(127,127)*geometry.rect.size/255).is_equal_approx(Vector2(400,300)))
   assert(geometry.rect.size==Vector2(128,128))

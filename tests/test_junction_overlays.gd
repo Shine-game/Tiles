@@ -128,7 +128,7 @@ func check_defaults():
  # Use an existing tiny artwork fixture to test omitted metadata defaults.
  var path="res://build/junction-default-test.json"
  var file=FileAccess.open(path,FileAccess.WRITE)
- file.store_string(JSON.stringify({"schema":"tiles.junction-sprite.v1","image":"res://art/themes/vines/artwork/junctions/vines_tier1_bend_color1_basic.png"}))
+ file.store_string(JSON.stringify({"schema":"tiles.junction-sprite.v1","image":"res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color1_01.png"}))
  file.close()
  var layer=Junctions.new()
  var minimal=layer.load_sprite(path)
@@ -136,7 +136,7 @@ func check_defaults():
  DirAccess.remove_absolute(path)
  for index in range(6):
   var overrides=[{"scale":0},{"center":[-1,0]},{"rotation":{"range_deg":[30,0]}},{"rotation":{"allowed_deg":[0],"range_deg":[0,360]}},{"color_role":"opposite"},{"source_color":"invalid"}]
-  var invalid={"schema":"tiles.junction-sprite.v1","image":"res://art/themes/vines/artwork/junctions/vines_tier1_bend_color1_basic.png"}
+  var invalid={"schema":"tiles.junction-sprite.v1","image":"res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color1_01.png"}
   invalid.merge(overrides[index],true)
   var invalid_path="res://build/junction-invalid-%d.json"%index
   var output=FileAccess.open(invalid_path,FileAccess.WRITE)

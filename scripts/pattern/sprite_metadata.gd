@@ -2,8 +2,8 @@ class_name PatternSpriteMetadata
 extends RefCounted
 
 const Schema = preload("res://scripts/pattern/sprite_schema.gd")
-const SCHEMA_PATH := "res://assets/schemas/sprite-metadata-v1.schema.json"
-const SETTINGS_PATH := "res://assets/themes/tier1-generation.json"
+const SCHEMA_PATH := "res://assets/shared/schemas/sprite-metadata-v1.schema.json"
+const SETTINGS_PATH := "res://assets/shared/assembly/tier1-generation.json"
 const CATALOG_SCHEMA := "tiles.sprite-catalog.v1"
 const ALPHA_THRESHOLD := 0.01
 static var _json: Dictionary = {}
@@ -292,7 +292,7 @@ static func load_catalog(source: Variant, root: String = "res://", settings_sour
 	if not settings.ok: return settings
 	var key: String = loaded.path + "/" + JSON.stringify(settings.definition).sha256_text()
 	if source is String and _catalogs.has(key): return _catalogs[key].duplicate(true)
-	var schema := _document("res://assets/schemas/sprite-catalog-v1.schema.json", "res://")
+	var schema := _document("res://assets/shared/schemas/sprite-catalog-v1.schema.json", "res://")
 	if not schema.ok: return schema
 	var errors := Schema.validate(loaded.definition, schema.definition)
 	if not errors.is_empty(): return _failure(loaded.path, errors)

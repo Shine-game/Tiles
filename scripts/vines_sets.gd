@@ -7,7 +7,7 @@ const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Art = preload("res://scripts/vines_renderer.gd")
-const ROOT := "res://art/themes/vines/sets/"
+const ROOT := "res://assets/themes/vines/assembly/"
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
 static var tier2: Dictionary = {}
@@ -26,7 +26,7 @@ static func install() -> void:
 	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
 	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
 	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
-	tier3 = Assets.load_set("res://art/themes/vines/sets/tier3.json")
+	tier3 = Assets.load_set("res://assets/themes/vines/assembly/vines_tier3.json")
 	assert(tier3.ok,str(tier3.errors))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")

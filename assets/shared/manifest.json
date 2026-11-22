@@ -1,0 +1,13 @@
+{
+  "schema": "tiles.asset-manifest.v1",
+  "theme_id": "shared",
+  "files": [
+    "res://assets/shared/assembly/tier1-generation.json",
+    "res://assets/shared/fonts/lora_ofl.txt",
+    "res://assets/shared/fonts/lora_regular.ttf",
+    "res://assets/shared/schemas/junction-sprite-v1.schema.json",
+    "res://assets/shared/schemas/sprite-catalog-v1.schema.json",
+    "res://assets/shared/schemas/sprite-metadata-v1.schema.json",
+    "res://assets/shared/ui/app_icon.svg"
+  ]
+}

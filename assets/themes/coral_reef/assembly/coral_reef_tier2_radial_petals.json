@@ -1,0 +1,22 @@
+{
+  "schema": "tiles.radial-petals.v1",
+  "count": 8,
+  "seed": 10973,
+  "scale": 0.9,
+  "petals": [
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_01.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_02.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_03.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_04.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_05.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_06.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_07.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_08.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_09.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_10.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_11.json",
+    "res://assets/themes/coral_reef/sprites/tier2/coral_reef_tier2_petal_color1_12.json"
+  ],
+  "stagger_sec": 0.05,
+  "balanced_reflections": true
+}

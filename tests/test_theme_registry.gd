@@ -79,10 +79,16 @@ func _initialize() -> void:
 	changed = original.duplicate(true)
 	changed.themes.vines.soundscape.place.path = "res://missing.ogg"
 	check(not Themes.validate(changed).is_empty(),"Missing placement recording is diagnosed")
+	changed = original.duplicate(true)
+	changed.themes.clockwork.manifest = "res://missing-manifest.json"
+	check(not Themes.validate(changed).is_empty(), "Missing theme manifests fail runtime validation")
+	changed = original.duplicate(true)
+	changed.shared_manifest = "res://missing-shared-manifest.json"
+	check(not Themes.validate(changed).is_empty(), "Missing shared assets fail runtime validation")
 	var preset := ConfigFile.new()
 	check(preset.load("res://export_presets.cfg") == OK, "export configuration loads")
 	var included: String = preset.get_value("preset.0", "include_filter")
-	check(Themes.PATH.trim_prefix("res://") in included and "frames.json" not in included and "theme.json" not in included, "export includes active registry without obsolete manifests")
+	check("assets/themes/*.json" in included and "assets/themes/*/manifest.json" in included and "frames.json" not in included and "theme.json" not in included, "export includes active registry without obsolete manifests")
 	Palette.select(0)
 	Palette.select_theme("vines")
 	print("Theme registry: %d checks, %d failures" % [checks, failures])

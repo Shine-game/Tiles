@@ -46,16 +46,16 @@ func run() -> void:
 	check(scene.board_view.axes_overlay.states.all(func(state):return state.complete),"Field axes immediately thicken on a restored hover")
 	check(icon.available.all(func(value):return value) and icon.complete.all(func(value):return value),"Recoloring updates the predictive graphic to the restored symmetries")
 	check(scene.place_button.get_child(0).color == Rules.BLUE,"Place hand follows the color toggle")
-	check(not scene._can_save() and scene.indicators[0].panel.disabled,"Predicted symmetry cannot enable saving unplaced artwork")
+	check(not scene._can_save() and not scene.indicators[0].panel.disabled,"Predicted symmetry cannot enable saving unplaced artwork")
 	for anchor in [Vector2i(-1,0),Vector2i(0,0)]:
 		scene.selected = anchor
 		scene._preview()
-		check(scene.place_button.disabled,"Out-of-bounds and overlapping placements deactivate Place")
+		check(not scene.place_button.disabled and not scene._action_available("place",{}),"Invalid placement leaves Place pressable without allowing the action")
 		check(icon.available.all(func(value):return value) and not icon.complete.any(func(value):return value),"An off-board cell or same-color overlap leaves visible symmetry unchanged")
 		check(scene.floating_piece.color == Rules.BLUE,"Impossible placement preserves selected color")
 	scene.selected = Vector2i.ZERO
 	scene._choose_color(Rules.CORAL)
-	check(scene.place_button.disabled and not icon.available[0] and not icon.available[1],"Invalid overlapping hover still predicts its visible conflicting color")
+	check(not scene.place_button.disabled and not icon.available[0] and not icon.available[1],"Invalid overlapping hover still predicts its visible conflicting color")
 	check(scene.game.board[0][0] == Rules.BLUE and scene.game.moves == 0,"Invalid overlay prediction never commits a tile")
 	scene._choose_color(Rules.BLUE)
 	scene.selected = Vector2i(2,1)
@@ -65,7 +65,7 @@ func run() -> void:
 	scene.has_hover = true
 	scene.erase_mode = true
 	scene._preview()
-	check(not icon.complete.any(func(value):return value) and scene.place_button.disabled,"Erase mode suppresses prediction and placement")
+	check(not icon.complete.any(func(value):return value) and not scene.place_button.disabled and not scene._action_available("place",{}),"Erase mode suppresses prediction and placement")
 	scene.queue_free()
 	await process_frame
 	print("Predictive symmetry: %d checks, %d failures" % [checks,failures])

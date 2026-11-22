@@ -1,0 +1,14 @@
+{
+  "schema": "tiles.formation-sprite.v1",
+  "image": "vines_tier3_butterfly_color2_01.png",
+  "canvas_px": [
+    255,
+    255
+  ],
+  "center_px": [
+    127,
+    127
+  ],
+  "scale": 1.0,
+  "rotation_degrees": 0
+}

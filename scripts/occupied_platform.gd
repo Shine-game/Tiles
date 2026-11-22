@@ -66,8 +66,8 @@ func configure(origin: Vector2, pitch: float, ink: Color, underwater: bool = fal
 	# A fixed display-pixel depth need not imply the Clockwork metal material.
 	shader_material.set_shader_parameter("metal_mode", fixed_depth >= 0 and metal_surface)
 	if fixed_depth >= 0 and metal_surface:
-		shader_material.set_shader_parameter("metal_wall", load("res://art/themes/clockwork_workshop/artwork/ground/clockwork_ui_sidewall_color0_1.png"))
-		shader_material.set_shader_parameter("metal_lip", load("res://art/themes/clockwork_workshop/artwork/ground/clockwork_ui_edge_lip_color0_1.png"))
+		shader_material.set_shader_parameter("metal_wall", load("res://assets/themes/clockwork/ui/clockwork_ui_sidewall_color0_01.png"))
+		shader_material.set_shader_parameter("metal_lip", load("res://assets/themes/clockwork/ui/clockwork_ui_edge_lip_color0_01.png"))
 
 # Logical occupancy for input/geometry verification; rounded rendering does not
 # remove any playable area from a cell.

@@ -41,7 +41,8 @@ func open() -> void:
 	ok_button.text = ok_button_text
 	cancel_button.text = cancel_button_text
 	show()
-	cancel_button.grab_focus()
+	# Touch/mouse openings should not arbitrarily highlight one choice.
+	# Keyboard users can still focus either option with Tab.
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):

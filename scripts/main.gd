@@ -456,12 +456,10 @@ func _refresh() -> void:
 	undo_button.get_child(0).count = game.undo_left
 	skip_button.get_child(0).count = game.skip_left
 	erase_button.get_child(0).count = game.erase_left
-	undo_button.disabled = game.history.is_empty() or game.undo_left <= 0 or saving
-	skip_button.disabled = game.over or game.skip_left <= 0 or saving
-	erase_button.disabled = game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)) or saving
+	# Availability is enforced by the action policy, not by changing button faces.
+	for button: Button in _controls():
+		button.disabled = false
 	erase_button.set_pressed_no_signal(erase_mode)
-	for button: Button in [flip_button, blue_button]:
-		button.disabled = game.over
 	blue_button.get_child(0).queue_redraw()
 	blue_button.get_child(0).color = game.current_color
 	_preview()
@@ -477,7 +475,7 @@ func _update_summaries(board: Array) -> void:
 	indicator.icon.complete = states.map(func(state: Dictionary): return occupied and state.complete)
 	indicator.icon.saved = board == game.board and saved_fingerprint == _design_fingerprint()
 	indicator.icon.queue_redraw()
-	indicator.panel.disabled = not _can_save() or saving or board_view.growing
+	indicator.panel.disabled = false
 	_apply_button_style(indicator.panel)
 
 func _surface_revision(theme: String) -> String:
@@ -502,13 +500,11 @@ func _can_save() -> bool:
 func _preview() -> void:
 	floating_piece.cells = cells if has_hover and not game.over and not erase_mode else []
 	floating_piece.color = game.current_color
-	var physical := false
 	var legal := false
 	if has_hover and not game.over:
-		physical = game.physical_placement(cells, selected).ok
 		legal = game.placement(cells, selected).ok
 	floating_piece.valid = legal
-	place_button.disabled = not physical or game.over or board_view.growing or erase_mode or saving
+	place_button.disabled = false
 	place_button.get_child(0).color = game.current_color
 	place_button.get_child(0).queue_redraw()
 	_update_summaries(_prediction_board())
@@ -617,7 +613,10 @@ func _request_player_action(action: String, parameters: Dictionary = {}) -> Dict
 func _action_available(action: String, _request: Dictionary) -> bool:
 	if saving: return false
 	if action not in ["undo","erase"] and game.over: return false
-	if action == "place": return has_hover and not board_view.growing and not erase_mode
+	if action in ["rotate","flip","color"]: return not cells.is_empty()
+	if action == "place":
+		if not has_hover or cells.is_empty() or board_view.growing or erase_mode: return false
+		return game.physical_placement(_request.get("cells",cells), _request.get("anchor",selected)).ok
 	return true
 
 func _place() -> void:
@@ -669,7 +668,7 @@ func _toggle_erase() -> void:
 	if introduction != null:
 		introduction.joker_action("erase")
 		return
-	if game.erase_left <= 0:
+	if saving or game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)):
 		return
 	erase_mode = not erase_mode
 	erase_target = Vector2i(-1, -1)

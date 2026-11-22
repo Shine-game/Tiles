@@ -1,0 +1,10 @@
+{
+  "schema": "tiles.junction-sprite.v1",
+  "image": "vines_tier0_core_color2_01.png",
+  "center": [
+    127,
+    126
+  ],
+  "scale": 1.0,
+  "color_role": "original"
+}

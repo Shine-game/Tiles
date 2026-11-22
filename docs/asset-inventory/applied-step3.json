@@ -1,0 +1,80 @@
+{
+  "scope": "Retained files only; deletion candidates, Zen and generated test outputs left in place.",
+  "moved_files": 512,
+  "source_checkpoint": "/tmp/tiles-step3-checkpoint.tar.gz",
+  "code_files_rewritten": [
+    "scripts/clockwork_sets.gd",
+    "scripts/coral_sets.gd",
+    "scripts/clockwork_growth.gd",
+    "scripts/coral_growth.gd",
+    "scripts/occupied_platform.gd",
+    "scripts/interface_theme.gd",
+    "scripts/introduction.gd",
+    "scripts/vines_sets.gd",
+    "scripts/board_view.gd",
+    "scripts/clockwork_visuals.gd",
+    "scripts/pattern/animated_fingers.gd",
+    "scripts/pattern/sprite_metadata.gd",
+    "tests/test_vines_deco_tuning.gd",
+    "tests/test_junction_overlays.gd",
+    "tests/test_sprite_metadata.gd",
+    "tests/test_tier1_artwork.gd",
+    "tests/test_sprite_planner.gd",
+    "tests/test_pattern_assets.gd",
+    "tests/test_sprite_anchor_groups.gd",
+    "tests/test_clockwork_native.gd",
+    "tests/test_export_sprite_inventory.gd",
+    "tests/test_coral_radial_petals.gd",
+    "addons/tiles_gallery/export_plugin.gd",
+    "tools/audit_sprites.py"
+  ],
+  "status": "completed_not_pushed",
+  "manifests": [
+    "assets/themes/vines/manifest.json",
+    "assets/themes/coral_reef/manifest.json",
+    "assets/themes/clockwork/manifest.json",
+    "assets/shared/manifest.json"
+  ],
+  "verification": {
+    "dependency_audit": "204 runtime PNGs plus app icon; no missing dependencies or manifest discrepancies",
+    "retained_asset_loads": "212 resources loaded successfully",
+    "hash_and_import_checks": {
+      "unchanged_resources": 215,
+      "untouched_candidates": 533,
+      "preserved_import_uids": 212,
+      "preserved_import_parameters": 212
+    },
+    "exported_resource_pack": {
+      "path": "/tmp/tiles-step3.pck",
+      "sha256": "60ffcca8a57ba8377d454cbefbc7adb75f371af86fc1ffb7ff072a1ce942ffd9",
+      "images": 205,
+      "audio_ogg": 6,
+      "import_artifacts": 212,
+      "unexpected_legacy_sources": 0,
+      "orphan_imports": 0,
+      "apk_built": false
+    },
+    "checks_passed": {
+      "theme_registry": 76,
+      "sprite_metadata": 188,
+      "theme_audio": 52,
+      "clockwork_model": 235,
+      "clockwork_tier2_layout": 256,
+      "coral_fingers": 161,
+      "pattern_assets": 39,
+      "settings": 871,
+      "interface_style": 1515,
+      "game_session": 18,
+      "native_clockwork": 19,
+      "native_sprite_reveal": 8,
+      "native_tutorial": 1265
+    },
+    "other_passed": [
+      "Coral radial petals: all 12 variants, both colors, reflected forms and marked anchors",
+      "Vines Tier 2 flowers: both colors, centered geometry and growth",
+      "Vines leaf orientations and scale",
+      "205 sprite source import inventory"
+    ]
+  },
+  "remaining_steps": "Delete approved obsolete sources/metadata in step 4; preserve and remove Zen in its archive step; then rebuild import caches and verify an APK."
+}

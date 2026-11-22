@@ -4,7 +4,7 @@ extends "res://scripts/growth.gd"
 const Assembly = preload("res://scripts/pattern/assembly.gd")
 const Ordinary = preload("res://scripts/clockwork_sets.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
-const ROOT := "res://art/themes/clockwork_workshop/"
+const ROOT := "res://assets/themes/clockwork/"
 const HALF_TRAVEL := 0.20
 const REVEAL_TAIL := 0.035
 const CORE_EMIT_DELAY := 0.15

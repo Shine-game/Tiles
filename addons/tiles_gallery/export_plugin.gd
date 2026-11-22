@@ -12,31 +12,32 @@ func _exit_tree() -> void:
 	android_export = null
 
 class GalleryAndroidExport extends EditorExportPlugin:
+	const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 	const ExportAssets = preload("res://addons/tiles_gallery/export_assets.gd")
 	const ApkCheck = preload("res://addons/tiles_gallery/apk_check.gd")
 	var apk_path := ""
+	var allowed_files := {}
 	var allowed_sprites := {}
 	var allowed_audio := {}
-	func _collect_audio(value: Variant) -> void:
-		if value is Dictionary:
-			for item in value.values(): _collect_audio(item)
-		elif value is Array:
-			for item in value: _collect_audio(item)
-		elif value is String and value.begins_with("res://") and value.get_extension() in ["wav", "ogg", "mp3"]:
-			allowed_audio[value] = true
 	func _export_file(path: String, type: String, _features: PackedStringArray) -> void:
-		# Explicit sprite inventory also rejects obsolete local/untracked artwork.
+		if (path.begins_with("res://assets/") or path.begins_with("res://art/")) and not allowed_files.has(path):
+			skip()
+			return
+		# Explicit manifests also reject obsolete local/untracked artwork.
 		if (type == "Texture2D" or path.get_extension().to_lower() in ["png", "jpg", "jpeg", "webp", "svg", "bmp", "tga", "exr", "hdr", "ktx", "dds"]) and not allowed_sprites.has(path): skip()
 		if path.get_extension().to_lower() in ["wav", "ogg", "mp3"] and not allowed_audio.has(path): skip()
 	func _get_export_options_overrides(platform: EditorExportPlatform) -> Dictionary:
 		return {"gradle_build/use_gradle_build":true} if platform is EditorExportPlatformAndroid else {}
 	func _export_begin(features: PackedStringArray, _debug: bool, path: String, _flags: int) -> void:
+		var registry: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json"))
+		var collected := Manifest.collect(registry)
+		for error: String in collected.errors: push_error(error)
+		allowed_files = collected.files
 		allowed_audio.clear()
-		_collect_audio(JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json")))
 		allowed_sprites.clear()
-		allowed_sprites["res://assets/icon.svg"] = true
-		var inventory: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/audit.json"))
-		for sprite: String in inventory.runtime_pngs: allowed_sprites["res://" + sprite] = true
+		for file: String in allowed_files:
+			if file.get_extension() in ["png","jpg","jpeg","webp","svg"]: allowed_sprites[file] = true
+			elif file.get_extension() == "ogg": allowed_audio[file] = true
 		if features.has("Android") or features.has("android"):
 			var cleanup := ExportAssets.clean_import_staging(ProjectSettings.globalize_path("res://"))
 			for error: String in cleanup.errors: push_error(error)

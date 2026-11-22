@@ -1,0 +1,9 @@
+{
+  "schema": "tiles.junction-sprite.v1",
+  "image": "clockwork_tier0_core_color1_01.png",
+  "center": [
+    127.5,
+    127.5
+  ],
+  "scale": 0.8
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "coral_reef_tier1_deco_color1_05.png",
+    "color2": "coral_reef_tier1_deco_color2_05.png"
+  },
+  "canvas_px": [
+    119,
+    158
+  ],
+  "attachment": [
+    61,
+    144
+  ],
+  "direction": [
+    59.0,
+    34.5
+  ],
+  "tags": [
+    "coral_sprout"
+  ],
+  "spawn": {
+    "mode": "progressive",
+    "duration_sec": 0.38
+  },
+  "variation": {
+    "weight": 1,
+    "scale": [
+      0.68,
+      0.8
+    ]
+  },
+  "authoring": {
+    "source": "coral_05.json from both supplied coral_growth archives",
+    "notes": [
+      "Orange=color1; teal=color2. Matching dimensions, alpha masks and source metadata verified.",
+      "Attachment retained from supplied root marker and verified against visible alpha.",
+      "Native growth direction points to the arithmetic mean of the supplied tip markers.",
+      "Progressive animation is a directional reveal; no branch morph or branch-order mask is included."
+    ]
+  },
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  }
+}

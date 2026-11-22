@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "kind": "base",
+  "status": "ready",
+  "images": {
+    "color1": "coral_reef_tier1_vine_color1_01.png",
+    "color2": "coral_reef_tier1_vine_color2_01.png"
+  },
+  "canvas_px": [
+    256,
+    256
+  ],
+  "frame": {
+    "origin": [
+      128,
+      128
+    ],
+    "up": [
+      128,
+      0
+    ]
+  },
+  "lighting": {
+    "toward": [
+      80,
+      80
+    ]
+  },
+  "transforms": {
+    "allow_flip_x": true
+  },
+  "spawn": {
+    "count": [
+      4,
+      6
+    ],
+    "minimum_spacing_px": 20,
+    "group_counts": {
+      "spine": 2
+    }
+  },
+  "anchors": [
+    {
+      "id": "A01",
+      "position": [
+        90,
+        116
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.0938
+    },
+    {
+      "id": "A02",
+      "position": [
+        125,
+        116
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.0938,
+      "group": "spine"
+    },
+    {
+      "id": "A03",
+      "position": [
+        159,
+        116
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.0938
+    },
+    {
+      "id": "A04",
+      "position": [
+        88,
+        96
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.25
+    },
+    {
+      "id": "A05",
+      "position": [
+        125,
+        96
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.25,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
+    },
+    {
+      "id": "A06",
+      "position": [
+        160,
+        96
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.25
+    },
+    {
+      "id": "A07",
+      "position": [
+        94,
+        76
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.4062
+    },
+    {
+      "id": "A08",
+      "position": [
+        125,
+        76
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.4062,
+      "group": "spine"
+    },
+    {
+      "id": "A09",
+      "position": [
+        155,
+        76
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.4062
+    },
+    {
+      "id": "A10",
+      "position": [
+        92,
+        56
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.5625
+    },
+    {
+      "id": "A11",
+      "position": [
+        126,
+        56
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.5625,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
+    },
+    {
+      "id": "A12",
+      "position": [
+        157,
+        56
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.5625
+    },
+    {
+      "id": "A13",
+      "position": [
+        88,
+        36
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.7188
+    },
+    {
+      "id": "A14",
+      "position": [
+        125,
+        36
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.7188,
+      "group": "spine"
+    },
+    {
+      "id": "A15",
+      "position": [
+        161,
+        36
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.7188
+    },
+    {
+      "id": "A16",
+      "position": [
+        99,
+        16
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "orientation": {
+        "mode": "perpendicular",
+        "angle_deg": 180
+      },
+      "growth_at": 0.875
+    },
+    {
+      "id": "A17",
+      "position": [
+        125,
+        16
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.875,
+      "group": "spine",
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 0,
+        "jitter_deg": 0
+      }
+    },
+    {
+      "id": "A18",
+      "position": [
+        151,
+        16
+      ],
+      "accepts": [
+        "coral_sprout"
+      ],
+      "growth_at": 0.875
+    }
+  ],
+  "authoring": {
+    "notes": [
+      "Orange uploaded wavy silhouette is the canonical shape, not the older narrower repository pair.",
+      "Turquoise source texture was row-aligned to that silhouette and its exact alpha.",
+      "All 18 original attachment positions and growth order estimates are retained.",
+      "Lighting marker is visually authored to the lit flank; it is not a measured physical light-source position.",
+      "Ready covers source-asset/placement validation, not integration into the game.",
+      "Six existing central-spine anchors form the spine group; exactly two parallel sprouts are selected within the total decoration count."
+    ]
+  },
+  "constraints": {
+    "base_overlap": "require_attachment"
+  },
+  "orientation": {
+    "mode": "perpendicular",
+    "angle_deg": 0,
+    "jitter_deg": 10
+  }
+}

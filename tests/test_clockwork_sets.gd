@@ -52,7 +52,7 @@ func _run() -> void:
 				var key := Clock.key("T01_" + Clock.NAMES[d], color, center)
 				var node: Sprite2D = visuals.ordinary_components.nodes[key]
 				check(node.flip_v == (not wheel and d in [2, 3]), "Declared straight-port flips preserve the existing shading workaround")
-				check(node.texture == Assets.texture("artwork/%s/clockwork_tier1_pipe_color%d_1.png" % [("copper" if color == 1 else "gunmetal"),color], Clock.ROOT), "Directional vines still share the original canonical image")
+				check(node.texture == Assets.texture("sprites/tier1/clockwork_tier1_pipe_color%d_01.png" % color, Clock.ROOT), "Directional vines still share the original canonical image")
 	# Prove the shared shape selector reads configuration rather than a wheel-specific branch.
 	var alternate: Dictionary = Sets.tier1.duplicate(true)
 	alternate.definition.roles.straight = "centerpiece"
@@ -62,7 +62,7 @@ func _run() -> void:
 	var renderer := Renderer.new()
 	for treatment in ["copper", "gunmetal"]:
 		check(renderer.compose(Sets.tier0, "isolated", parent, null, "probe", treatment), "Generic composition supports a selected treatment")
-		check(renderer.nodes["probe/C02"].texture == Assets.texture("artwork/%s/clockwork_tier0_core_color%d_2.png" % [treatment,1 if treatment=="copper" else 2], Clock.ROOT), "The generic renderer binds the requested variant")
+		check(renderer.nodes["probe/C02"].texture == Assets.texture("sprites/tier0/clockwork_tier0_core_component_color%d_02.png" % (1 if treatment=="copper" else 2), Clock.ROOT), "The generic renderer binds the requested variant")
 	var old_ids: Array = renderer.nodes.values().map(func(node): return node.get_instance_id())
 	check(not renderer.compose(Sets.tier0, "isolated", parent, null, "probe", "unknown"), "Missing treatments fail explicitly instead of substituting metal artwork")
 	check(old_ids == renderer.nodes.values().map(func(node): return node.get_instance_id()), "Failed treatment selection keeps the current assembly intact")

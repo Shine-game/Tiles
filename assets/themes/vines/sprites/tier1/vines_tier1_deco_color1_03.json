@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "vines_tier1_deco_color1_03.png",
+    "color2": "vines_tier1_deco_color2_03.png"
+  },
+  "canvas_px": [
+    128,
+    128
+  ],
+  "attachment": [
+    10.3,
+    116.1
+  ],
+  "direction": [
+    116.17,
+    11.17
+  ],
+  "tags": [
+    "leaf"
+  ],
+  "spawn": {
+    "mode": "progressive",
+    "duration_sec": 0.35
+  },
+  "variation": {
+    "weight": 1,
+    "scale": [
+      0.8,
+      0.8
+    ]
+  },
+  "authoring": {
+    "source": "leaf_variants_5x2_128px.rar",
+    "notes": [
+      "Violet=color1; pink=color2. Original 128px PNG bytes preserved.",
+      "No marker JSON was supplied. Attachment and direction estimated from opaque silhouette endpoints along the native diagonal.",
+      "Uniform 80% native scale on both axes; growth_scale uses the identity default."
+    ]
+  },
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  }
+}

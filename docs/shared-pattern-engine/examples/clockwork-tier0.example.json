@@ -8,7 +8,7 @@
         "socket": {
           "asset": {
             "provider": "texture",
-            "path": "res://art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_1.png"
+            "path": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_component_color1_01.png"
           },
           "position_cells": [
             0.5,
@@ -23,7 +23,7 @@
         "wheel": {
           "asset": {
             "provider": "texture",
-            "path": "res://art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_2.png"
+            "path": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_component_color1_02.png"
           },
           "position_cells": [
             0.5,
@@ -38,7 +38,7 @@
         "axle": {
           "asset": {
             "provider": "texture",
-            "path": "res://art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_3.png"
+            "path": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_component_color1_03.png"
           },
           "position_cells": [
             0.5,

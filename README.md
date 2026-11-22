@@ -215,3 +215,11 @@ Corrected sprite artwork and universal metadata are staged for all four themes. 
 The [deterministic tier 1 planner](docs/tier1-generation/placement-planner.md) now resolves base lighting, anchors, weighted decoration choices, independent mirrors and source-alpha constraints. It produces stable placement data; growth timing and board rendering integration remain staged.
 
 The [tier 1 growth-timing bridge](docs/tier1-generation/growth-timing.md) binds planned decorations to existing source waves and the shared component clock while preserving structural prerequisites. Live sprite rendering remains staged.
+
+Active theme assets live under `assets/themes/{vines,coral_reef,clockwork}/`,
+with numbered sprites, adjacent sprite JSON, assembly catalogs, UI, and OGG audio.
+Shared fonts, schemas, defaults and the app icon live under `assets/shared/`.
+Each theme and the shared folder have a `manifest.json`; runtime validation and
+export use these lists. `python tools/audit_sprites.py` checks live references,
+numbering and unchanged artwork. Older files still under `art/` are pending the
+separate cleanup/archive steps and are excluded from exports.

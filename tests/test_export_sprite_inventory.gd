@@ -1,25 +1,30 @@
 extends SceneTree
+const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 var sprites: Array[String] = []
 func scan(path: String) -> void:
 	for file: String in DirAccess.get_files_at(path):
-		if file.ends_with(".import") and file.trim_suffix(".import").get_extension().to_lower() in ["png", "jpg", "jpeg", "webp", "svg", "bmp", "tga", "exr", "hdr", "ktx", "dds"]: sprites.append(path.path_join(file).trim_suffix(".import").trim_prefix("res://"))
+		if file.ends_with(".import") and file.trim_suffix(".import").get_extension().to_lower() in ["png","jpg","jpeg","webp","svg"]:
+			sprites.append(path.path_join(file).trim_suffix(".import"))
 	for folder: String in DirAccess.get_directories_at(path):
 		if folder != ".godot": scan(path.path_join(folder))
 func _initialize() -> void:
-	scan("res://")
-	var inventory := "res://assets/sprites/audit.json"
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--inventory="): inventory = argument.trim_prefix("--inventory=")
-	var expected: Array = JSON.parse_string(FileAccess.get_file_as_string(inventory)).runtime_pngs
-	expected.append("assets/icon.svg")
-	var failures := 0
-	for sprite in sprites:
+	var registry: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json"))
+	var inventory := Manifest.collect(registry)
+	var expected: Array = inventory.files.keys().filter(func(path): return path.get_extension() in ["png","jpg","jpeg","webp","svg"])
+	# The editor source tree intentionally still contains cleanup candidates.
+	# An exported pack must contain only the manifest-listed imported images.
+	if OS.has_feature("editor"):
+		scan("res://assets/themes")
+		scan("res://assets/shared")
+	else: scan("res://")
+	var failures: int = inventory.errors.size()
+	for sprite: String in sprites:
 		if sprite not in expected:
 			push_error("Unexpected export sprite: " + sprite)
 			failures += 1
-	for sprite in expected:
+	for sprite: String in expected:
 		if sprite not in sprites:
 			push_error("Missing export sprite: " + sprite)
 			failures += 1
-	print("Packed sprite inventory: ", sprites.size(), " sprites, ", failures, " discrepancies")
+	print("Manifest sprite inventory: ", sprites.size(), " sprites, ", failures, " discrepancies")
 	quit(1 if failures else 0)

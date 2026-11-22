@@ -1,0 +1,34 @@
+{
+  "scope": "Step 1 audit only; runtime/export configuration and artwork left unchanged.",
+  "checks": [
+    {
+      "command": "python tools/verify_asset_inventory.py",
+      "result": "pass; no missing dependencies or unreviewed dynamic resource literals"
+    },
+    {
+      "command": "godot --headless --audio-driver Dummy --path . --script tools/verify_asset_loads.gd",
+      "result": "pass; all 212 active dependency assets load with the expected resource type"
+    },
+    {
+      "command": "godot --headless --audio-driver Dummy --path . --script tests/test_theme_registry.gd",
+      "result": "74 checks; 0 failures"
+    },
+    {
+      "command": "godot --headless --audio-driver Dummy --path . --script tests/test_sprite_metadata.gd",
+      "result": "188 checks; 1 failure: hardcoded expected 52 production geometries; the 3 active catalogs contain 20. No production asset-load/adaptation checks failed."
+    },
+    {
+      "command": "godot --headless --audio-driver Dummy --path . --script tests/test_export_sprite_inventory.gd",
+      "result": "Ran against source project, not an exported pack: detected 405 import-sidecar images, 200 outside the active list (90 legacy + 101 Zen + 9 generated test images). This is evidence of source import exposure, not proof these files are packed in an APK."
+    }
+  ],
+  "generated_path_review": [
+    "Clockwork steam: explicit 1..3 expansion from mini(2,int(life*3))+1.",
+    "Coral fingers: ROOT+salmon.json, six variants with three images each; all 18 frames retained.",
+    "Coral petals: all 12 registered metadata variants and both colors retained, not merely the randomly chosen eight.",
+    "Shared sprite metadata: follows extends/settings, all images/color variants, masks, catalog bases/decorations, and frame arrays.",
+    "Procedural masks/brush textures and gallery images under user:// are generated, not missing shipped files.",
+    "Zen dynamic loaders are guarded by the inactive theme; their assets remain in a separate preservation category."
+  ],
+  "next_step": "Prepare the migration/deletion report. Resolve validation-only legacy references before treating those dependency images as deletable."
+}

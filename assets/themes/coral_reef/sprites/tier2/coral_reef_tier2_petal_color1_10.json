@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "coral_reef_tier2_petal_color1_10.png",
+    "color2": "coral_reef_tier2_petal_color2_10.png"
+  },
+  "canvas_px": [
+    268,
+    257
+  ],
+  "attachment": [
+    103.0,
+    253.0
+  ],
+  "direction": [
+    132.54,
+    93.23
+  ],
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  },
+  "spawn": {
+    "mode": "progressive",
+    "duration_sec": 0.35
+  },
+  "authoring": {
+    "source": "petal_10.json",
+    "notes": [
+      "Attachment and axis endpoints copied exactly from supplied JSON. Source describes these as silhouette estimates. Original PNG bytes retained."
+    ]
+  }
+}

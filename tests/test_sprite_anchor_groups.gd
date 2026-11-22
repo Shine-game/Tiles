@@ -3,7 +3,7 @@ const Metadata = preload("res://scripts/pattern/sprite_metadata.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Planner = preload("res://scripts/pattern/sprite_planner.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
-const BASE := "res://art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.json"
+const BASE := "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_vine_color1_01.json"
 var checks := 0
 var failures := 0
 func check(value: bool, label: String) -> void:
@@ -80,7 +80,7 @@ func run() -> void:
 	check(unmet.ok and unmet.group_counts.spine == 0 and not unmet.warnings.is_empty(), "Infeasible quota reports a shortfall without relaxing constraints")
 	var rules := Metadata.rules(raw(), catalog.families.default.decorations[0].definition, {}, catalog.settings)
 	check(rules.ok and not rules.animation.has("group_counts"), "Layout quotas do not leak into animation rules")
-	var vine_path := "res://art/themes/vines/artwork/tier1/vines_tier1_vine_color1_basic.json"
+	var vine_path := "res://assets/themes/vines/sprites/tier1/vines_tier1_vine_color1_01.json"
 	var vine: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(vine_path))
 	for option: Array in [[], ["upper_02", "upper_02"], ["upper_02", "lower_07"], ["upper_02", "missing"], ["upper_02"]]:
 		var malformed := vine.duplicate(true)

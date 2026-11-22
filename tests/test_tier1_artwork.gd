@@ -40,14 +40,13 @@ func inspect_sprite(path: String, family: Dictionary, expected_kind: String) -> 
 		check(texture != null, "Texture loads: " + image_path)
 		if texture != null and size.size() == 2:
 			check(texture.get_size() == Vector2(size[0], size[1]), "Actual texture dimensions match metadata: " + image_path)
-		# All image-specific sidecars are also exported, including the color2 copies.
-		var sidecar := image_path.get_basename() + ".json"
-		check(FileAccess.file_exists(sidecar), "Image sidecar is available: " + sidecar)
-		check(FileAccess.get_file_as_string(sidecar) == FileAccess.get_file_as_string(path), "Color sidecars share exactly the same record: " + sidecar)
+	# One shared descriptor sits beside the primary image and lists both colors.
+	var primary: String = record.images.values()[0]
+	check(path == path.get_base_dir().path_join(primary).get_basename() + ".json", "Shared metadata uses its primary image basename")
 
 func _initialize() -> void:
 	var registry := read_json(REGISTRY)
-	var expected := {"coral_reef": "coral", "clockwork": "clockwork", "vines": "vines", "zen_garden": "zen"}
+	var expected := {"coral_reef": "coral", "clockwork": "clockwork", "vines": "vines"}
 	for theme_id: String in expected:
 		var link: Dictionary = registry.themes[theme_id].get("tier1_artwork", {})
 		check(link.get("status") == "active", "Universal tier 1 is active: " + theme_id)
@@ -59,17 +58,13 @@ func _initialize() -> void:
 			for kind: String in ["base", "decoration"]:
 				for reference: String in family["bases" if kind == "base" else "decorations"]:
 					inspect_sprite(path.get_base_dir().path_join(reference).simplify_path(), family, kind)
-		if theme_id == "zen_garden":
-			check(catalog.families.stones.logical_colors.keys() == ["2"], "Zen stones bind only logical color 2")
-			check(catalog.families.stones.logical_colors["2"].image_variant == "color1", "Zen's single art variant is not its logical color")
-			check(catalog.legacy_families == ["rakes"], "Existing rake family remains separate")
 		if theme_id == "vines":
 			var bindings: Dictionary = catalog.families.default.logical_colors
 			check(bindings["1"].image_variant == "color2" and bindings["2"].image_variant == "color1", "Pink/violet variants match logical Rose/Violet order")
 			check(catalog.families.default.decorations.size() == 3, "Only three supplied leaf designs are cataloged")
-	check(kinds.base == 15 and kinds.decoration == 37, "Catalog contains 52 distinct shared geometries")
-	check(image_paths.size() == 72, "All 72 actual PNGs resolve")
-	check(read_json("res://assets/themes/tier1-generation.json").schema_version == 1, "Shared defaults are exported")
-	check(read_json("res://assets/schemas/sprite-metadata-v1.schema.json").has("$schema"), "Authoring schema is exported")
+	check(kinds.base == 3 and kinds.decoration == 17, "Active catalogs contain 20 shared geometries")
+	check(image_paths.size() == 40, "All 40 active Tier 1 PNGs resolve")
+	check(read_json("res://assets/shared/assembly/tier1-generation.json").schema_version == 1, "Shared defaults are exported")
+	check(read_json("res://assets/shared/schemas/sprite-metadata-v1.schema.json").has("$schema"), "Authoring schema is exported")
 	print("Tier 1 artwork: %d checks, %d failures; %d geometries, %d PNGs" % [checks, failures, metadata_paths.size(), image_paths.size()])
 	quit(1 if failures else 0)

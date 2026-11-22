@@ -64,7 +64,7 @@ func run() -> void:
 		scene._reset()
 		check(not sound.place_click.playing or clicks.size() == before_count+1,"Reset does not create a new click")
 	for theme_id: String in Palette.THEMES:
-		var folder := DirAccess.open("res://assets/audio/"+theme_id)
+		var folder := DirAccess.open("res://assets/themes/"+theme_id+"/audio")
 		var recordings: Array = []
 		for name: String in folder.get_files():
 			if name.get_extension() in ["ogg","wav","mp3"]: recordings.append(name)

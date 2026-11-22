@@ -29,7 +29,7 @@ func run() -> void:
 				check(slab != null,"Floating preview is rendered")
 				if slab != null:
 					check(slab.material.get_shader_parameter("ground_color").is_equal_approx(Palette.tile(color)),"Rendered preview keeps selected color even when placement is invalid: " + theme)
-				check(scene.place_button.disabled == (anchor.x < 0),"Color changes preserve placement rules")
+				check(not scene.place_button.disabled,"Color changes preserve placement rules")
 				check(scene.board_view.get_rect().is_equal_approx(board_rect),"Hover and color changes cannot move the board")
 		scene._clear_selection()
 		scene._skip()

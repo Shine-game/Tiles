@@ -3,6 +3,7 @@ extends RefCounted
 
 # One active theme/UI contract. Hook IDs select reviewed project code; data
 # never names a script to execute. Pattern artwork stays in pattern-set files.
+const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 const PATH := "res://assets/themes/themes.json"
 const SCHEMA := "tiles.themes.v1"
 const HOOKS := ["zen_garden", "clockwork", "vines", "coral_reef"]
@@ -131,6 +132,9 @@ static func validate(data: Variant) -> Array:
 			if not pair.get("name") is String: errors.append("Palette needs a name")
 			for value: Variant in pair.colors + [pair.get("floor")]:
 				if not value is String or not Color.html_is_valid(value): errors.append("Invalid palette color")
+	if data.has("shared_manifest") and themes.values().all(func(profile): return profile is Dictionary):
+		errors.append_array(Manifest.collect(data).errors)
+
 	return errors
 
 static func project_file(path: Variant, extension: String) -> bool:

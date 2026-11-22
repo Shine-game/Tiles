@@ -6,7 +6,7 @@ const Growth=preload("res://scripts/growth.gd")
 const Rules=preload("res://scripts/rules.gd")
 const M=preload("res://scripts/pattern/sprite_metadata.gd")
 func _initialize():
- var c=A.load_sprite_catalog("res://art/themes/vines/sets/tier1-artwork.json")
+ var c=A.load_sprite_catalog("res://assets/themes/vines/assembly/vines_tier1_sprite_catalog.json")
  var p=P.new()
  for sample in range(64):
   var color=1+sample%2

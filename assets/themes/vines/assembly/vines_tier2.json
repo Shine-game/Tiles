@@ -1,0 +1,52 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "vines-tier2",
+  "tier": 2,
+  "roles": {
+    "formation": "flower"
+  },
+  "compositions": {
+    "flower": {
+      "parts": {
+        "flower": {
+          "provider": "vines.sprite_formation",
+          "animation": {
+            "duration_seconds": 3.0
+          },
+          "params": {
+            "size_cells": [
+              2,
+              2
+            ],
+            "sprites": {
+              "1": "res://assets/themes/vines/sprites/tier2/vines_tier2_flower_color2_01.json",
+              "2": "res://assets/themes/vines/sprites/tier2/vines_tier2_flower_color1_01.json"
+            },
+            "enabled": true,
+            "seed": 27391,
+            "rotation_range_degrees": [
+              0,
+              360
+            ]
+          }
+        }
+      }
+    }
+  },
+  "lower_layers": {
+    "retain_pattern": true
+  },
+  "schedule": {
+    "prerequisite": "perimeter_edges_meet",
+    "link_overlap_fraction": 1.0,
+    "after_tier1_seconds": 0.2
+  },
+  "water": {
+    "arc_height_cells": 0.45,
+    "travel_seconds": 0.8,
+    "droplets_per_arc": 7,
+    "color": "#9ce9ff",
+    "width_cells": 0.035,
+    "enabled": false
+  }
+}

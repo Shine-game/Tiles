@@ -1,0 +1,547 @@
+{
+  "schema_version": 1,
+  "kind": "base",
+  "status": "ready",
+  "images": {
+    "color1": "vines_tier1_vine_color1_01.png",
+    "color2": "vines_tier1_vine_color2_01.png"
+  },
+  "canvas_px": [
+    255,
+    255
+  ],
+  "frame": {
+    "origin": [
+      127,
+      127
+    ],
+    "up": [
+      254,
+      127
+    ]
+  },
+  "lighting": {
+    "toward": [
+      127,
+      123
+    ]
+  },
+  "transforms": {
+    "allow_flip_y": true
+  },
+  "spawn": {
+    "count": [
+      4,
+      4
+    ],
+    "minimum_spacing_px": 0,
+    "group_counts": {
+      "upper": 2,
+      "lower": 2
+    },
+    "group_anchor_sets": {
+      "upper": [
+        [
+          "upper_02",
+          "upper_07"
+        ],
+        [
+          "upper_02",
+          "upper_08"
+        ],
+        [
+          "upper_02",
+          "upper_09"
+        ],
+        [
+          "upper_03",
+          "upper_07"
+        ],
+        [
+          "upper_03",
+          "upper_08"
+        ],
+        [
+          "upper_03",
+          "upper_09"
+        ],
+        [
+          "upper_04",
+          "upper_08"
+        ],
+        [
+          "upper_04",
+          "upper_09"
+        ]
+      ],
+      "lower": [
+        [
+          "lower_02",
+          "lower_07"
+        ],
+        [
+          "lower_02",
+          "lower_08"
+        ],
+        [
+          "lower_02",
+          "lower_09"
+        ],
+        [
+          "lower_03",
+          "lower_07"
+        ],
+        [
+          "lower_03",
+          "lower_08"
+        ],
+        [
+          "lower_03",
+          "lower_09"
+        ],
+        [
+          "lower_04",
+          "lower_08"
+        ],
+        [
+          "lower_04",
+          "lower_09"
+        ]
+      ]
+    }
+  },
+  "anchors": [
+    {
+      "id": "upper_01",
+      "position": [
+        134,
+        124.5
+      ],
+      "forward": [
+        134,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.055118,
+      "group": "upper"
+    },
+    {
+      "id": "upper_02",
+      "position": [
+        146,
+        124.5
+      ],
+      "forward": [
+        146,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.149606,
+      "group": "upper"
+    },
+    {
+      "id": "upper_03",
+      "position": [
+        158,
+        124.5
+      ],
+      "forward": [
+        158,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.244094,
+      "group": "upper"
+    },
+    {
+      "id": "upper_04",
+      "position": [
+        170,
+        124.5
+      ],
+      "forward": [
+        170,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.338583,
+      "group": "upper"
+    },
+    {
+      "id": "upper_05",
+      "position": [
+        182,
+        124.5
+      ],
+      "forward": [
+        182,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.433071,
+      "group": "upper"
+    },
+    {
+      "id": "upper_06",
+      "position": [
+        194,
+        124.5
+      ],
+      "forward": [
+        194,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.527559,
+      "group": "upper"
+    },
+    {
+      "id": "upper_07",
+      "position": [
+        206,
+        124.5
+      ],
+      "forward": [
+        206,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.622047,
+      "group": "upper"
+    },
+    {
+      "id": "upper_08",
+      "position": [
+        218,
+        124.5
+      ],
+      "forward": [
+        218,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.716535,
+      "group": "upper"
+    },
+    {
+      "id": "upper_09",
+      "position": [
+        230,
+        124.5
+      ],
+      "forward": [
+        230,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.811024,
+      "group": "upper"
+    },
+    {
+      "id": "upper_10",
+      "position": [
+        242,
+        124.5
+      ],
+      "forward": [
+        242,
+        104.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": 30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.905512,
+      "group": "upper"
+    },
+    {
+      "id": "lower_01",
+      "position": [
+        134,
+        129.5
+      ],
+      "forward": [
+        134,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.055118,
+      "group": "lower"
+    },
+    {
+      "id": "lower_02",
+      "position": [
+        146,
+        129.5
+      ],
+      "forward": [
+        146,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.149606,
+      "group": "lower"
+    },
+    {
+      "id": "lower_03",
+      "position": [
+        158,
+        129.5
+      ],
+      "forward": [
+        158,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.244094,
+      "group": "lower"
+    },
+    {
+      "id": "lower_04",
+      "position": [
+        170,
+        129.5
+      ],
+      "forward": [
+        170,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.338583,
+      "group": "lower"
+    },
+    {
+      "id": "lower_05",
+      "position": [
+        182,
+        129.5
+      ],
+      "forward": [
+        182,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.433071,
+      "group": "lower"
+    },
+    {
+      "id": "lower_06",
+      "position": [
+        194,
+        129.5
+      ],
+      "forward": [
+        194,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.527559,
+      "group": "lower"
+    },
+    {
+      "id": "lower_07",
+      "position": [
+        206,
+        129.5
+      ],
+      "forward": [
+        206,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.622047,
+      "group": "lower"
+    },
+    {
+      "id": "lower_08",
+      "position": [
+        218,
+        129.5
+      ],
+      "forward": [
+        218,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.716535,
+      "group": "lower"
+    },
+    {
+      "id": "lower_09",
+      "position": [
+        230,
+        129.5
+      ],
+      "forward": [
+        230,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.811024,
+      "group": "lower"
+    },
+    {
+      "id": "lower_10",
+      "position": [
+        242,
+        129.5
+      ],
+      "forward": [
+        242,
+        149.5
+      ],
+      "accepts": [
+        "leaf"
+      ],
+      "orientation": {
+        "mode": "relative",
+        "angle_deg": -30,
+        "jitter_deg": 0
+      },
+      "growth_at": 0.905512,
+      "group": "lower"
+    }
+  ],
+  "authoring": {
+    "notes": [
+      "Violet alpha is the reference; pink RGB retained with the exact violet alpha to remove stray coverage.",
+      "20 original edge contacts retained with explicit outward local forward markers.",
+      "Discarded wavy/serrated designs are excluded completely; existing variants remain numbered 1,2,4,6.",
+      "Lighting marker is visually authored to the lit flank; it is not a measured physical light-source position.",
+      "Ready covers source-asset/placement validation, not integration into the game."
+    ]
+  },
+  "constraints": {
+    "base_overlap": "require_attachment"
+  }
+}

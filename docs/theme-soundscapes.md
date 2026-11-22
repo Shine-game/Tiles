@@ -8,7 +8,7 @@ byte-for-byte unchanged, with their existing loop settings and gains: Clockwork
 0 dB, Vines −9.52 dB, and Coral −5 dB with its 1.5-second fade-in. Coral's supplied
 `coral_place_click.ogg` is named `coral_reef_place_click.ogg` for consistency.
 The Vines MP3 click was converted to Vorbis quality 5. The other OGG clicks were
-copied without processing. `assets/audio/catalog.json` records SHA-256 hashes.
+copied without processing. `docs/asset-inventory/audio-provenance.json` records SHA-256 hashes.
 
 `ThemeAudio` owns one ambience player and one non-looping click player. It
 listens to the shared player-action completion signal and clicks once for an

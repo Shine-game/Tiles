@@ -1,6 +1,6 @@
 extends RefCounted
 const Palette = preload("res://scripts/interface_palette.gd")
-const FONT = preload("res://assets/fonts/lora/Lora-Regular.ttf")
+const FONT = preload("res://assets/shared/fonts/lora_regular.ttf")
 const FONT_SIZE := 24
 const RADIUS := 8
 const BEVEL := 1
@@ -29,7 +29,6 @@ static func button_style(state: String) -> StyleBoxFlat:
 	if pressed:
 		style.expand_margin_top = -TRAVEL
 		style.expand_margin_bottom = TRAVEL
-	if state == "disabled": style.shadow_color.a = 0.25
 	return style
 
 static func panel_style() -> StyleBoxFlat:
@@ -52,10 +51,11 @@ static func build() -> Theme:
 			result.set_color(state, type, Palette.text())
 		result.set_color("font_disabled_color", type, Palette.muted())
 		var focus := StyleBoxFlat.new()
-		focus.bg_color = Color.TRANSPARENT
-		focus.set_corner_radius_all(RADIUS)
-		focus.set_border_width_all(2)
-		focus.border_color = Palette.text()
+		# Focus must not draw a second outline over the shared bevel.
+		# Keep keyboard focus visible as a subtle inset face highlight instead.
+		focus.bg_color = Color(Palette.light(), 0.20)
+		focus.set_corner_radius_all(RADIUS - 3)
+		focus.set_expand_margin_all(-4)
 		result.set_stylebox("focus", type, focus)
 	for type: String in ["Panel", "PanelContainer", "PopupPanel", "AcceptDialog", "Window"]:
 		result.set_stylebox("panel", type, panel_style())

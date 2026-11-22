@@ -5,7 +5,7 @@ const State = preload("res://scripts/pattern/component_state.gd")
 const Catalog = preload("res://scripts/zen_assets.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
-const PATH := "res://art/themes/clockwork_workshop/artwork/copper/clockwork_tier0_core_color1_1.png"
+const PATH := "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_component_color1_01.png"
 var checks := 0
 var failures := 0
 var builds := 0
@@ -32,7 +32,7 @@ func _draw_probe(view) -> void: view.set_meta("draw_called", true)
 func _run() -> void:
 	Catalog.install()
 	check(Assets.validate(PATH).is_empty(), "Valid original textures pass validation")
-	check(Assets.texture(PATH) == Assets.texture("clockwork_tier0_core_color1_1.png", "res://art/themes/clockwork_workshop/artwork/copper/"), "One canonical resource is cached across relative and absolute paths")
+	check(Assets.texture(PATH) == Assets.texture("clockwork_tier0_core_component_color1_01.png", "res://assets/themes/clockwork/sprites/tier0/"), "One canonical resource is cached across relative and absolute paths")
 	check(not Assets.validate("res://missing.png").is_empty(), "Missing required texture paths are diagnosed")
 	check(not Assets.validate({"status": "invented"}).is_empty(), "Unknown availability is rejected")
 	check(Assets.resolve({"status": "missing"}) == null and Assets.resolve({"status": "unused"}) == null, "Explicitly absent optional art draws nothing without substitution")
@@ -110,7 +110,7 @@ func _run() -> void:
 	state.advance(100)
 	renderer.advance(state.schedule.clock, state)
 	check(not renderer.nodes.has("a"), "Completed shared-state retirement removes its bound render node")
-	var masks := {"masks": {"reveal": {"asset": "res://art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_e_color0_1.png", "purpose": "reveal", "channel": "r", "encoding": "linear", "zero": "core", "one": "edge"}}}
+	var masks := {"masks": {"reveal": {"asset": "res://assets/themes/clockwork/sprites/tier1/masks/clockwork_tier1_mask_from_core_e_color0_01.png", "purpose": "reveal", "channel": "r", "encoding": "linear", "zero": "core", "one": "edge"}}}
 	check(Assets.validate_masks(masks).is_empty(), "Masks keep explicit purpose, channel, encoding and zero/one semantics")
 	masks.masks.reveal.purpose = "lighting"
 	check(not Assets.validate_masks(masks).is_empty(), "The deferred lighting contract is not silently enabled")

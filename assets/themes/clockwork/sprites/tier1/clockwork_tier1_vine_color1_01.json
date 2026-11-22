@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "base",
+  "status": "ready",
+  "images": {
+    "color1": "clockwork_tier1_vine_color1_01.png",
+    "color2": "clockwork_tier1_vine_color2_01.png"
+  },
+  "canvas_px": [
+    256,
+    256
+  ],
+  "frame": {
+    "origin": [
+      128,
+      128
+    ],
+    "up": [
+      255,
+      128
+    ]
+  },
+  "lighting": {
+    "toward": [
+      128,
+      64
+    ]
+  },
+  "transforms": {
+    "allow_flip_y": true
+  },
+  "spawn": {
+    "count": [
+      1,
+      1
+    ],
+    "minimum_spacing_px": 0
+  },
+  "anchors": [
+    {
+      "id": "center_join",
+      "position": [
+        128,
+        128
+      ],
+      "accepts": [
+        "ring"
+      ],
+      "growth_at": 0
+    }
+  ],
+  "authoring": {
+    "notes": [
+      "Both uploaded pipe colors are 256px, not the provisional 255px assumption.",
+      "Centerline and source dimensions measured; two ring centers avoid native end cuffs.",
+      "Color alpha differs slightly but each anchor and axis is valid on both; pixel equality is not claimed.",
+      "Lighting marker is visually authored to the lit flank; it is not a measured physical light-source position.",
+      "Ready covers source-asset/placement validation, not integration into the game."
+    ]
+  },
+  "orientation": {
+    "mode": "perpendicular"
+  },
+  "constraints": {
+    "base_overlap": "require_attachment"
+  }
+}

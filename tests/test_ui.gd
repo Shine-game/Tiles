@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Palette = preload("res://scripts/palette.gd")
+const Session = preload("res://scripts/game_session.gd")
 const Rules = preload("res://scripts/rules.gd")
 var failures := 0
 var checks := 0
@@ -174,7 +175,7 @@ func _run() -> void:
 	drag(scene, off_field)
 	touch(scene, off_field, false)
 	check(scene.has_hover and scene.floating_piece.cells.size() == 4, "invalid release keeps floating piece visible")
-	check(not scene.floating_piece.valid and scene.place_button.disabled, "off-field hover cannot be placed")
+	check(not scene.floating_piece.valid and not scene.place_button.disabled, "off-field hover cannot be placed")
 	# The tray is gone after moving: regrab the floating piece to restore a valid hover.
 	touch(scene, off_field, true)
 	drag(scene, board_point(scene, move.anchor + grab))
@@ -191,7 +192,7 @@ func _run() -> void:
 	drag(scene, board_point(scene, pending_move.anchor + pending_grab))
 	touch(scene, board_point(scene, pending_move.anchor + pending_grab), false)
 	check(scene.has_hover and not scene.dragging, "next piece remains draggable while growth resolves")
-	check(scene.place_button.disabled, "physically valid next piece cannot be placed during growth")
+	check(not scene.place_button.disabled and not scene._action_available("place",{}), "Place remains pressable but cannot place during growth")
 	var committed_moves: int = scene.game.moves
 	scene._place()
 	check(scene.game.moves == committed_moves, "controller rejects early placement even without a button click")
@@ -199,7 +200,7 @@ func _run() -> void:
 	var growth_clock: float = scene.board_view.clock
 	scene._choose_palette(1)
 	check(scene.board_view.growing and is_equal_approx(scene.board_view.clock, growth_clock), "palette switching does not restart active growth")
-	check(scene.place_button.disabled, "palette switching cannot bypass growth gate")
+	check(not scene.place_button.disabled and not scene._action_available("place",{}), "palette switching cannot bypass growth gate")
 	scene._choose_palette(0)
 
 	scene._flip()
@@ -327,7 +328,7 @@ func _run() -> void:
 	await click_button(scene.skip_button)
 	check(scene.game.skip_left == 2 and scene.game.board == before_skip and scene.game.queue[scene.game.index] != offered, "native skip button spends one use and changes only offer")
 	await click_button(scene.erase_button)
-	check(scene.erase_mode and scene.place_button.disabled, "erase helper arms square selection and blocks Place")
+	check(scene.erase_mode and not scene.place_button.disabled and not scene._action_available("place",{}), "erase helper arms square selection and blocks Place")
 	touch(scene, board_point(scene, Vector2i.ZERO), true)
 	touch(scene, board_point(scene, Vector2i.ZERO), false)
 	check(scene.erase_mode and scene.game.erase_left == 3, "empty selection does not waste eraser")
@@ -392,6 +393,27 @@ func _run() -> void:
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("/tmp/tiles-godot.png")
+	# Pressable controls must still leave unavailable actions entirely inert.
+	scene.game.undo_left = 0
+	scene.game.skip_left = 0
+	scene.game.erase_left = 0
+	scene.cells = []
+	scene._clear_selection()
+	scene._refresh()
+	var unchanged := JSON.stringify(Session.pack(scene.game))
+	for button: Button in scene._controls():
+		check(not button.disabled, "All main-game buttons remain pressable")
+	for button: Button in [scene.flip_button,scene.blue_button,scene.place_button,scene.undo_button,scene.skip_button,scene.erase_button]:
+		button.pressed.emit()
+		check(JSON.stringify(Session.pack(scene.game)) == unchanged and scene.cells.is_empty() and not scene.erase_mode, "Unavailable button press changes no piece, board, history or joker")
+	scene.game.over = true
+	scene._refresh()
+	unchanged = JSON.stringify(Session.pack(scene.game))
+	for button: Button in [scene.flip_button,scene.blue_button,scene.place_button,scene.skip_button]:
+		check(not button.disabled, "Game-over controls remain pressable")
+		button.pressed.emit()
+		check(JSON.stringify(Session.pack(scene.game)) == unchanged, "Game-over piece actions do nothing")
+
 	scene.queue_free()
 	await process_frame
 	print("UI: %d checks, %d failures (drag, hover, summaries, placement, undo, resize)" % [checks, failures])

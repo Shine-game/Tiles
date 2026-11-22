@@ -1,10 +1,10 @@
 extends RefCounted
 # Continuous visual animation is independent of the finite construction clock.
 const Assets = preload("res://scripts/pattern/asset_library.gd")
-const ROOT := "res://art/themes/coral_reef/artwork/fingers/"
+const ROOT := "res://assets/themes/coral_reef/assembly/"
 static var data: Dictionary = {}
 static func definition() -> Dictionary:
-	if data.is_empty(): data = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "salmon.json"))
+	if data.is_empty(): data = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "coral_reef_tier3_fingers.json"))
 	return data
 
 static func choices(a: Vector2i, b: Vector2i) -> Array:

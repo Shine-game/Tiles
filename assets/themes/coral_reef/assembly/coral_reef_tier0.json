@@ -1,0 +1,77 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "coral-tier0",
+  "tier": 0,
+  "treatments": {
+    "1": "salmon",
+    "2": "turquoise"
+  },
+  "roles": {
+    "isolated": "isolated"
+  },
+  "compositions": {
+    "isolated": {
+      "parts": {
+        "core": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "salmon": {
+                "provider": "texture",
+                "path": "../sprites/tier1/coral_reef_tier1_bend_color1_01.png"
+              },
+              "turquoise": {
+                "provider": "texture",
+                "path": "../sprites/tier1/coral_reef_tier1_bend_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            626.5,
+            626.5
+          ],
+          "size_px": [
+            256,
+            256
+          ],
+          "layer": 20,
+          "z_index": 2,
+          "group_z_index": 3,
+          "texture_filter": 2,
+          "anchor": "cell_center",
+          "quarter_turns": 0,
+          "animation": {
+            "trigger": "cell_center_reached",
+            "duration_seconds": 0.18,
+            "dependencies": [],
+            "soft_front_seconds": 0.035
+          },
+          "material": {
+            "provider": "coral.reveal",
+            "params": {
+              "soft_front_seconds": 0.035
+            }
+          },
+          "masks": {
+            "reveal": {
+              "asset": {
+                "provider": "texture",
+                "path": "../sprites/tier0/masks/coral_reef_tier0_mask_core_color0_01.png"
+              },
+              "purpose": "reveal",
+              "channel": "r",
+              "encoding": "linear",
+              "zero": "invisible; ground remains visible",
+              "one": "exact original component RGBA, retained permanently",
+              "rotation_degrees": 0
+            }
+          },
+          "size_cells": [
+            1,
+            1
+          ]
+        }
+      }
+    }
+  }
+}

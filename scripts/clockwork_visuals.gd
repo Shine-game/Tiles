@@ -306,7 +306,7 @@ func configure_surface(platform) -> void:
 		sprite.material.set_shader_parameter("occupancy_mask", platform.mask_texture)
 		sprite.material.set_shader_parameter("grid_size", platform.grid_size)
 		sprite.material.set_shader_parameter("metal_surface", true)
-		sprite.material.set_shader_parameter("metal_lip", texture("artwork/ground/clockwork_ui_edge_lip_color0_1.png"))
+		sprite.material.set_shader_parameter("metal_lip", texture("res://assets/themes/clockwork/ui/clockwork_ui_edge_lip_color0_01.png"))
 		sprite.material.set_shader_parameter("cell_pixels", 256.0)
 		sprite.material.set_shader_parameter("screen_pixel", 256.0 / platform.cell_pixels)
 
@@ -444,7 +444,7 @@ func _process(delta: float) -> void:
 	for item: Dictionary in puffs:
 		var life: float = clampf((fx_clock - item.born) / (0.28 if item.seal else 1.1), 0, 1)
 		var width: float = lerpf(28, 55, life) if item.seal else lerpf(52, 90, life)
-		particles.append({"texture": texture("artwork/ground/clockwork_tier3_steam_color0_%d.png" % (mini(2, int(life * 3))+1)), "center": item.center - Vector2(0, life * (28 if item.seal else 50)), "size": Vector2.ONE * width, "alpha": sin(life * PI) * (0.32 if item.seal else 0.22)})
+		particles.append({"texture": texture("res://assets/themes/clockwork/sprites/tier3/clockwork_tier3_steam_color0_%02d.png" % (mini(2, int(life * 3))+1)), "center": item.center - Vector2(0, life * (28 if item.seal else 50)), "size": Vector2.ONE * width, "alpha": sin(life * PI) * (0.32 if item.seal else 0.22)})
 	for entry: Dictionary in vent_shutters:
 		if entry.event.id in ["H03_shutters_left", "H03_shutters_right"]:
 			var opening := 0.0

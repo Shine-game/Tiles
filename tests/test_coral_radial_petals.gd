@@ -4,7 +4,7 @@ const Sets=preload("res://scripts/coral_sets.gd")
 const Growth=preload("res://scripts/coral_growth.gd")
 const Rules=preload("res://scripts/rules.gd")
 const Metadata=preload("res://scripts/pattern/sprite_metadata.gd")
-const PATH="res://art/themes/coral_reef/artwork/petals/radial.json"
+const PATH="res://assets/themes/coral_reef/assembly/coral_reef_tier2_radial_petals.json"
 func _initialize():
  Sets.install()
  var mirrors={}
@@ -22,7 +22,7 @@ func _initialize():
    phases[choices[0].angle]=true
    for i in range(8):
     var chosen=choices[i]
-    assert(int(chosen.path.get_file().get_basename().get_slice("_",3)) in range(1,13))
+    assert(int(chosen.path.get_file().get_basename().split("_")[-1]) in range(1,13))
     assert(not used.has(chosen.path))
     used[chosen.path]=true
     selected[chosen.path]=true

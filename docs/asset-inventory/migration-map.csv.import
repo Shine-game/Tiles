@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://drs56bcnrex2k"
+
+[deps]
+
+files=["res://docs/asset-inventory/migration-map.source.translation", "res://docs/asset-inventory/migration-map.destination.translation", "res://docs/asset-inventory/migration-map.kind.translation", "res://docs/asset-inventory/migration-map.bytes.translation", "res://docs/asset-inventory/migration-map.sha256.translation", "res://docs/asset-inventory/migration-map.reason.translation"]
+
+source_file="res://docs/asset-inventory/migration-map.csv"
+dest_files=["res://docs/asset-inventory/migration-map.source.translation", "res://docs/asset-inventory/migration-map.destination.translation", "res://docs/asset-inventory/migration-map.kind.translation", "res://docs/asset-inventory/migration-map.bytes.translation", "res://docs/asset-inventory/migration-map.sha256.translation", "res://docs/asset-inventory/migration-map.reason.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

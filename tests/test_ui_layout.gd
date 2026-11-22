@@ -48,7 +48,7 @@ func run() -> void:
 	Palette.select_theme("vines")
 	scene.size = Vector2(720,1100)
 	scene._reset()
-	check(scene.get_children().all(func(child):return not child is Label),"Playing screen has no inscriptions")
+	check(scene.get_children().all(func(child):return not child is Label or not child.visible),"Playing screen has no inscriptions before game over")
 	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
 	check(is_equal_approx(scene.place_button.size.x,98.952),"Bottom buttons are 20 percent larger")
 	var fixed_board: Rect2 = scene.board_view.get_rect()
@@ -95,7 +95,7 @@ func run() -> void:
 	check(scene.indicators.size()==1 and scene.indicators[0].icon.available.size()==7,"One button contains all seven symmetry states")
 	scene.game.board = Rules.empty_board(9)
 	scene._refresh()
-	check(scene.indicators[0].panel.disabled,"Empty board cannot save")
+	check(not scene.indicators[0].panel.disabled and not scene._can_save(),"Empty board keeps the save button pressable without allowing a save")
 	scene.game.board[4][4] = Rules.BLUE
 	scene._refresh()
 	check(not scene.indicators[0].panel.disabled and scene.indicators[0].icon.complete.all(func(value):return value),"Symmetric design enables save")

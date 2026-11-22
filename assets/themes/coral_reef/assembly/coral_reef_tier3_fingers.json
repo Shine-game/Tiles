@@ -1,0 +1,58 @@
+{
+  "schema": "tiles.animated-fingers.v1",
+  "color": 1,
+  "seed": 18361,
+  "count": 16,
+  "origin_px": [
+    61,
+    153
+  ],
+  "direction": [
+    0,
+    -1
+  ],
+  "scale": 1.0,
+  "cycle_seconds": [
+    0.7,
+    0.9
+  ],
+  "frame_sequence": [
+    1,
+    2,
+    3,
+    2
+  ],
+  "growth_seconds": 0.2,
+  "variants": [
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_01_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_01_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_01_frame03.png"
+    ],
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_02_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_02_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_02_frame03.png"
+    ],
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_03_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_03_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_03_frame03.png"
+    ],
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_04_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_04_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_04_frame03.png"
+    ],
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_05_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_05_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_05_frame03.png"
+    ],
+    [
+      "../sprites/tier3/coral_reef_tier3_finger_color1_06_frame01.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_06_frame02.png",
+      "../sprites/tier3/coral_reef_tier3_finger_color1_06_frame03.png"
+    ]
+  ]
+}

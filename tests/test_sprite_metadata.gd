@@ -3,8 +3,8 @@ const Sprites = preload("res://scripts/pattern/sprite_metadata.gd")
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
-const BASE := "res://art/themes/vines/artwork/tier1/vines_tier1_vine_color1_basic.json"
-const LEAF := "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json"
+const BASE := "res://assets/themes/vines/sprites/tier1/vines_tier1_vine_color1_01.json"
+const LEAF := "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_01.json"
 const PEBBLE := "res://art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.json"
 var checks := 0
 var failures := 0
@@ -42,7 +42,7 @@ func _run() -> void:
 						if spec.has("masks"):
 							var mask: Texture2D = Assets.resolve(spec.masks.growth.asset)
 							check(mask != null and mask.get_size() == Vector2(spec.source_canvas_px[0], spec.source_canvas_px[1]), "Progressive reveal integrates with the existing cached mask provider")
-	check(geometries == 52, "Every production geometry loads")
+	check(geometries == 20, "Every production geometry loads")
 	var before := Sprites.cache_sizes()
 	var cached := Assets.load_sprite_catalog(Themes.sprite_catalog_path("vines"))
 	check(cached.ok and Sprites.cache_sizes() == before, "Repeated catalog loads reuse JSON, records, masks and texture caches")
@@ -102,7 +102,7 @@ func _run() -> void:
 	settings = raw(Sprites.SETTINGS_PATH); settings.defaults.spawn.erase("mode")
 	reject(Sprites.load_sprite(seed, LEAF.get_base_dir(), settings), "Incomplete settings are diagnosed before normalization")
 	reject(Assets.load_sprite_catalog(Themes.sprite_catalog_path("vines"), "res://", "a_different_theme"), "Registry/catalog identity mismatch is diagnosed")
-	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color1_basic.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png"}}
+	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_vine_color1_01.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png"}}
 	var explicit := Sprites.load_sprite(masked)
 	check(explicit.ok and explicit.reveals.color1.provider == "texture" and Assets.resolve(explicit.reveals.color1) != null, "Explicit same-size grayscale reveal integrates with shared assets")
 	masked.spawn.reveal_mask = masked.images.color1

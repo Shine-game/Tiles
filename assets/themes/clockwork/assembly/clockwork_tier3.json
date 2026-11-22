@@ -1,0 +1,300 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "clockwork-tier3",
+  "tier": 3,
+  "roles": {
+    "mechanism_finishing": "mechanism_finishing"
+  },
+  "compositions": {
+    "mechanism_finishing": {
+      "parts": {
+        "H00_plain_hatch": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_plain_hatch_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_plain_hatch_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H01_valve": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_valve_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_valve_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H02_rotating": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_rotating_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_rotating_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_exhaust": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_exhaust_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_exhaust_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 65,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "J00_chain_junction": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_chain_junction_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_chain_junction_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 60,
+          "z_index": 8,
+          "texture_filter": 2
+        },
+        "H00_left_shutter": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_left_shutter_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_left_shutter_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H00_right_shutter": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_right_shutter_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier2/clockwork_tier2_right_shutter_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_opaque_underlay": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_opaque_underlay_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_opaque_underlay_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 8,
+          "texture_filter": 2
+        },
+        "H03_shutters_left": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_shutters_left_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_shutters_left_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "H03_shutters_right": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_shutters_right_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_shutters_right_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            256.0,
+            256.0
+          ],
+          "size_px": [
+            512,
+            512
+          ],
+          "layer": 64,
+          "z_index": 9,
+          "texture_filter": 2
+        },
+        "CH01_link": {
+          "asset": {
+            "provider": "variants",
+            "variants": {
+              "copper": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_link_color1_01.png"
+              },
+              "gunmetal": {
+                "provider": "texture",
+                "path": "../sprites/tier3/clockwork_tier3_link_color2_01.png"
+              }
+            }
+          },
+          "pivot_px": [
+            32.0,
+            32.0
+          ],
+          "size_px": [
+            64,
+            64
+          ],
+          "layer": 55,
+          "z_index": 9,
+          "texture_filter": 2
+        }
+      }
+    }
+  }
+}

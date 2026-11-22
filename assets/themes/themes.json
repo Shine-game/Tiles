@@ -83,17 +83,17 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://art/themes/clockwork_workshop/artwork/clockwork_ui_frame_color0_1.png",
+        "texture": "res://assets/themes/clockwork/ui/clockwork_ui_frame_color0_01.png",
         "appearance": "walnut-workshop-v1",
         "material": "Aged walnut workshop frame with the shared 14-unit rim and 10-unit lower sidewall.",
         "provenance": "Original artwork from Clockwork_Workshop_v1_Codex.zip."
       },
       "sets": {
         "default": {
-          "0": "res://art/themes/clockwork_workshop/sets/tier0.json",
-          "1": "res://art/themes/clockwork_workshop/sets/tier1.json",
-          "2": "res://art/themes/clockwork_workshop/sets/tier2.json",
-          "3": "res://art/themes/clockwork_workshop/sets/tier3.json"
+          "0": "res://assets/themes/clockwork/assembly/clockwork_tier0.json",
+          "1": "res://assets/themes/clockwork/assembly/clockwork_tier1.json",
+          "2": "res://assets/themes/clockwork/assembly/clockwork_tier2.json",
+          "3": "res://assets/themes/clockwork/assembly/clockwork_tier3.json"
         }
       },
       "hooks": {
@@ -101,15 +101,15 @@
         "environment": "clockwork"
       },
       "environment": {
-        "catalog": "res://art/themes/clockwork_workshop/sets/environment.json",
-        "background": "res://art/themes/clockwork_workshop/artwork/background/clockwork_ui_drafting_paper_1080x1650_color0_1.png"
+        "catalog": "res://assets/themes/clockwork/assembly/clockwork_environment.json",
+        "background": "res://assets/themes/clockwork/ui/clockwork_ui_background_color0_01.png"
       },
       "preview": {
         "ground": "a3a29a",
-        "core": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.png"
+        "core": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_color1_01.png"
       },
       "tier1_artwork": {
-        "catalog": "res://art/themes/clockwork_workshop/sets/tier1-artwork.json",
+        "catalog": "res://assets/themes/clockwork/assembly/clockwork_tier1_sprite_catalog.json",
         "status": "active",
         "source_layout": "components",
         "component_ports": {
@@ -120,7 +120,7 @@
           5,
           10
         ],
-        "fixed_decoration_path": "res://art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color1_1.json",
+        "fixed_decoration_path": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_deco_color1_01.json",
         "decoration_z_index": 3
       },
       "junctions": {
@@ -128,34 +128,35 @@
         "z_index": 6,
         "shapes": {
           "bend": {
-            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color1_basic.json",
-            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_bend_color2_basic.json"
+            "1": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_bend_color1_01.json",
+            "2": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_bend_color2_01.json"
           },
           "t": {
-            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color1_basic.json",
-            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_tjoint_color2_basic.json"
+            "1": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_t_color1_01.json",
+            "2": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_t_color2_01.json"
           },
           "cross": {
-            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color1_basic.json",
-            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_crossroad_color2_basic.json"
+            "1": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_cross_color1_01.json",
+            "2": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_cross_color2_01.json"
           },
           "core": {
-            "1": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color1_basic.json",
-            "2": "res://art/themes/clockwork_workshop/artwork/junctions/clockwork_tier1_core_color2_basic.json"
+            "1": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_color1_01.json",
+            "2": "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_color2_01.json"
           }
         }
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/clockwork/clockwork_ambient.ogg",
+          "path": "res://assets/themes/clockwork/audio/clockwork_ambient.ogg",
           "gain_db": 0,
           "fade_in_seconds": 0.0
         },
         "place": {
-          "path": "res://assets/audio/clockwork/clockwork_place_click.ogg",
+          "path": "res://assets/themes/clockwork/audio/clockwork_place_click.ogg",
           "gain_db": 0.0
         }
-      }
+      },
+      "manifest": "res://assets/themes/clockwork/manifest.json"
     },
     "vines": {
       "name": "Vines",
@@ -177,7 +178,7 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://art/themes/vines/artwork/vines_ui_frame_color0_1.png",
+        "texture": "res://assets/themes/vines/ui/vines_ui_frame_color0_01.png",
         "appearance": "vines-porcelain-frame-2",
         "source_rect": [
           0,
@@ -194,9 +195,9 @@
       },
       "sets": {
         "default": {
-          "0": "res://art/themes/vines/sets/tier0.json",
-          "1": "res://art/themes/vines/sets/tier1.json",
-          "2": "res://art/themes/vines/sets/tier2.json"
+          "0": "res://assets/themes/vines/assembly/vines_tier0.json",
+          "1": "res://assets/themes/vines/assembly/vines_tier1.json",
+          "2": "res://assets/themes/vines/assembly/vines_tier2.json"
         }
       },
       "hooks": {
@@ -204,14 +205,14 @@
         "environment": "vines"
       },
       "environment": {
-        "background": "res://art/themes/vines/artwork/vines_ui_ui_background_color0_1.png"
+        "background": "res://assets/themes/vines/ui/vines_ui_background_color0_01.png"
       },
       "preview": {
         "ground": "fff5fb",
         "core": ""
       },
       "tier1_artwork": {
-        "catalog": "res://art/themes/vines/sets/tier1-artwork.json",
+        "catalog": "res://assets/themes/vines/assembly/vines_tier1_sprite_catalog.json",
         "status": "active",
         "source_layout": "edge_halves",
         "size_cells": [
@@ -227,27 +228,27 @@
         "z_index": -1,
         "shapes": {
           "bend": {
-            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_bend_color1_basic.json",
-            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_bend_color2_basic.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color2_01.json"
           },
           "t": {
-            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_tjoint_color1_basic.json",
-            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_tjoint_color2_basic.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_t_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_t_color2_01.json"
           },
           "cross": {
-            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_crossroad_color1_basic.json",
-            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_crossroad_color2_basic.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_cross_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_cross_color2_01.json"
           },
           "core": {
-            "1": "res://art/themes/vines/artwork/junctions/vines_tier1_core_color1_basic.json",
-            "2": "res://art/themes/vines/artwork/junctions/vines_tier1_core_color2_basic.json"
+            "1": "res://assets/themes/vines/sprites/tier0/vines_tier0_core_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier0/vines_tier0_core_color2_01.json"
           }
         },
         "leaf_centers": {
           "decorations": [
-            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_1.json",
-            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_2.json",
-            "res://art/themes/vines/artwork/tier1/vines_tier1_deco_color1_3.json"
+            "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_01.json",
+            "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_02.json",
+            "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_03.json"
           ],
           "core_count": 8,
           "endpoint_count": 8,
@@ -258,15 +259,16 @@
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/vines/vines_ambient.ogg",
+          "path": "res://assets/themes/vines/audio/vines_ambient.ogg",
           "gain_db": -9.52,
           "fade_in_seconds": 0.0
         },
         "place": {
-          "path": "res://assets/audio/vines/vines_place_click.ogg",
+          "path": "res://assets/themes/vines/audio/vines_place_click.ogg",
           "gain_db": 0.0
         }
-      }
+      },
+      "manifest": "res://assets/themes/vines/manifest.json"
     },
     "coral_reef": {
       "name": "Coral Reef",
@@ -291,17 +293,17 @@
       },
       "frame": {
         "enabled": true,
-        "texture": "res://assets/frames/coral_ui_frame_color0_1.png",
+        "texture": "res://assets/themes/coral_reef/ui/coral_reef_ui_frame_color0_01.png",
         "appearance": "bleached-wreck-timber-v1",
         "material": "Pale bleached wreck timber, rounded relief, cool shaded flank, turquoise inner reveal, restrained marine encrustation.",
         "provenance": "User-supplied Coral_Reef_Frame.zip; original 256x266 RGBA PNG installed unchanged, geometry verified against CODEX_FRAME_HANDOFF.md."
       },
       "sets": {
         "default": {
-          "0": "res://art/themes/coral_reef/sets/tier0.json",
-          "1": "res://art/themes/coral_reef/sets/tier1.json",
-          "2": "res://art/themes/coral_reef/sets/tier2.json",
-          "3": "res://art/themes/coral_reef/sets/tier3.json"
+          "0": "res://assets/themes/coral_reef/assembly/coral_reef_tier0.json",
+          "1": "res://assets/themes/coral_reef/assembly/coral_reef_tier1.json",
+          "2": "res://assets/themes/coral_reef/assembly/coral_reef_tier2.json",
+          "3": "res://assets/themes/coral_reef/assembly/coral_reef_tier3.json"
         }
       },
       "hooks": {
@@ -309,14 +311,14 @@
         "environment": "coral_reef"
       },
       "environment": {
-        "catalog": "res://art/themes/coral_reef/sets/environment.json"
+        "catalog": "res://assets/themes/coral_reef/assembly/coral_reef_environment.json"
       },
       "preview": {
         "ground": "edd7ad",
-        "core": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color1_basic.png"
+        "core": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_bend_color1_01.png"
       },
       "tier1_artwork": {
-        "catalog": "res://art/themes/coral_reef/sets/tier1-artwork.json",
+        "catalog": "res://assets/themes/coral_reef/assembly/coral_reef_tier1_sprite_catalog.json",
         "status": "active",
         "source_layout": "components",
         "component_ports": {
@@ -332,30 +334,32 @@
         "z_index": 5,
         "shapes": {
           "bend": {
-            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color1_basic.json",
-            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_bend_color2_basic.json"
+            "1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_bend_color1_01.json",
+            "2": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_bend_color2_01.json"
           },
           "t": {
-            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color1_basic.json",
-            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_tjoint_color2_basic.json"
+            "1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_t_color1_01.json",
+            "2": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_t_color2_01.json"
           },
           "cross": {
-            "1": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color1_basic.json",
-            "2": "res://art/themes/coral_reef/artwork/junctions/coral_tier1_crossroad_color2_basic.json"
+            "1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_cross_color1_01.json",
+            "2": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_cross_color2_01.json"
           }
         }
       },
       "soundscape": {
         "ambience": {
-          "path": "res://assets/audio/coral_reef/coral_reef_ambient.ogg",
+          "path": "res://assets/themes/coral_reef/audio/coral_reef_ambient.ogg",
           "gain_db": -5,
           "fade_in_seconds": 1.5
         },
         "place": {
-          "path": "res://assets/audio/coral_reef/coral_reef_place_click.ogg",
+          "path": "res://assets/themes/coral_reef/audio/coral_reef_place_click.ogg",
           "gain_db": 0.0
         }
-      }
+      },
+      "manifest": "res://assets/themes/coral_reef/manifest.json"
     }
-  }
+  },
+  "shared_manifest": "res://assets/shared/manifest.json"
 }

@@ -135,7 +135,7 @@ func _run() -> void:
 	scene.selected = Vector2i(1, 2)
 	scene.cells = Rules.PIECES.Dot.cells
 	scene._preview()
-	check(scene.place_button.disabled, "Place remains disabled during growth")
+	check(not scene.place_button.disabled and not scene._action_available("place",{}), "Place remains pressable without allowing placement during growth")
 	var rim_point: Vector2 = scene.floating_piece.origin + Vector2(1, 1 - scene.board_view.surface_depth())
 	check(scene._start_drag(rim_point, 0), "raised reef hover can be grabbed at its upper rim")
 	scene._move_gesture(rim_point + Vector2(scene.board_view.pitch, 0))
