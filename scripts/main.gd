@@ -33,6 +33,8 @@ const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
 const GalleryPanel = preload("res://scripts/gallery_panel.gd")
 const Frame = preload("res://scripts/board_frame.gd")
+const ChristmasStore = preload("res://scripts/christmas_joy_store.gd")
+const ChristmasIcon = preload("res://scripts/christmas_tree_icon.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
 const MENU_THEMES = {
 	"vines": "Porcelain Vines",
@@ -105,6 +107,10 @@ var preset_summary: Label
 var change_presets_button: Button
 var menu_buttons: Array = []
 var theme_options: Array = []
+var christmas_store: ChristmasStore
+var christmas_button: Button
+var christmas_dialog: ConfirmationDialog
+var christmas_confirm_install := false
 var difficulty_options: Array = []
 var settings_options: Array = []
 var menu_close: Button
@@ -764,6 +770,35 @@ func _build_settings() -> void:
 		tile.theme_id = id
 		option.add_child(tile)
 		theme_options.append(option)
+	christmas_button = _menu_button("Christmas joy", _open_christmas_offer)
+	christmas_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var tree := ChristmasIcon.new()
+	christmas_button.add_child(tree)
+	palette_menu.christmas_button = christmas_button
+	palette_menu.christmas_icon = tree
+	var heading := Label.new()
+	heading.text = "Coming soon"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var divider := HSeparator.new()
+	for control: Control in [heading, divider]:
+		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		palette_list.add_child(control)
+		menu_buttons.append(control)
+	palette_menu.coming_soon = heading
+	palette_menu.offer_divider = divider
+	christmas_dialog = ConfirmationDialog.new()
+	christmas_dialog.title = "Christmas joy"
+	christmas_dialog.confirmed.connect(func():
+		if christmas_confirm_install:
+			christmas_confirm_install = false
+			christmas_store.activate())
+	add_child(christmas_dialog)
+	christmas_store = ChristmasStore.new()
+	christmas_store.notice.connect(_christmas_notice)
+	christmas_store.changed.connect(_christmas_changed)
+	add_child(christmas_store)
+	palette_menu.christmas_owned = christmas_store.owned
+
 	for level in range(3):
 		difficulty_options.append(_menu_button(["Easy", "Moderate", "Hard"][level], _set_difficulty_preset.bind(level)))
 	axes_button = _menu_button("Show axes on field: Off", _toggle_axes)
@@ -856,6 +891,28 @@ func _settings_page_changed() -> void:
 	_update_summaries(_prediction_board())
 	interface_changed.emit(false)
 
+func _open_christmas_offer() -> void:
+	if OS.has_feature("android") or christmas_store.owned:
+		christmas_store.activate()
+		return
+	christmas_confirm_install = true
+	christmas_dialog.dialog_text = "Limited offer — €0.00\nLocal test. No payment is collected."
+	christmas_dialog.ok_button_text = "Test install"
+	christmas_dialog.get_cancel_button().show()
+	christmas_dialog.popup_centered()
+
+func _christmas_notice(message: String) -> void:
+	christmas_confirm_install = false
+	christmas_dialog.dialog_text = message
+	christmas_dialog.ok_button_text = "OK"
+	christmas_dialog.get_cancel_button().hide()
+	christmas_dialog.popup_centered()
+
+func _christmas_changed() -> void:
+	palette_menu.christmas_owned = christmas_store.owned
+	if palette_menu.visible and palette_menu.page == "Themes":
+		_layout_palette_menu(clampf(size.x * 0.025, 6, 14))
+
 func _review_new_game(theme: String) -> void:
 	if introduction != null and introduction.lesson_id == "reveal":
 		introduction.choose_theme(theme)
@@ -932,6 +989,8 @@ func _apply_button_style(button: Button) -> void:
 		if theme_options.has(button):
 			style.content_margin_left = 18
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
+		elif button == christmas_button:
+			style.content_margin_right = 42
 		elif palette_options.has(button):
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		elif button.has_node("ControlIcon"):
@@ -941,6 +1000,7 @@ func _apply_button_style(button: Button) -> void:
 func _refresh_theme() -> void:
 	theme = InterfaceTheme.build()
 	confirmation.theme = theme
+	christmas_dialog.theme = theme
 	game_over_message.add_theme_font_override("font", InterfaceTheme.FONT)
 	game_over_message.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
 	game_over_message.add_theme_color_override("font_color", Interface.text())

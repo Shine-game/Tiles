@@ -11,6 +11,11 @@ var pages: Dictionary
 var menu_buttons: Array
 var palette_list: Control
 var frame: BoardFrame
+var christmas_button: Button
+var christmas_icon: Control
+var coming_soon: Label
+var offer_divider: HSeparator
+var christmas_owned := false
 var menu_title: Label
 var menu_close: Button
 var back_button: Button
@@ -41,23 +46,28 @@ func go_back() -> void:
 func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clearance: float, theme_labels: Dictionary, style_button: Callable) -> void:
 	for control: Control in menu_buttons:
 		control.hide()
-	var options: Array = pages.get(page, pages["Settings"])
+	var options: Array = pages.get(page, pages["Settings"]).duplicate()
+	var show_offer := page == "Themes" and not christmas_owned
+	if page == "Themes":
+		christmas_button.text = "✓ Christmas joy" if christmas_owned else "Christmas joy"
+		options.append(christmas_button)
+	var section_height := 30.0 if show_offer else 0.0
 	var rim := frame.thin_rim if frame.apply_theme(Palette.theme_id()) else 0.0
 	var row_units := options.size() + (1 if page == "Game Presets" else 0)
 	var width := minf(view_size.x - 2 * pad, maxf(view_size.x * 0.70, 400.0))
 	var max_height := view_size.y - 2 * pad
 	var close_side := maxf(44, InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 8)
 	var min_row := 112.0 if page in ["Themes", "Audio"] else 46.0
-	var clearance := minf(requested_clearance, maxf(0.0, (max_height - 2 * rim - close_side - min_row * row_units) / (options.size() + 2)))
+	var clearance := minf(requested_clearance, maxf(0.0, (max_height - 2 * rim - close_side - section_height - min_row * row_units) / (options.size() + 2)))
 	clearance = minf(clearance, maxf(0.0, (width - 2 * rim - 2 * close_side) / 3.0))
 	var inset := rim + clearance
 	var title_height := close_side + clearance
 	var gap := clearance
 	var preferred_row := maxf(min_row, 66.0)
-	var height := minf(max_height, 2 * inset + title_height + preferred_row * row_units + gap * (options.size() - 1))
+	var height := minf(max_height, 2 * inset + title_height + section_height + preferred_row * row_units + gap * (options.size() - 1))
 	var content_width := width - 2 * inset
 	var content_height := height - 2 * inset
-	var row_height := (content_height - title_height - gap * (options.size() - 1)) / row_units
+	var row_height := (content_height - title_height - section_height - gap * (options.size() - 1)) / row_units
 	var panel_style: StyleBoxFlat = get_theme_stylebox("panel").duplicate()
 	panel_style.set_content_margin_all(inset)
 	add_theme_stylebox_override("panel", panel_style)
@@ -110,15 +120,24 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clea
 			row_y += row_height + gap
 			continue
 		var button: Button = options[i]
+		if show_offer and button == christmas_button:
+			offer_divider.show()
+			coming_soon.show()
+			coming_soon.add_theme_font_size_override("font_size", 18)
+			_set_rect(offer_divider, Rect2(0, row_y, content_width, 2))
+			_set_rect(coming_soon, Rect2(0, row_y + 2, content_width, section_height - 2))
+			row_y += section_height
 		button.show()
 		if pages["Vine colors"].has(button):
 			button.set_meta("menu_right_inset", row_height + 12)
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
+		button.add_theme_font_size_override("font_size", 22 if page == "Themes" and row_height < 85 else InterfaceTheme.FONT_SIZE)
 		style_button.call(button)
 		button.size.x = content_width
 		button.update_minimum_size()
 		_set_rect(button, Rect2(0, row_y, content_width, row_height))
+		if button == christmas_button:
+			_set_rect(christmas_icon, Rect2(content_width - 36, (row_height - 26) / 2, 26, 26))
 		row_y += row_height + gap
 
 func _set_rect(control: Control, rect: Rect2) -> void:
