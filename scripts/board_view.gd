@@ -454,15 +454,22 @@ func _draw() -> void:
 func _draw_guides() -> void:
 	var n: int = board.size()
 	var ink := Palette.grid() if Palette.theme_id() == "vines" else Color("9b95a3", 0.20)
-	var width: float = maxf(0.75, pitch * 0.012)
+	# Snap only the drawing to physical pixels; logical cells and hit testing
+	# retain their exact, equally spaced coordinates. Hairlines stay one pixel
+	# wide under viewport scaling, avoiding alternating faint/dark seams.
+	var screen := get_screen_transform()
+	var inverse := screen.affine_inverse()
 	for y in range(n):
 		for x in range(n + 1):
 			if Growth.value(board, Vector2i(x - 1, y)) == 0 and Growth.value(board, Vector2i(x, y)) == 0:
-				draw_line(_guide_point(Vector2(x, y)), _guide_point(Vector2(x, y + 1)), ink, width, true)
+				draw_line(_guide_pixel(Vector2(x, y), screen, inverse), _guide_pixel(Vector2(x, y + 1), screen, inverse), ink, -1.0, false)
 	for y in range(n + 1):
 		for x in range(n):
 			if Growth.value(board, Vector2i(x, y - 1)) == 0 and Growth.value(board, Vector2i(x, y)) == 0:
-				draw_line(_guide_point(Vector2(x, y)), _guide_point(Vector2(x + 1, y)), ink, width, true)
+				draw_line(_guide_pixel(Vector2(x, y), screen, inverse), _guide_pixel(Vector2(x + 1, y), screen, inverse), ink, -1.0, false)
+
+func _guide_pixel(cell: Vector2, screen: Transform2D, inverse: Transform2D) -> Vector2:
+	return inverse * ((screen * _guide_point(cell)).floor() + Vector2(0.5, 0.5))
 
 func _port_tangent(cell: Vector2i, neighbor: Vector2i) -> Vector2:
 	var direction := Vector2(neighbor - cell)
