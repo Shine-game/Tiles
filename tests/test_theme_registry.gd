@@ -21,8 +21,8 @@ func _initialize() -> void:
 	for installer in [Clock, Coral, Vines]: installer.install()
 	for id: String in Themes.ids():
 		check(Palette.select_theme(id) and Palette.theme_name() == Themes.label(id), "theme selection reads registry")
-		check(Palette.theme_version() == {"zen_garden": "0.18", "clockwork": "1.7", "vines": "1.8", "coral_reef": "3.0"}[id], "Generative artwork has a distinct appearance version")
-		check(int(Palette.clockwork) + int(Palette.coral_reef) + int(Palette.zen_garden) == (0 if id == "vines" else 1), "specialized flags are mutually exclusive views")
+		check(Palette.theme_version() == {"clockwork": "1.7", "vines": "1.8", "coral_reef": "3.0"}[id], "Generative artwork has a distinct appearance version")
+		check(int(Palette.clockwork) + int(Palette.coral_reef) == (0 if id == "vines" else 1), "specialized flags are mutually exclusive views")
 		var profile := Themes.profile(id)
 		for family: String in profile.sets:
 			for tier: String in profile.sets[family]:

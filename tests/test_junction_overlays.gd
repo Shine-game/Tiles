@@ -73,7 +73,7 @@ func run():
    var tip_id="junction/vines/%d/%d/%d/core"%[color,tip.y,tip.x]
    for i in range(8):check(view.junction_layer.renderer.nodes[tip_id+"/leaf_%d"%i].visible,"Straight endpoint has eight visible radial leaves")
  # The same class also replaces configured centers in every other model.
- for theme in ["coral_reef","clockwork","zen_garden"]:
+ for theme in ["coral_reef","clockwork"]:
   var saved_junctions=Themes.definition.themes[theme].get("junctions", {}).duplicate(true)
   Themes.definition.themes[theme].junctions=original_config.duplicate(true)
   Palette.select_theme(theme)
@@ -81,7 +81,6 @@ func run():
   for p in [Vector2i(2,2),Vector2i(2,1),Vector2i(1,2),Vector2i(3,2)]:grid[p.y][p.x]=1
   view.show_settled(grid)
   check(view.junction_layer.events.has("junction/%s/1/2/2/t"%theme),"One shared system handles every theme's model")
-  if theme=="zen_garden":check(not view.zen_visuals.centerpieces.has(Vector2i(2,2)),"Configured overlay replaces the legacy rake centerpiece")
   if theme=="clockwork":check(not view.clockwork_visuals.registry.has("C01/1/2/2"),"Configured overlay replaces legacy clockwork center")
   if theme=="coral_reef":check(not view.coral_visuals.registry.has("core/1/2/2"),"Configured overlay replaces legacy coral center")
   if saved_junctions.is_empty():Themes.definition.themes[theme].erase("junctions")

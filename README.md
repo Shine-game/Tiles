@@ -221,5 +221,14 @@ with numbered sprites, adjacent sprite JSON, assembly catalogs, UI, and OGG audi
 Shared fonts, schemas, defaults and the app icon live under `assets/shared/`.
 Each theme and the shared folder have a `manifest.json`; runtime validation and
 export use these lists. `python tools/audit_sprites.py` checks live references,
-numbering and unchanged artwork. Older files still under `art/` are pending the
-separate cleanup/archive steps and are excluded from exports.
+numbering and unchanged artwork. Obsolete artwork has been removed. Zen is preserved in `preserved/zen_garden_2026-11-22.zip` and an external
+archive copy; its former source files and runtime hooks have been removed.
+The archive folder is ignored by Godot and excluded from exports.
+Generated previews under `build/` are protected from Godot imports by `.gdignore`.
+
+After pulling the asset cleanup, close Godot and delete the local `.godot`
+directory once, then reopen the project and let importing finish. Keep the
+source-side `.import` files: they preserve import settings and resource UIDs.
+`python tools/verify_import_cache.py` checks for missing or orphaned cache files.
+Audit reports, preserved archives and generated builds have `.gdignore` markers
+so Godot does not import their contents.

@@ -17,7 +17,7 @@ func _initialize() -> void:
 		quit(1)
 		return
 	if "--check-export" in OS.get_cmdline_user_args():
-		var has_zen := "zen_garden" in DirAccess.get_directories_at("res://art/themes")
+		var has_zen := DirAccess.dir_exists_absolute("res://art/themes/zen_garden")
 		for path: String in ["res://scripts", "res://shaders"]:
 			for file: String in DirAccess.get_files_at(path):
 				if file.begins_with("zen"): has_zen = true

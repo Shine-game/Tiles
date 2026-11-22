@@ -31,6 +31,9 @@ def audit():
             path = ROOT / row['destination']
             if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
                 errors.append('Retained image bytes changed: ' + row['destination'])
+    for entry in source['assets']:
+        if entry['status'] == 'unreferenced_candidate':
+            errors.append('Unlisted source asset: ' + entry['path'])
     compare = source['comparison_with_export_inventory']
     for key in ['required_but_not_allowlisted', 'allowlisted_without_dependency_evidence']:
         errors.extend(key + ': ' + p for p in compare[key])

@@ -35,8 +35,6 @@ func render(owner: Control, live_view: Control, snapshot: Array, theme_id: Strin
 		artwork.coral_visuals.copy_order(live_view.coral_visuals)
 	if live_view.clockwork_visuals != null and artwork.clockwork_visuals != null:
 		artwork.clockwork_visuals.copy_motion(live_view.clockwork_visuals)
-	if live_view.zen_visuals != null and artwork.zen_visuals != null:
-		artwork.zen_visuals.copy_landmark_order(live_view.zen_visuals)
 	artwork.construction_state.copy_from(live_view.construction_state)
 	await RenderingServer.frame_post_draw
 	if not is_instance_valid(viewport): return null

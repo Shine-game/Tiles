@@ -25,6 +25,7 @@ func _initialize():
 			if not inventory.files.has(file.trim_suffix(".import")): failures.append("Unlisted source import: " + file)
 			for match in regex.search_all(FileAccess.get_file_as_string(file)): expected[match.get_string()] = true
 		if file.begins_with("res://art/"): failures.append("Legacy artwork packed: " + file)
+		if file.begins_with("res://preserved/"): failures.append("Preserved archive packed: " + file)
 	for file: String in paths:
 		if file.begins_with("res://.godot/imported/") and not expected.has(file): failures.append("Orphan import: " + file)
 	print("Exported pack: ",images," images, ",audio," OGG recordings; ",expected.size()," import artifacts; failures: ", failures)

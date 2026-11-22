@@ -1,0 +1,17 @@
+[
+  {
+    "path": ".godot",
+    "files_removed": 1889,
+    "bytes_removed": 79829264
+  },
+  {
+    "path": "android/build/assets/.godot/imported",
+    "files_removed": 0,
+    "bytes_removed": 0
+  },
+  {
+    "path": "android/build/src/main/assets/.godot/imported",
+    "files_removed": 0,
+    "bytes_removed": 0
+  }
+]

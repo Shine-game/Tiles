@@ -123,6 +123,7 @@ def audit():
         if not p.is_file() or any(part in {'.git', '.godot', 'build', '__pycache__'} for part in p.relative_to(ROOT).parts): continue
         if p.suffix.lower() not in IMAGE | {'.ogg', '.wav', '.mp3', '.flac', '.ttf', '.otf'}: continue
         if rel in edges: status = 'required_by_active_dependencies'
+        elif rel == 'tests/fixtures/decoration_test.png': status = 'test_only_fixture'
         elif rel.startswith('art/themes/zen_garden/'): status = 'preserve_inactive_zen'
         else: status = 'unreferenced_candidate'
         inventory.append({'path': rel, 'kind': 'image' if p.suffix.lower() in IMAGE else 'font' if p.suffix.lower() in {'.ttf', '.otf'} else 'audio',

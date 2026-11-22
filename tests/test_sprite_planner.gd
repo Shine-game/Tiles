@@ -5,7 +5,7 @@ const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const CORAL := "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_vine_color1_01.json"
 const LEAF := "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_01.json"
-const PEBBLE := "res://art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.json"
+const PEBBLE := "res://tests/fixtures/decoration_test.json"
 var checks := 0
 var failures := 0
 func check(ok: bool, message: String) -> void:
@@ -36,11 +36,11 @@ func _run() -> void:
 	var planner := Planner.new()
 	for theme: String in Themes.ids():
 		var catalog := Assets.load_sprite_catalog(Themes.sprite_catalog_path(theme))
-		var family_id := "stones" if theme == "zen_garden" else "default"
+		var family_id := "default"
 		for color: String in catalog.families[family_id].logical_colors:
 			for turns in range(4):
 				var context := {}
-				if theme != "zen_garden": context.target_forward = Vector2.RIGHT.rotated(turns * PI / 2)
+				context.target_forward = Vector2.RIGHT.rotated(turns * PI / 2)
 				var plan := planner.plan(catalog, family_id, int(color), "actual/" + theme, 42, context)
 				check(plan.ok, "Production base has a valid orientation: " + theme)
 				if not plan.ok: continue
@@ -69,9 +69,6 @@ func _run() -> void:
 					var anchor := Vector2(anchors[deco.anchor_id].position[0], anchors[deco.anchor_id].position[1])
 					check((deco.transform * attachment).is_equal_approx(plan.base.transform * anchor), "Attachment follows the whole base rotation/reflection")
 					check(deco.id == "actual/" + theme + "/anchor/" + deco.anchor_id, "Decoration identity is stable across redraws")
-					if theme == "zen_garden":
-						check(deco.scale == 4.0, "Zen uses fixed 4x decoration scale")
-						check(not deco.rules.constraints.inside_canvas and not deco.rules.constraints.avoid_deco_overlap and deco.rules.constraints.base_overlap_checks.is_empty(), "Zen placement has no spatial rejection rules")
 				check(plan.decorations.size() <= plan.target_count and plan.decorations.size() > 0, "Production layout places a constrained subset")
 				check(var_to_bytes(plan) == var_to_bytes(planner.plan(catalog, family_id, int(color), "actual/" + theme, 42, context)), "Same identity, settings and seed reproduce the entire plan")
 	var base := simple_base()
@@ -150,17 +147,20 @@ func _run() -> void:
 		elif orientation.mode == "perpendicular": check(absf(axis) < 0.001, "Ring-like orientation is perpendicular to anchor forward")
 		else: check(chosen.rotation_deg >= 9.999 and chosen.rotation_deg <= 20.001, "Random mode respects the allowed sprite-rotation range")
 	leaf_base.orientation = {"mode": "relative"}
-	var heavy := Metadata.load_sprite(LEAF.replace("color1_1.json", "color1_2.json"))
+	var heavy := Metadata.load_sprite(LEAF.replace("color1_01.json", "color1_02.json"))
 	heavy.definition.variation.weight = 1000
 	heavy.resolved.variation.weight = 1000
 	var weighted := fixture(leaf_base, [leaf, heavy])
 	var reordered_weighted := weighted.duplicate(true)
 	reordered_weighted.families.default.decorations.reverse()
 	check(Planner.new().plan(reordered_weighted, "default", 1, "weighted", 7).fingerprint == planner.plan(weighted, "default", 1, "weighted", 7).fingerprint, "Weighted selection is independent of catalog entry order")
-	var zen := Assets.load_sprite_catalog(Themes.sprite_catalog_path("zen_garden"))
-	var reversed_zen := zen.duplicate(true)
-	reversed_zen.families.stones.bases.reverse()
-	check(Planner.new().plan(reversed_zen, "stones", 2, "zen-order", 42).fingerprint == planner.plan(zen, "stones", 2, "zen-order", 42).fingerprint, "Base variant selection is independent of catalog entry order")
+	var multi_base := leaves.duplicate(true)
+	var alternative: Dictionary = multi_base.families.default.bases[0].duplicate(true)
+	alternative.path += "#alternate"
+	multi_base.families.default.bases.append(alternative)
+	var reversed_bases := multi_base.duplicate(true)
+	reversed_bases.families.default.bases.reverse()
+	check(Planner.new().plan(reversed_bases, "default", 1, "base-order", 42).fingerprint == planner.plan(multi_base, "default", 1, "base-order", 42).fingerprint, "Base variant selection is independent of catalog entry order")
 	var heavy_count := 0
 	for seed in range(24):
 		plan = planner.plan(weighted, "default", 1, "weighted", seed)

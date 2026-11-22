@@ -2,10 +2,8 @@ extends SceneTree
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Growth = preload("res://scripts/growth.gd")
-const Geometry = preload("res://scripts/zen_geometry.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
-const Trees = preload("res://scripts/zen_trees.gd")
 const SHAPES := ["isolated", "endpoint", "endpoint", "bend", "endpoint", "straight", "bend", "t", "endpoint", "bend", "straight", "t", "bend", "t", "t", "cross"]
 const CANONICAL := [[0, 0], [1, 0], [1, 1], [3, 0], [1, 2], [5, 0], [3, 1], [11, 1], [1, 3], [3, 3], [5, 1], [11, 0], [3, 2], [11, 3], [11, 2], [15, 0]]
 var checks := 0
@@ -24,7 +22,6 @@ func _initialize() -> void:
 			for bit in range(4):
 				if mask & (1 << bit): expected |= 1 << posmod(bit + turns, 4)
 			check(Topology.rotate_mask(mask, turns) == expected, "Positive turns rotate clockwise, including negative/wrapped turns")
-			check(Geometry.rotate_mask(mask, turns) == expected, "Zen's public rotation adapter preserves its result")
 		for n in [9, 11]:
 			for color in [1, 2]:
 				var board := Rules.empty_board(n)
@@ -34,7 +31,7 @@ func _initialize() -> void:
 					var other: Vector2i = center + [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT][d]
 					board[other.y][other.x] = color if mask & (1 << d) else 3 - color
 				check(Topology.neighbor_mask(board, center) == mask, "Masks connect only the same logical color")
-				check(Clock.connection_mask(board, center) == mask and Geometry.neighbor_mask(board, center) == mask, "Clockwork and Zen use the shared masks")
+				check(Clock.connection_mask(board, center) == mask, "Clockwork uses the shared masks")
 				check(Clock.has_wheel(board, center) == (SHAPES[mask] != "straight"), "Clockwork's isolated/endpoint/bend/T/cross wheel behavior is unchanged")
 	check(Topology.shape(16) == "invalid" and Topology.canonical(-1).is_empty(), "Invalid masks are not classified as valid shapes")
 	check(Topology.neighbor_mask([], Vector2i.ZERO) == 0 and Topology.value([], Vector2i.ZERO) == 0, "Empty and out-of-field positions are empty")
@@ -77,9 +74,6 @@ func _initialize() -> void:
 		var ready: Dictionary = {}
 		for origin: Vector2i in features:
 			ready[origin] = {"color": 1, "ready": float(origin.x + origin.y), "old": origin == Vector2i(2, 2)}
-		var legacy: Dictionary = Trees.clusters(ready)[0]
-		check(legacy.cells == group.cells and legacy.center.is_equal_approx(group.center * 256), "Tree adapter preserves unique support and source-pixel centroid")
-		check(not legacy.old, "Tree adapter aggregates old/new state independently of topology")
 		check_graph(board)
 	# Explicit graph adversaries: diagonals, distant formations, opposite colors.
 	var features := {Vector2i(0, 0): {"color": 1}, Vector2i(1, 1): {"color": 1}, Vector2i(4, 1): {"color": 1}, Vector2i(0, 1): {"color": 2}}

@@ -1,0 +1,76 @@
+{
+  "status": "cache_and_export_pack_verified_apk_toolchain_unavailable",
+  "cache_reset": [
+    {
+      "path": ".godot",
+      "files_removed": 1889,
+      "bytes_removed": 79829264
+    },
+    {
+      "path": "android/build/assets/.godot/imported",
+      "files_removed": 0,
+      "bytes_removed": 0
+    },
+    {
+      "path": "android/build/src/main/assets/.godot/imported",
+      "files_removed": 0,
+      "bytes_removed": 0
+    }
+  ],
+  "fresh_cache": {
+    "source_imports": 213,
+    "expected_artifacts": 213,
+    "cache_file_count": 426,
+    "cache_bytes": 17729376,
+    "missing_artifacts": [],
+    "orphan_files": [],
+    "ignored_folders": [
+      "build",
+      "docs/asset-inventory",
+      "preserved"
+    ],
+    "ok": true
+  },
+  "audit_report_import_fix": "Added docs/asset-inventory/.gdignore and removed the CSV translation-import sidecar.",
+  "exported_pack": {
+    "path": "/tmp/tiles-clean-final.pck",
+    "bytes": 18473384,
+    "sha256": "4af622a9cb7dcb717d590dde3a22653bf8bba7f12be70f88008d06c6068e29d2",
+    "images": 205,
+    "ogg_recordings": 6,
+    "import_artifacts": 212,
+    "missing_or_orphan_assets": 0,
+    "legacy_or_zen_files": 0,
+    "archives_or_test_fixtures": 0,
+    "boot": "passed headless startup"
+  },
+  "runtime_asset_loads": {
+    "count": 212,
+    "failures": 0
+  },
+  "checks_passed": {
+    "theme_registry": 76,
+    "manifest_image_inventory": 205,
+    "tier1_artwork": 327,
+    "sprite_metadata": 188,
+    "game_session": 18,
+    "active_themes": "Three active themes; Vines default; Zen not selectable"
+  },
+  "apk_build": {
+    "attempted": true,
+    "produced": false,
+    "blockers": [
+      "Matching Android export source template is not installed.",
+      "Android build template is not installed in this project workspace.",
+      "Android SDK platform-tools/adb and build-tools/apksigner are unavailable.",
+      "Godot has no valid Java SDK path configured in this environment."
+    ],
+    "conclusion": "The resource-pack payload was verified; actual APK validation must run on a configured Android export machine."
+  },
+  "local_rebuild_instructions": [
+    "After pulling, close Godot, delete the local project .godot directory once and reopen the project to finish importing.",
+    "Keep the .import files beside source assets; they preserve resource UIDs and import options.",
+    "Run python tools/verify_import_cache.py after import to check for missing/orphan cache files.",
+    "Export a fresh APK on a machine with the matching Godot Android templates, SDK and configured JDK."
+  ]
+}

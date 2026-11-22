@@ -14,8 +14,6 @@ static var coral_reef: bool:
 	get: return Themes.profile(active_theme).hooks.environment == "coral_reef"
 static var clockwork: bool:
 	get: return Themes.profile(active_theme).hooks.environment == "clockwork"
-static var zen_garden: bool:
-	get: return Themes.profile(active_theme).hooks.environment == "zen_garden"
 
 static func theme_id() -> String:
 	return active_theme

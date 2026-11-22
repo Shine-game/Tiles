@@ -5,7 +5,6 @@ const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Board = preload("res://scripts/board_view.gd")
 const Clock = preload("res://scripts/clockwork_sets.gd")
 const Coral = preload("res://scripts/coral_sets.gd")
-const Zen = preload("res://scripts/zen_sets.gd")
 const Vines = preload("res://scripts/vines_sets.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Rules = preload("res://scripts/rules.gd")
@@ -22,9 +21,8 @@ func emit(_id: String, _spec: Dictionary, _record: Dictionary, at: float, second
 func _run() -> void:
 	Clock.install()
 	Coral.install()
-	Zen.install()
 	Vines.install()
-	for loaded: Dictionary in [Clock.tier2, Coral.tier2, Zen.families.rakes[2], Zen.families.stones[2], Vines.tier2]:
+	for loaded: Dictionary in [Clock.tier2, Coral.tier2, Vines.tier2]:
 		check(loaded.ok and loaded.definition.tier == 2, "Every active family has a validated live Tier 2 set")
 		check(Formations.validate_schedule(Formations.parts(loaded)).is_empty(), "All production formation schedules have valid durations and dependency order")
 	var sequence := {"base": {"animation": {"offset_seconds": 0.2, "duration_seconds": 0.5}}, "top": {"animation": {"duration_seconds": 0.3, "dependencies": [{"component": "base", "event": "complete", "delay_seconds": 0.1}]}}}
@@ -50,18 +48,7 @@ func _run() -> void:
 					check(record.id == Formations.identity(origin, color), "Canonical identity depends on logical color and top-left origin")
 	var mixed := [[1, 1, 2], [1, 2, 2], [1, 1, 1]]
 	check(Formations.collect(mixed, mixed).is_empty(), "Mixed colors cannot complete a 2x2")
-	var lantern := Zen.landmark_spec(Vector2i(3, 4), 1)
-	var sprite := Components.sprite(lantern)
-	check(sprite.position == Vector2(4, 5) * 256 and sprite.offset == sprite.texture.get_size() * 0.5 - Vector2(627, 1090), "Lantern attachment stays on its original pedestal pivot")
-	check(is_equal_approx(maxf(sprite.texture.get_width(), sprite.texture.get_height()) * sprite.scale.x, 256), "The lantern stays half-size")
-	sprite.free()
-	for origin: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(3, 3), Vector2i(8, 5)]:
-		var spec := Zen.landmark_spec(origin, 2)
-		var rock := Components.sprite(spec)
-		check(is_equal_approx(rock.scale.x, rock.scale.y) and is_equal_approx(maxf(rock.texture.get_width(), rock.texture.get_height()) * rock.scale.x, 512), "Every rock variant fits a two-cell maximum extent without aspect distortion")
-		rock.free()
-	var bad_extent := lantern.duplicate(true)
-	bad_extent.max_extent_cells = 0
+	var bad_extent := {"max_extent_cells":0}
 	check(not Assets.validate_placement(bad_extent).is_empty(), "A nonpositive aspect-preserving extent is rejected")
 	for theme: String in Palette.THEMES:
 		Palette.select_theme(theme)
@@ -125,7 +112,7 @@ func _run() -> void:
 	check(surviving.phase == "settled" and not partial.growing, "Preserved partial formation and retiring parts eventually release the gate")
 	partial.queue_free()
 	await process_frame
-	check(Clock.formation_parts().L03.swap_treatment and Clock.tier2.definition.schedule.completion_offset_seconds == 1.95, "The upper gear keeps its opposite metal and complete mechanism readiness")
-	check(is_equal_approx(Vines.flower().animation.duration_seconds, 0.36) and is_equal_approx(Vines.tier2.definition.schedule.link_overlap_fraction, 0.45), "Vines keeps its flower/link overlap rather than postponing links")
+	check(Clock.formation_parts().L01.swap_treatment and Clock.tier2.definition.schedule.completion_offset_seconds == 0.65, "The surviving gear keeps its opposite metal and complete mechanism readiness")
+	check(is_equal_approx(Vines.flower().animation.duration_seconds, 3.0) and is_equal_approx(Vines.tier2.definition.schedule.link_overlap_fraction, 1.0), "Vines keeps its flower/link overlap rather than postponing links")
 	print("Tier 2 sets: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

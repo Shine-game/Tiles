@@ -2,7 +2,6 @@ extends SceneTree
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const State = preload("res://scripts/pattern/component_state.gd")
-const Catalog = preload("res://scripts/zen_assets.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
 const PATH := "res://assets/themes/clockwork/sprites/tier0/clockwork_tier0_core_component_color1_01.png"
@@ -30,7 +29,6 @@ func _material(_params: Dictionary) -> ShaderMaterial:
 	return Renderer.material(shader)
 func _draw_probe(view) -> void: view.set_meta("draw_called", true)
 func _run() -> void:
-	Catalog.install()
 	check(Assets.validate(PATH).is_empty(), "Valid original textures pass validation")
 	check(Assets.texture(PATH) == Assets.texture("clockwork_tier0_core_component_color1_01.png", "res://assets/themes/clockwork/sprites/tier0/"), "One canonical resource is cached across relative and absolute paths")
 	check(not Assets.validate("res://missing.png").is_empty(), "Missing required texture paths are diagnosed")
@@ -44,11 +42,10 @@ func _run() -> void:
 	check(region is AtlasTexture and region.get_size() == Vector2(70, 80) and region.filter_clip, "Atlas regions use original source pixels and clipped filtering")
 	check(region == Assets.resolve(atlas), "Identical atlas regions share an immutable cached resource")
 	check(not Assets.validate({"provider": "atlas", "path": PATH, "region_px": [250, 250, 30, 30]}).is_empty(), "Out-of-bounds atlas selections fail validation")
-	Assets.register_provider("test.generated", _generated)
+	Assets.register_provider("test.generated", _generated, func(params): return [] if params.get("size",0) > 0 else ["Positive size required"])
 	var generated := {"provider": "test.generated", "params": {"size": 12}}
 	check(Assets.resolve(generated) == Assets.resolve(generated) and builds == 1, "Registered procedural textures are cached by parameters")
-	check(Assets.resolve({"provider": "zen.rake_relief", "params": {"mask": 3}}).get_size() == Vector2(256, 256), "Actual rake geometry is a registered procedural texture provider")
-	check(not Assets.validate({"provider": "zen.rake_relief", "params": {"mask": 2}}).is_empty(), "Procedural parameters are validated before generation")
+	check(not Assets.validate({"provider":"test.generated","params":{"size":0}}).is_empty(), "Procedural parameters are validated before generation")
 	var sample := Assets.load_set("res://docs/shared-pattern-engine/examples/clockwork-tier0.example.json")
 	check(sample.ok, "The documented versioned multipart set loads using actual project assets")
 	var parent := Node2D.new()
@@ -120,6 +117,7 @@ func _run() -> void:
 	parent.queue_free()
 	# Release test-owned Callables; production providers are static project code.
 	Assets.providers.erase("test.generated")
+	Assets.provider_validators.erase("test.generated")
 	Renderer.node_providers.erase("test.dot")
 	Assets.node_kinds.erase("test.dot")
 	Renderer.draw_providers.erase("test.draw")

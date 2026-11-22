@@ -17,9 +17,9 @@ func _initialize() -> void: run.call_deferred()
 func run() -> void:
 	var parent := Node2D.new()
 	root.add_child(parent)
-	for theme: String in ["coral_reef", "clockwork", "vines", "zen_garden"]:
+	for theme: String in ["coral_reef", "clockwork", "vines"]:
 		var catalog := Assets.load_sprite_catalog(Themes.sprite_catalog_path(theme))
-		var plan := Planner.new().plan(catalog, "stones" if theme == "zen_garden" else "default", 2, theme, 42)
+		var plan := Planner.new().plan(catalog, "default", 2, theme, 42)
 		check(plan.ok, "Actual plan: " + theme)
 		var timeline := Growth.new()
 		var timed := timeline.reconcile({theme: plan}, {theme: {"event": {"start": 1.0, "stroke": 2.0, "end": 3.1}}}, {"structural_duration": 3.1})

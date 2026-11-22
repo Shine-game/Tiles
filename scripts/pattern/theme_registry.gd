@@ -6,7 +6,7 @@ extends RefCounted
 const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 const PATH := "res://assets/themes/themes.json"
 const SCHEMA := "tiles.themes.v1"
-const HOOKS := ["zen_garden", "clockwork", "vines", "coral_reef"]
+const HOOKS := ["clockwork", "vines", "coral_reef"]
 static var definition: Dictionary = {}
 
 static func validate(data: Variant) -> Array:

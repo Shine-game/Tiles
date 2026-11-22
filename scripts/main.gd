@@ -483,12 +483,6 @@ func _surface_revision(theme: String) -> String:
 	if Themes.profile(theme).get("tier1_artwork", {}).get("status") == "active": revision += "/tier1-generative-v1"
 	if board_view.board_frame != null and board_view.board_frame.is_present():
 		revision += "/frame-" + board_view.board_frame.appearance
-	if theme == "zen_garden" and board_view.zen_visuals != null and board_view.zen_visuals.pond != null:
-		var pond = board_view.zen_visuals.pond
-		if not pond.plants.is_empty(): revision += "/shrubs-" + pond.appearance_signature()
-	if theme == "zen_garden" and board_view.zen_visuals != null and board_view.zen_visuals.trees != null:
-		var trees = board_view.zen_visuals.trees
-		if not trees.groups.is_empty(): revision += "/trees-" + trees.appearance_signature()
 	return revision
 
 func _design_fingerprint() -> String:
@@ -720,10 +714,6 @@ func _reset(board_size: int = -1, level: int = -1) -> void:
 	palette_menu.hide()
 	erase_mode = false
 	game = Game.new(requested_size if board_size < 0 else board_size, -1, difficulty if level < 0 else level)
-	if board_view.zen_visuals != null and board_view.zen_visuals.pond != null:
-		board_view.zen_visuals.pond.reset_choices()
-	if board_view.zen_visuals != null and board_view.zen_visuals.trees != null:
-		board_view.zen_visuals.trees.reset()
 	board_view.show_settled(game.board)
 	cells = _offered_cells()
 	size_picker.text = "%d × %d" % [requested_size, requested_size]

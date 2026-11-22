@@ -70,13 +70,13 @@ func _run() -> void:
 		floating.cells = Rules.PIECES.L3.cells
 		floating.pitch = 64
 		floating.valid = true
-		floating.origin = Vector2(64, 64 + (4.0 if Palette.clockwork or Palette.zen_garden else Platform.depth(64)))
+		floating.origin = Vector2(64, 64 + (4.0 if Palette.clockwork else Platform.depth(64)))
 		floating_view.add_child(floating)
 		var placed = Platform.new()
 		placed_view.add_child(placed)
 		placed.sync([[1, 0], [1, 1]])
 		# Use equal ink to isolate geometry, depth, edge lighting and shadow.
-		placed.configure(Vector2(64, 64), 64, Palette.platform_color() if Palette.zen_garden else Palette.tile(1), Palette.coral_reef, 4 if Palette.clockwork or Palette.zen_garden else -1, not Palette.zen_garden)
+		placed.configure(Vector2(64, 64), 64, Palette.tile(1), Palette.coral_reef, 4 if Palette.clockwork else -1, true)
 		for i in range(4): await process_frame
 		var source_slab = source.get_node("PieceSlab")
 		var floating_slab = floating.get_node("PieceSlab")
@@ -88,13 +88,9 @@ func _run() -> void:
 			check(slab.material.shader == placed.material.shader, "unplaced pieces use the placed shadow and edge shader")
 		if DisplayServer.get_name() != "headless":
 			await RenderingServer.frame_post_draw
-			if Palette.zen_garden:
-				check(source_view.get_texture().get_image().get_data() == floating_view.get_texture().get_image().get_data(), "Zen incoming and hover pieces have identical sand, clipping, depth and shadows")
-				check(source_slab.get_node("ZenSand").visible and floating_slab.get_node("ZenSand").visible, "Zen incoming and hover faces use sand rather than a logical-color fill")
-			else:
-				var reference: PackedByteArray = placed_view.get_texture().get_image().get_data()
-				check(source_view.get_texture().get_image().get_data() == reference, "source face, thickness, rounded joins and shadow match placed pixels: " + theme)
-				check(floating_view.get_texture().get_image().get_data() == reference, "hover face, thickness, rounded joins and shadow match placed pixels: " + theme)
+			var reference: PackedByteArray = placed_view.get_texture().get_image().get_data()
+			check(source_view.get_texture().get_image().get_data() == reference, "source face, thickness, rounded joins and shadow match placed pixels: " + theme)
+			check(floating_view.get_texture().get_image().get_data() == reference, "hover face, thickness, rounded joins and shadow match placed pixels: " + theme)
 		for view: SubViewport in [source_view, floating_view, placed_view]: view.queue_free()
 		await process_frame
 	scene.queue_free()

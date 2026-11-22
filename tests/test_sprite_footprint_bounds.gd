@@ -6,8 +6,8 @@ func _initialize():
  var rng=RandomNumberGenerator.new()
  rng.seed=57382
  var count=0
- for index in [1,5,10,15,20]:
-  var meta=Metadata.load_sprite("res://art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_%d.json"%index)
+ for path in ["res://tests/fixtures/decoration_test.json", "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_01.json", "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_02.json", "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_03.json", "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_deco_color1_01.json"]:
+  var meta=Metadata.load_sprite(path)
   assert(meta.ok)
   var origin=Vector2(meta.resolved.origin[0],meta.resolved.origin[1])
   for sample in range(12):

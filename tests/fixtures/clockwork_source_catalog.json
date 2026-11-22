@@ -103,34 +103,6 @@
       },
       "growth_field": "res://assets/themes/clockwork/sprites/tier1/masks/clockwork_tier1_mask_from_core_e_color0_01.png"
     },
-    "T02": {
-      "assets": {
-        "copper": "artwork/copper/clockwork_tier1_pipe_color1_2.png",
-        "gunmetal": "artwork/gunmetal/clockwork_tier1_pipe_color2_2.png"
-      },
-      "canvas": [
-        256,
-        256
-      ],
-      "painted_size_nominal": [
-        26,
-        134
-      ],
-      "pivot": [
-        128.0,
-        128.0
-      ],
-      "anchor": "center",
-      "rotation": "quarter-turn",
-      "role": "socket-side collar",
-      "layer": 21,
-      "geometry": {
-        "east_socket_attachment": [
-          216,
-          128
-        ]
-      }
-    },
     "T03": {
       "assets": {
         "copper": "res://assets/themes/clockwork/sprites/tier1/clockwork_tier1_pipe_color1_02.png",
@@ -181,50 +153,6 @@
       "rotation": "clockwise",
       "role": "lower central driving gear",
       "layer": 35
-    },
-    "L02": {
-      "assets": {
-        "copper": "artwork/copper/clockwork_tier2_wheel_color1_2.png",
-        "gunmetal": "artwork/gunmetal/clockwork_tier2_wheel_color2_2.png"
-      },
-      "canvas": [
-        512,
-        512
-      ],
-      "painted_size_nominal": [
-        56,
-        56
-      ],
-      "pivot": [
-        256.0,
-        256.0
-      ],
-      "anchor": "center",
-      "rotation": "none",
-      "role": "top-down telescoping axle end",
-      "layer": 40
-    },
-    "L03": {
-      "assets": {
-        "copper": "artwork/copper/clockwork_tier2_wheel_color1_3.png",
-        "gunmetal": "artwork/gunmetal/clockwork_tier2_wheel_color2_3.png"
-      },
-      "canvas": [
-        512,
-        512
-      ],
-      "painted_size_nominal": [
-        236,
-        236
-      ],
-      "pivot": [
-        256.0,
-        256.0
-      ],
-      "anchor": "center",
-      "rotation": "clockwise_locked_to_L01",
-      "role": "upper ornate gear",
-      "layer": 45
     },
     "H00_plain_hatch": {
       "assets": {

@@ -1,0 +1,1214 @@
+{
+  "status": "completed_not_pushed",
+  "scope": "Step 4 only: obsolete source cleanup. Zen source preserved; validation-only dependencies retained.",
+  "checkpoint": "d92136e",
+  "external_backup": "/tmp/tiles-step4-deleted-assets-backup.tar.gz",
+  "counts": {
+    "image": 90,
+    "sidecar": 100,
+    "metadata": 32,
+    "shader": 1,
+    "generated_image": 9
+  },
+  "deleted_bytes": 6624403,
+  "fixture_components_removed": {
+    "tests/fixtures/clockwork_source_catalog.json": [
+      "T02",
+      "L02",
+      "L03"
+    ],
+    "tests/fixtures/coral_source_catalog.json": [
+      "fingers_n_0",
+      "fingers_n_1",
+      "fingers_e_0",
+      "fingers_e_1",
+      "fingers_s_0",
+      "fingers_s_1",
+      "fingers_w_0",
+      "fingers_w_1",
+      "colony_fold_ne",
+      "colony_fold_sw",
+      "colony_fingers_nw",
+      "colony_fingers_se"
+    ]
+  },
+  "generated_output_prevention": "Tracked build/.gdignore prevents previews/build output from reimporting.",
+  "deleted_files": [
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier1_pipe_color1_2.png",
+      "sha256": "33fdef10a877c18ad041de7cfd08dc47005d6fdf07d6cd1115504247f04e3dc8",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier1_pipe_color1_2.png.import",
+      "sha256": "4b91254765e61eee2c44690ed56e2b95cf016458b6eca28fee3b5c67319c9f99",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_2.png",
+      "sha256": "ca9b63ddb320c8e68bf05d79c55b13526460c9695a993a39d2e0f9d621d79cc9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_2.png.import",
+      "sha256": "591267cc69e933381d2676bf608fab9e7c8bdd4908f4bb19dd317f82a850a6c9",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_3.png",
+      "sha256": "2c6085b7d0991626d9c03d8e724a71cafc3b7cff51922cb902cb7c0e3bf44664",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/copper/clockwork_tier2_wheel_color1_3.png.import",
+      "sha256": "05b13d5a3461b236d9859a2c48427a8e3becb484653ea6bed1988d335ead78d9",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier1_pipe_color2_2.png",
+      "sha256": "478c890d38ac847fa35724f5584e8c740b4977ae088772aaa234d53268d89b9b",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier1_pipe_color2_2.png.import",
+      "sha256": "9cea1871b947bcee1596efe20a69471bae2c3f3fb98eabe4a3b40fdd64504f53",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_2.png",
+      "sha256": "1fa2f155d88f1ef6f8c845fdd5f6568eb62329153120783bd3b6d3d987e1c8c5",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_2.png.import",
+      "sha256": "d344fc5bab785687306df7c72c80802a7ee54727df5f53258178012e8e3e1868",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_3.png",
+      "sha256": "c0abce690c484d058fc938becb17e63b5f8d0a450fe89e9ae904ec686c4d4d78",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/gunmetal/clockwork_tier2_wheel_color2_3.png.import",
+      "sha256": "2d5ddddc2627d8df3770575ba4325b8d6ee41a17d11db13cd9590b1e41466a0a",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_1.json",
+      "sha256": "10e79d1cf942e422cae56acfd09b5b6376bde53d3cb21ebb3affd927a54f246a",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_deco_color2_2.json",
+      "sha256": "e90b8786442bdb25ef6582cf6e2cfe2fd95399b3712b5e39c4ac26905bdf774e",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/artwork/tier1/clockwork_tier1_vine_color2_basic.json",
+      "sha256": "28db7fef3a2da0321a72184eb1d181f611594633a9026017d86ace9407b10d20",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_n_color0_1.png",
+      "sha256": "8fc49f4fac0bcf695450e8b2e7f451ad73db08665b5e19c57169b08a09892a62",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_n_color0_1.png.import",
+      "sha256": "1de8657ee656419583017ba4e1ee780f4b0c12c0b929b8ffc797aeeaea704eb6",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_s_color0_1.png",
+      "sha256": "acaa5d10b6a29e46e97df4e366ae533ebd0b8245fd2973b6bcded60d80a7c57f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_s_color0_1.png.import",
+      "sha256": "992398cd548a8c4e322566003ac072bb830c4a70c99f99aa58e044f329ae7169",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_w_color0_1.png",
+      "sha256": "d22223335b1ed93c06fd683d26c85f57314219d3919d6a4257983d873006f505",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_core_w_color0_1.png.import",
+      "sha256": "1c71868725350ae0e444010ccf81755ac9fc6c2f562c30a8e92aff96e304a472",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_e_color0_1.png",
+      "sha256": "6a44ac02ddebf78cd4fe71eb6ff81b9930dfa896e01905af9c551104b03857f5",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_e_color0_1.png.import",
+      "sha256": "d5c4e7799a660552d065494f5776841f0f7f67a6d7bda1268f5e80c1c299396f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_n_color0_1.png",
+      "sha256": "bf0ae68eeb66761a9736b5cfca61578f05133a2e76f0f9b4b444b2b2e6e0bea0",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_n_color0_1.png.import",
+      "sha256": "caa46e2e8b455ed71344696f878d06d7416c0b7c06ef14c72b09c567466cf791",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_s_color0_1.png",
+      "sha256": "73f307f9875ab64033bdb6d3bc8f85521a214d1965cd4812d5c45a998dd760b9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_s_color0_1.png.import",
+      "sha256": "246ec41f17a31ebaa1ab53b309e7672805a76f7f36a86d0db32cc11812802eb8",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_w_color0_1.png",
+      "sha256": "2d29009ccb21cff197d0a3f5a1dd9f7ac032e4b74e814fce5a02f5d18e853c33",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/masks/clockwork_tier1_mask_from_edge_w_color0_1.png.import",
+      "sha256": "58f5c17756da92faa9168f0aaba03b45e30b50dacdbca64896a9b060749e676e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/shaders/directional_reveal.gdshader",
+      "sha256": "db38a0910f35ceb32dc30ff176449c682f7fc63b5f0131b218099cf1c9b6d4ab",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/clockwork_workshop/shaders/directional_reveal.gdshader.uid",
+      "sha256": "191bd9722d53f269a9c6a5ac4d82387b7ab7471121d72f0f8d7adb7aaf00ef92",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_13.json",
+      "sha256": "e0f174eda77f65e052624055d617277dd9d02f6b0b2685e3a72d37f8babdfdeb",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_14.json",
+      "sha256": "5bb66dfcbc09a02312fd2054c2babfd6f5fbe888657be82bb611160d8a68388d",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_15.json",
+      "sha256": "dd471df42161a234b2e193674c7fb0ada4786cdcc73fc2ae6f7f01d36c7eb7c3",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_16.json",
+      "sha256": "4a5b300253ffd6443ed8fc60e65500b1ef2b85a4c23618eb3cc4e8aaecf90e95",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_17.json",
+      "sha256": "e14b2025c663aa5f20299625ac3791a61b327310288e4a4642ad8f437700afa7",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_18.json",
+      "sha256": "3bb17a7adb494a8fc090f40451e0c74384ba1bbf321ff0ecc020db520be7b485",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_19.json",
+      "sha256": "29e34c93e95f2b52f8ddc3fc7e0d72d8205e9bfaf4ad1a26272f483034b6b290",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_20.json",
+      "sha256": "cd3b6e727ca9d39b843250b4de1f56909eabe56eb675910df44a760c3ae27218",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_21.json",
+      "sha256": "ae4ae63ea980f1c210d70dfb25c6b9b9c4ed1a869bbf34b62a17afcf4617130c",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_22.json",
+      "sha256": "0343b79872016c6cd6c5edc2df21e390ea5ddae890e30e986011ecfeec9f35b1",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_13.png",
+      "sha256": "abb7ffa113948bd70c23dae1159b4f7869ec70f8af1a132a311f9afede19daab",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_13.png.import",
+      "sha256": "342723ece0467ca6a2b20ae5e06080776cb3ff9c0069a71e651f6093045ac2fb",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_14.png",
+      "sha256": "48e970d8e78180b525b6e41e7d8f455b689fc1429abe142afa902943bf50f760",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_14.png.import",
+      "sha256": "890f21a7f0d2bc9dc21945e4746ee7ebb75d4c779402202f8957feffb94fe8f1",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_15.png",
+      "sha256": "d5688e0661342305b84fc846241fa52a7df1ad99b871786c87e4117e52048256",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_15.png.import",
+      "sha256": "1483e06305d47480903071ee49ab435e8e6beb8e5feb6bb478aa901c59f6f46f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_16.png",
+      "sha256": "57231c4c61ef93b05cb2b940b1ff952d91281fb7a1338ac21b762463218cd2d1",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_16.png.import",
+      "sha256": "5d7828c50e1e0c2a63d13b6cb744cebde3cedd2255958374b4c68a845eac342c",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_17.png",
+      "sha256": "a752551ff7bb013cb250398da3e7e6ef4f5af5ef155b9d468cbcdf95db7f8ef9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_17.png.import",
+      "sha256": "f199dfebf8ea377068dd71fdc84b343c9e880e366da9333fc9d54cba0325e413",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_18.png",
+      "sha256": "1ce8b615978f61c55aa685bf1e49f129060f4a5f631150666982469003822c1c",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_18.png.import",
+      "sha256": "4fc890a29d9d39c2c041bf09684a93668981a1b3458a0a6d890e61fd40943151",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_19.png",
+      "sha256": "8e156b8bce0a84842af80805e6649a09cd1779047daea299aa8796afc776f0bf",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_19.png.import",
+      "sha256": "17007bd95164ec9de23ce26d28c436e2df70f50bc7ff30036afbf62c7a6d58dd",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_20.png",
+      "sha256": "5bcb89423e2f2f6c008ee3233c74b4f4da086fb506c5360da4b556476d705509",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_20.png.import",
+      "sha256": "8d488a9db16e474fff0f20060f5375b7217b522ce5da7a8efee5991cd73067f0",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_21.png",
+      "sha256": "069e7d1b1b0c8d2ee8f72f4dac98a27968386a1e101fca790fdf627171d7875e",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_21.png.import",
+      "sha256": "11945dd65b26a602394945a4d91d1320c95325c29cae8eac7ef6e94ce3a06c49",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_22.png",
+      "sha256": "6eeaae02724d889db5faa360ae1b459a270b701aa218e9882687fb8fe9b06d8d",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color1_22.png.import",
+      "sha256": "c800a8719288986f64e71386d478225265358b2179e10fcfd4b9ff33b53dfb53",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_13.png",
+      "sha256": "1099ab6051585f59aa1791747e1cdc9427a6ecd5526c3836b7779924eb2969d4",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_13.png.import",
+      "sha256": "2b87665943f97225129854f12e4fcc806b6887bc82b4c7902adfbc10d3414d5e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_14.png",
+      "sha256": "6f5beadb4531061eadb41524d9098e34a6b69654c7027e0b3d9570dd6341192f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_14.png.import",
+      "sha256": "bff8df2af98537e3e552a42d4339febfa2e365215b445c4e69c84c6633d232e9",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_15.png",
+      "sha256": "3dc0e7438bb48e88a6c2f68428f4a9152d911ea2d946f9d1b566a8bd0c55204c",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_15.png.import",
+      "sha256": "0050123d992d6459db1a06fa9835b38304a300d62205b1c2fe5bba4c61ccadac",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_16.png",
+      "sha256": "b5d39a133a74035d14b212eb8245f4c22f8bfa80a89e4ec03a6d87b9bce8187b",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_16.png.import",
+      "sha256": "99dd1f58dd7465eed768c6c72f8ff5dbaaabd4bf97aa24518e24a942e64127df",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_17.png",
+      "sha256": "1328af796633fe311d7d24a0fa092681a0cb54dccde153e8aeb1a1f9c5598965",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_17.png.import",
+      "sha256": "4b584704fd2537cf86d656b454300118634ff6925cf436823a5a9e60a0a1cd9f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_18.png",
+      "sha256": "37c2c94b3593ae6b8c15a451349964ddb3d269e688de71aed4f0286c83ec21fc",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_18.png.import",
+      "sha256": "67efa01608e48793dcc69d8176df92fe4fe599362415b36ff76da6ecb186f4dd",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_19.png",
+      "sha256": "044b55b02baf2208467a28e14c3e80536adfd0c8f7b881b354bd3e1aa5588227",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_19.png.import",
+      "sha256": "d1cd74233a1525f6d5d13ae21464b8676498fd60d28d8f87c9967a2f817e7a6e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_20.png",
+      "sha256": "2d30f76baa144cdf4c5ea36b6289e3dec1355464a39672f61ad41599fbb6bca8",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_20.png.import",
+      "sha256": "b63ca4da6ddec8ffa3358c07fd7dce09d616664a95343e889220924cfb574725",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_21.png",
+      "sha256": "1e1bc6b63f95f739cc1638e678529f6d578ba15619604e6aa5d3a71b40876e94",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_21.png.import",
+      "sha256": "f78a2c537fcb0842ae35dabd6063773d8e374242505b73cfb6876e6ea6486587",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_22.png",
+      "sha256": "15e45ad821a5f461e468a137917af26c49c11be6faf1f3e4a40d4724a636c65b",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/petals/coral_tier2_petal_color2_22.png.import",
+      "sha256": "079ea92c8558c1e1ae7d9b8cffc92db4ee2af8a18c86160b033f26cc9fccdc57",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_e_color1_1.png",
+      "sha256": "07f46ba3002ce6ef43c9b262a3b9329a0d76089e53dfd27eebce531eab8c790b",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_e_color1_1.png.import",
+      "sha256": "6c2d473c5f8347ea0ee87443e2519c16154d359e858c92896dafdd9162134fb6",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_s_color1_1.png",
+      "sha256": "25b2c2102604d40a2282873ff4038ceb43fa657d0d644000ed5da7397ef24338",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_s_color1_1.png.import",
+      "sha256": "de3c0ef0485edd7ced350b31de960f97a4aa310de4b39d7507221df2fa5ba467",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_w_color1_1.png",
+      "sha256": "eda1cd83a571181fbad85c3b868758a086d24e4e2cf51fc683a4fbf00cdc70f7",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_arm_w_color1_1.png.import",
+      "sha256": "585ef46db1a616ee07bd4c69328ab1b8a70c2544d1684388bd5e137d92f2a49b",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_es_color1_1.png",
+      "sha256": "c23a8e6f214cb8fc46f5cf986fca92216304d0ecaec5ec26d1aae83e7246a2d8",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_es_color1_1.png.import",
+      "sha256": "14680d9eabd446c7a799a03c884017c3bbdd1053c67ca74b51a1ba8d02ae6830",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_sw_color1_1.png",
+      "sha256": "f283fde576a0c1ecc35e90135cf95641ec795419fc3137d7fb098f57cd3a7571",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_sw_color1_1.png.import",
+      "sha256": "230d53f52c9064669bf419e37b89c25400b40c823322d6541d06b0a8f1bc7042",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_wn_color1_1.png",
+      "sha256": "6c009f45b0f20da0984b57f624a6f291c7732e6e54b08bd4b06839d046c08620",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier1_junction_wn_color1_1.png.import",
+      "sha256": "5fbac73131aa3fb69a5be66bb47e3ad4b2bbe6f0ec88925aec0d1b74ca496032",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_nw_color1_1.png",
+      "sha256": "f42b8413fcf00b257d58fa472f94085034c5b3e5b06ca63f00c22ccf2f9abc27",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_nw_color1_1.png.import",
+      "sha256": "1eeeb610817387cb04f9e2544bb921568e8b457750e560cd87193838b2d0fc55",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_se_color1_1.png",
+      "sha256": "848b14052b2721690e5712c9e76d903a77a41d5b4b72b0fd2df23809cc2082cb",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fingers_se_color1_1.png.import",
+      "sha256": "02d10b49b3c3b623540987a0aa77cfc884420a0820b9051b5cba8d0e94739b1d",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_ne_color1_1.png",
+      "sha256": "35fc4904edb1cdfcdad4257649162ed1736c19dd0d7de9a120849278d0223a19",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_ne_color1_1.png.import",
+      "sha256": "f6fc235f22b94ed25086dd5a64cc926132cefcfa4aecd0e331b7050d4196c443",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_sw_color1_1.png",
+      "sha256": "5152e5571912e35e4e22966f0ca688d64701c758af29b5f1e00e4abb9c595c7a",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier2_colony_fold_sw_color1_1.png.import",
+      "sha256": "20b79c579ead26eb91cf712572deaf9815f8c104a2aa4bbcb25c90c3162873ce",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_1.png",
+      "sha256": "27ef2088cb5205b71c2c564a18bb193f3b13a5ba11cd49603b183d17f74dc183",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_1.png.import",
+      "sha256": "f98c4b9588612a0534fc4ac7b989d22d55fefdca0b56799f60f5743907a7ee8a",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_2.png",
+      "sha256": "1636868aa6fea67df859020877501256ecdadd92ad4064692d580ab3774ff058",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_e_color1_2.png.import",
+      "sha256": "576b895925c9adb6920bf15ee909ec44612046aff8efb2c1bdf5e25777a33827",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_1.png",
+      "sha256": "b76e82df9aad96e90d2de2f4e5b70cd8fcdbbf2015cc48983cd0fc4fb6d36e2d",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_1.png.import",
+      "sha256": "0136aa82d7c9002f45c2199f4b4859eb856f7d9fb571d39c91d910205203baa2",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_2.png",
+      "sha256": "a13a254575cc93cdf36e7e725c7cd8777a87a22bb80dd229042faff60f2585c7",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_n_color1_2.png.import",
+      "sha256": "ff08c3d8d8738bcf46bc4af9d8a51b2e53bd6904d2bf4c934ca68d6e7d147f64",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_1.png",
+      "sha256": "a29268da33802f7c34b5eab4f4d49f6a427dc09365857ce2a2ebedc4d0fbf835",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_1.png.import",
+      "sha256": "bf7595581e8014ba3293ac3dfa94341587d1dbe3765240d1a5f07bc31fa89101",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_2.png",
+      "sha256": "e2ee821b5d6300d4971553a6507454947a87e7a4edc30778dbe64bbfc7e2a7b8",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_s_color1_2.png.import",
+      "sha256": "18ef22ff557155380ca82ac24c7a1b83af103e7a836655d565ea6c334b0fd6d6",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_1.png",
+      "sha256": "e8fb28e9fcc452eb4a90bf0bda0ded840fe48bab61fb84c662209f1d385837b0",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_1.png.import",
+      "sha256": "b908c3639ae4ee10abf767c44d1c61adc571b425dc3b315dd6ebf1920c849db2",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_2.png",
+      "sha256": "22b9c366c9c6988b57d97e913c5678c4bb1244b83ccc11099106228e5b583456",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/salmon/coral_tier3_fingers_w_color1_2.png.import",
+      "sha256": "c6010e76387d6abb58e9c71d43fcfba7556f5ea0fc94266a3533f9f139a6bc10",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_1.json",
+      "sha256": "79a5272d630ded11b19b8605a7265cc28292ee69a921bc9c514568c8465eeed0",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_10.json",
+      "sha256": "7e7053b6ee31cc5064cd7e57db47a8b27c93af2638dc0f21a2f3fea4cf3b4b66",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_11.json",
+      "sha256": "e9db90b1a616e65eb4b4145c05d9a9fc0acddb38b5662606d3480b5bc33cbce9",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_12.json",
+      "sha256": "7e510cd6c6c275df537453b5add4868dc90265644240d288fe63a6ef4192ce46",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_2.json",
+      "sha256": "1e063dcee8d8e64168371b3e6e0e120baab28738ae57f421653bbe1d61a3b651",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_3.json",
+      "sha256": "64cb572a04f29c1e09e195953d15eb9d3a121a79e33fdcf942a1177457bf6ac7",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_4.json",
+      "sha256": "f2b2112f00f2ab16693abb916f5c3d027beeb60971e97734fe745b319a0ab449",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_5.json",
+      "sha256": "d5be019f7d1a2e46d93ecc2da44e8f8ef4731efb585f98fe25ed970c5a32669c",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_6.json",
+      "sha256": "5541b4bd63ff43287eb3a456fbc772ccaf9d604e421be45032b925e3a3b06019",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_7.json",
+      "sha256": "8c5cc44154613d8c6a196438e2505fd9f29a13706ebf8934fefaf32b18c11219",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_8.json",
+      "sha256": "fc2fcdf2bb946b1b86332618856b436824fde002bd6b8d895bac6ddf8f39939b",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_deco_color2_9.json",
+      "sha256": "e10c04474643705728bccceb00c66a00e387a0b527f4fc54ae556fb5dbd10e16",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/tier1/coral_tier1_vine_color2_basic.json",
+      "sha256": "015631935b6666b3b1675bc36053949083cc7fc0351e13bff0d692d3a6960bef",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_e_color2_1.png",
+      "sha256": "7030a848cc363a3782e450dca737dcf8a4159910e68fdde54ea0ded4a5b60511",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_e_color2_1.png.import",
+      "sha256": "b7067cbd67bb47aff878cce187b187ea9f5f7d84ea2abce5a110bfbce46196ef",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_s_color2_1.png",
+      "sha256": "e3117e6976a6ba755cd53e902f800afebae64cb22f2e80a49d1ce02c75a91ee6",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_s_color2_1.png.import",
+      "sha256": "277cebdaef3e51ca744f072e5dedef708ea6385deba0eb061a3545df42a28b68",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_w_color2_1.png",
+      "sha256": "e6e8644cc6e7f5eb6640308b0e47441dbdc0e19ffe89848fd7dd99a4d2674df9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_arm_w_color2_1.png.import",
+      "sha256": "be12f0953271d7de742d866cd26a9a3aaf50b2aa9dad5869ae38de2f0cc5ad1a",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_es_color2_1.png",
+      "sha256": "3c7df48da74ea2eebccd2a4e85bfe39860cd6353a417f6eca830a8ab4a582474",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_es_color2_1.png.import",
+      "sha256": "4d316c9685f84355562a66553aa1953046d23f7d6eb79614569d9fcc5d0677e4",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_sw_color2_1.png",
+      "sha256": "bb4c61a00e624896ef9d61fd4634c260b35d71bd9c0e13734739b0fb0e0b25ec",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_sw_color2_1.png.import",
+      "sha256": "2201be081f4f29e36282f0ca3dfee479f123cd0d2775c5974541fad107bcf87b",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_wn_color2_1.png",
+      "sha256": "fa0a68b0b9865120e956ef39a6a20bf78628320c7885ced78996d158af70697a",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier1_junction_wn_color2_1.png.import",
+      "sha256": "d4266f1a352aaee800798a8d1a9142fbc16a3a837ede7941a08374eb2e356885",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_nw_color2_1.png",
+      "sha256": "e051567631d9664570f1127b29e18b76f0c27fe07eae098ff3a8ffeb3cfb761f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_nw_color2_1.png.import",
+      "sha256": "9120d6e8f65a8058f2bb63df9e2242b5dba48fcf77b97713b34b938a8ce1a868",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_se_color2_1.png",
+      "sha256": "789bae7fa463c4e6bdff1a5412120bf99aa7b9a078e7641de8523d7a4e5a2636",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fingers_se_color2_1.png.import",
+      "sha256": "3488e673c0ccdd7fd33be9b45b6db9414854b35cf9a97f413f34565140ff4617",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_ne_color2_1.png",
+      "sha256": "425c35a4d70f708a6da6ba69948024ee0532bae50df88b082931c6baa9db3752",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_ne_color2_1.png.import",
+      "sha256": "145484a7ae113e9745c41da7a13f2db7e2bc8e3be713b44609fa23f8ac42febc",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_sw_color2_1.png",
+      "sha256": "f293eaa4ac9b704566047dcf322c52944ebc97695174742522a1cb2716182444",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier2_colony_fold_sw_color2_1.png.import",
+      "sha256": "4ca7e0906018d5985375c6a7502331c46cd5efccf590dee7d991d4ebdb906116",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_1.png",
+      "sha256": "25b69e7accfa42240565522ceba0253403f12622348fe0854a2aeb4b24761da9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_1.png.import",
+      "sha256": "4e36fc3ea0c3be6e52264b3207be29399323b7295e265f8360765cdadfc649ee",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_2.png",
+      "sha256": "5325aa964ad6af9a0deb16affb6e53afe47d93a81d0b0eafc47e7fda81efa80f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_e_color2_2.png.import",
+      "sha256": "300939f4b7e2ad7d1bab0b4121280abd341c22a0ac8d9f2fc7d324b66c4f42e3",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_1.png",
+      "sha256": "6b46e0294d914667f26c1b71d12400cd0a61419ee3508f02339de78e3b2942ec",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_1.png.import",
+      "sha256": "600c5d30c37c9f94efdcc1a07dd6ad41e599a8fc733b2e4dbc789d9baf70b88d",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_2.png",
+      "sha256": "1b993557fc58c24000333c8fdd6de5c6293159b210953ea2106579a347cbeba9",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_n_color2_2.png.import",
+      "sha256": "ffc031b545707bfc3a628af96ee65044af2e8f2c626cee650460d8763b267672",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_1.png",
+      "sha256": "7a58d00b6623a022e7774a45c167d4f8c24d3602c9510a107ee63fe9fa3e3cb5",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_1.png.import",
+      "sha256": "6cb6d7d5fbbf7f41b7fa1e12da047eebcd9fc8cfd6e310baf57a7ec4f5121e5b",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_2.png",
+      "sha256": "6886b74aff00078750cb900e5793254b66f32fb22d721ab15d4dbd483cd7054f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_s_color2_2.png.import",
+      "sha256": "b3c784a8730b0a695c7f5a2f5dbaaad76cc9deb8a8936974a33e4ef9ca070a8e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_1.png",
+      "sha256": "5310d1cdbb8b9dfa0fa88fd3af7a436fd8841ba7154c77cbb94e08da7a6b2c21",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_1.png.import",
+      "sha256": "6b1fd67f72628ecae1d03b84ce2a6c562d91ffe10b24de28f1077b8bb6748857",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_2.png",
+      "sha256": "e63730f08feeb46968281a33ece2de0926a72d864d517f4568bcd5da83df9ac5",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/artwork/turquoise/coral_tier3_fingers_w_color2_2.png.import",
+      "sha256": "23bf2881eb34613bd1893462704ae1a2cac140bc78d17401effd47d722e893f3",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_e_color0_1.png",
+      "sha256": "a0c401f47f390c8371886a5155043560e8caae5d949f8b5b16ffcf1c5a60c900",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_e_color0_1.png.import",
+      "sha256": "652b081589d52febbfaa927d6842c988d2d505753070006741115ca85a44be8f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png",
+      "sha256": "64d39de7c7f91716d7250f7d30c8fca02074b5412315cdd260e6a865c3ac9091",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png.import",
+      "sha256": "76fdda58e06fb5b92243872503b2f189a634d813116d56cbfb2c0f01dbae7fdf",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_s_color0_1.png",
+      "sha256": "b8e6053b363f7df5fa65e642478ce854f56fa12ce91d1a5727dabe6e29c30b44",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_s_color0_1.png.import",
+      "sha256": "2f6ce79e8eaba88be3f456df2ddde042ecbc6a9a16bb3b9132400a917404781c",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_w_color0_1.png",
+      "sha256": "bd051d9cb524a397acdc1315e64083f7ef03773ceb0626f651cacaea1b96ea2b",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_arm_w_color0_1.png.import",
+      "sha256": "3d4485b999c476330bc095b158ff2451d1e31d596ff8eb51a42db51b93080cec",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_es_color0_1.png",
+      "sha256": "f73b1ae3885c43b3db8d841a0b37c2c5afd10911823c24c3a3e0f31491b560b6",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_es_color0_1.png.import",
+      "sha256": "c6aedc8588a04d58fc4e1f7992cd7d656a8b15a522913981a9a9a9f77309ca3e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_sw_color0_1.png",
+      "sha256": "9a1c32327977b16e629d75ba5afa3aaf29800e67c1fcf2347e236cc239cf5047",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_sw_color0_1.png.import",
+      "sha256": "6a3fa878e0c1554d555cfab3dba0b6813c8269ec567210dcb8000851b9677c96",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_wn_color0_1.png",
+      "sha256": "45c85ed73bc291155f7bf1f9d36569dfbd60b224cb9911b9bf4c89c51995288f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier1_mask_junction_wn_color0_1.png.import",
+      "sha256": "34be6779ee5846860f10264a6aa7d73f2b54ae5c3ab133a82736e7ca53ad241f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_nw_color0_1.png",
+      "sha256": "b9db12b1f9968bbab03002d005107a6817145f5bb46d4a57987bd4c7f9ccd916",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_nw_color0_1.png.import",
+      "sha256": "a6b725ef0f2b0a7bfe649a38171aa2c4d90829fe110b64a7a97f79c0aae39c19",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_se_color0_1.png",
+      "sha256": "984a73ac9bb17ac3311ac4cbc691c9619f4c797b500de60c14e91f162ea7286d",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fingers_se_color0_1.png.import",
+      "sha256": "215a25d85b9be04fa69e07f029ec94e7784b10184d7f09485c1e87e33dc8799b",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_ne_color0_1.png",
+      "sha256": "8bb014b302bdcfb2dc09b26693b801e8f86c1b96991113280bd55ea0a2a430b5",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_ne_color0_1.png.import",
+      "sha256": "7f41e2ca93cc8d8cdcec69561a87fa619d13aa38a7bf4ad6639710d5dedbeb0b",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_sw_color0_1.png",
+      "sha256": "1b4f3b6ab66465f452f05623a431181bda065129150a82c0f762b20e38fb7a6c",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier2_mask_colony_fold_sw_color0_1.png.import",
+      "sha256": "f37c70a0fdd09af2fedc644e5f922d5537b3bcd986c2d594d0b25ea32aa9ba5e",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_1.png",
+      "sha256": "d5bb467d188ab4c95d1c823052cd1c9818d059baa78922bbf147175a38021847",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_1.png.import",
+      "sha256": "c1d4fbaaa36732f028600752772292a41050a435ee97c98673c0c56a659120f5",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_2.png",
+      "sha256": "abf9696a42b21e0564ba6d71320a2a0f09e3fad577660728ae3de2e15afc128f",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_e_color0_2.png.import",
+      "sha256": "140057832eb4742aa095aa604b97804007b0f6cff315d8e670d0687ef3537603",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_1.png",
+      "sha256": "8b15788c9f8f6ec26bb1092307d3622e5497ed65a7bf41b4bc7a644513ce58a2",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_1.png.import",
+      "sha256": "bc3b6a03eb54dca1a123804d599410d202d7ce1d206947471d28a7e9d6b77956",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_2.png",
+      "sha256": "d0905864d542b0d15d3440420b5d4ae4fe95e9599dc6b5c30786f64cb7bed42d",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_n_color0_2.png.import",
+      "sha256": "9f7373b9585a4495b6631ec68679cf1061872ad3c7af84da0da1c78581bc7b49",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_1.png",
+      "sha256": "5be47797aeaeff7fc9dec21dd05457a320a6f6ffa7d34f7872b5258a001824e7",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_1.png.import",
+      "sha256": "1d0c6cf35d87c23f5067da77f4a3eb9d5cec52b4eae85e86969e03a82a1dcc72",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_2.png",
+      "sha256": "a8ab7068b47b442f92c7ee90387dbff9729691fd805608deac55e96c34ed5a63",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_s_color0_2.png.import",
+      "sha256": "229a8c39abc3d7a87deb40c2b9146b3caf6dc7b9c4c076bcb00344d9853fc8e1",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_1.png",
+      "sha256": "5f56f41cf227e89247035997ba24789b36c5c7dc3fda3c3937e9ecb538df260c",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_1.png.import",
+      "sha256": "adfb7623678e8806e87e5375a566a084c48391863705308a588148990ff5937d",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_2.png",
+      "sha256": "d1ef555b41a24de5eae85e33c211ae127312d5ea066558b01cff3bedbcb4271a",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/coral_reef/masks/coral_tier3_mask_fingers_w_color0_2.png.import",
+      "sha256": "16f676fb98e5b1b8eacdfeb1e2070fcd92f1512114044803d6d028d7b9fb4756",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_1.json",
+      "sha256": "979d0058d57c3ffe265e829379758c88ebb3d196e34aac3a3c750631c808449a",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_2.json",
+      "sha256": "826e9b89259bbed69ec1957f27f71fea54fb292d2c169693df6f7d0f881b2e67",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_deco_color2_3.json",
+      "sha256": "16aa0f2aab7cd8da918eeb43f40b9b95c33f899367a858b035cc761ea126608c",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier1/vines_tier1_vine_color2_basic.json",
+      "sha256": "5d00d78068eec1219f78e94b87202180cbf47498e768b5e8690dfb029c84a99b",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.json",
+      "sha256": "5d47ab9d61862757a18a583feba52598ef4a511b48033c843e3b68d5f60a00b2",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.png",
+      "sha256": "131857a9c425d7780f364c754e7887622fecc5e7efd0095f87723a28f6b7e263",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color1_basic.png.import",
+      "sha256": "1a78dc579041cf8a1a68223afdbef79c176f6b0333017f00ee801545c83848a1",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.json",
+      "sha256": "abcc4039e69848225040ebe298fa96b5111e82b6ed7ea326706bd565d5cb6404",
+      "reason": "Unreferenced theme metadata/shader; no active dependency. Review test/tool references during implementation."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.png",
+      "sha256": "d178b95e33306192ed525902990b59ebd086253b636296416bc1a9da30eafdbd",
+      "reason": "No dependency from selectable themes, reachable runtime scripts or reviewed generated asset paths."
+    },
+    {
+      "path": "art/themes/vines/artwork/tier2/vines_tier2_fountain_color2_basic.png.import",
+      "sha256": "c4e4111523424f274f1d84feb92cbad2a02cfc4ea48681c24f7dc6f5c8cfc29f",
+      "reason": "Remove the sidecar together with its unused owner."
+    },
+    {
+      "path": "build/tier1-generation/clockwork-partial.png",
+      "sha256": "94dfce423702936fa51650b074c99448e7ea115483bddfed4800663235f32223",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/clockwork-partial.png.import",
+      "sha256": "0dfbf765f1e528409fc70dd6759f8f8c85e8803644a1fa3ecf42343c912dff4d",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/clockwork-settled.png",
+      "sha256": "404e9c0e75e958bd9291c3d20a5cccfc729745fffa7a0becfa5a12b9056a56df",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/clockwork-settled.png.import",
+      "sha256": "9456244ac0eccbcab373f39bddb22f50815cc28ac2db764d21ced3b63c752279",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/coral_reef-partial.png",
+      "sha256": "3d7c0c06ab525e5ec32d4dd17e05e649c1d8ca0925c9fc1250b74d6d5a35b091",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/coral_reef-partial.png.import",
+      "sha256": "cf413f8021abbc7f3efdbe1f0f8191a9d9b537993dc078adfccaf0276b9ea06f",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/coral_reef-settled.png",
+      "sha256": "af5871f4e406a5627f5b190250251b8355ebf8b983d7f3cc62e3c56f35c7e166",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/coral_reef-settled.png.import",
+      "sha256": "235b78e1f8edabb5e4d65eb5fd7c61a887b2ce6845b5da88c09499f35728087b",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/vines-blue-snow.png",
+      "sha256": "5f94a2f3ac19bc56fa68c9d119b3cc26512258194c17dc60fcee557220560890",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/vines-blue-snow.png.import",
+      "sha256": "bd2fe5d5f952f8c03299d02b81a9ad404fa6926f902b2eb7c0de5e68af7314cb",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/vines-partial.png",
+      "sha256": "3a4678fa7c466b7d5abea5fe1f351d27380221ab0a272b1c5b9a872998bc20e7",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/vines-partial.png.import",
+      "sha256": "e8f03ce5652d544160217b590083ece9062feee9abe94565a64c5887fde35ae7",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/vines-settled.png",
+      "sha256": "e8d9d52d3859e59357be6a189f051ad02a3181088ff8b3a63e76d240ec5cd11f",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/vines-settled.png.import",
+      "sha256": "3d8ada5a64eac0b0421dbe6696811ddbf5b0f2f53d08457ba4a3a68c2d89d0f4",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/zen_garden-partial.png",
+      "sha256": "3a12f06aea05d4d4349ffd552cf27b21f4080c7bb1f98e70410ae2ecc2903977",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/zen_garden-partial.png.import",
+      "sha256": "c9a363d44aa701a0d55487cc99e4542399519d6c28b1f6dcc68172c37772658f",
+      "reason": "Sidecar for generated test rendering."
+    },
+    {
+      "path": "build/tier1-generation/zen_garden-settled.png",
+      "sha256": "a62a2921398b5e4dbdf026ff64f7b563a652c81b4853a6274d76b004f6bf4ce1",
+      "reason": "Generated test rendering; keep future output outside the Godot project."
+    },
+    {
+      "path": "build/tier1-generation/zen_garden-settled.png.import",
+      "sha256": "3643f587a0ede084592a1131ae7d09b7f5f9042082e9ee8ee588891ab115bc70",
+      "reason": "Sidecar for generated test rendering."
+    }
+  ],
+  "verification": {
+    "unchanged_retained_resources": 215,
+    "unchanged_zen_preservation_files": 301,
+    "all_planned_deletions_absent": true,
+    "new_unlisted_asset_guard": "Rejects an injected unlisted PNG; temporary probe removed.",
+    "checks_passed": {
+      "sprite_metadata": 188,
+      "theme_registry": 76,
+      "tier1_artwork": 327,
+      "coral_fingers": 161,
+      "audio": 52,
+      "game_session": 18,
+      "manifest_images": 205,
+      "all_runtime_resource_loads": 212
+    }
+  }
+}

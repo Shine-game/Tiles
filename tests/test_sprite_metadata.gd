@@ -5,7 +5,7 @@ const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const BASE := "res://assets/themes/vines/sprites/tier1/vines_tier1_vine_color1_01.json"
 const LEAF := "res://assets/themes/vines/sprites/tier1/vines_tier1_deco_color1_01.json"
-const PEBBLE := "res://art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.json"
+const PEBBLE := "res://tests/fixtures/decoration_test.json"
 var checks := 0
 var failures := 0
 func check(ok: bool, message: String) -> void:
@@ -102,7 +102,7 @@ func _run() -> void:
 	settings = raw(Sprites.SETTINGS_PATH); settings.defaults.spawn.erase("mode")
 	reject(Sprites.load_sprite(seed, LEAF.get_base_dir(), settings), "Incomplete settings are diagnosed before normalization")
 	reject(Assets.load_sprite_catalog(Themes.sprite_catalog_path("vines"), "res://", "a_different_theme"), "Registry/catalog identity mismatch is diagnosed")
-	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_vine_color1_01.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://art/themes/coral_reef/masks/coral_tier1_mask_arm_n_color0_1.png"}}
+	var masked := {"schema_version": 1, "kind": "decoration", "status": "ready", "images": {"color1": "res://assets/themes/coral_reef/sprites/tier1/coral_reef_tier1_vine_color1_01.png"}, "canvas_px": [256, 256], "attachment": [128, 128], "direction": [128, 0], "spawn": {"mode": "progressive", "reveal_mask": "res://assets/themes/coral_reef/sprites/tier0/masks/coral_reef_tier0_mask_core_color0_01.png"}}
 	var explicit := Sprites.load_sprite(masked)
 	check(explicit.ok and explicit.reveals.color1.provider == "texture" and Assets.resolve(explicit.reveals.color1) != null, "Explicit same-size grayscale reveal integrates with shared assets")
 	masked.spawn.reveal_mask = masked.images.color1
@@ -121,7 +121,7 @@ func _run() -> void:
 	bad = definition.duplicate(true); bad.families.default.logical_colors = []
 	reject(Sprites.load_catalog(bad, catalog_path.get_base_dir()), "Malformed catalog is diagnosed before iteration")
 	reject(Assets.load_sprite_set(Assets.load_sprite_catalog(catalog_path), "missing", 1), "Unknown family diagnosed")
-	reject(Assets.load_sprite_set(Assets.load_sprite_catalog(Themes.sprite_catalog_path("zen_garden")), "stones", 1), "Zen has no accidental logical-color-1 stone binding")
+	reject(Assets.load_sprite_set(Assets.load_sprite_catalog("res://missing-catalog.json"), "missing", 1), "Absent catalogs cannot invent a logical-color binding")
 	settings = raw(Sprites.SETTINGS_PATH)
 	var base := {"spawn": {"count": [2, 4], "minimum_spacing_px": 20}, "orientation": {"mode": "relative", "angle_deg": 30}, "variation": {"scale": [0.8, 1]}, "constraints": {"base_overlap": "avoid", "base_gap_px": 3, "inside_canvas": true}}
 	var deco := seed.duplicate(true)

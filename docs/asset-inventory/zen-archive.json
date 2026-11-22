@@ -1,0 +1,1665 @@
+{
+  "status": "completed_not_pushed",
+  "external_archive": "/workspace/work/Tiles-archive/zen_garden_2026-11-22.zip",
+  "versioned_archive": "preserved/zen_garden_2026-11-22.zip",
+  "sha256": "4fc73d83fe8cb5804dc8cd215fd6d3cd476b0deaa27cad8725064e21bf3ba95c",
+  "archive_bytes": 17897061,
+  "preserved_source_files": 323,
+  "source_inventory": [
+    {
+      "path": "art/themes/zen_garden/archived-profile.json",
+      "bytes": 2736,
+      "sha256": "6225ce87efec216832f12bfbb42171b6bd75c7f4a0455aa9b2fcb158864c26bf"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/architecture/zen_tier2_stone_lantern_color0_1.png",
+      "bytes": 1259251,
+      "sha256": "fd98f89858b63c827009202f5c6f03b6136829b49f0402e6f58a3eed58e8f3c4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/architecture/zen_tier2_stone_lantern_color0_1.png.import",
+      "bytes": 1041,
+      "sha256": "75d458be8c3de12505a0670f7c959c1b78d5918c9c195ae6f5d599e1178bcaf4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/raked_sand_endpoint_relief_256.res",
+      "bytes": 131139,
+      "sha256": "8f27fa850b195b02102279b1cbf6dfea3198f5146fca282783ab8e367d3a8cb8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png",
+      "bytes": 27364,
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_one_flat_top_stone_color0_1.png.import",
+      "bytes": 1052,
+      "sha256": "872228cb272478c2d66261677d24e3b28b1799d340b5350cb7a49653afcd68d4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_stepping_stone_endpoint_core_color0_1.png",
+      "bytes": 33946,
+      "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_stepping_stone_endpoint_core_color0_1.png.import",
+      "bytes": 1083,
+      "sha256": "72f39c96380a5a42d4e915bfafa2df01ef1e445b2390ddee7a5be4134d3c67b4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png",
+      "bytes": 52611,
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_tall_bamboo_behind_cairn_visual_color0_1.png.import",
+      "bytes": 1090,
+      "sha256": "87d812703e103d4aefacd354a650b0fa5c1a026f3e652929f4050c128f18b267"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_three_stone_cairn_color0_1.png",
+      "bytes": 27744,
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/centers/zen_tier2_three_stone_cairn_color0_1.png.import",
+      "bytes": 1049,
+      "sha256": "4a9336ebf8f985197843c5ddd01eeee45ea74bddebab65f2946ea0aee118f75c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/cores/raked_sand_core_relief_256.res",
+      "bytes": 131139,
+      "sha256": "8f27fa850b195b02102279b1cbf6dfea3198f5146fca282783ab8e367d3a8cb8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/cores/zen_tier0_stepping_stone_core_color0_1.png",
+      "bytes": 33946,
+      "sha256": "bcb4e778b449f191858f3d6d5d5add7a6acc56b8871a5d3ae1b682d1b55b13c8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/cores/zen_tier0_stepping_stone_core_color0_1.png.import",
+      "bytes": 1053,
+      "sha256": "8bac0e073ccb9992aa9abf0d7ff3fe41754faff78a97a4c78e7ba2e08faf1266"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/ground/zen_ui_sand_ground_color0_1.png",
+      "bytes": 106331,
+      "sha256": "e09ebd324fe150aaa28b676cd57afe9447306459794ce26df01d7c07de42a739"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/ground/zen_ui_sand_ground_color0_1.png.import",
+      "bytes": 1020,
+      "sha256": "e0d1ef07533511dc86ee552fa7375c754f7e70a8d1477623ab2e2e872c5469bc"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color1_basic.json",
+      "bytes": 145,
+      "sha256": "ace837c36716f5f01a43b1c07fd7b88f72b8a4cffbf0f5603895499e0d45fc97"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color1_basic.png",
+      "bytes": 27364,
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color1_basic.png.import",
+      "bytes": 1025,
+      "sha256": "5fd5631b29559d554fc587c43bf062d58fd87fbd9dfcd23c684872e317239464"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.json",
+      "bytes": 145,
+      "sha256": "dd21a163aef9e51d419d5d82acabbed9dc670522d6e077ee26c006319fbcaebf"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.png",
+      "bytes": 27364,
+      "sha256": "d6e564da3b1d6ce278b544458112b29ddc96079951d34dfa11e60efa2dc7a3a0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_bend_color2_basic.png.import",
+      "bytes": 1025,
+      "sha256": "30a2b97b9c89b9f6ead16edcd8a310393a4524438c8de36b98bafe578db28b9e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.json",
+      "bytes": 145,
+      "sha256": "bef5ab7e6814e1f49245c13b11b2285305a2e3a06ab970c1b865e2c51437e356"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.png",
+      "bytes": 86811,
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color1_basic.png.import",
+      "bytes": 1025,
+      "sha256": "b7b9c755df596009b7997af480ba5ffbc23355c23bc690e9cdf3d1cad5122a53"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.json",
+      "bytes": 145,
+      "sha256": "fc755a94edc14f9d007e6b128d5db6d420fdea20d8ecf85c7b4e72b36d3f59b6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.png",
+      "bytes": 86811,
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_core_color2_basic.png.import",
+      "bytes": 1025,
+      "sha256": "1b6118eafa0f6262b11c179786078fed6f80d97b3ff154cb4cb378e6e815e855"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.json",
+      "bytes": 150,
+      "sha256": "ed82a6d86045e12ecc7949895b7d0f818dab90cef308b70ad18ae539233daaf5"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.png",
+      "bytes": 52611,
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color1_basic.png.import",
+      "bytes": 1040,
+      "sha256": "52b53acb7f209fdf10759184bdd385c96ee55dc4c542f10e5885002d2844f364"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color2_basic.json",
+      "bytes": 150,
+      "sha256": "5b759ce68beb76be0ba34da9de82d0dd1575acb13170f216199dc64b5dfd0698"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color2_basic.png",
+      "bytes": 52611,
+      "sha256": "fab807e1236ebbb3a50e2245265e2f465e037dd53877f512a22a7136acdac646"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_crossroad_color2_basic.png.import",
+      "bytes": 1040,
+      "sha256": "5c82999403b15d0cb39cc15b9bb01950ce47a47ffaf0ed3f0abf595e44ab1f0d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.json",
+      "bytes": 147,
+      "sha256": "3a3b180810b37608d8f31db0ab34f03b9e65b99403c2ce3c5775a82fed08f6d8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.png",
+      "bytes": 27744,
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color1_basic.png.import",
+      "bytes": 1031,
+      "sha256": "3b1fec36bb39872440a4ae8f074d41259012f2e2a5f360c677742f368bb8b066"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.json",
+      "bytes": 147,
+      "sha256": "efd283312d59562ab70021833d7b82927e58628318831d289f969435cc12a38c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.png",
+      "bytes": 27744,
+      "sha256": "fa168b22bf04ff283a1a1b13b47c06666749a6ba4daa8a78fd4b695db09c4820"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/junctions/zen_tier1_tjoint_color2_basic.png.import",
+      "bytes": 1031,
+      "sha256": "86601756618385e9a6dc5b283ba853cd72af58e7d640de55966e439c2568c96c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_1.png",
+      "bytes": 1961485,
+      "sha256": "e7f6018dd35b15063776b631c0de6aa86f5afbf34361fa9bea4a295c7f67d7e3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_1.png.import",
+      "bytes": 1018,
+      "sha256": "75382ed77ca3b0097ac64acb0c464cd007ed2d75a691c5380b0b72ae4dc279ae"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_2.png",
+      "bytes": 2191301,
+      "sha256": "328c332e83d4dbe1159274658416443bf892e1be35f97759735df2d019a09d14"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_2.png.import",
+      "bytes": 1017,
+      "sha256": "27b2de223b408efcd7f9456cd461f803ac89764b737ae00bcea06fd83664fa7c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_3.png",
+      "bytes": 2097129,
+      "sha256": "d97bc2f1f0362b454d4483f79cc14a76d5ad5c454d593825618b96b0029544e4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_3.png.import",
+      "bytes": 1018,
+      "sha256": "2595c0986a1044735adcef4e01fa41c3e29a28b2319802cba728cb04f1a6da61"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_4.png",
+      "bytes": 1952325,
+      "sha256": "0503294a7426385674e89b950aead11990a2b8525077c1665a4a05ed3117ca15"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/rock_formations/zen_tier2_rock_color0_4.png.import",
+      "bytes": 1017,
+      "sha256": "a5a21ee395709be718d07b83d7244f512f10ca3029aabeff30be1c36eb5c1039"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_1.png",
+      "bytes": 110400,
+      "sha256": "6fe568f7b2b4f344ddc2f1456c9f86d247e7936e5b387dfbf86978faaa454ca3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_1.png.import",
+      "bytes": 1040,
+      "sha256": "13d944d50319c24866e8b94a2d2b0028a8137d34bda83b7ab17c5e38c9b9d60f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_2.png",
+      "bytes": 111739,
+      "sha256": "e0b09bc0929b74507304a79d26293a8b5a657b3aead400fbb66774d342926da3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_2.png.import",
+      "bytes": 1040,
+      "sha256": "47c521e42e4a816f1049f17e5f932d18125f4768b418bc646279424642ad2081"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_3.png",
+      "bytes": 106093,
+      "sha256": "4012cf1492cfb15a5579e1bdd3009748fd9d6873dcaed61a6c35828dafb249e2"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_3.png.import",
+      "bytes": 1041,
+      "sha256": "5aafc934b2f46b4ae5cba21fbf6fddc46d0c5eba269e7a183ccd6ecff9282648"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_4.png",
+      "bytes": 105254,
+      "sha256": "dfe32f7c383aeb144deed89658e94b18b86b770cb937cf518fee7086d1df7b24"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_4.png.import",
+      "bytes": 1041,
+      "sha256": "9342e2a091ee7f067feba0879f997636a10b93a8e4ddd27cc828421f78f6a11f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_5.png",
+      "bytes": 105799,
+      "sha256": "2ef7c676d7a0e442bb096523d315d8c23bb2fe6e37ad0971fe3596bced4a55f7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_5.png.import",
+      "bytes": 1041,
+      "sha256": "09eaf4e5c1a9ca3bb34013057a9250e58fee0a580c55a744512b83185b81d1f8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_6.png",
+      "bytes": 95536,
+      "sha256": "39579219aca72cfe42249fbde6895861da14e31cae847619344d1c1b9fb70678"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/shoreline_plants/zen_tier2_shore_plant_color0_6.png.import",
+      "bytes": 1041,
+      "sha256": "b3abe516392c5ff275f17926ffbcd0f679f315efa0ad5dbef5403f4938f74fa7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_e_color0_1.png",
+      "bytes": 48830,
+      "sha256": "a2e509ae525ecbe2be0b6b57dcedde8d74f6f35b6b858e8e974c7fea5a71a012"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_e_color0_1.png.import",
+      "bytes": 1038,
+      "sha256": "4a1af328a2d9d5f49933469dbec26823d85c02fe67d9041828e7cf85b5d7e46d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_n_color0_1.png",
+      "bytes": 43723,
+      "sha256": "359c461a64ae2d9dd6443442138fa3597d09de1489fd553c87a71dfef7fab685"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_n_color0_1.png.import",
+      "bytes": 1037,
+      "sha256": "59086e7d095a47080f0d06090f9039541f51e35d7f7fb167c98aa1b0a6c28c3c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_s_color0_1.png",
+      "bytes": 49765,
+      "sha256": "96116c83b6346cc0f25fdd144331395fb224cc770b9e9b793c455b4d43744dc2"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_s_color0_1.png.import",
+      "bytes": 1038,
+      "sha256": "628534487b1c06cb5c08ecffa8097d2c135b80196328e1caacbf1a4492f6f31e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_w_color0_1.png",
+      "bytes": 50002,
+      "sha256": "e53fed8eb85259f7fa2172243be6dbb012a14e012f4f729a2051e32f7f01a6bf"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/stone_paths/zen_tier1_half_stone_w_color0_1.png.import",
+      "bytes": 1037,
+      "sha256": "357588a3a21bef73a7b5604b73cd69b83331843c876b09bec565d8fed21ee630"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.json",
+      "bytes": 911,
+      "sha256": "d8b17c8d28c856411aba67feaf1b0080c87c60cfc2bc637f6c8cfc321e807ebc"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.png",
+      "bytes": 871,
+      "sha256": "bee42b2ce00d14a7ed184dc51643ff7c6e57dd3dc6a407bbbb401a50da649150"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_1.png.import",
+      "bytes": 1009,
+      "sha256": "751f1b142250491a9f5bcb2bee24acf07508d793ca0dff2328001dc425e407d4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_10.json",
+      "bytes": 912,
+      "sha256": "7338b9318c266dc9eb6876423597612d27fc2d5df1ae8a496c3e1141e6deadc5"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_10.png",
+      "bytes": 557,
+      "sha256": "0406110f72b64c8bfbb9ba21f000088a0b7f59c88357d4075bdb2f9ac1f5f2a4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_10.png.import",
+      "bytes": 1011,
+      "sha256": "f52507c1dad12775e4b4ed5088a57d7fc34d9ea7dfd40e56f72809d128ea0839"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_11.json",
+      "bytes": 908,
+      "sha256": "b6fc68d2e892aca0a8649a19b3c5462f0285f47d7ca8695f6a70bc79508b8a9b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_11.png",
+      "bytes": 833,
+      "sha256": "3b98dfd67fd89ffe5341613bf00e07cf40d6ac33b7482d61781bc2650179a484"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_11.png.import",
+      "bytes": 1012,
+      "sha256": "89010c407296eef2db9f2edaf01b7ba804b5f50ba23da6338d77f6e10b17df02"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_12.json",
+      "bytes": 908,
+      "sha256": "c2ea6ca621def9fc260db778d80b162ddb3f166f64fb3f4622db68d08817ddf2"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_12.png",
+      "bytes": 667,
+      "sha256": "f7159c8ad2943726decfd90dbf9168a1950e0eaa66f1f1151e6c9a6eb2aeb287"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_12.png.import",
+      "bytes": 1012,
+      "sha256": "be74bc81caf4cc456e2a817cac2ce725e491194f67974166b5fcb0be04cd4cdc"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_13.json",
+      "bytes": 908,
+      "sha256": "d767547fb1aa0aaf83c4f456f7482539f2f46df1357fb2e68f80abb3228705e3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_13.png",
+      "bytes": 716,
+      "sha256": "f141d40238c979b2050b95471a059abc187167ba59b4eb73ceb0530380861c25"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_13.png.import",
+      "bytes": 1012,
+      "sha256": "fb45eacd0229abd419771e3d797b6a32a61528b4b7664d186f7546ab47863420"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_14.json",
+      "bytes": 908,
+      "sha256": "45bbe2ca23694605380a8b11924dfb37e5e8329711e72949907cf00ae7925397"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_14.png",
+      "bytes": 794,
+      "sha256": "1967b86c31811e4cc4618bc7e614597be66e49f2ec7d969ca59c979d9a2855af"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_14.png.import",
+      "bytes": 1012,
+      "sha256": "d11ff11def6584fb308fcac17e6b69458b56b328c190a3b5be6e47a5fc7c513c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_15.json",
+      "bytes": 908,
+      "sha256": "c3eddb0fd1e338e6d004fda23bb040d44e7a2b1871651d6a8eb39303f09302f5"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_15.png",
+      "bytes": 656,
+      "sha256": "7c5194fdff885fdf8644a8089309aef60ec30bc716783e920df34a0bacada53d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_15.png.import",
+      "bytes": 1012,
+      "sha256": "c1c6904fc221302fe94280e8f502185d67dad017bfa5a7bb3c0cc6e7bd8ff47d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_16.json",
+      "bytes": 908,
+      "sha256": "cc1bfd9f291e0483513884d7c2b32b697fcb5d11b8b33df76e8e9e4949e6d570"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_16.png",
+      "bytes": 775,
+      "sha256": "a6853783414d0942a49a4df5a262e0cf5e6609429e65ac6ef09883a18a8485f7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_16.png.import",
+      "bytes": 1012,
+      "sha256": "2da795c7a3b909f3ac1adc58069566c4c9ee9a6376e35a3ea07444d63bdf4b1f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_17.json",
+      "bytes": 908,
+      "sha256": "e3fd2a09a49fe884694ce6a252c8e9fdd4399bf5be46f844652e457ccd2a9766"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_17.png",
+      "bytes": 752,
+      "sha256": "3ab58450698b5ffd6754f2eb59c5747532da04512fb87ab0d4a99cfc5edf6efb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_17.png.import",
+      "bytes": 1012,
+      "sha256": "dc6bb594ae4ca68344fe1bf0133324d241657608631d6dbd93dc963e3b147f65"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_18.json",
+      "bytes": 908,
+      "sha256": "df9af80f31065a18be92d9acc67af7ad37d4b580e8ddb45571b9e75f49931707"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_18.png",
+      "bytes": 680,
+      "sha256": "de3e9eb9de0d2213dcb10952062e842e793f693e45284c63f066050af79dd976"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_18.png.import",
+      "bytes": 1011,
+      "sha256": "e9ced03dd8c4ffa9b75e3b7a0bf4b3e631791ee914bcb83a0a07a397827fe3f1"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_19.json",
+      "bytes": 908,
+      "sha256": "96639d6d22748d1d283ce270ebc3952dcbfb55a47ade9f09bc46fc5019bf38c2"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_19.png",
+      "bytes": 766,
+      "sha256": "b54d9faf389421e68c647e04f54999d730f57da631ac2cf5e547cb54785b022a"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_19.png.import",
+      "bytes": 1012,
+      "sha256": "cea29da3f6ac03aeaa225d39adfd9c9918e78d49c04638559d6c3057c1e3a6a4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_2.json",
+      "bytes": 910,
+      "sha256": "7b72b2dcbcb707f56b7bdd87ee973c9bad59dfb49168c9228000a45623e957d0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_2.png",
+      "bytes": 795,
+      "sha256": "ae53a0a87d9a601643a3214206e78cc46cbac97b3a9ea77ff4ebcf8f9b6f30ad"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_2.png.import",
+      "bytes": 1009,
+      "sha256": "b011f7831870b527814e89c268f70e5f226f6b33115807a67af823353b65a56d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_20.json",
+      "bytes": 908,
+      "sha256": "e50ede37caff0bc8cfb2d75a3427603b5e2fd8843bbc8803eb831747a62a8162"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_20.png",
+      "bytes": 627,
+      "sha256": "0b8068daa9988af48368bdda062dd795e313c7129b92088bc9bd0921f2493c68"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_20.png.import",
+      "bytes": 1012,
+      "sha256": "031b2a94460dab66596cbdd825c54fb9b6ed3f7a882fc10f050822111a95c6a7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_3.json",
+      "bytes": 909,
+      "sha256": "ab1ff470b09195327992eaa0602560b4816e95e53b175d13819a1ae61530d10f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_3.png",
+      "bytes": 768,
+      "sha256": "94ed98d15cb9967ee70650c58b0263b19bdcbedd7a2598c2c3fb390d420036ab"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_3.png.import",
+      "bytes": 1008,
+      "sha256": "02bb80e3a5f578424871d704746b937d17b8a3bc9767693df9f72a7498868116"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_4.json",
+      "bytes": 911,
+      "sha256": "e0e49661f3de8591c1ac650772dee8f39a241c8ce1a9859366272dd4fb6112ed"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_4.png",
+      "bytes": 818,
+      "sha256": "2bb96b9b14fe4f8e07684e6499e1d173360f3cab2c52a6fbadf8c98267c908be"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_4.png.import",
+      "bytes": 1008,
+      "sha256": "5fd77b1ef018ae4aa5b9862852c8c415814f430f36057ed890337857b80fbf0e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.json",
+      "bytes": 911,
+      "sha256": "f461b1d6457185c9b4fbcd22eb404ee1e219f54fa8915bf809a4c8b32bbf0795"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.png",
+      "bytes": 626,
+      "sha256": "ea853e1bfcffbff0dedbeea969bbcbc21f716f3a8da223fffafd6e5ff14304e0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_5.png.import",
+      "bytes": 1009,
+      "sha256": "38777436a35654f52cb8e580a6d221e92e158b990bf1b954da879c58de1ddd34"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_6.json",
+      "bytes": 911,
+      "sha256": "ead1259bf95a1fe5bd51ac43e04e2b663524e4752ad0435b1c073d7bd3837a7c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_6.png",
+      "bytes": 776,
+      "sha256": "07bca51870f29f15451801c60f20aa25862c343a3ad78ed8b6181b511f8e07db"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_6.png.import",
+      "bytes": 1009,
+      "sha256": "e6c9a3b4ca36fa872b150e7aed3ab861dba964c9068570b305b42a35c0936acd"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_7.json",
+      "bytes": 911,
+      "sha256": "822b29dbc787b589d9a5296dad6ee041090e83382849f820150564b17c1d9071"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_7.png",
+      "bytes": 580,
+      "sha256": "3dca1316e15c34c4fd65112de11eacc9cd698d018679cdf87023dcfeba2bd712"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_7.png.import",
+      "bytes": 1009,
+      "sha256": "e0c6c3d6369cfddf730355040f5b19a4245baab16de28d1bc50dc6fd477efcbc"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_8.json",
+      "bytes": 910,
+      "sha256": "1fddee3e6098bc20df75d3da19a8a4cf21304b1c5a913b253aaac04341c5baf2"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_8.png",
+      "bytes": 627,
+      "sha256": "58486f01a67d7587bee7d0f939242f7e9a2f06be1bf74be42616f79dbcc8233a"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_8.png.import",
+      "bytes": 1009,
+      "sha256": "8291b99b3d4cd136fac7befa1f080b3282f7f4749dfbb8216ee763dc22ffe303"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_9.json",
+      "bytes": 911,
+      "sha256": "2b258c58285168f338f318a2310b74cafe9b2afe113ba7fabd8b3e082722bb2f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_9.png",
+      "bytes": 760,
+      "sha256": "35b5a7da558b8b24dffa68148980651d5847bb3440299df9727060e0d5a1599f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_deco_color1_9.png.import",
+      "bytes": 1009,
+      "sha256": "8ec7d2b5f83bfa45d3f562d4909bd3c0627ef0c8bf2a80a0e0636432fddf0267"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_1.json",
+      "bytes": 6397,
+      "sha256": "86d1900d4cd118d6234cbc25558addd32c93434a75c6be0c3292a3f3e961f520"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_1.png",
+      "bytes": 87307,
+      "sha256": "f64fa96848ec3df884b875975b9265c8c9a603e7fa471f8066258933172a32a6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_1.png.import",
+      "bytes": 1012,
+      "sha256": "883d38294c7d2f3038cefbbf7e7fa7a96afde18fe8589d76bcbbc3a583229ce0"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.json",
+      "bytes": 6406,
+      "sha256": "12097cd6e7856edadb45b3c8fca9555982cb204660d75761e94855a6a579097f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.png",
+      "bytes": 86985,
+      "sha256": "44d9ff85bff3b0b2857c76d2a673c06128a7c584767d6aa54368b00cb3fca4fb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_10.png.import",
+      "bytes": 1015,
+      "sha256": "4c005ff8166746bdf637a8db62b8842b6b4ceebbe6fdf4ce1fe7126cb87cdb69"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.json",
+      "bytes": 6406,
+      "sha256": "12470692727fbc8d59be9ae374724daa828eeb9ed13c5721a10e9eac2af92a29"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.png",
+      "bytes": 86737,
+      "sha256": "9fabf61fc7849219ed35ab2bd01c0e91cbc8ab904b30573d65b95de0e4dd67ef"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_11.png.import",
+      "bytes": 1015,
+      "sha256": "f1ee5d8a11bba6097ec75b71a201c985a267ef49c6c8cdbde3f4f93d4f685b88"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_2.json",
+      "bytes": 6397,
+      "sha256": "f55c0fd2c40a61431f9669d16a79c50825ffee55e13af268120c8561dc421055"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_2.png",
+      "bytes": 86608,
+      "sha256": "18b7918c8c00c3f574e4493169892a8f393e41052a9c82fe5da8e37b936f60b6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_2.png.import",
+      "bytes": 1012,
+      "sha256": "77a4b8c2e1a15b9ad1457c443a37676fd5c61497bbcefc8e734022d7862b918b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_3.json",
+      "bytes": 6397,
+      "sha256": "be2e20a90907e9163b79d2b2096d4548a1e5ef96efa3413206967789a681ab80"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_3.png",
+      "bytes": 87184,
+      "sha256": "bfcde2ae9e9caa0f63fac6eab5b4ea93e5ff85396cecd3ceff9fcd1374bae930"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_3.png.import",
+      "bytes": 1011,
+      "sha256": "a55c961a34c89335c8b72457e17105877439d6febe64e33b8ff5241e66a6acfb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_4.json",
+      "bytes": 6397,
+      "sha256": "bf7ecc6bbda25d56b83888b55e21419d7f1272570f29ab425f903732eca6f972"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_4.png",
+      "bytes": 86747,
+      "sha256": "57d62133a884dc55bd2d0105dde33ff2dadeb19ec74fd3aa95ab13ea4ef6155a"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_4.png.import",
+      "bytes": 1012,
+      "sha256": "b70e0a174ba8bb666fb29c103294367f117dadd583009b12b48d2d37a7674808"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.json",
+      "bytes": 6397,
+      "sha256": "c70008f30ba324f5a8058d35e272f5d6cd7cdd30fe23e4768099540c49a68013"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.png",
+      "bytes": 87287,
+      "sha256": "4e0b398603515f79065812cbbf8cfbafb10d8b801c139de7ed31397798abb815"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_5.png.import",
+      "bytes": 1012,
+      "sha256": "fb0348ee2fd829da6788747fc2e1e1b965fa069b98cfbaf3ef06d7951a7ce9ed"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.json",
+      "bytes": 6397,
+      "sha256": "aa4892d7843b6cc21d9efb768778b785562dffd5d61066eee4c2248888477fd1"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.png",
+      "bytes": 86723,
+      "sha256": "47f7b6f54968df3e5534fb3727d631454339bc5c495b0b58aaf48e6767cc4893"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_6.png.import",
+      "bytes": 1011,
+      "sha256": "8dbcb8f3d44101105dc5d80905137c7044bac605f283dcd2343112f519af6c03"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.json",
+      "bytes": 6397,
+      "sha256": "27fd2921939d9cf985bbccca0259afd62eaf3497f0acb07cb0b59d51e7689cbb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.png",
+      "bytes": 87256,
+      "sha256": "ff62f1fa50dc8e1a5af563980dee46b9da492f9a8363a26e33ffd9c199bfe10e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_7.png.import",
+      "bytes": 1011,
+      "sha256": "4c00a0d11ba49db6440d3bc1c29668e889c16176e928602d5b970af7eea7eab4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.json",
+      "bytes": 6397,
+      "sha256": "8f8d1d8f02dd27cece74317b5681f26590d02f5eee0809ca544c5de8ecaab04d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.png",
+      "bytes": 87006,
+      "sha256": "dec9da9db292e82abe8c30c62f62e3edd589e3257a07c7c124091c31dfc26ff9"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_8.png.import",
+      "bytes": 1012,
+      "sha256": "20af7334ed64cc874322804bcae520dffbd4b8c966b16bf5321e4690a3827d7c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.json",
+      "bytes": 6405,
+      "sha256": "ec8da2ec5e3f7f95c79dcf6120e570cb08a4f71be4a96c7af33b52bdffa8a161"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.png",
+      "bytes": 86608,
+      "sha256": "01d514f7119e73649e867c708046e0861a04ee9dcd1fb306cbdf0789e775e936"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_9.png.import",
+      "bytes": 1012,
+      "sha256": "273a984b129ab3e0f16bcada7329883ff2582554bbe1122488a4684f52e33637"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_basic.json",
+      "bytes": 6409,
+      "sha256": "c61ec5ef1619823a6c30a4f9a4c7e10d31da0c7713bf7e05a0d896ba4387f698"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_basic.png",
+      "bytes": 86811,
+      "sha256": "420cbd338ed5c1441d233e6b15b57e261dbd4f938cac38facd4c01e48b06db77"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/tier1/zen_tier1_stone_color1_basic.png.import",
+      "bytes": 1023,
+      "sha256": "0e45d229fb19ff5ad1283ac18c0cbeafd8f99da2a896408f69c1e32ae9aab13c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_1.png",
+      "bytes": 807370,
+      "sha256": "8ceb57b64ebb5e2c345d3e57c72032d84583984029a5081ee4ea6495fb4ac52d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_1.png.import",
+      "bytes": 1051,
+      "sha256": "4e42969599e8016f314ae4d8b6bc7f7782ad7c9863f421e2ec2e857e074de64f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_2.png",
+      "bytes": 573022,
+      "sha256": "16ece47af718fb59065c3bb10b0a3f9b31d2297f821e18e06af30da329c86ee1"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_2.png.import",
+      "bytes": 1051,
+      "sha256": "ae7e13204ded4b2058c1e11682fd9e60288ce5ee42bd58ef82970bece1f7a41b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_3.png",
+      "bytes": 321130,
+      "sha256": "5a0a5efde1a894632a8a2620210d5aa13bf74ac054243b1b69dca63474b042f6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_autumn_color0_3.png.import",
+      "bytes": 1051,
+      "sha256": "a20aa3679dbbc9ce6d697d645ffb248c090fe9eca404da74e0b896183549055c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_1.png",
+      "bytes": 702145,
+      "sha256": "58f82edbca3b63866c3743aeeb79d8d333c56086b93e0ec8ee2d81635e89bf08"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_1.png.import",
+      "bytes": 1051,
+      "sha256": "ee87e8555d4e27b884932de79ef990550f48295db42b423cab4370ea5d7f2a8e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_2.png",
+      "bytes": 492333,
+      "sha256": "1bc2a7f7e36afc2b422aff979ec980de02fcdaa5dcf5f93687bca979b3444314"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_spring_color0_2.png.import",
+      "bytes": 1051,
+      "sha256": "651d132e0abf31d576989b8b08700d89119fdc3292a4daa71247f6c82de09474"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_1.png",
+      "bytes": 634808,
+      "sha256": "0ed1b9fabed74efd6941711773b8b622697c2f6e6de443f016b46a641952ab66"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_1.png.import",
+      "bytes": 1051,
+      "sha256": "6411db4a710e1e86b5349dd55fef509d8b280ba93259c0271f069754618c876d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_2.png",
+      "bytes": 198697,
+      "sha256": "6086036ad5c67d6c7c59338d1ac293132bdf747bf6646c3c6b5c322fba97d807"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/individual_first_set/zen_tier3_tree_summer_color0_2.png.import",
+      "bytes": 1051,
+      "sha256": "bef5ddf591785296879cd3b56c23664784166f65623acf1fd61a565b398fd872"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/winter/zen_tier3_tree_winter_color0_1.png",
+      "bytes": 1872369,
+      "sha256": "a8d3c49e8d18d5e524c37d64c6dd8b3ecd1957d173031bb4fcd7be411c2b576b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/trees/winter/zen_tier3_tree_winter_color0_1.png.import",
+      "bytes": 1037,
+      "sha256": "5a4cffa51eb650d5e21b92abff2e39712662be1ea19430ddbab93fbe12292d9e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_rock_occlusion_color0_1.png",
+      "bytes": 16216,
+      "sha256": "e0fa22b9929aa24c60f5e5da1201d23e81898fef01f93c5a6d2fa454be0bcbe4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_rock_occlusion_color0_1.png.import",
+      "bytes": 1062,
+      "sha256": "61a3f9b270078623f0f81e1ffbd479797a3c78555515e1bdc4d80161e50fe501"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_e_color0_1.png",
+      "bytes": 5149,
+      "sha256": "a087d5f1b8399a22d51983eb4a19f017e138e92fead6f9f5e9f7468b8f6be260"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_e_color0_1.png.import",
+      "bytes": 1041,
+      "sha256": "6ccd6b7b8ab349aef8e88eb534ddc2cb630ba802bd80851c99be0c56069c8e07"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_n_color0_1.png",
+      "bytes": 4618,
+      "sha256": "32061ec7d9d2cb450a081cf916fb82428c9f59a90963144537a0c72033ad39c3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_n_color0_1.png.import",
+      "bytes": 1041,
+      "sha256": "31f27abe8ff1e6e3bccfc49a924d405a9188222c807b2085d06cc739e4817988"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_s_color0_1.png",
+      "bytes": 5181,
+      "sha256": "09d08ba31050e61e499f3a1e3574df555ba96a020cbca076a486a9b9793a81be"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_s_color0_1.png.import",
+      "bytes": 1041,
+      "sha256": "29dc833725a25a718af5f2f84ded09a7f349090a127f14a08eff546054851b7b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_w_color0_1.png",
+      "bytes": 6144,
+      "sha256": "b3dab5fa6aa5ac61178567b2ff6a209181169738240984e2b1972cec9ac81c66"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/01/zen_tier2_mask_water_w_color0_1.png.import",
+      "bytes": 1040,
+      "sha256": "a7ee7799d2831af904b600df61230c2266ab6ce6b6b02210adb71fe8cf780f47"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_rock_occlusion_color0_2.png",
+      "bytes": 12854,
+      "sha256": "fe402f751a344bf060ef9e294cfb5eca92f0c700c662f12fb0cc9fd599186038"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_rock_occlusion_color0_2.png.import",
+      "bytes": 1062,
+      "sha256": "ece767df542e9c6cb808e4d43732ecab2728de73a29480a15314489e67fa0d8b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_e_color0_2.png",
+      "bytes": 4724,
+      "sha256": "ac04defc28fdada32eddb21a702d34db2cda65b5d1ff3a94890e18d5a3bf5dc3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_e_color0_2.png.import",
+      "bytes": 1041,
+      "sha256": "35a1b8ab56ad11ec5d9191b2a8147e69275b368a6016e00594409770339c8c73"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_n_color0_2.png",
+      "bytes": 12488,
+      "sha256": "9744fd9670f24fd5d8775ebabb0d8f51b4d291df315300ea00931ebf2a4660ac"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_n_color0_2.png.import",
+      "bytes": 1041,
+      "sha256": "8b1ae218bc2cb9fdd9b3cb28988d56534b3a7a407a7ef18f1475b72c8c505c1e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_s_color0_2.png",
+      "bytes": 3981,
+      "sha256": "cd6adf95b2be7579dc60a6506998d85c81702a40ae5573ae83112a7a2d76081e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_s_color0_2.png.import",
+      "bytes": 1040,
+      "sha256": "00be8719bb7374116c324340f1a573ff5d8c26b436203bf83125b3ca57dc8547"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_w_color0_2.png",
+      "bytes": 5075,
+      "sha256": "0c43274917f19e2c374eded6d55bdc57ef8b91bd460cf1375fb175dbde22b3c8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_water_w_color0_2.png.import",
+      "bytes": 1041,
+      "sha256": "62058d18a49bb98ed7acae19db8b0fb2bf7a4e05729ffa8de6739aa91afe23b9"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_e_color0_1.png",
+      "bytes": 3934,
+      "sha256": "173a5722530666fa8858890ba049950f8d57c3861758b2994905a97eb552dc9b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_e_color0_1.png.import",
+      "bytes": 1053,
+      "sha256": "7f5130882cfa56303f08486b822b27b82e5370f0eb6a428c3260b79fd234e194"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_n_color0_1.png",
+      "bytes": 6463,
+      "sha256": "060f0ebbf41c8bfe5258df4938b626506d92143674c49672e1dbb4d12c33456d"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_n_color0_1.png.import",
+      "bytes": 1052,
+      "sha256": "d14e191f9a066ec78cebc21454858e9d04936f93297408a9b2e5a6ac55643bde"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_s_color0_1.png",
+      "bytes": 3293,
+      "sha256": "1fdd29e640ffb4135e0cd2aef264380a2dba03e27629e2daae3ee6f646510052"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_s_color0_1.png.import",
+      "bytes": 1053,
+      "sha256": "2945b6926c2844d39543a476c9a9ef1c412fad1add4a14760c3e2dba296ff474"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_w_color0_1.png",
+      "bytes": 4447,
+      "sha256": "8eba617231c2a466d7bf316263c491a207295b18e6dc15e10168ade902d77ce6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/02/zen_tier2_mask_watershed_w_color0_1.png.import",
+      "bytes": 1053,
+      "sha256": "fedb0f289cb34a7d56fbb3513abbb2be7921e0d7ad6f992af9a6b9f788897221"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_rock_occlusion_color0_3.png",
+      "bytes": 6682,
+      "sha256": "993e9bb4787f02f1dac0f05e43a6054e2346631513832820e60bd5748110f273"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_rock_occlusion_color0_3.png.import",
+      "bytes": 1061,
+      "sha256": "a0d12d09a347893315ecda13084e868fa34d0c16a8ca39a8af1fcf028ae04201"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_e_color0_3.png",
+      "bytes": 4090,
+      "sha256": "21246e16bc9532666e44c61f3b4303b7d61a12c5c9d1e7fe685d691d2aef42e3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_e_color0_3.png.import",
+      "bytes": 1041,
+      "sha256": "be853814a68e450eaf27afd80d06bd1df08f09842d2073064ed5784268812ef3"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_n_color0_3.png",
+      "bytes": 4383,
+      "sha256": "10e712a7f3dc90bb3e48a9fec75980384be238713480d5d92b38cbeff1509171"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_n_color0_3.png.import",
+      "bytes": 1040,
+      "sha256": "e0d6139ed8633a2c21f71167b7129d0cfe2c5c06a56df4d2b7f3d8e8469eb93f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_s_color0_3.png",
+      "bytes": 3352,
+      "sha256": "b1ee1994c4307a0aab76fd83879e37bf572d88b073f0b834bbca5d54a355a136"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_s_color0_3.png.import",
+      "bytes": 1041,
+      "sha256": "5faaed52292d64e1ed87009d64bdc87bd0aeef655cc1765ccbd281c907fe015f"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_w_color0_3.png",
+      "bytes": 4958,
+      "sha256": "66adf3a9a1dab8e84def161a2f7e4e0f388a978bacbacef99560b9833f783725"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_water_w_color0_3.png.import",
+      "bytes": 1041,
+      "sha256": "3ea334ca383fa336540f8c6bf07e03bce02ec461118acc3014d67bcc8dbd5e6a"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_e_color0_2.png",
+      "bytes": 4310,
+      "sha256": "e496edbbcd095c67cc77bc1f6994f987cc78efd14550beb066c7b521bd06c258"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_e_color0_2.png.import",
+      "bytes": 1052,
+      "sha256": "dfaab21a9fd56ac91fbe214b9ba59b0049ec90c7540ed5a05009b7ea84c4b690"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_n_color0_2.png",
+      "bytes": 3882,
+      "sha256": "fc3f477385fee36710a1607b905409f9f0a607937a72bfe70c82c0ec58e29c03"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_n_color0_2.png.import",
+      "bytes": 1053,
+      "sha256": "07e09ffbd6630e6c3128a76fd97974ebe3ff30a34dc47810aadfd3e62bd1826b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_s_color0_2.png",
+      "bytes": 3198,
+      "sha256": "43e3756a0d480b64f32ec097fea63e0447fe47e4c29222edb10fe5f3d023e80b"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_s_color0_2.png.import",
+      "bytes": 1052,
+      "sha256": "e0b860cd8b24efaa838e799dc524c207bf68fc4807f95802c083c2c163beaea7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_w_color0_2.png",
+      "bytes": 4963,
+      "sha256": "9e45d967233a35e3bb5efe1d7ce2edac48d683ac3a7208ae94e724f86ac79eeb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/03/zen_tier2_mask_watershed_w_color0_2.png.import",
+      "bytes": 1052,
+      "sha256": "5521d893183e61b2b70286eafb8fc7622abd7d5f14950dd385eada88ce962b47"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_rock_occlusion_color0_4.png",
+      "bytes": 5821,
+      "sha256": "00b3e69312cc15dc9a7b165aaf1bec9a3e7f0506a863010e75851aba8825199a"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_rock_occlusion_color0_4.png.import",
+      "bytes": 1062,
+      "sha256": "435b99eee1175f2cd86119b658d9c6a5d97ba61ab6c0834edf6b1194fd688732"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_e_color0_4.png",
+      "bytes": 3531,
+      "sha256": "553c5193fcc66e0671da7dbf0c70882c7a3a5ed4bf39789fb7a9ae1b42b0e4e8"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_e_color0_4.png.import",
+      "bytes": 1040,
+      "sha256": "8848bd62de165e5b4997efb9be27f33f59cba688ea094a26b416472c25e9330c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_n_color0_4.png",
+      "bytes": 4059,
+      "sha256": "de1c39fd9cdea71b6ed95dd27d797cfba124a00abffab19a5b1075c0677b7f5c"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_n_color0_4.png.import",
+      "bytes": 1041,
+      "sha256": "61e1f4dbbe875d856b9eec7e6f623a1ba681f66aab79463a0779c53682aab029"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_s_color0_4.png",
+      "bytes": 3350,
+      "sha256": "bdf1f03381d2c47d6faa6ca5bcb4237ab3631513045a80ff18a5267ff72ec628"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_s_color0_4.png.import",
+      "bytes": 1041,
+      "sha256": "a9a38fd8ce97839f7f0a2df6cf51478f79cff5b3be1684743dee3edac262188e"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_w_color0_4.png",
+      "bytes": 4876,
+      "sha256": "820248495f8d2d3f11fb5d64ac00ce7528593cb19da064d8e4db4f4df4c99c77"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_water_w_color0_4.png.import",
+      "bytes": 1041,
+      "sha256": "b8e25d272aa1ae04d69d5a3f53f3a9f1f3d9fcde538be0bf62ecf4c429193246"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_e_color0_3.png",
+      "bytes": 4029,
+      "sha256": "1815c3cd2d0cded2bc3ee90c43139426579adc4a06c605cc3f77a4f27c9c07f7"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_e_color0_3.png.import",
+      "bytes": 1053,
+      "sha256": "9d8b96ad6f650c2d749240d232f43f79da047dfc405127838c06a7f9b75f82c4"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_n_color0_3.png",
+      "bytes": 3987,
+      "sha256": "b2c01593dd18ee957149b621431a268e0b90fe901e8928ced920fcf6515075ae"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_n_color0_3.png.import",
+      "bytes": 1053,
+      "sha256": "dfb88587f583082840fcd3a499c1e524a9b6ed4522c8f68d4941ca074ed85adb"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_s_color0_3.png",
+      "bytes": 3694,
+      "sha256": "745f0adab4b5e65127be7b83490b165e0bcf2b1aafe3382d1545deb06ce20c62"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_s_color0_3.png.import",
+      "bytes": 1053,
+      "sha256": "ee50ac8d9999d4006ae5d64937b066087131a915411b395c23d81577901adfdc"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_w_color0_3.png",
+      "bytes": 5180,
+      "sha256": "e69435126836013a7fe1016421bea834362da5ec127655ee979b6a30103f6be6"
+    },
+    {
+      "path": "art/themes/zen_garden/artwork/watersheds/04/zen_tier2_mask_watershed_w_color0_3.png.import",
+      "bytes": 1053,
+      "sha256": "fbdd77483ac5c6f908461d0515b6be0cc825c908d701d2d7fe7a95f87f125d92"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/rakes-tier0.json",
+      "bytes": 465,
+      "sha256": "3b730628addfadc9f4d560153c75789952aa895ea1006e17c394deab69865194"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/rakes-tier1.json",
+      "bytes": 3699,
+      "sha256": "aa290199fd7841357a876819c04a3082ccaff7a03aa23957f1af5bd60ae33295"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/rakes-tier2.json",
+      "bytes": 904,
+      "sha256": "be21f39a097f07fe0b7e6c858cf334fc539cf07f25954e4cab70a76167d983ae"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/stones-tier0.json",
+      "bytes": 545,
+      "sha256": "4d712570f5187e12bdec25831abe36e0ceb774a381382288b034e8da10ea1a0d"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/stones-tier1.json",
+      "bytes": 1539,
+      "sha256": "89e6d5394563e972d90dba4f28bcefb421b93b8e6219ed6123b85795f786f2f0"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/stones-tier2.json",
+      "bytes": 1606,
+      "sha256": "3d4c7fd59bd286edc5fbcbb798122376c6649b8caf96c000257a32399eb8d2cb"
+    },
+    {
+      "path": "art/themes/zen_garden/sets/tier1-artwork.json",
+      "bytes": 2406,
+      "sha256": "0dd19905afa63ca51228ca85661d84e79327c15d2649758e3a50215a92f81d5d"
+    },
+    {
+      "path": "art/themes/zen_garden/source-assets.json",
+      "bytes": 16007,
+      "sha256": "6057aa1d88c406730960e1687ba75dca6475dbeabd171e6603db821e6b3d901e"
+    },
+    {
+      "path": "docs/shared-pattern-engine/zen-ordinary-sets.md",
+      "bytes": 4540,
+      "sha256": "3cd35320e781765853d297a43fe69419836fca811418bc6231cd695052135ed5"
+    },
+    {
+      "path": "docs/tier1-generation/zen-core-decoration-validation.json",
+      "bytes": 705,
+      "sha256": "e41936fc453c10864fa47a4845bdcf39b5c6352abb0424d8df19f87e890adb84"
+    },
+    {
+      "path": "docs/tier1-generation/zen-deco-size-validation.json",
+      "bytes": 518,
+      "sha256": "9e239a264a404d135257f00c8d5175a340f471ac38efd6edaada490de1e40c96"
+    },
+    {
+      "path": "docs/tier1-generation/zen-junction-policy.md",
+      "bytes": 847,
+      "sha256": "db34a932eff9f4ea9012c689a71c4ac7c52a1bed0e89334c521a483883142afd"
+    },
+    {
+      "path": "docs/tier1-generation/zen-junction-validation.json",
+      "bytes": 2195,
+      "sha256": "ced16a9013c8827950ad85b0ca9a134446cf33d66294f4b469dacf66fe335053"
+    },
+    {
+      "path": "docs/tier1-generation/zen-quadrant-decoration.md",
+      "bytes": 1391,
+      "sha256": "c761ce1e7fdf1f479faff342e0d3a01118467d6530b9066c9c4eba33369c6a99"
+    },
+    {
+      "path": "docs/tier1-generation/zen-quadrant-validation.json",
+      "bytes": 633,
+      "sha256": "31370fd26d329b2599ac87da7b441a9efd0780499f0d70407eb8f292f0ec1c3a"
+    },
+    {
+      "path": "docs/zen-ordinary-tiles.md",
+      "bytes": 10074,
+      "sha256": "30fe8820489dd154f006d497ce8abed7ee4bb8263b64c562d42b76cd2c5041d0"
+    },
+    {
+      "path": "scripts/zen_assets.gd",
+      "bytes": 829,
+      "sha256": "86086b0459cb7394eca4d6ffd5f2a666b4f464697d69c0acd2155001d71fcb9f"
+    },
+    {
+      "path": "scripts/zen_assets.gd.uid",
+      "bytes": 20,
+      "sha256": "7a20dbde8d4a6c61d92113944ff70c17633bff438f78190db52fc9e681e0dca0"
+    },
+    {
+      "path": "scripts/zen_centerpiece.gd",
+      "bytes": 2975,
+      "sha256": "0030fcefcf7342e3b5e5a851073d07c864d8040636578433fb8b6a629d53f26f"
+    },
+    {
+      "path": "scripts/zen_centerpiece.gd.uid",
+      "bytes": 20,
+      "sha256": "ce23929d505c135bd3897ded524d804caf148539dcf2503b96300997b4da7e46"
+    },
+    {
+      "path": "scripts/zen_geometry.gd",
+      "bytes": 7061,
+      "sha256": "aa597ceb58877db5e65be70ce72295f7a6e2cce22600b81f00d742b9da7137c3"
+    },
+    {
+      "path": "scripts/zen_geometry.gd.uid",
+      "bytes": 20,
+      "sha256": "f15ab6592f15f0c311a7986b14e42b3d16a76fbab9eab11ead435966830809bb"
+    },
+    {
+      "path": "scripts/zen_growth.gd",
+      "bytes": 2649,
+      "sha256": "8a286250f1f99262dac1c1204837d96dd3bd26baa66d40e53e31eff9145a6e3b"
+    },
+    {
+      "path": "scripts/zen_growth.gd.uid",
+      "bytes": 20,
+      "sha256": "5013c0ac5e7e6823737b52f0969871634a5a1f25f92fecff431fb300753f9cf1"
+    },
+    {
+      "path": "scripts/zen_landmark.gd",
+      "bytes": 2692,
+      "sha256": "93ef674df9477105208c02c5df2c25ddd7a7a58d73c7817a388a172a6aa91eb1"
+    },
+    {
+      "path": "scripts/zen_landmark.gd.uid",
+      "bytes": 20,
+      "sha256": "09c676ca936b02a54d4dd1982caeb694aa64375f9132f60fec981144dea493f1"
+    },
+    {
+      "path": "scripts/zen_pond.gd",
+      "bytes": 9120,
+      "sha256": "0097152d7c63c43f3343929d23294c9be3b1f4ccbd0c5b78162ce2fe486c3ad4"
+    },
+    {
+      "path": "scripts/zen_pond.gd.uid",
+      "bytes": 20,
+      "sha256": "5f4a24a0b5e3009e5e944f18029c1d28aeb220c8e18b8669d040c26c7e806019"
+    },
+    {
+      "path": "scripts/zen_sets.gd",
+      "bytes": 6036,
+      "sha256": "9e4e387b315e72078cd9eca1dda772a39d16251a000042c2b18bac18a98451de"
+    },
+    {
+      "path": "scripts/zen_sets.gd.uid",
+      "bytes": 20,
+      "sha256": "480f7d820dd4fb2ead57b9e04b785470e1d88b5450798f5659d865170206346c"
+    },
+    {
+      "path": "scripts/zen_tree_art.gd",
+      "bytes": 2057,
+      "sha256": "442a96a593dc6b50e3b43186a517d932aec464554c493fbbbf41b930a7c877e0"
+    },
+    {
+      "path": "scripts/zen_tree_art.gd.uid",
+      "bytes": 20,
+      "sha256": "7b7b961a6dddb2fcd4ce5d73df85f4000b1e5af2caae4367e036c3718d404590"
+    },
+    {
+      "path": "scripts/zen_tree_trunk.gd",
+      "bytes": 702,
+      "sha256": "ef1fb5ba6b2427bcf26401e737f44c901d0546b409624c0995f25b8240201e62"
+    },
+    {
+      "path": "scripts/zen_tree_trunk.gd.uid",
+      "bytes": 20,
+      "sha256": "579e72b90612b4b05e80eaa8653fa193ae51165079c5414de0b1a76cf20adcb8"
+    },
+    {
+      "path": "scripts/zen_trees.gd",
+      "bytes": 10583,
+      "sha256": "daee1e240a44283bad44369ddd0f705b45e57a444f8549e150e58003634d8324"
+    },
+    {
+      "path": "scripts/zen_trees.gd.uid",
+      "bytes": 20,
+      "sha256": "65cd2547d0c9e1f717f9286deadffd18ccdee18d87928423916a2bb73acbb469"
+    },
+    {
+      "path": "scripts/zen_visuals.gd",
+      "bytes": 7737,
+      "sha256": "9b059b9dbf9dd62da04ce28c18eeae909fdaba15784601347b98b6851f4acc84"
+    },
+    {
+      "path": "scripts/zen_visuals.gd.uid",
+      "bytes": 19,
+      "sha256": "72e59323daf0cafc495c53da29edbdcb5fcbd2da0cb2f8ca7a967f085635cf11"
+    },
+    {
+      "path": "shaders/zen_center_addition.gdshader",
+      "bytes": 1138,
+      "sha256": "1eb535ad773259dc0c8a4afe5ea8415e679d7a1e50535ce57b46d54a3bc2ca86"
+    },
+    {
+      "path": "shaders/zen_center_addition.gdshader.uid",
+      "bytes": 19,
+      "sha256": "6356ca13d3d6a0c7037dc100518c0ecd4aaddfea4f7e63e74378fc0ba3dcd81d"
+    },
+    {
+      "path": "shaders/zen_landmark.gdshader",
+      "bytes": 582,
+      "sha256": "3c308a38aebec12fbfddee18a6d9b17ac54180212092d77f5f7604781b034237"
+    },
+    {
+      "path": "shaders/zen_landmark.gdshader.uid",
+      "bytes": 20,
+      "sha256": "51c22f431cca6c35c7b21d0da387f40c2c5da720125fe0b295bc62d66ed7da49"
+    },
+    {
+      "path": "shaders/zen_pond.gdshader",
+      "bytes": 955,
+      "sha256": "4e77d5d3fe9745d9e8a47f2a9b0bab2ee8340a38548f78e32b823dba2629d352"
+    },
+    {
+      "path": "shaders/zen_pond.gdshader.uid",
+      "bytes": 20,
+      "sha256": "3722d46079ada1129640a3737ab505ebf5af81dcf620d494625df4d26758f757"
+    },
+    {
+      "path": "shaders/zen_pond_mask.gdshader",
+      "bytes": 489,
+      "sha256": "f7247a1f3e1516bbe6a1fd593003e509c0da753ffb1b946bf5ea413f2092aecd"
+    },
+    {
+      "path": "shaders/zen_pond_mask.gdshader.uid",
+      "bytes": 20,
+      "sha256": "bbcdf7bdcd0defbbe6cee574ebfaf54982cea6c5a02db8813da50d03937536e8"
+    },
+    {
+      "path": "shaders/zen_sand.gdshader",
+      "bytes": 2601,
+      "sha256": "2de96272bbf27b0d2e53dad2db7261c5a7aded6324a18c153fa590a0e34bef3a"
+    },
+    {
+      "path": "shaders/zen_sand.gdshader.uid",
+      "bytes": 20,
+      "sha256": "1d92e1f1565ade661044c53cab06cc6d03af47a72d0de90ac9fb28b372c5dc28"
+    },
+    {
+      "path": "shaders/zen_tree_branch.gdshader",
+      "bytes": 1025,
+      "sha256": "5439e7e41cce59ebc414c4ec206489ff5641233311d96d29a395876aec4e41ea"
+    },
+    {
+      "path": "shaders/zen_tree_branch.gdshader.uid",
+      "bytes": 20,
+      "sha256": "3376cbd757c9c17b501ecef9589dfc180584b31f11be23adebb0572428b526bf"
+    },
+    {
+      "path": "shaders/zen_tree_trunk.gdshader",
+      "bytes": 350,
+      "sha256": "d34edebb1027fe0a32fb8648016e38901d680cd187a9b1423a7fb831c13363d4"
+    },
+    {
+      "path": "shaders/zen_tree_trunk.gdshader.uid",
+      "bytes": 20,
+      "sha256": "372e935c28eaa246d501f59cddb2d3ae8d3351d68e2318a19b04d3d023a8deca"
+    },
+    {
+      "path": "tests/render_zen_game.gd",
+      "bytes": 6319,
+      "sha256": "94471a73c46d8ad6c6c532428db64c670faccf3c179796ac0620770aabfda736"
+    },
+    {
+      "path": "tests/render_zen_game.gd.uid",
+      "bytes": 20,
+      "sha256": "82d060c2a194ce82f975ebfbe6f948ddfcdc7f418c2b861e3cd91360c2255af9"
+    },
+    {
+      "path": "tests/test_zen_cell_stones.gd",
+      "bytes": 1793,
+      "sha256": "e649784fb2fec9260779628ce082f1a48a389a2ab217900d9f1cdc3adbdbdfa8"
+    },
+    {
+      "path": "tests/test_zen_cell_stones.gd.uid",
+      "bytes": 19,
+      "sha256": "d0d904ad45432a3f131ace5ff55f016b02abe90326fb0a5ea6737eaaff49f15b"
+    },
+    {
+      "path": "tests/test_zen_centerpieces.gd",
+      "bytes": 8492,
+      "sha256": "e547131ee26ff0349f6610e220cad40cf7b31e7216d11be35d94b49bffdb5188"
+    },
+    {
+      "path": "tests/test_zen_centerpieces.gd.uid",
+      "bytes": 19,
+      "sha256": "903a76fc94ff3154cf1ae0e3e1ebe653cc236d46a4423cac2eeef477c19426e6"
+    },
+    {
+      "path": "tests/test_zen_junction_overlays.gd",
+      "bytes": 2266,
+      "sha256": "68f9bfa48d82c99d0620f348e18f6df9a5e1775ed74801d783bc643b1c157aa2"
+    },
+    {
+      "path": "tests/test_zen_junction_overlays.gd.uid",
+      "bytes": 20,
+      "sha256": "f768b4a17fe282ccfc34269d2a7d9dbc66f5616699ff84dee9056f219571f689"
+    },
+    {
+      "path": "tests/test_zen_junction_policy.gd",
+      "bytes": 1469,
+      "sha256": "f141c3b1faa2bd40d393a7a7da5bdf2ad69ec520817f67160ed73f83e6a2ca5c"
+    },
+    {
+      "path": "tests/test_zen_junction_policy.gd.uid",
+      "bytes": 20,
+      "sha256": "30f3cf791ff8fc3a5d4560d9001abb2fe34030e8c860e06e4f0bdfea8fe67d6e"
+    },
+    {
+      "path": "tests/test_zen_landmarks.gd",
+      "bytes": 12111,
+      "sha256": "d04adbff9fa7180720be7e1bf021e671cc34e915f7b9db95cf0b5ec7dfecd69d"
+    },
+    {
+      "path": "tests/test_zen_landmarks.gd.uid",
+      "bytes": 20,
+      "sha256": "6aad25b6808cd00d3326f7a777fa9ab1d1132c6287445868360d28f15ba25eee"
+    },
+    {
+      "path": "tests/test_zen_ordinary.gd",
+      "bytes": 9073,
+      "sha256": "f70390b6917a440061372ab846aa04b1edbf067fe0c6eee007b5777f5e84cd8b"
+    },
+    {
+      "path": "tests/test_zen_ordinary.gd.uid",
+      "bytes": 20,
+      "sha256": "e85be748b346c2963126e72778c9fe92638947add2857965efe3744c8b758377"
+    },
+    {
+      "path": "tests/test_zen_ponds.gd",
+      "bytes": 13954,
+      "sha256": "507b712ea79af33bb8b806a7ce777f0ed070e1c5dfcd9ad8f4e6d1e0508519c7"
+    },
+    {
+      "path": "tests/test_zen_ponds.gd.uid",
+      "bytes": 20,
+      "sha256": "b479476d66423463da28b42b7e49a2cbbc1c6d79879bcd675910c2179c55ec15"
+    },
+    {
+      "path": "tests/test_zen_quadrant_deco.gd",
+      "bytes": 1173,
+      "sha256": "fd387ff9271832db418b604c5d6ad5e786d2b673e676329e584c7216b2f793fe"
+    },
+    {
+      "path": "tests/test_zen_quadrant_deco.gd.uid",
+      "bytes": 19,
+      "sha256": "7f8d7ba42fbe577561f6a4b12152a5a6deb8b5fbf0d1204144bdcf7cd5ba7759"
+    },
+    {
+      "path": "tests/test_zen_sets.gd",
+      "bytes": 7147,
+      "sha256": "97d481b380baba46bf922b3dd84ef110e5701cff1442bc235707b2d63be6d635"
+    },
+    {
+      "path": "tests/test_zen_sets.gd.uid",
+      "bytes": 20,
+      "sha256": "43ef7a8b0b2e2e98893a7b0af82a963d2bd4805ebf1968394f24da6cf3fe2bed"
+    },
+    {
+      "path": "tests/test_zen_stone_pace.gd",
+      "bytes": 848,
+      "sha256": "4c29819712eb18657f660de15dc1835d1a9ea3f0b8362ccbde37e7a00847e740"
+    },
+    {
+      "path": "tests/test_zen_stone_pace.gd.uid",
+      "bytes": 20,
+      "sha256": "3b2362be8f8284fe16695778300bcdaf76a2d1aed0d11d1350a851a7537cf133"
+    },
+    {
+      "path": "tests/test_zen_stone_variety.gd",
+      "bytes": 1864,
+      "sha256": "79a9839ba4178aadfae4bf4e1906b38cc492ce5758f1dc534f2776d0312d3cfe"
+    },
+    {
+      "path": "tests/test_zen_stone_variety.gd.uid",
+      "bytes": 20,
+      "sha256": "aa53e38bd65f6fb8557a88c0edfd7c10266b0455fbacfe1736c7fdecee2cc120"
+    },
+    {
+      "path": "tests/test_zen_trees.gd",
+      "bytes": 14556,
+      "sha256": "c863718b450be1f4bb8aa8e3abf98d60cc4c506cd4d6880c49e31da6b04aea4f"
+    },
+    {
+      "path": "tests/test_zen_trees.gd.uid",
+      "bytes": 20,
+      "sha256": "4d328f8d9bec47b14f3863ef43599ba4a9ff5c3048abe8897556268f3219f72e"
+    }
+  ],
+  "restoration_notes": {
+    "theme_id": "zen_garden",
+    "status": "inactive_unfinished",
+    "profile_source_commit": "2324819^",
+    "source_layout": "Extract source/ into a separate checkout; paths inside source/ retain their original names.",
+    "restoration_steps": [
+      "Start in a separate checkout; do not unzip into the live project without reviewing the map.",
+      "Use source/ for the original Zen artwork, metadata, scripts, shaders and tests.",
+      "Use reference/ for snapshots of the shared integration before archival. Port the Zen-specific hooks; do not overwrite newer shared scripts wholesale.",
+      "The recovered full profile predates the current asset manifests. Move restored Zen assets into assets/themes/zen_garden/, create its manifest and update every old/relative path.",
+      "Use reference/asset-migration-plan.json to translate references to shared fonts, schemas and other active assets moved during Step 3.",
+      "Restore providers, model/renderer hooks and tests before adding Zen to the selectable registry.",
+      "Reimport and validate all colors, stone/rake paths, centers, ponds and trees in both board sizes before exposing the theme."
+    ],
+    "preservation": "The versioned ZIP under preserved/ is a copy of the external archive; .gdignore and export exclusions keep it out of Godot imports and builds."
+  },
+  "verification": {
+    "zip_integrity": "passed for both archive copies",
+    "source_hashes_verified": 323,
+    "runtime_zen_loader_references": 0,
+    "active_asset_bytes": "unchanged",
+    "exported_pack": "205 images, six OGG recordings, 212 import artifacts; no archive, Zen artwork, test fixture or orphan imports",
+    "checks_passed": {
+      "theme_registry": 76,
+      "sprite_metadata": 188,
+      "planner": 510,
+      "footprint_rasters": 60,
+      "topology": 1393,
+      "assembly": 68,
+      "tier2_sets": 283,
+      "pattern_assets": 38,
+      "sprite_growth": 207,
+      "sprite_presenter": 99,
+      "tier1_integration": 300,
+      "junction_overlays": 291,
+      "native_tutorial": 1265,
+      "native_gallery_export": 40,
+      "native_piece_surface": 1564
+    }
+  }
+}

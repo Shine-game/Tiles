@@ -1,0 +1,14 @@
+{
+  "source_imports": 213,
+  "expected_artifacts": 213,
+  "cache_file_count": 426,
+  "cache_bytes": 17729376,
+  "missing_artifacts": [],
+  "orphan_files": [],
+  "ignored_folders": [
+    "build",
+    "docs/asset-inventory",
+    "preserved"
+  ],
+  "ok": true
+}

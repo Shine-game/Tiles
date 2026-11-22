@@ -4,7 +4,6 @@ extends RefCounted
 # persistent history stay owned by their theme; no nodes enter common state.
 const Formations = preload("res://scripts/pattern/formation_assembly.gd")
 const Growth = preload("res://scripts/growth.gd")
-const Schedule = preload("res://scripts/pattern/growth_schedule.gd")
 
 static func _put(events: Dictionary, id: String, start: float, end: float, old: bool, owner: Variant = null, retiring: bool = false) -> void:
 	events[id] = {"start": start, "end": end, "old": old, "owner": owner, "retiring": retiring}
@@ -15,7 +14,7 @@ static func _part(events: Dictionary, prefix: String, key: String, event: Dictio
 	if event.has("edge_start"): start = minf(start, event.edge_start)
 	_put(events, prefix + key, start, event.end, event.old, event.get("cell", event.get("feature", key)))
 
-static func collect(model, theme: String, zen = null, workshop = null) -> Dictionary:
+static func collect(model, theme: String, workshop = null) -> Dictionary:
 	var events: Dictionary = {}
 	var prefix := theme + "/"
 	if theme == "clockwork":
@@ -31,8 +30,6 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 				_put(events, id, entry.retire_at, entry.retire_end, false, entry.event.get("cell", entry.event.key), true)
 	elif theme == "coral_reef":
 		for key: String in model.components: _part(events, prefix + "part/", key, model.components[key])
-	elif theme == "zen_garden" and zen != null:
-		_zen(events, prefix, model, zen)
 	else:
 		for cell: Vector2i in model.arrivals:
 			var at: float = model.arrivals[cell]
@@ -51,33 +48,3 @@ static func collect(model, theme: String, zen = null, workshop = null) -> Dictio
 			continue
 		events[id] = model.sprite_growth_events[id].duplicate(true)
 	return events
-
-static func _zen(events: Dictionary, prefix: String, model, zen) -> void:
-	# Archived theme: load its timing providers only when explicitly activated.
-	var Landmark = load("res://scripts/zen_landmark.gd")
-	var Pond = load("res://scripts/zen_pond.gd")
-	var Trees = load("res://scripts/zen_trees.gd")
-	var Centerpiece = load("res://scripts/zen_centerpiece.gd")
-	for cell: Vector2i in model.arrivals:
-		var at: float = model.arrivals[cell]
-		_put(events, prefix + "pattern/%d/%d/%d" % [model.board[cell.y][cell.x], cell.y, cell.x], at, at + Landmark.PATTERN_SECONDS, at < 0, cell)
-	for cell: Vector2i in zen.centerpieces:
-		var center = zen.centerpieces[cell]
-		for stage in range(center.stage):
-			var old: bool = not center.growing.has(stage)
-			var start: float = center.growing.get(stage, Schedule.SETTLED_AT)
-			_put(events, prefix + "center/%d/%d/%d" % [cell.y, cell.x, stage], start, start + Centerpiece.GROW_SECONDS, old, cell)
-	if zen.pond != null:
-		for key: String in zen.pond.regions:
-			var start: float = zen.pond.regions[key].start
-			_put(events, prefix + "water/" + key, start, start + Pond.FILL_SECONDS, start == Schedule.SETTLED_AT, key)
-		for key: String in zen.pond.plants:
-			var start: float = zen.pond.plants[key].start
-			_put(events, prefix + "shrub/" + key, start + Pond.FILL_SECONDS, start + Pond.FILL_SECONDS + Pond.PLANT_SECONDS, start == Schedule.SETTLED_AT, key)
-	if zen.trees != null:
-		for key: String in zen.trees.trunks:
-			var start: float = zen.trees.trunks[key].start
-			_put(events, prefix + "trunk/" + key, start, start + Trees.TRUNK_SECONDS, start == Schedule.SETTLED_AT, key)
-		for id: int in zen.trees.branches:
-			var start: float = zen.trees.branches[id].start
-			_put(events, prefix + "branch/%d" % id, start, start + Trees.BRANCH_SECONDS, start == Schedule.SETTLED_AT, id)

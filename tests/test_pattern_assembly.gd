@@ -4,7 +4,6 @@ const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Renderer = preload("res://scripts/pattern/component_renderer.gd")
 const Coral = preload("res://scripts/coral_sets.gd")
 const Clock = preload("res://scripts/clockwork_sets.gd")
-const Zen = preload("res://scripts/zen_sets.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 var checks := 0
 var failures := 0
@@ -17,21 +16,20 @@ func _initialize() -> void: _run.call_deferred()
 func _run() -> void:
 	Coral.install()
 	Clock.install()
-	Zen.install()
-	var part: Dictionary = Zen.families.stones[1].definition.compositions.vine.parts.half
+	var part: Dictionary = {"asset":Assets.select_variant(Clock.vine().asset,"copper"),"pivot_px":[128,128],"scale":[0.7,0.7],"anchor":"shared_edge_midpoint","canonical_port":0,"flip_h_ports":["S","W"]}
 	var original: Dictionary = part.duplicate(true)
 	var texture: Texture2D
 	for d in range(4):
 		var cell := Vector2i(3, 5)
 		var spec := Assembly.on_port(part, cell, d)
-		spec.asset_root = Zen.ROOT
+		spec.asset_root = Clock.ROOT
 		var node := Renderer.sprite(spec)
 		if texture == null: texture = node.texture
-		check(node.texture == texture, "All four stone paths share one loaded image")
+		check(node.texture == texture, "All four port sprites share one loaded image")
 		var seam := (Vector2(cell) + Vector2.ONE * 0.5 + Vector2(Topology.DIRECTIONS[d]) * 0.5) * 256
 		check(node.position == seam, "The basic assembly rotates the anchor around the cell center")
 		check((node.transform * (Vector2(128, 0) - Vector2(128, 128) + node.offset)).is_equal_approx(seam), "The canonical border stays on the shared seam after rotation and scaling")
-		check(node.flip_h == (d in [2, 3]), "Declared tangential mirroring keeps opposite asymmetric stone profiles aligned")
+		check(node.flip_h == (d in [2, 3]), "Declared tangential mirroring keeps opposite asymmetric profiles aligned")
 		check(is_equal_approx(node.rotation, d * PI / 2), "Common renderer applies the canonical port orientation")
 		node.free()
 	check(part == original, "Instancing does not modify the canonical set definition")

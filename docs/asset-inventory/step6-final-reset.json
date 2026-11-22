@@ -1,0 +1,5 @@
+{
+  "reason": "Final rebuild after protecting audit CSVs with docs/asset-inventory/.gdignore",
+  "files_removed": 449,
+  "bytes_removed": 17855915
+}

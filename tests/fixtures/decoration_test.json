@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "decoration",
+  "status": "ready",
+  "images": {
+    "color1": "decoration_test.png"
+  },
+  "canvas_px": [
+    32,
+    32
+  ],
+  "attachment": [
+    15.5,
+    15.5
+  ],
+  "tags": [
+    "pebble"
+  ],
+  "spawn": {
+    "mode": "direct"
+  },
+  "variation": {
+    "weight": 1,
+    "scale": [
+      2,
+      2
+    ]
+  },
+  "transforms": {
+    "allow_flip_x": true,
+    "allow_flip_y": false
+  }
+}

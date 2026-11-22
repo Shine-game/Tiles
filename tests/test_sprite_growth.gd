@@ -5,7 +5,6 @@ const State = preload("res://scripts/pattern/component_state.gd")
 const Growth = preload("res://scripts/growth.gd")
 const Coral = preload("res://scripts/coral_growth.gd")
 const Clock = preload("res://scripts/clockwork_growth.gd")
-const Zen = preload("res://scripts/zen_growth.gd")
 const Vines = preload("res://scripts/vines_growth.gd")
 const Events = preload("res://scripts/pattern/theme_events.gd")
 const Planner = preload("res://scripts/pattern/sprite_planner.gd")
@@ -188,7 +187,7 @@ func check_actual_models() -> void:
 	var empty := Rules.empty_board(5)
 	var board := empty.duplicate(true)
 	board[1][1] = 2; board[1][2] = 2; board[2][1] = 2; board[2][2] = 2
-	var models := {"coral_reef": Coral, "clockwork": Clock, "vines": Vines, "zen_garden": Zen}
+	var models := {"coral_reef": Coral, "clockwork": Clock, "vines": Vines}
 	for theme: String in models:
 		var model = models[theme].new()
 		model.build(empty, board)
@@ -204,7 +203,7 @@ func check_actual_models() -> void:
 		else: source = {"start": model.arrivals[Vector2i(1, 1)], "end": model.arrivals[Vector2i(1, 1)] + 0.3}
 		mapping.event = source
 		var catalog := Assets.load_sprite_catalog(Themes.sprite_catalog_path(theme))
-		var family := "stones" if theme == "zen_garden" else "default"
+		var family := "default"
 		var actual_plan := Planner.new().plan(catalog, family, 2, theme + "/actual", 42)
 		var compiled := SpriteGrowth.compile(actual_plan, mapping)
 		check(compiled.ok and compiled.events.size() == actual_plan.decorations.size(), "Actual theme planner and growth source compile: " + theme)

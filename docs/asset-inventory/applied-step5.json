@@ -1,0 +1,9 @@
+{
+  "status": "completed_not_pushed",
+  "archive_report": "docs/asset-inventory/zen-archive.json",
+  "versioned_archive": "preserved/zen_garden_2026-11-22.zip",
+  "external_archive": "/workspace/work/Tiles-archive/zen_garden_2026-11-22.zip",
+  "sha256": "4fc73d83fe8cb5804dc8cd215fd6d3cd476b0deaa27cad8725064e21bf3ba95c",
+  "removed_source_files": 323,
+  "remaining_step": "Rebuild disposable caches/staging and perform final export validation. No APK built in this step."
+}
