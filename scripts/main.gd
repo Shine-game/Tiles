@@ -352,16 +352,18 @@ func _layout() -> void:
 	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
 	var edge := 10.0 / pixel_scale + maxf(hardware.x, hardware.z)
 	var controls_left := maxf(safe.x, safe.z) + gap
-	var layout := PlayLayout.portrait(view, pixel_scale, controls_left + gap) if view.y >= view.x else PlayLayout.measure_landscape(view, safe, edge, gap, game.board.size())
+	var layout := PlayLayout.portrait(view, pixel_scale, maxf(hardware.x, hardware.z)) if view.y >= view.x else PlayLayout.measure_landscape(view, safe, edge, gap, game.board.size())
 	var side: float = layout.board_side
 	var header_height: float = layout.header_height
 	var control_side: float = layout.control_side
 	var dock_side: float = layout.dock_side
 	var dock_padding: float = layout.dock_padding
 	var dock_gap: float = layout.dock_gap
+	controls_left = layout.get("controls_left", controls_left)
+	var tray_gap: float = layout.get("tray_gap", gap)
 	var controls_right := view.x - controls_left - control_side
-	var preview_left := controls_left + control_side + gap
-	var preview_width := maxf(1, controls_right - gap - preview_left)
+	var preview_left := controls_left + control_side + tray_gap
+	var preview_width := maxf(1, controls_right - tray_gap - preview_left)
 	var left := (view.x - side) / 2
 	var top: float = layout.header_top
 	for i in range(3):
@@ -878,6 +880,9 @@ func _apply_button_style(button: Button) -> void:
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		elif palette_options.has(button):
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
+		elif button.has_node("ControlIcon"):
+			style.content_margin_left = 0
+			style.content_margin_right = 0
 		button.add_theme_stylebox_override(state, style)
 
 func _refresh_theme() -> void:
