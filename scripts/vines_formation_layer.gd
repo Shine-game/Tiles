@@ -33,7 +33,10 @@ func sync(view,settled:bool):
   var id="butterfly/"+str(link.a)+"/"+str(link.b)
   specs[id]={"asset":Assets.texture(meta.image),"source_transform":matrix,"material":null,"z_index":1}
   events[id]={"start":link.start,"duration":butterfly.animation.duration_seconds,"old":settled or link.old,"flower":false}
- assert(renderer.sync(specs,self),str(renderer.diagnostics))
+ var synced:bool=renderer.sync(specs,self)
+ if not synced:
+  push_error(str(renderer.diagnostics))
+  return
  advance(view.clock)
 func advance(clock:float):
  for id in events:

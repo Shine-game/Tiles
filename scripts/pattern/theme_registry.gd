@@ -45,7 +45,7 @@ static func validate(data: Variant) -> Array:
 			else:
 				for channel: String in ["ambience","place"]:
 					var clip: Variant = sounds.get(channel)
-					if not clip is Dictionary or not project_file(clip.get("path"),"ogg"): errors.append(id + ": missing OGG " + channel + " recording")
+					if not clip is Dictionary or not audio_file(clip.get("path")): errors.append(id + ": missing OGG " + channel + " recording")
 		if profile.get("frame") is Dictionary:
 			if not profile.frame.get("enabled") is bool: errors.append(id + ": frame enabled must be boolean")
 			if not profile.frame.get("appearance") is String: errors.append(id + ": frame needs an appearance ID")
@@ -139,6 +139,11 @@ static func validate(data: Variant) -> Array:
 
 static func project_file(path: Variant, extension: String) -> bool:
 	return path is String and path.begins_with("res://") and path.get_extension() == extension and FileAccess.file_exists(path)
+
+# Imported sounds are remapped to .oggvorbisstr in exported Android builds.
+# FileAccess only checks raw files and therefore rejects valid packaged audio.
+static func audio_file(path: Variant) -> bool:
+	return path is String and path.begins_with("res://") and path.get_extension() == "ogg" and ResourceLoader.exists(path, "AudioStreamOggVorbis")
 
 static func texture_file(path: Variant) -> bool:
 	return path is String and path.begins_with("res://") and ResourceLoader.exists(path, "Texture2D")

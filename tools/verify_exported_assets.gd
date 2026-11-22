@@ -1,9 +1,23 @@
 extends SceneTree
 var paths: Array[String] = []
 func scan(folder: String) -> void:
-	for file: String in DirAccess.get_files_at(folder): paths.append(folder.path_join(file))
-	for child: String in DirAccess.get_directories_at(folder): scan(folder.path_join(child))
+	var directory := DirAccess.open(folder)
+	directory.include_hidden = true
+	directory.list_dir_begin()
+	var name := directory.get_next()
+	while not name.is_empty():
+		if name not in [".",".."]:
+			var path := folder.path_join(name)
+			if directory.current_is_dir(): scan(path)
+			else: paths.append(path)
+		name = directory.get_next()
 func _initialize():
+	# Running from the checkout lets FileAccess find unexported source files,
+	# hiding the exact remapped-audio failure this test is meant to catch.
+	if FileAccess.file_exists(ProjectSettings.globalize_path("res://project.godot")):
+		push_error("Run this exported-pack check from an empty directory outside the source checkout.")
+		quit(1)
+		return
 	var registry: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/themes/themes.json"))
 	var Manifest = load("res://scripts/pattern/asset_manifest.gd")
 	var Themes = load("res://scripts/pattern/theme_registry.gd")
