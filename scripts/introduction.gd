@@ -13,7 +13,7 @@ const Ink = preload("res://scripts/interface_palette.gd")
 const Axes = preload("res://scripts/field_axes.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 const TUTORIAL_FONT = preload("res://assets/shared/fonts/lora_regular.ttf")
-const FONT_SIZE := 20
+const FONT_SIZE := 24
 const Lessons = preload("res://scripts/tutorial_lessons.gd")
 const ANIMATION_SECONDS := 0.32
 const PULSE_SECONDS := 1.4
@@ -258,10 +258,11 @@ func layout() -> void:
 	progress_label.text = "%d / %d" % [Lessons.definition(lesson_id,repair_checkpoint).number,Lessons.CARD_COUNT]
 	# The central header belongs entirely to the caption; side controls never move.
 	var preparation: Rect2 = host.piece_view.get_rect()
-	progress_label.position = preparation.position+Vector2(0,-18)
-	progress_label.z_index = 2
-	progress_label.size = Vector2(preparation.size.x,16)
 	progress_label.add_theme_font_size_override("font_size",FONT_SIZE)
+	var counter_height := ceilf(TUTORIAL_FONT.get_height(FONT_SIZE))
+	progress_label.position = Vector2(preparation.position.x, maxf(0.0, preparation.position.y - counter_height))
+	progress_label.z_index = 2
+	progress_label.size = Vector2(preparation.size.x, counter_height)
 	progress_label.add_theme_color_override("font_color",Ink.text())
 	var n := grid_size()
 	var rim := maxf(0,host.board_view.size.x-host.board_view.field.size.x)

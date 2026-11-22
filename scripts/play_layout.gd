@@ -10,8 +10,10 @@ static func measure(view: Vector2, safe: Vector4, edge: float, gap: float, board
 	var control_side := clampf(view.x * 0.112, 36, 72) if portrait else clampf(view.y * 0.09, 28, 48)
 	var dock_side := clampf(view.x * 0.225, 56, 128) if portrait else clampf(view.y * 0.14, 40, 64)
 	var dock_padding := (view.x - 3 * dock_side) / 6.0
-	var dock_vertical_padding := minf(dock_padding, minf(safe.w, view.y * 0.015))
-	var available_height := view.y - safe.y - dock_side - 2 * dock_vertical_padding - gap
+	var dock_vertical_padding := safe.w if portrait else minf(dock_padding, minf(safe.w, view.y * 0.015))
+	var upper_gap := maxf(12.0, gap) if portrait else gap
+	var board_gap := upper_gap if portrait else dock_vertical_padding
+	var available_height := view.y - safe.y - dock_side - dock_vertical_padding - board_gap - upper_gap
 	var full_width := maxf(1, view.x - 2 * edge)
 	var extent := Vector2i.ONE
 	for definition: Dictionary in Rules.PIECES.values():
@@ -32,6 +34,13 @@ static func measure(view: Vector2, safe: Vector4, edge: float, gap: float, board
 		board_side = full_width
 	var header_height := maxf(0, available_height - board_side)
 	control_side = clampf((header_height - 2 * gap) / 3.0, 0, control_side)
+	if portrait:
+		var tray_height := extent.y * maxf(1, (board_side - BOARD_FRAME) / board_size) + 2 * gap
+		var preferred_header := maxf(3 * control_side + 2 * gap, tray_height)
+		var spacing := maxf(0, header_height - preferred_header) / 2.0
+		header_height -= 2 * spacing
+		upper_gap += spacing
+		board_gap += spacing
 
 	return {
 		"board_side": board_side,
@@ -39,5 +48,6 @@ static func measure(view: Vector2, safe: Vector4, edge: float, gap: float, board
 		"control_side": control_side,
 		"dock_side": dock_side,
 		"dock_padding": dock_padding,
-		"dock_vertical_padding": dock_vertical_padding,
+		"upper_gap": upper_gap,
+		"board_to_dock_gap": board_gap,
 	}

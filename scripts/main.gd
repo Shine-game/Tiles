@@ -357,7 +357,6 @@ func _layout() -> void:
 	var control_side: float = layout.control_side
 	var dock_side: float = layout.dock_side
 	var dock_padding: float = layout.dock_padding
-	var dock_vertical_padding: float = layout.dock_vertical_padding
 	var controls_left := maxf(safe.x, safe.z) + gap
 	var controls_right := view.x - controls_left - control_side
 	var preview_left := controls_left + control_side + gap
@@ -371,15 +370,15 @@ func _layout() -> void:
 	_set_rect(flip_button, Rect2(controls_right, top + header_height - control_side, control_side, control_side))
 	_set_rect(piece_view, Rect2(preview_left, top, preview_width, header_height))
 	_set_rect(game_over_message, piece_view.get_rect())
-	var board_top := top + header_height + gap
+	var board_top := top + header_height + float(layout.upper_gap)
 	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
 	piece_view.cell_pitch = board_view.pitch
-	var dock_y := board_top + side + dock_vertical_padding
+	var dock_y := board_top + side + float(layout.board_to_dock_gap)
 	for i in range(3):
 		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + 2 * dock_padding), dock_y, dock_side, dock_side))
 	for control: Control in _controls():
-		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26))
+		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26) + 4)
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))
 	_layout_palette_menu(gap)
 	_layout_confirmation(gap)

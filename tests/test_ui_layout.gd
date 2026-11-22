@@ -40,7 +40,12 @@ func run() -> void:
 				var padding: float = scene.blue_button.position.x
 				check(is_equal_approx(scene.place_button.position.x - scene.blue_button.get_rect().end.x, 2 * padding), "Bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
-				check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around bottom buttons")
+				if dimensions.y >= dimensions.x:
+					var upper_gap: float = scene.board_view.position.y - scene.piece_view.get_rect().end.y
+					var bottom_gap: float = scene.blue_button.position.y - scene.board_view.get_rect().end.y
+					check(is_equal_approx(upper_gap, bottom_gap) and bottom_gap > 0, "The portrait board has balanced clearance above and below")
+				else:
+					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around landscape bottom buttons")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")

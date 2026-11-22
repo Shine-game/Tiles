@@ -1,7 +1,7 @@
 extends RefCounted
 const Palette = preload("res://scripts/interface_palette.gd")
 const FONT = preload("res://assets/shared/fonts/lora_regular.ttf")
-const FONT_SIZE := 24
+const FONT_SIZE := 28
 const RADIUS := 8
 const BEVEL := 1
 const TRAVEL := 2

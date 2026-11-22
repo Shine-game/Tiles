@@ -47,7 +47,7 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	if count >= 0:
 		var font := get_theme_default_font()
-		var font_size := clampi(roundi(size.x * 0.25),12,22)
+		var font_size := clampi(roundi(size.x * 0.25),12,22) + 4
 		var center := Vector2(size.x * 0.82,size.y * 0.19)
 		var text := str(count)
 		var extent := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size)

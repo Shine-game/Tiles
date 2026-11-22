@@ -46,7 +46,7 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, theme_labels: 
 	var desired_height: float = (38 + 70 * row_units + 12) * 1.5
 	if page == "Themes": desired_height = maxf(desired_height,420)
 	if page == "Audio": desired_height = maxf(desired_height,330)
-	var width: float = view_size.x * 0.70
+	var width := minf(view_size.x - 2 * pad, maxf(view_size.x * 0.70, 340.0))
 	var height: float = minf(desired_height, view_size.y - 2 * pad)
 	var scale_factor: float = minf(1, minf(width / 540, height / desired_height))
 	var content_width: float = width - inset.x - inset.z

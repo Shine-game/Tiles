@@ -182,7 +182,7 @@ func run() -> void:
 		game._layout()
 		var controls: Array = game._controls().map(func(button):return button.get_rect())
 		intro.layout()
-		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 20,"Tutorial type stays fixed at twenty pixels on every screen")
+		check(intro.text.get_theme_font_size("font_size") <= 2*clampi(roundi(dimensions.x*0.028),12,18) and intro.text.get_theme_font_size("font_size") == 24,"Tutorial type stays fixed at 24 pixels on every screen")
 		check(intro.text.get_rect().end.y <= intro.tray_rect.position.y and intro.tray_rect.end.y < intro.board_rect.position.y,"Text, offered piece and board do not overlap")
 		check(Rect2(Vector2.ZERO,dimensions).encloses(intro.board_rect),"Practice grid fits the phone")
 		check(is_equal_approx(intro.adjusted_board_rect.end.y,intro.normal_board_rect.end.y),"Tutorial board shares the normal board bottom")
@@ -288,7 +288,7 @@ func run() -> void:
 			check(shared_font_size == intro.text.get_theme_font_size("font_size"),"Every cue uses the same font fitted to the longest text")
 			check(intro.caption_rect.encloses(intro.text.get_rect()),"Cue fit %s checkpoint %s window %s text %s" % [dimensions,checkpoint,intro.caption_rect,intro.text.get_rect()])
 			check(is_equal_approx(shared_preview_unit,intro.tray_geometry().unit),"All previews keep the same standard tile size")
-			check(intro.text.get_theme_font_size("font_size") == 20,"Shared cue formatting fits the reserved text window")
+			check(intro.text.get_theme_font_size("font_size") == 24,"Shared cue formatting fits the reserved text window")
 			check(game.board_view.get_rect().is_equal_approx(normal_frame) and intro.board_rect.is_equal_approx(normal_field),"Tutorial nine-square frame and field exactly match normal geometry")
 			check(controls == game._controls().map(func(button):return button.get_rect()),"Full-size tutorial field keeps every normal button fixed")
 			if not intro.cells.is_empty():
