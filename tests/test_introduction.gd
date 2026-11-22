@@ -516,6 +516,7 @@ func run() -> void:
 		intro.finish(true)
 		await process_frame
 	for theme_id: String in game.MENU_THEMES:
+		if not game.theme_store.can_replay(theme_id): continue
 		Model.save_checkpoint("reveal",false,path)
 		game._start_introduction("reveal")
 		intro = game.introduction

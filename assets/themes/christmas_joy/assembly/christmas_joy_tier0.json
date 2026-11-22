@@ -1,0 +1,89 @@
+{
+  "schema": "tiles.pattern-set.v1",
+  "id": "vines-tier0",
+  "tier": 0,
+  "treatments": {
+    "1": "primary_palette_pigment",
+    "2": "secondary_palette_pigment"
+  },
+  "roles": {
+    "isolated": "holding",
+    "surface": "wash"
+  },
+  "compositions": {
+    "holding": {
+      "parts": {
+        "motif": {
+          "provider": "vines.holding",
+          "animation": {
+            "duration_seconds": 0.3
+          },
+          "params": {
+            "port_order": [
+              3,
+              1,
+              0,
+              2
+            ],
+            "curve_normal": 0.3,
+            "side_normal": 0.7,
+            "center_radius": 0.014,
+            "center_alpha": 0.75,
+            "open": {
+              "reach": 0.415,
+              "curve_alpha": 0.76,
+              "leaf_roots": [
+                0.1,
+                0.23
+              ],
+              "leaf_lengths": [
+                0.3,
+                0.26
+              ],
+              "leaf_widths": [
+                0.16,
+                0.14
+              ],
+              "leaf_lightening": [
+                0.0,
+                0.1
+              ],
+              "leaf_alphas": [
+                0.9,
+                0.84
+              ],
+              "star_radius": 0.037
+            },
+            "connected": {
+              "reach": 0.205,
+              "curve_alpha": 0.6,
+              "leaf_root": 0.09,
+              "side_normal": 0.75,
+              "leaf_length": 0.14,
+              "leaf_width": 0.075,
+              "leaf_alpha": 0.78,
+              "star_radius": 0.031
+            },
+            "star_alpha": 0.9
+          }
+        }
+      }
+    },
+    "wash": {
+      "parts": {
+        "wash": {
+          "provider": "vines.wash",
+          "animation": {
+            "duration_seconds": 0.3
+          },
+          "params": {
+            "layers": 3,
+            "radius": 0.34,
+            "radius_step": 0.08,
+            "alpha": 0.012
+          }
+        }
+      }
+    }
+  }
+}

@@ -63,6 +63,7 @@ func _run() -> void:
 	check(absf(scene.piece_view.get_global_rect().get_center().x - scene.get_viewport_rect().size.x / 2) < 0.1, "active piece is centered at top")
 	var unchanged_board: Array = scene.game.board.duplicate(true)
 	for option: Button in scene.theme_options:
+		if not scene.theme_store.can_replay(option.get_meta("theme_id")): continue
 		await click_button(scene.palette_button)
 		check(scene.palette_menu.visible and scene.menu_page == "Settings", "Settings opens from the game")
 		await click_button(scene.settings_options[0])

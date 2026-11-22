@@ -11,11 +11,8 @@ var pages: Dictionary
 var menu_buttons: Array
 var palette_list: Control
 var frame: BoardFrame
-var christmas_button: Button
-var christmas_icon: Control
-var coming_soon: Label
-var offer_divider: HSeparator
-var christmas_owned := false
+var paid_heading: Label
+var paid_divider: HSeparator
 var menu_title: Label
 var menu_close: Button
 var back_button: Button
@@ -43,14 +40,18 @@ func go_back() -> void:
 	else:
 		open_page(history.pop_back(), false)
 
-func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clearance: float, theme_labels: Dictionary, style_button: Callable) -> void:
+func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clearance: float, theme_labels: Dictionary, style_button: Callable, can_replay: Callable) -> void:
 	for control: Control in menu_buttons:
 		control.hide()
 	var options: Array = pages.get(page, pages["Settings"]).duplicate()
-	var show_offer := page == "Themes" and not christmas_owned
+	var first_paid: Button
 	if page == "Themes":
-		options.append(christmas_button)
-	var section_height := 30.0 if show_offer else 0.0
+		var locked := options.filter(func(button: Button): return not can_replay.call(button.get_meta("theme_id")))
+		options = options.filter(func(button: Button): return can_replay.call(button.get_meta("theme_id")))
+		if not locked.is_empty():
+			first_paid = locked[0]
+			options.append_array(locked)
+	var section_height := 30.0 if first_paid != null else 0.0
 	var rim := frame.thin_rim if frame.apply_theme(Palette.theme_id()) else 0.0
 	var row_units := options.size() + (1 if page == "Game Presets" else 0)
 	var width := minf(view_size.x - 2 * pad, maxf(view_size.x * 0.70, 400.0))
@@ -119,12 +120,12 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clea
 			row_y += row_height + gap
 			continue
 		var button: Button = options[i]
-		if show_offer and button == christmas_button:
-			offer_divider.show()
-			coming_soon.show()
-			coming_soon.add_theme_font_size_override("font_size", 18)
-			_set_rect(offer_divider, Rect2(0, row_y, content_width, 2))
-			_set_rect(coming_soon, Rect2(0, row_y + 2, content_width, section_height - 2))
+		if button == first_paid:
+			paid_divider.show()
+			paid_heading.show()
+			paid_heading.add_theme_font_size_override("font_size", 18)
+			_set_rect(paid_divider, Rect2(0, row_y, content_width, 2))
+			_set_rect(paid_heading, Rect2(0, row_y + 2, content_width, section_height - 2))
 			row_y += section_height
 		button.show()
 		if pages["Vine colors"].has(button):
@@ -135,8 +136,6 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clea
 		button.size.x = content_width
 		button.update_minimum_size()
 		_set_rect(button, Rect2(0, row_y, content_width, row_height))
-		if button == christmas_button:
-			_set_rect(christmas_icon, Rect2(content_width - 36, (row_height - 26) / 2, 26, 26))
 		row_y += row_height + gap
 
 func _set_rect(control: Control, rect: Rect2) -> void:

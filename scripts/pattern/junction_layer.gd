@@ -76,14 +76,14 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		events.clear()
 		specs.clear()
 		return true
-	if not config.get("shapes") is Dictionary:
-		diagnostics.append("Junction shapes must be an object")
+	if not config.get("shapes") is Dictionary or config.shapes.is_empty():
+		diagnostics.append("Junction shapes must be a nonempty object")
 		return false
 	# Preflight every shape/color before replacing the live presentation.
 	var loaded: Dictionary = {}
-	for shape: String in (["bend", "t", "cross", "core"] if config.shapes.has("core") else ["bend", "t", "cross"]):
-		if not config.get("shapes", {}).get(shape) is Dictionary:
-			diagnostics.append("Junction configuration needs bend, t and cross bindings")
+	for shape: String in config.shapes:
+		if shape not in Themes.JUNCTION_SHAPES or not config.shapes[shape] is Dictionary:
+			diagnostics.append("Invalid junction shape " + shape)
 			return false
 		loaded[shape] = {}
 		for color: String in ["1", "2"]:
@@ -153,7 +153,7 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		if record.color_role != "original":
 			var target := Palette.accent(color) if record.color_role == "opposite" else Palette.pigment(color)
 			next_specs[id].material = Renderer.material(Reveal, {"recolor": true, "palette_source": record.source_color, "palette_target": target, "reveal_progress": 1.0})
-	if theme == "vines":
+	if Themes.profile(theme).hooks.growth == "vines":
 		var duration: float = Assets.load_set(Themes.pattern_set_path(theme,2)).definition.compositions.flower.parts.flower.animation.duration_seconds
 		for id: String in next_events:
 			if not id.get_slice("/",5) in ["bend","t","cross"]:continue

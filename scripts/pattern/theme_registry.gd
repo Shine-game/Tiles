@@ -7,6 +7,7 @@ const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 const PATH := "res://assets/themes/themes.json"
 const SCHEMA := "tiles.themes.v1"
 const HOOKS := ["clockwork", "vines", "coral_reef"]
+const JUNCTION_SHAPES := ["core", "bend", "t", "cross"]
 static var definition: Dictionary = {}
 
 static func validate(data: Variant) -> Array:
@@ -23,11 +24,17 @@ static func validate(data: Variant) -> Array:
 		else: seen[id] = true
 	if seen.size() != themes.size(): errors.append("Every active theme must appear in order")
 	if not seen.has(data.get("default", "")): errors.append("Default theme must be active")
+	var products := {}
 	for id: String in themes:
 		var profile: Variant = themes[id]
 		if not profile is Dictionary:
 			errors.append(id + ": profile must be an object")
 			continue
+		if profile.has("play_product"):
+			var product: Variant = profile.play_product
+			if not product is String or product.is_empty() or products.has(product):
+				errors.append(id + ": invalid or duplicate Google Play product ID")
+			else: products[product] = true
 		for field: String in ["name", "version"]:
 			if not profile.get(field) is String or str(profile[field]).is_empty(): errors.append(id + ": missing " + field)
 		var colors: Variant = profile.get("colors")
@@ -75,17 +82,17 @@ static func validate(data: Variant) -> Array:
 			var junctions: Variant = profile.junctions
 			if not junctions is Dictionary or not junctions.get("enabled") is bool: errors.append(id + ": invalid junction configuration")
 			elif junctions.enabled:
-				if not junctions.get("shapes") is Dictionary:
-					errors.append(id + ": junction shapes must be an object")
+				if not junctions.get("shapes") is Dictionary or junctions.shapes.is_empty():
+					errors.append(id + ": junction shapes must be a nonempty object")
 					continue
 				for field: String in ["z_index", "seed"]:
 					if junctions.has(field):
 						var value: Variant = junctions[field]
 						if not (value is int or value is float) or not is_finite(float(value)) or value != floorf(value): errors.append(id + ": junction " + field + " must be an integer")
 						elif field == "z_index" and absf(value) > 4096: errors.append(id + ": junction z_index out of range")
-				for shape: String in (["bend", "t", "cross", "core"] if junctions.shapes.has("core") else ["bend", "t", "cross"]):
-					var bindings: Variant = junctions.get("shapes", {}).get(shape)
-					if not bindings is Dictionary: errors.append(id + ": missing junction shape " + shape)
+				for shape: String in junctions.shapes:
+					var bindings: Variant = junctions.shapes[shape]
+					if shape not in JUNCTION_SHAPES or not bindings is Dictionary: errors.append(id + ": invalid junction shape " + shape)
 					else:
 						for color: String in ["1", "2"]:
 							if not project_file(bindings.get(color), "json"): errors.append(id + ": missing junction metadata " + shape + "/" + color)
@@ -159,6 +166,15 @@ static func specification() -> Dictionary:
 static func ids() -> Array:
 	return specification().order.duplicate()
 
+static func menu_labels() -> Dictionary:
+	var ordered := ids()
+	ordered.sort_custom(func(a: String, b: String):
+		return profile(a).get("menu_rank", 100) < profile(b).get("menu_rank", 100))
+	var labels := {}
+	for id: String in ordered:
+		labels[id] = profile(id).get("menu_name", label(id))
+	return labels
+
 static func profile(id: String) -> Dictionary:
 	return specification().themes.get(id, {})
 
@@ -177,3 +193,6 @@ static func palette_pairs() -> Array:
 
 static func sprite_catalog_path(id: String) -> String:
 	return profile(id).get("tier1_artwork", {}).get("catalog", "")
+
+static func play_product(id: String) -> String:
+	return profile(id).get("play_product", "")

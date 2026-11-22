@@ -1,4 +1,5 @@
 extends RefCounted
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const UI = preload("res://scripts/interface_theme.gd")
 
 # Own only the presentation overrides required by a tutorial. Restore is safe to
@@ -39,7 +40,10 @@ func allow_theme_menu(z: int) -> void:
 	for button: Control in host.menu_buttons:
 		if button is BaseButton:
 			menu_controls.append({"node":button,"disabled":button.disabled})
-			button.disabled = button not in host.theme_options and button not in [host.settings_options[0],host.menu_close,host.back_button]
+			if button in host.theme_options:
+				button.disabled = not Themes.play_product(button.get_meta("theme_id")).is_empty()
+			else:
+				button.disabled = button not in [host.settings_options[0],host.menu_close,host.back_button]
 
 func restore() -> void:
 	if restored: return

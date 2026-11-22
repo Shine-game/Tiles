@@ -62,6 +62,7 @@ var show_axes := false:
 var show_guides := true
 var growth_before: Array = []
 var coral_reef := false
+var rendered_theme := ""
 var coral_visuals: CoralVisuals
 var occupied_platform: OccupiedPlatform
 var placement_revision := 0
@@ -107,11 +108,12 @@ func sync_board(grid: Array) -> void:
 		show_settled(grid)
 	elif Palette.clockwork and not clockwork:
 		show_settled(grid, true)
-	elif coral_reef != Palette.coral_reef or clockwork != Palette.clockwork:
+	elif rendered_theme != Palette.theme_id():
 		_restyle()
 
 func _build_pattern(before: Array, after: Array) -> void:
-	if Palette.theme_id() == "vines":
+	rendered_theme = Palette.theme_id()
+	if Palette.vines:
 		Vines.install()
 		if tile_floor == null:
 			tile_floor = ColorRect.new()
@@ -119,19 +121,19 @@ func _build_pattern(before: Array, after: Array) -> void:
 			tile_floor.z_index = -2
 			add_child(tile_floor)
 	if tile_floor != null:
-		tile_floor.visible = Palette.theme_id() == "vines"
+		tile_floor.visible = Palette.vines
 		tile_floor.color = Palette.floor_color()
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	var model_hooks := { "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
 	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
 	pattern.build(before, after)
-	if fountain_water == null and Palette.theme_id() == "vines" and Vines.tier2.definition.water.get("enabled", true):
+	if fountain_water == null and Palette.vines and Vines.tier2.definition.water.get("enabled", true):
 		fountain_water = FountainWater.new()
 		fountain_water.view = self
 		add_child(fountain_water)
 	if fountain_water != null:
-		fountain_water.visible = Palette.theme_id() == "vines" and Vines.tier2.definition.water.get("enabled", true)
+		fountain_water.visible = Palette.vines and Vines.tier2.definition.water.get("enabled", true)
 		fountain_water.set_process(fountain_water.visible and not pattern.links.is_empty())
 		fountain_water.queue_redraw()
 	if board_frame == null:
@@ -286,7 +288,7 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 		add_child(tier1_layer)
 	var okay := tier1_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0, sprite_reverse)
 	if not okay: push_error("Tier 1 preparation failed: " + str(tier1_layer.diagnostics))
-	if Palette.theme_id() == "vines": pattern.reschedule_formations(pattern.sprite_growth_events)
+	if Palette.vines: pattern.reschedule_formations(pattern.sprite_growth_events)
 	if junction_layer == null:
 		junction_layer = JunctionLayer.new()
 		add_child(junction_layer)
@@ -294,13 +296,13 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 	var events: Dictionary = ThemeEvents.collect(pattern, Palette.theme_id(), clockwork_visuals)
 	events.merge(junction_layer.events)
 	events.merge(tier1_layer.retirement_events())
-	if Palette.theme_id() == "vines": events.merge(Vines.center_events(pattern, growth_before, settled))
+	if Palette.vines: events.merge(Vines.center_events(pattern, growth_before, settled))
 	construction_state.reconcile(events, 0.0 if settled else maxf(pattern.duration, pattern.sprite_visual_duration), at, settled, preserve, restart)
 	clock = construction_state.schedule.clock
 	growing = construction_state.schedule.running()
 	if not tier1_layer.present(construction_state, _sprite_view_transform()): push_error("Tier 1 presentation failed: " + str(tier1_layer.diagnostics))
 	if not junction_layer.present(construction_state, _sprite_view_transform()): push_error(str(junction_layer.diagnostics))
-	if Palette.theme_id() == "vines":
+	if Palette.vines:
 		if vines_formations==null:
 			vines_formations=VinesFormationLayer.new()
 			add_child(vines_formations)
@@ -457,7 +459,7 @@ func _draw() -> void:
 
 func _draw_guides() -> void:
 	var n: int = board.size()
-	var ink := Palette.grid() if Palette.theme_id() == "vines" else Color("9b95a3", 0.20)
+	var ink := Palette.grid() if Palette.vines else Color("9b95a3", 0.20)
 	# Snap only the drawing to physical pixels; logical cells and hit testing
 	# retain their exact, equally spaced coordinates. Hairlines stay one pixel
 	# wide under viewport scaling, avoiding alternating faint/dark seams.

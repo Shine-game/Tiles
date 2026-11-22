@@ -7,7 +7,8 @@ const Components = preload("res://scripts/pattern/component_renderer.gd")
 const Cells = preload("res://scripts/pattern/cell_sets.gd")
 const Topology = preload("res://scripts/pattern/topology.gd")
 const Art = preload("res://scripts/vines_renderer.gd")
-const ROOT := "res://assets/themes/vines/assembly/"
+const Palette = preload("res://scripts/palette.gd")
+static var loaded_theme := ""
 static var tier0: Dictionary = {}
 static var tier1: Dictionary = {}
 static var tier2: Dictionary = {}
@@ -15,7 +16,9 @@ static var tier3: Dictionary = {}
 static var renderer := Components.new()
 
 static func install() -> void:
-	if not tier0.is_empty(): return
+	var theme: String = Palette.theme_id() if Palette.vines else "vines"
+	if loaded_theme == theme: return
+	loaded_theme = theme
 	Components.register_draw_part_provider("vines.holding", Art.holding)
 	Components.register_draw_part_provider("vines.connection", Art.connection)
 	Components.register_draw_part_provider("vines.wash", Art.wash)
@@ -23,10 +26,10 @@ static func install() -> void:
 	Components.register_draw_part_provider("vines.fountain", Art.fountain)
 	Components.register_draw_part_provider("vines.sprite_formation", Art.sprite_formation)
 	Components.register_draw_part_provider("vines.overlap_butterfly", Art.overlap_butterfly)
-	tier0 = Assets.load_set(Themes.pattern_set_path("vines", 0))
-	tier1 = Assets.load_set(Themes.pattern_set_path("vines", 1))
-	tier2 = Assets.load_set(Themes.pattern_set_path("vines", 2))
-	tier3 = Assets.load_set("res://assets/themes/vines/assembly/vines_tier3.json")
+	tier0 = Assets.load_set(Themes.pattern_set_path(theme, 0))
+	tier1 = Assets.load_set(Themes.pattern_set_path(theme, 1))
+	tier2 = Assets.load_set(Themes.pattern_set_path(theme, 2))
+	tier3 = Assets.load_set(Themes.pattern_set_path(theme, 3))
 	assert(tier3.ok,str(tier3.errors))
 	assert(tier0.ok and tier1.ok and tier2.ok, str(tier0.errors + tier1.errors + tier2.errors))
 	assert(Formations.validate_schedule(Formations.parts(tier2)).is_empty(), "Invalid flower schedule")
@@ -39,9 +42,10 @@ static func identity(color: int, cell: Vector2i) -> String:
 	return "vines/center/%d/%d/%d" % [color, cell.y, cell.x]
 
 static func center_events(model, before: Array, settled: bool) -> Dictionary:
+	install()
 	var events: Dictionary = {}
 	for cell: Vector2i in model.arrivals:
-		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(model.board, cell))): continue
+		if Junctions.handles(loaded_theme, Topology.shape(Topology.neighbor_mask(model.board, cell))): continue
 		var parts := centers(Topology.neighbor_mask(model.board, cell))
 		if parts.is_empty(): continue
 		var color: int = model.board[cell.y][cell.x]
@@ -67,7 +71,7 @@ static func draw(view) -> void:
 	# Higher-tier art stays in its existing providers and painter order.
 
 	for cell: Vector2i in view.pattern.arrivals:
-		if Junctions.handles("vines", Topology.shape(Topology.neighbor_mask(view.board, cell))): continue
+		if Junctions.handles(loaded_theme, Topology.shape(Topology.neighbor_mask(view.board, cell))): continue
 		var selected := centers(Topology.neighbor_mask(view.board, cell))
 		for id: String in selected:
 			renderer.draw_parts({id: selected[id]}, view, {"cell": cell, "scale": center_scale(view, cell, selected[id])})

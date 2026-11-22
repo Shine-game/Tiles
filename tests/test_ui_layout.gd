@@ -1,5 +1,6 @@
 extends SceneTree
 const Palette = preload("res://scripts/palette.gd")
+const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const Rules = preload("res://scripts/rules.gd")
 const Interface = preload("res://scripts/interface_palette.gd")
 var checks := 0
@@ -18,6 +19,8 @@ func run() -> void:
 	root.add_child(scene)
 	await process_frame
 	for theme: String in Palette.THEMES:
+		var product: String = Themes.play_product(theme)
+		if not product.is_empty(): scene.theme_store.owned[product] = true
 		scene._select_theme(theme)
 		check(Interface.background() == Palette.background() and Interface.accent(1) == Interface.text(), "Theme surface and readable shared UI ink")
 		for n in [9,11]:

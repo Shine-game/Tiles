@@ -41,6 +41,9 @@ func run():
 			check(button.visible and button.size.x > 0 and button.size.y > 0, "UI control has a visible layout: " + id)
 			check(button.get_theme_stylebox("normal").bg_color == Color(registry.themes[id].ui.controls), "UI face uses its authored color: " + id)
 			check(game.button_icon(button) != null, "UI icon exists: " + id)
+		var product: String = Themes.play_product(id)
+		if not product.is_empty():
+			game.theme_store.owned[product] = true
 		game._start_introduction()
 		for i in range(3): await process_frame
 		check(game.introduction != null and not game.introduction.text.text.is_empty(), "Tutorial text initializes: " + id)

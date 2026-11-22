@@ -563,7 +563,7 @@ func open_settings() -> void:
 
 func choose_theme(theme_id: String) -> void:
 	if lesson_id != "reveal" or reveal_save_state != "saved" or host.saving or theme_id not in host.MENU_THEMES: return
-	if not Palette.select_theme(theme_id): return
+	if not host.theme_store.can_replay(theme_id) or not Palette.select_theme(theme_id): return
 	reset_pulses()
 	host._close_menu()
 	host._refresh_theme()

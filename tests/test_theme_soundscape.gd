@@ -64,12 +64,15 @@ func run() -> void:
 		scene._reset()
 		check(not sound.place_click.playing or clicks.size() == before_count+1,"Reset does not create a new click")
 	for theme_id: String in Palette.THEMES:
-		var folder := DirAccess.open("res://assets/themes/"+theme_id+"/audio")
+		var soundscape: Dictionary = Themes.profile(theme_id).soundscape
+		var ambience: String = soundscape.ambience.path
+		var place: String = soundscape.place.path
+		var folder := DirAccess.open(ambience.get_base_dir())
 		var recordings: Array = []
 		for name: String in folder.get_files():
 			if name.get_extension() in ["ogg","wav","mp3"]: recordings.append(name)
 		recordings.sort()
-		check(recordings == [theme_id+"_ambient.ogg",theme_id+"_place_click.ogg"],"Only the two authorized recordings remain for "+theme_id)
+		check(recordings == [ambience.get_file(), place.get_file()],"Only the two authorized recordings remain for "+theme_id)
 	scene.queue_free()
 	await process_frame
 	check(AudioServer.bus_count == buses,"Audio cleanup removes both owned buses")

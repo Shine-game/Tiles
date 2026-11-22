@@ -33,14 +33,10 @@ const PaletteChoice = preload("res://scripts/palette_choice.gd")
 const Gallery = preload("res://scripts/gallery.gd")
 const GalleryPanel = preload("res://scripts/gallery_panel.gd")
 const Frame = preload("res://scripts/board_frame.gd")
-const ChristmasStore = preload("res://scripts/christmas_joy_store.gd")
+const ThemeStore = preload("res://scripts/theme_store.gd")
 const ChristmasIcon = preload("res://scripts/christmas_tree_icon.gd")
 const ThemeTile = preload("res://scripts/theme_tile.gd")
-const MENU_THEMES = {
-	"vines": "Porcelain Vines",
-	"coral_reef": "Coral Reef",
-	"clockwork": "Mechanical Workshop",
-}
+var MENU_THEMES := Themes.menu_labels()
 const ColorMark = preload("res://scripts/color_mark.gd")
 const ActionIcon = preload("res://scripts/action_icon.gd")
 const SymmetryIcon = preload("res://scripts/symmetry_icon.gd")
@@ -109,10 +105,11 @@ var preset_summary: Label
 var change_presets_button: Button
 var menu_buttons: Array = []
 var theme_options: Array = []
-var christmas_store: ChristmasStore
-var christmas_button: Button
-var christmas_dialog: MenuConfirmation
-var christmas_confirm_install := false
+var theme_store: ThemeStore
+var theme_games: Dictionary = {}
+var theme_game_directory := "user://theme_games"
+var store_dialog: MenuConfirmation
+var buy_theme_button: Button
 var difficulty_options: Array = []
 var settings_options: Array = []
 var menu_close: Button
@@ -138,30 +135,25 @@ var difficulty: Game.Difficulty = Game.Difficulty.DIFFICULT
 func _ready() -> void:
 	var restored: Dictionary = session_store.load_state() if session_enabled else {}
 	if not restored.is_empty() and restored.theme in MENU_THEMES:
+		var newer := _load_theme_game(restored.theme)
+		if not newer.is_empty(): restored = newer
 		Palette.select_theme(restored.theme)
 		Palette.select(int(restored.palette))
-		game = Session.unpack(restored.game)
-		requested_size = int(restored.preset_size)
-		difficulty = int(restored.preset_difficulty) as Game.Difficulty
+		_restore_game(restored)
 	else:
 		restored = {}
 	_build_interface()
 	if restored.is_empty():
 		cells = _offered_cells()
 	else:
-		cells = Session.decode_cells(restored.offered)
-		has_hover = restored.hover and not game.over
-		tray_moved = restored.tray_moved
-		selected = Vector2i(int(restored.selected[0]),int(restored.selected[1]))
-		piece_on_board = has_hover and _board_anchors(cells).has_point(selected)
-		board_view.show_axes = restored.axes
-		board_view.restore_session_art(game.board,restored.get("art",{}))
+		_restore_play_surface(restored)
 	resized.connect(_layout)
 	session_ready = true
 	_refresh_theme()
 	_layout()
 	_refresh_and_save()
-	if session_enabled: _maybe_introduction.call_deferred(not restored.is_empty())
+	if session_enabled and Themes.play_product(Palette.theme_id()).is_empty():
+		_maybe_introduction.call_deferred(not restored.is_empty())
 
 func _maybe_introduction(returning_player: bool) -> void:
 	var progress := IntroModel.progress(intro_progress_path)
@@ -174,6 +166,9 @@ func _maybe_introduction(returning_player: bool) -> void:
 
 func _start_introduction(lesson_id: String = "rotate", checkpoint: String = "") -> void:
 	if introduction != null: return
+	if _trial_active():
+		_store_notice("Switch to a free or owned theme to start the tutorial.")
+		return
 	palette_menu.hide()
 	dragging = false
 	introduction = Introduction.new()
@@ -188,12 +183,48 @@ func _start_introduction(lesson_id: String = "rotate", checkpoint: String = "") 
 	introduction.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 
-func _autosave() -> void:
-	if not session_enabled or not session_ready: return
-	var data := {"schema":"tiles.session.v1","theme":Palette.theme_id(),"palette":Palette.selected_index,
+func _restore_game(state: Dictionary) -> void:
+	game = Session.unpack(state.game)
+	requested_size = int(state.preset_size)
+	difficulty = int(state.preset_difficulty) as Game.Difficulty
+
+func _restore_play_surface(state: Dictionary) -> void:
+	cells = Session.decode_cells(state.offered)
+	has_hover = state.hover and not game.over
+	tray_moved = state.tray_moved
+	selected = Vector2i(int(state.selected[0]), int(state.selected[1]))
+	dragging = false
+	piece_on_board = has_hover and _board_anchors(cells).has_point(selected)
+	board_view.show_axes = state.axes
+	board_view.restore_session_art(game.board, state.get("art", {}))
+
+func _theme_session(theme: String):
+	var store := Session.new()
+	store.path = theme_game_directory.path_join(theme + ".json")
+	return store
+
+func _load_theme_game(theme: String) -> Dictionary:
+	if Themes.play_product(theme).is_empty(): return {}
+	if theme_games.has(theme): return theme_games[theme]
+	var restored: Dictionary = _theme_session(theme).load_state() if session_enabled else {}
+	return restored if restored.get("theme") == theme else {}
+
+func _autosave() -> bool:
+	if not session_ready: return true
+	var theme := Palette.theme_id()
+	var paid := not Themes.play_product(theme).is_empty()
+	if not session_enabled and not paid: return true
+	var data := {"schema":"tiles.session.v1","theme":theme,"palette":Palette.selected_index,
 		"game":Session.pack(game),"preset_size":requested_size,"preset_difficulty":difficulty,"axes":board_view.show_axes,
 		"art":board_view.session_art_state(),"offered":Session.encode_cells(cells),"hover":has_hover,"tray_moved":tray_moved,"selected":[selected.x,selected.y]}
-	if not session_store.save_state(data): push_warning("Could not save the current game.")
+	if paid:
+		theme_games[theme] = data.duplicate(true)
+		if session_enabled and not _theme_session(theme).save_state(data):
+			push_warning("Could not save the paid theme game.")
+			return false
+	if session_enabled and not session_store.save_state(data):
+		push_warning("Could not save the current game.")
+	return true
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_WM_CLOSE_REQUEST,NOTIFICATION_WM_GO_BACK_REQUEST]:
@@ -264,6 +295,8 @@ func _build_interface() -> void:
 	palette_menu = SettingsMenu.new()
 	palette_menu.page_changed.connect(_settings_page_changed)
 	palette_menu.closed.connect(func(): interface_changed.emit(false))
+	palette_menu.visibility_changed.connect(func():
+		if session_ready: _update_purchase_controls())
 	palette_menu.visible = false
 	palette_menu.z_index = 80
 	add_child(palette_menu)
@@ -303,11 +336,10 @@ func _build_interface() -> void:
 		if action.is_valid(): action.call())
 	confirmation.canceled.connect(func(): pending_change = Callable())
 	add_child(confirmation)
-	add_child(christmas_dialog)
-	add_child(christmas_store)
-	palette_menu.christmas_owned = christmas_store.owned
-	christmas_dialog.visibility_changed.connect(_update_confirmation_blocker)
-	themed_buttons.append_array([christmas_dialog.get_ok_button(), christmas_dialog.get_cancel_button()])
+	add_child(store_dialog)
+	add_child(theme_store)
+	store_dialog.visibility_changed.connect(_update_confirmation_blocker)
+	themed_buttons.append_array([store_dialog.get_ok_button(), store_dialog.get_cancel_button()])
 	themed_buttons.append_array([confirmation.get_ok_button(), confirmation.get_cancel_button()])
 	for button: Button in [confirmation.get_ok_button(), confirmation.get_cancel_button()]:
 		button.button_down.connect(InterfaceTheme.press_children.bind(button, true))
@@ -393,6 +425,8 @@ func _layout() -> void:
 		_set_rect(right_buttons[i], Rect2(controls_right, row_y, control_side, control_side))
 	_set_rect(piece_view, Rect2(preview_left, top, preview_width, header_height))
 	_set_rect(game_over_message, piece_view.get_rect())
+	var buy_height := minf(header_height, 56.0)
+	_set_rect(buy_theme_button, Rect2(preview_left, top + (header_height - buy_height) / 2, preview_width, buy_height))
 	var board_top := top + header_height + float(layout.upper_gap)
 	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
@@ -416,7 +450,7 @@ func _layout() -> void:
 
 func _refresh() -> void:
 	board_view.sync_board(game.board)
-	game_over_message.visible = game.over and game.lost and introduction == null
+	game_over_message.visible = game.over and game.lost and introduction == null and not _trial_finished()
 	piece_view.cells = [] if game.over or tray_moved else cells
 	piece_view.color = game.current_color
 	piece_view.queue_redraw()
@@ -426,6 +460,7 @@ func _refresh() -> void:
 	# Availability is enforced by the action policy, not by changing button faces.
 	for button: Button in _controls():
 		button.disabled = false
+	_update_purchase_controls()
 	erase_button.set_pressed_no_signal(erase_mode)
 	blue_button.get_child(0).queue_redraw()
 	blue_button.get_child(0).color = game.current_color
@@ -522,7 +557,7 @@ func _drag_to(point: Vector2) -> void:
 	_preview()
 
 func _pick_piece(point: Vector2) -> Dictionary:
-	if game.over or dragging or confirmation.visible or christmas_dialog.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving: return {}
+	if game.over or dragging or confirmation.visible or store_dialog.visible or palette_menu.visible or gallery_panel.visible or erase_mode or saving: return {}
 	for control: Control in _controls():
 		if control.visible and control.get_global_rect().has_point(point): return {}
 	var hit: Vector2i = floating_piece.cell_at(point) if has_hover else Vector2i(-1,-1)
@@ -574,7 +609,7 @@ func _erase_cell_at(point: Vector2) -> Vector2i:
 
 func _input(event: InputEvent) -> void:
 	if introduction != null: return
-	if confirmation.visible or christmas_dialog.visible:
+	if confirmation.visible or store_dialog.visible:
 		piece_gesture.cancel()
 		return
 	if saving:
@@ -606,7 +641,7 @@ func _request_player_action(action: String, parameters: Dictionary = {}) -> Dict
 	return player_actions.execute(action,game,request,_action_available)
 
 func _action_available(action: String, _request: Dictionary) -> bool:
-	if saving: return false
+	if saving or _trial_finished(): return false
 	if action not in ["undo","erase"] and game.over: return false
 	if action in ["rotate","flip","color"]: return not cells.is_empty()
 	if action == "place":
@@ -679,7 +714,7 @@ func _toggle_erase() -> void:
 	if introduction != null:
 		introduction.joker_action("erase")
 		return
-	if saving or game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)):
+	if saving or _trial_finished() or game.erase_left <= 0 or not game.board.any(func(row: Array): return row.any(func(value): return value != 0)):
 		return
 	erase_mode = not erase_mode
 	erase_target = Vector2i(-1, -1)
@@ -705,12 +740,13 @@ func _undo() -> void:
 	_refresh_and_save()
 
 func _ask_reset(n: int) -> void:
+	if _trial_active(): return
 	_confirm_new_game("Start a new game on a %d × %d board?" % [n, n], func():
 		requested_size = n
 		_reset())
 
 func _replay_game() -> void:
-	if saving: return
+	if saving or _trial_active(): return
 	_confirm_new_game("Start new game", func():
 		if introduction != null: introduction.finish(true)
 		palette_menu.history.clear()
@@ -719,15 +755,8 @@ func _replay_game() -> void:
 func _game_started() -> bool:
 	return game.moves > 0 or game.index > 0 or game.undo_left < 3 or game.skip_left < 3 or game.erase_left < 3
 
-func _request_configuration_change(action: Callable, page: String) -> void:
-	var apply := func():
-		action.call()
-		_reset()
-		_show_menu(page, false)
-	if _game_started(): _confirm_new_game("Start new game", apply)
-	else: apply.call()
-
 func _reset(board_size: int = -1, level: int = -1) -> void:
+	if _trial_active() and not _load_theme_game(Palette.theme_id()).is_empty(): return
 	palette_menu.hide()
 	gameplay_edits.clear()
 	erase_mode = false
@@ -744,11 +773,13 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Interface.background())
 	if Palette.clockwork:
 		var paper := ClockworkVisuals.texture(Themes.profile(Palette.theme_id()).environment.background)
+		if paper == null: return
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
-	elif Palette.theme_id() == "vines":
-		var paper := ThemeAssets.texture(Themes.profile("vines").environment.background)
+	elif Palette.vines:
+		var paper := ThemeAssets.texture(Themes.profile(Palette.theme_id()).environment.background)
+		if paper == null: return
 		var factor: float = maxf(size.x / paper.get_width(), size.y / paper.get_height())
 		var extent: Vector2 = paper.get_size() * factor
 		draw_texture_rect(paper, Rect2((size - extent) * 0.5, extent), false)
@@ -775,36 +806,33 @@ func _build_settings() -> void:
 		option.set_meta("theme_id", id)
 		option.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		option.add_theme_constant_override("outline_size", 0)
-		var tile := ThemeTile.new()
-		tile.theme_id = id
-		option.add_child(tile)
+		if id == "christmas_joy":
+			option.add_child(ChristmasIcon.new())
+		else:
+			var tile := ThemeTile.new()
+			tile.theme_id = id
+			option.add_child(tile)
 		theme_options.append(option)
-	christmas_button = _menu_button("Christmas joy", _open_christmas_offer)
-	christmas_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	var tree := ChristmasIcon.new()
-	christmas_button.add_child(tree)
-	palette_menu.christmas_button = christmas_button
-	palette_menu.christmas_icon = tree
 	var heading := Label.new()
-	heading.text = "Coming soon"
+	heading.text = "Paid themes"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var divider := HSeparator.new()
 	for control: Control in [heading, divider]:
 		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		palette_list.add_child(control)
 		menu_buttons.append(control)
-	palette_menu.coming_soon = heading
-	palette_menu.offer_divider = divider
-	christmas_dialog = MenuConfirmation.new()
-	christmas_dialog.z_index = 300
-	christmas_dialog.confirmed.connect(func():
-		if christmas_confirm_install:
-			christmas_confirm_install = false
-			christmas_store.activate())
-	christmas_store = ChristmasStore.new()
-	christmas_store.notice.connect(_christmas_notice)
-	christmas_store.changed.connect(_christmas_changed)
-
+	palette_menu.paid_heading = heading
+	palette_menu.paid_divider = divider
+	store_dialog = MenuConfirmation.new()
+	store_dialog.z_index = 300
+	theme_store = ThemeStore.new()
+	theme_store.notice.connect(_store_notice)
+	theme_store.changed.connect(_store_changed)
+	buy_theme_button = _button("Check price", func():
+		if _trial_finished(): theme_store.purchase(Palette.theme_id()))
+	buy_theme_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	buy_theme_button.z_index = 50
+	buy_theme_button.hide()
 
 	for level in range(3):
 		difficulty_options.append(_menu_button(["Easy", "Moderate", "Hard"][level], _set_difficulty_preset.bind(level)))
@@ -918,71 +946,80 @@ func _settings_page_changed() -> void:
 	_update_summaries(_prediction_board())
 	interface_changed.emit(false)
 
-func _open_christmas_offer() -> void:
-	if OS.has_feature("android") or christmas_store.owned:
-		christmas_store.activate()
-		return
-	christmas_confirm_install = true
-	christmas_dialog.dialog_text = "Christmas joy\nLimited offer — €0.00\nNo payment"
-	christmas_dialog.ok_button_text = "Test install"
-	christmas_dialog.get_cancel_button().show()
-	christmas_dialog.open()
-	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
-
-func _christmas_notice(message: String) -> void:
-	christmas_confirm_install = false
-	christmas_dialog.dialog_text = message
-	christmas_dialog.ok_button_text = "OK"
-	christmas_dialog.get_cancel_button().hide()
-	christmas_dialog.open()
+func _store_notice(message: String) -> void:
+	store_dialog.dialog_text = message
+	store_dialog.get_cancel_button().hide()
+	store_dialog.open()
 	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 
 func _update_confirmation_blocker() -> void:
-	confirmation_blocker.visible = confirmation.visible or christmas_dialog.visible
+	confirmation_blocker.visible = confirmation.visible or store_dialog.visible
 
 func _settings_clearance() -> float:
 	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
 	return 30.0 / pixel_scale
 
-func _christmas_changed() -> void:
-	palette_menu.christmas_owned = christmas_store.owned
-	if palette_menu.visible and palette_menu.page == "Themes":
+func _trial_active() -> bool:
+	return theme_store != null and not theme_store.can_replay(Palette.theme_id())
+
+func _trial_finished() -> bool:
+	return _trial_active() and game.over
+
+func _update_purchase_controls() -> void:
+	var theme := Palette.theme_id()
+	buy_theme_button.visible = introduction == null and not palette_menu.visible and _trial_finished()
+	buy_theme_button.disabled = not theme_store.can_check_out(theme)
+	buy_theme_button.text = theme_store.button_text(theme)
+	replay_button.disabled = _trial_active()
+	size_picker.disabled = _trial_active()
+	gameplay_options[0].disabled = _trial_active()
+
+func _store_changed() -> void:
+	if not session_ready: return
+	_refresh()
+	if palette_menu.visible and menu_page == "Themes":
 		_layout_palette_menu(clampf(size.x * 0.025, 6, 14))
 
 func _review_new_game(theme: String) -> void:
 	if introduction != null and introduction.lesson_id == "reveal":
-		introduction.choose_theme(theme)
+		if Themes.play_product(theme).is_empty(): introduction.choose_theme(theme)
 		return
 	_request_theme(theme)
 
 func _cycle_difficulty_preset() -> void:
+	if _trial_active(): return
 	var current: int = gameplay_edits.get("difficulty", difficulty)
 	gameplay_edits["difficulty"] = (current + 1) % 3
 	_update_settings_labels()
 
 func _cycle_size_preset() -> void:
+	if _trial_active(): return
 	var current: int = gameplay_edits.get("size", requested_size)
 	gameplay_edits["size"] = 11 if current == 9 else 9
 	_update_settings_labels()
 
 func _set_difficulty_preset(level: int) -> void:
+	if _trial_active(): return
 	gameplay_edits["difficulty"] = level
 	_back_menu()
 
 func _set_size_preset(n: int) -> void:
+	if _trial_active(): return
 	gameplay_edits["size"] = n
 	_back_menu()
 
 func _start_new_game() -> void:
 	if pending_theme not in MENU_THEMES: return
-	Palette.select_theme(pending_theme)
 	palette_menu.history.clear()
-	_reset()
+	if pending_theme == Palette.theme_id():
+		_reset()
+	else:
+		_select_theme(pending_theme)
 
 func _layout_palette_menu(pad: float) -> void:
 	_refresh_menu_style()
 	_update_settings_labels()
-	palette_menu.layout(size, palette_button.get_rect().end.y, pad, _settings_clearance(), MENU_THEMES, _apply_button_style)
+	palette_menu.layout(size, palette_button.get_rect().end.y, pad, _settings_clearance(), MENU_THEMES, _apply_button_style, theme_store.can_replay)
 
 func _update_settings_labels() -> void:
 	new_button.text = "Start"
@@ -1013,7 +1050,7 @@ func _refresh_menu_style() -> void:
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
 
 func _layout_confirmation(pad: float) -> void:
-	for dialog: MenuConfirmation in [confirmation, christmas_dialog]:
+	for dialog: MenuConfirmation in [confirmation, store_dialog]:
 		if dialog.visible:
 			dialog.layout(size, pad, _settings_clearance(), palette_button.get_rect().end.y)
 
@@ -1024,8 +1061,6 @@ func _apply_button_style(button: Button) -> void:
 		if theme_options.has(button):
 			style.content_margin_left = 18
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
-		elif button == christmas_button:
-			style.content_margin_right = 42
 		elif palette_options.has(button):
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		elif button.has_node("ControlIcon"):
@@ -1035,7 +1070,7 @@ func _apply_button_style(button: Button) -> void:
 func _refresh_theme() -> void:
 	theme = InterfaceTheme.build()
 	confirmation.theme = theme
-	christmas_dialog.theme = theme
+	store_dialog.theme = theme
 	game_over_message.add_theme_font_override("font", InterfaceTheme.FONT)
 	game_over_message.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
 	game_over_message.add_theme_color_override("font_color", Interface.text())
@@ -1073,15 +1108,45 @@ func _confirm_new_game(_message: String, action: Callable) -> void:
 	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 
 func _request_theme(id: String) -> void:
-	if id not in MENU_THEMES or id == Palette.theme_id(): return
-	_request_configuration_change(func(): Palette.select_theme(id), "Themes")
+	if id not in MENU_THEMES: return
+	var current := Palette.theme_id()
+	if id == current:
+		if not Themes.play_product(id).is_empty(): _close_menu()
+		return
+	var apply := func():
+		_select_theme(id)
+		if Themes.play_product(id).is_empty() and Themes.play_product(current).is_empty():
+			_show_menu("Themes", false)
+	if Themes.play_product(current).is_empty() and _game_started():
+		_confirm_new_game("Start new game", apply)
+	else:
+		apply.call()
 
 func _select_theme(id: String) -> void:
-	if Palette.select_theme(id):
+	if id not in MENU_THEMES: return
+	var previous := Palette.theme_id()
+	if previous == id and _trial_active(): return
+	if not Themes.play_product(previous).is_empty() and not _autosave():
+		_store_notice("Could not save this theme’s game. Try switching again.")
+		return
+	var restored := _load_theme_game(id)
+	if not Palette.select_theme(id): return
+	if restored.is_empty():
 		_reset()
+	else:
+		palette_menu.hide()
+		gameplay_edits.clear()
+		erase_mode = false
+		_restore_game(restored)
+		_restore_play_surface(restored)
+		_refresh_theme()
+		_layout()
+		_refresh_and_save()
+	if not Themes.play_product(id).is_empty() or not Themes.play_product(previous).is_empty():
+		palette_menu.history.clear()
 
 func _request_difficulty(level: int) -> void:
-	if level == difficulty:
+	if level == difficulty or _trial_active():
 		return
 	_confirm_new_game("Switch to %s and start a new game?" % ["Easy", "Moderate", "Difficult"][level], func():
 		difficulty = level as Game.Difficulty
@@ -1115,7 +1180,7 @@ func _choose_palette(index: int) -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if saving or confirmation.visible or christmas_dialog.visible:
+		if saving or confirmation.visible or store_dialog.visible:
 			return
 		if gallery_panel.visible:
 			if event.keycode == KEY_ESCAPE:

@@ -16,13 +16,13 @@ func check(ok: bool, message: String) -> void:
 func _initialize() -> void:
 	var original := Themes.specification()
 	check(Themes.validate(original).is_empty(), "production registry validates")
-	check(Palette.theme_id() == "vines" and Themes.ids() == ["clockwork", "vines", "coral_reef"] and not Palette.select_theme("zen_garden"), "Vines is default and unfinished Zen remains archived")
+	check(Palette.theme_id() == "vines" and Themes.ids() == ["clockwork", "vines", "coral_reef", "christmas_joy"] and not Palette.select_theme("zen_garden"), "Vines is default and unfinished Zen remains archived")
 	check(Themes.label("labyrinth") == "Labyrinth (archived)" and not Palette.select_theme("labyrinth"), "archived gallery label does not reactivate the theme")
 	for installer in [Clock, Coral, Vines]: installer.install()
 	for id: String in Themes.ids():
 		check(Palette.select_theme(id) and Palette.theme_name() == Themes.label(id), "theme selection reads registry")
-		check(Palette.theme_version() == {"clockwork": "1.7", "vines": "1.8", "coral_reef": "3.1"}[id], "Generative artwork has a distinct appearance version")
-		check(int(Palette.clockwork) + int(Palette.coral_reef) == (0 if id == "vines" else 1), "specialized flags are mutually exclusive views")
+		check(Palette.theme_version() == {"clockwork": "1.7", "vines": "1.8", "coral_reef": "3.1", "christmas_joy": "0.1.0"}[id], "Generative artwork has a distinct appearance version")
+		check(int(Palette.clockwork) + int(Palette.coral_reef) == (0 if Themes.profile(id).hooks.growth == "vines" else 1), "specialized flags are mutually exclusive views")
 		var profile := Themes.profile(id)
 		for family: String in profile.sets:
 			for tier: String in profile.sets[family]:

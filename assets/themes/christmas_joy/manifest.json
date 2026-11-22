@@ -1,0 +1,18 @@
+{
+  "schema": "tiles.asset-manifest.v1",
+  "theme_id": "christmas_joy",
+  "files": [
+    "res://assets/themes/christmas_joy/assembly/christmas_joy_tier0.json",
+    "res://assets/themes/christmas_joy/assembly/christmas_joy_tier1.json",
+    "res://assets/themes/christmas_joy/assembly/christmas_joy_tier1_sprite_catalog.json",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.json",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.png",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color2_01.json",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color2_01.png",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_snow.json",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_snow_color1_02.png",
+    "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_snow_color2_01.png",
+    "res://assets/themes/christmas_joy/ui/christmas_joy_ui_background_color0_01.png",
+    "res://assets/themes/christmas_joy/ui/christmas_joy_ui_frame_color0_01.png"
+  ]
+}

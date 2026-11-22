@@ -16,6 +16,7 @@ func build(before:Array,after:Array)->void:
 	reschedule_formations({})
 
 func reschedule_formations(sprite_events:Dictionary)->void:
+	Sets.install()
 	var delay:float=Sets.tier2.definition.schedule.get("after_tier1_seconds",0.0)
 	for corner:Vector2i in flowers:
 		var event:Dictionary=flowers[corner]
@@ -24,7 +25,7 @@ func reschedule_formations(sprite_events:Dictionary)->void:
 		for shot in sprite_events.values():
 			if shot.old:continue
 			var owner:String=shot.owner
-			if owner.get_slice_count("/")!=6 or owner.get_slice("/",0)!="vines":continue
+			if owner.get_slice_count("/")!=6 or owner.get_slice("/",0)!=Sets.loaded_theme:continue
 			var cell:=Vector2i(int(owner.get_slice("/",3)),int(owner.get_slice("/",2)))
 			var other:=Vector2i(int(owner.get_slice("/",5)),int(owner.get_slice("/",4)))
 			var area:=Rect2i(corner-Vector2i.ONE,Vector2i(2,2))

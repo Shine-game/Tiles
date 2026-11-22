@@ -10,6 +10,8 @@ static var selected_index := 0
 static var THEMES: Array = Themes.ids()
 static var active_theme: String = Themes.specification().default
 # Read-only compatibility views used by specialized renderers, never separate state.
+static var vines: bool:
+	get: return Themes.profile(active_theme).hooks.growth == "vines"
 static var coral_reef: bool:
 	get: return Themes.profile(active_theme).hooks.environment == "coral_reef"
 static var clockwork: bool:

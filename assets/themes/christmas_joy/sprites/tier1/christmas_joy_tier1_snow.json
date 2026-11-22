@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "base",
+  "status": "ready",
+  "images": {
+    "color1": "christmas_joy_tier1_snow_color1_02.png",
+    "color2": "christmas_joy_tier1_snow_color2_01.png"
+  },
+  "canvas_px": [
+    255,
+    255
+  ],
+  "frame": {
+    "origin": [
+      127,
+      127
+    ],
+    "up": [
+      254,
+      127
+    ]
+  },
+  "lighting": {
+    "toward": [
+      127,
+      123
+    ]
+  },
+  "transforms": {
+    "allow_flip_y": true
+  },
+  "spawn": {
+    "count": [
+      0,
+      0
+    ]
+  },
+  "anchors": []
+}

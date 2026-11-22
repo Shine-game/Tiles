@@ -1,0 +1,35 @@
+{
+  "schema": "tiles.sprite-catalog.v1",
+  "id": "christmas_joy-tier1-artwork",
+  "theme_id": "christmas_joy",
+  "artwork_theme": "christmas_joy",
+  "tier": 1,
+  "status": "active",
+  "coordinate_system": {
+    "units": "source_pixels",
+    "origin": "top_left",
+    "dimensions": "per_sprite_canvas_px"
+  },
+  "families": {
+    "default": {
+      "logical_colors": {
+        "1": {
+          "image_variant": "color1",
+          "treatment": "evergreen"
+        },
+        "2": {
+          "image_variant": "color2",
+          "treatment": "holiday_lights"
+        }
+      },
+      "bases": [
+        "../sprites/tier1/christmas_joy_tier1_snow.json"
+      ],
+      "decorations": []
+    }
+  },
+  "palette": {
+    "source_palette": "Evergreen / Holiday Lights",
+    "runtime_palette_policy": "original"
+  }
+}

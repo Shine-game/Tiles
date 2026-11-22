@@ -1,0 +1,61 @@
+{
+  "id": "christmas_joy",
+  "name": "Christmas joy",
+  "colors": [
+    "27705A",
+    "A94743"
+  ],
+  "ui": {
+    "controls": "E7F1F7",
+    "text": "263E50",
+    "muted": "506D7F",
+    "platform": "E2EFF7",
+    "floor": "C0D9E8",
+    "seams": "A6C4D5",
+    "background": "C0D9E8",
+    "lit_edge": "F2F9FD",
+    "shaded_edge": "A6BECE",
+    "panel_background": "E3EFF6",
+    "button_shadow": "7898AD",
+    "disabled_text": "647D8D"
+  },
+  "omit_placeholders": [
+    "sprites/tier0/*",
+    "sprites/tier1/christmas_joy_tier1_deco_*",
+    "sprites/tier1/christmas_joy_tier1_flower_*",
+    "sprites/tier1/christmas_joy_tier1_vine_*"
+  ],
+  "profile_overrides": {
+    "frame": {
+      "enabled": true,
+      "texture": "res://assets/themes/christmas_joy/ui/christmas_joy_ui_frame_color0_01.png",
+      "appearance": "christmas-ice-frame-v1",
+      "source_rect": [
+        0,
+        0,
+        1024,
+        1024
+      ],
+      "opening_rect": [
+        44,
+        44,
+        936,
+        936
+      ]
+    },
+    "preview": {
+      "ground": "C0D9E8",
+      "core": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.png"
+    },
+    "junctions": {
+      "enabled": true,
+      "z_index": 0,
+      "shapes": {
+        "core": {
+          "1": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.json",
+          "2": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color2_01.json"
+        }
+      }
+    }
+  }
+}

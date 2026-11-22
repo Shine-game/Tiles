@@ -4,7 +4,8 @@
   "order": [
     "clockwork",
     "vines",
-    "coral_reef"
+    "coral_reef",
+    "christmas_joy"
   ],
   "archived_labels": {
     "labyrinth": "Labyrinth (archived)",
@@ -63,6 +64,8 @@
   "themes": {
     "clockwork": {
       "name": "Clockwork Workshop",
+      "menu_name": "Mechanical Workshop",
+      "menu_rank": 2,
       "version": "1.7",
       "colors": [
         "bc783d",
@@ -160,6 +163,8 @@
     },
     "vines": {
       "name": "Vines",
+      "menu_name": "Porcelain Vines",
+      "menu_rank": 0,
       "version": "1.8",
       "colors": [],
       "ui": {
@@ -197,7 +202,8 @@
         "default": {
           "0": "res://assets/themes/vines/assembly/vines_tier0.json",
           "1": "res://assets/themes/vines/assembly/vines_tier1.json",
-          "2": "res://assets/themes/vines/assembly/vines_tier2.json"
+          "2": "res://assets/themes/vines/assembly/vines_tier2.json",
+          "3": "res://assets/themes/vines/assembly/vines_tier3.json"
         }
       },
       "hooks": {
@@ -272,6 +278,8 @@
     },
     "coral_reef": {
       "name": "Coral Reef",
+      "menu_name": "Coral Reef",
+      "menu_rank": 1,
       "version": "3.1",
       "colors": [
         "f49f7f",
@@ -358,6 +366,101 @@
         }
       },
       "manifest": "res://assets/themes/coral_reef/manifest.json"
+    },
+    "christmas_joy": {
+      "name": "Christmas joy",
+      "menu_name": "Christmas joy",
+      "menu_rank": 100,
+      "version": "0.1.0",
+      "colors": [
+        "27705A",
+        "A94743"
+      ],
+      "ui": {
+        "controls": "E7F1F7",
+        "text": "263E50",
+        "muted": "506D7F",
+        "platform": "E2EFF7",
+        "floor": "C0D9E8",
+        "seams": "A6C4D5",
+        "background": "C0D9E8",
+        "lit_edge": "F2F9FD",
+        "shaded_edge": "A6BECE",
+        "panel_background": "E3EFF6",
+        "button_shadow": "7898AD",
+        "disabled_text": "647D8D"
+      },
+      "frame": {
+        "enabled": true,
+        "texture": "res://assets/themes/christmas_joy/ui/christmas_joy_ui_frame_color0_01.png",
+        "appearance": "christmas-ice-frame-v1",
+        "source_rect": [
+          0,
+          0,
+          1024,
+          1024
+        ],
+        "opening_rect": [
+          44,
+          44,
+          936,
+          936
+        ]
+      },
+      "sets": {
+        "default": {
+          "0": "res://assets/themes/christmas_joy/assembly/christmas_joy_tier0.json",
+          "1": "res://assets/themes/christmas_joy/assembly/christmas_joy_tier1.json",
+          "2": "res://assets/themes/vines/assembly/vines_tier2.json",
+          "3": "res://assets/themes/vines/assembly/vines_tier3.json"
+        }
+      },
+      "hooks": {
+        "growth": "vines",
+        "environment": "vines"
+      },
+      "environment": {
+        "background": "res://assets/themes/christmas_joy/ui/christmas_joy_ui_background_color0_01.png"
+      },
+      "preview": {
+        "ground": "C0D9E8",
+        "core": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.png"
+      },
+      "tier1_artwork": {
+        "catalog": "res://assets/themes/christmas_joy/assembly/christmas_joy_tier1_sprite_catalog.json",
+        "status": "active",
+        "source_layout": "edge_halves",
+        "size_cells": [
+          1.0039370078740157,
+          1.0039370078740157
+        ],
+        "layer_z_index": -1,
+        "decoration_z_index": 0,
+        "stroke_seconds": 0.14
+      },
+      "junctions": {
+        "enabled": true,
+        "z_index": 0,
+        "shapes": {
+          "core": {
+            "1": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.json",
+            "2": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color2_01.json"
+          }
+        }
+      },
+      "soundscape": {
+        "ambience": {
+          "path": "res://assets/themes/vines/audio/vines_ambient.ogg",
+          "gain_db": -9.52,
+          "fade_in_seconds": 0.0
+        },
+        "place": {
+          "path": "res://assets/themes/vines/audio/vines_place_click.ogg",
+          "gain_db": 0.0
+        }
+      },
+      "manifest": "res://assets/themes/christmas_joy/manifest.json",
+      "play_product": "christmas_joy"
     }
   },
   "shared_manifest": "res://assets/shared/manifest.json"

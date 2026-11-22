@@ -8,7 +8,7 @@ func _initialize() -> void:
 		push_error(str(errors))
 		quit(1)
 		return
-	if Themes.ids().size() != 3 or "zen_garden" in Themes.ids() or Palette.select_theme("zen_garden"):
+	if Themes.ids().size() != 4 or Themes.play_product("christmas_joy") != "christmas_joy" or "zen_garden" in Themes.ids() or Palette.select_theme("zen_garden"):
 		push_error("Archived Zen must not be active or selectable")
 		quit(1)
 		return
@@ -26,5 +26,5 @@ func _initialize() -> void:
 			quit(1)
 			return
 
-	print("Active theme resources: registry validates; three themes; Zen unavailable; Vines default")
+	print("Active theme resources: registry validates; four themes; Zen unavailable; Vines default")
 	quit(0)

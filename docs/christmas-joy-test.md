@@ -1,27 +1,9 @@
-# Christmas joy purchase and delivery test
+# Christmas joy paid theme
 
-The Themes page includes a **Coming soon** section. On desktop, **Limited offer — €0.00** opens a local test confirmation. Confirming installs a preview receipt and moves Christmas joy above the divider into the theme library. The preview has no playable artwork.
+Christmas joy ships in the game update. An unowned copy offers one game per local installation. The player can leave and resume it. Once the game ends, the finished board is saved and the next-piece area opens the Google Play purchase option. An acknowledged purchase moves the theme into the owned section and enables the replay button.
 
-## Google Play checkout
+Create and activate a non-consumable one-time product with the ID `christmas_joy` in Play Console for `org.shinegame.tiles`. Set its price and availability there. Tiles displays the formatted price for the offer it passes to checkout. The earlier `christmas_joy_test` product and desktop preview receipt were for the checkout prototype.
 
-1. In Play Console for `org.shinegame.tiles`, create and activate the non-consumable one-time product `christmas_joy_test`. Use a valid Play Console price. Google Play sets the price in its checkout sheet.
-2. Add your account under **License testing** and use that account on the device. Choose a Play test payment method to test approval or decline without a charge. Membership in a test track alone does not make transactions free.
-3. For the Android test build, add the following to `project.godot`. Keep this setting off in public builds. The app also requires a debug export to enable checkout.
+To check the purchase end to end, upload an Android App Bundle with an unused version code to a Play test track, set up a license tester, and install through Play. Finish the trial, cancel checkout, then complete it. Restart once, then remove and reinstall the app to verify that Play restores ownership. Trial progress is stored on-device and survives updates. A reinstall without backup can start a new local trial.
 
-   ```ini
-   [tiles]
-
-   store/play_billing_test_enabled=true
-   ```
-
-4. Export with Gradle, upload the signed debug APK through Play Console Internal app sharing, and install it through the sharing link using the account above. Tap Christmas joy in Themes. Check approval, cancellation, and restoration after reopening. This client-side flow is for testing only. Use server-side Play purchase verification before offering paid artwork publicly.
-
-## Download test
-
-By default, installation writes the bundled preview receipt. To test network delivery, host the following text at a directly accessible HTTPS URL and set `store/christmas_preview_url="https://…"` under `[tiles]` in the test build.
-
-```json
-{"product":"christmas_joy_test","version":1,"preview":true}
-```
-
-The app checks the exact payload before saving it. The preview appears in the library after installation succeeds. On Android, Google Play ownership is checked again on startup.
+For another paid theme, add its artwork manifest and registry profile with a unique `play_product` value. The menu, trial saves, price handling, and replay unlock use that registry entry.
