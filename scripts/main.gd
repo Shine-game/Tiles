@@ -366,11 +366,15 @@ func _layout() -> void:
 	var preview_width := maxf(1, controls_right - tray_gap - preview_left)
 	var left := (view.x - side) / 2
 	var top: float = layout.header_top
+	var row_inset: float = layout.get("row_inset", 0.0)
+	var row_top := top + row_inset
+	var row_step := (header_height - 2 * row_inset - control_side) / 2.0
+	var left_buttons := [erase_button, undo_button, skip_button]
+	var right_buttons := [palette_button, replay_button, flip_button]
 	for i in range(3):
-		_set_rect([erase_button, undo_button, skip_button][i], Rect2(controls_left, top + i * (header_height - control_side) / 2, control_side, control_side))
-	_set_rect(palette_button, Rect2(controls_right, top, control_side, control_side))
-	_set_rect(replay_button, Rect2(controls_right, top + (header_height - control_side) / 2, control_side, control_side))
-	_set_rect(flip_button, Rect2(controls_right, top + header_height - control_side, control_side, control_side))
+		var row_y := row_top + i * row_step
+		_set_rect(left_buttons[i], Rect2(controls_left, row_y, control_side, control_side))
+		_set_rect(right_buttons[i], Rect2(controls_right, row_y, control_side, control_side))
 	_set_rect(piece_view, Rect2(preview_left, top, preview_width, header_height))
 	_set_rect(game_over_message, piece_view.get_rect())
 	var board_top := top + header_height + float(layout.upper_gap)

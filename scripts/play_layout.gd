@@ -20,16 +20,19 @@ static func portrait(view: Vector2, pixel_scale: float, side_safe_area: float) -
 	var scale := clampf(minf(max_top_side / (1.2 * square), max_bottom_side / (2 * square)), 0.0, 1.0)
 	var control_side := 1.2 * square * scale
 	var dock_side := 2 * square * scale
+	var row_extra := maxf(0.0, header_height - 3 * control_side - 2 * clearance) / 4.0
+	var dock_extra := maxf(0.0, view.x - 2 * side_inset - 3 * dock_side - 2 * clearance) / 4.0
 	return {
 		"board_side": board_side,
 		"header_top": clearance,
+		"row_inset": row_extra,
 		"header_height": header_height,
 		"control_side": control_side,
 		"controls_left": side_inset,
 		"tray_gap": clearance,
 		"dock_side": dock_side,
-		"dock_padding": side_inset,
-		"dock_gap": (view.x - 2 * side_inset - 3 * dock_side) / 2.0,
+		"dock_padding": side_inset + dock_extra,
+		"dock_gap": clearance + dock_extra,
 		"upper_gap": clearance,
 		"board_to_dock_gap": (bottom_surface - dock_side) / 2.0,
 	}

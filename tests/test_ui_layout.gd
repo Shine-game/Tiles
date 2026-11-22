@@ -45,7 +45,9 @@ func run() -> void:
 					var min_gap := minf(square / 2.0, minf(free_height * 0.6 / 5.0, free_height * 0.4 / 3.0))
 					var row_gap: float = scene.undo_button.position.y - scene.erase_button.get_rect().end.y
 					check(dock_gap >= min_gap - 0.01 and row_gap >= min_gap - 0.01, "Buttons are at least half a reference square apart where space allows")
-					check(is_equal_approx(padding, min_gap) and is_equal_approx(scene.erase_button.position.x, min_gap), "Outer buttons sit at the requested side clearance")
+					check(is_equal_approx(padding, dock_gap), "Bottom buttons have equal gaps at the edges and between buttons")
+					check(is_equal_approx(scene.erase_button.position.y, row_gap), "Top buttons have equal gaps at the edges and between buttons")
+					check(is_equal_approx(scene.erase_button.position.x, min_gap), "Top columns respect the side clearance")
 					check(is_equal_approx(scene.place_button.get_rect().get_center().x, dimensions.x / 2), "Middle bottom button is centered")
 					check(is_equal_approx(scene.blue_button.size.x, (2.0 / 1.2) * scene.erase_button.size.x), "Both button sizes shrink by the same factor")
 					check(scene.erase_button.size.x <= 1.2 * square + 0.01, "Upper buttons are at most 1.2 reference squares")
