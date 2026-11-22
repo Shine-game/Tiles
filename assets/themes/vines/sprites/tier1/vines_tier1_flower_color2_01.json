@@ -1,9 +1,9 @@
 {
   "schema": "tiles.junction-sprite.v1",
-  "image": "vines_tier1_bend_color1_01.png",
+  "image": "vines_tier1_flower_color2_01.png",
   "center": [
-    624.89,
-    631.63
+    624.3,
+    632.92
   ],
   "scale": 0.8,
   "rotation": {

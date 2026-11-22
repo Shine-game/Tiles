@@ -53,7 +53,7 @@ func _group(event: Dictionary, restored: bool) -> Node2D:
 		identity = "bucket/%d" % event.bucket
 	if not groups.has(identity):
 		var node := Node2D.new()
-		node.z_index = int(Ordinary.part(event.id).group_z_index) if Ordinary.owns(event.id) else (int(Ordinary.special_part(event.id).group_z_index) if event.id.begins_with("anemone_") else int(event.bucket / 10))
+		node.z_index = int(Ordinary.part(event.id).group_z_index) if Ordinary.owns(event.id) else (7 if event.has("animated_finger") else int(event.bucket / 10))
 		add_child(node)
 		groups[identity] = node
 		if not ordinals.has(identity) or (not restored and not event.old):
@@ -81,10 +81,11 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 			components.remove(identity)
 			continue
 		var placement: Dictionary
-		placement = Fingers.render_spec(event) if event.has("animated_finger") else Ordinary.render_spec(event, settled) if ordinary else Ordinary.special_render_spec(event, settled)
+		placement = Fingers.render_spec(event) if event.has("animated_finger") else Ordinary.render_spec(event, settled) if ordinary else Ordinary.ground_render_spec(event)
 		var sprite: Sprite2D = components.ensure(identity, placement, _group(event, settled))
 		if event.has("animated_finger"):
 			finger_events[identity] = event
+			if event.color == 2: sprite.material = Fingers.teal_material()
 			sprite.visible = settled or event.old
 			sprite.set_meta("finger_settled", settled or event.old)
 			if settled or event.old: sprite.modulate.a = 1.0
@@ -97,8 +98,6 @@ func reconcile(model, settled: bool, preserve: bool = true) -> void:
 				sprite.material = surface
 			sprite.material.set_shader_parameter("cell_center", event.center)
 			sprite.material.set_shader_parameter("quarter_turn", float(event.rotation))
-		elif not (settled or event.old):
-			components.reveal(identity, event, "clock_seconds")
 	for identity: String in groups.keys():
 		if groups[identity].get_child_count() == 0:
 			var group: Node2D = groups[identity]

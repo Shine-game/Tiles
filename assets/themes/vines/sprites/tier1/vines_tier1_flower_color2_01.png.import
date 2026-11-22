@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db0okp46r6462"
-path="res://.godot/imported/coral_reef_tier3_anemone_oral_disc_color2_01.png-3eac15dfd1098e8834e7cc46412d8112.ctex"
+uid="uid://cre05nqkb5pr8"
+path="res://.godot/imported/vines_tier1_flower_color2_01.png-9bf1d58f239e8f5a35624f102c395550.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/themes/coral_reef/sprites/tier3/coral_reef_tier3_anemone_oral_disc_color2_01.png"
-dest_files=["res://.godot/imported/coral_reef_tier3_anemone_oral_disc_color2_01.png-3eac15dfd1098e8834e7cc46412d8112.ctex"]
+source_file="res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color2_01.png"
+dest_files=["res://.godot/imported/vines_tier1_flower_color2_01.png-9bf1d58f239e8f5a35624f102c395550.ctex"]
 
 [params]
 

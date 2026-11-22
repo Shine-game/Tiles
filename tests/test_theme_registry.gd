@@ -21,7 +21,7 @@ func _initialize() -> void:
 	for installer in [Clock, Coral, Vines]: installer.install()
 	for id: String in Themes.ids():
 		check(Palette.select_theme(id) and Palette.theme_name() == Themes.label(id), "theme selection reads registry")
-		check(Palette.theme_version() == {"clockwork": "1.7", "vines": "1.8", "coral_reef": "3.0"}[id], "Generative artwork has a distinct appearance version")
+		check(Palette.theme_version() == {"clockwork": "1.7", "vines": "1.8", "coral_reef": "3.1"}[id], "Generative artwork has a distinct appearance version")
 		check(int(Palette.clockwork) + int(Palette.coral_reef) == (0 if id == "vines" else 1), "specialized flags are mutually exclusive views")
 		var profile := Themes.profile(id)
 		for family: String in profile.sets:
@@ -32,7 +32,7 @@ func _initialize() -> void:
 			var loaded := Assets.load_set(profile.environment.catalog)
 			check(loaded.ok and not Assets.catalog([loaded]).is_empty(), "environment parts use the same artwork contract")
 		check(Frame.profile(id) == profile.frame, "board and menu share registry frame")
-	check(Clock.special.size() == 11 and Coral.special.size() == 10, "Tier 3 catalogs include all retained specialized components")
+	check(Clock.special.size() == 11 and Themes.pattern_set_path("coral_reef", 3).is_empty(), "Coral Tier 3 uses animated fingers without a legacy sprite catalog")
 	check(Clock.grounds.size() == 5 and Coral.grounds.size() == 6, "ground variants, pins, lip and sidewall retained")
 	check(not Clock.catalog.has("T02") and not Clock.special.has("T02"), "unused wheel collar is not reintroduced")
 	check(not FileAccess.file_exists("res://art/themes/coral_reef/theme.json") and not FileAccess.file_exists("res://art/themes/clockwork_workshop/theme.json"), "old runtime manifests removed")

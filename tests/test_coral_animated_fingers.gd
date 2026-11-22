@@ -50,7 +50,9 @@ func run():
 			for x in range(row.size()):
 				if row[x] == 1: row[x] = 2
 		view.show_settled(board)
-		check(view.coral_visuals.finger_events.is_empty(), "Teal retains legacy artwork")
+		check(view.coral_visuals.finger_events.size() == 16, "Teal uses the shared animated fingers")
+		for id in view.coral_visuals.finger_events:
+			check(view.coral_visuals.registry[id].material == Fingers.teal_material(), "Teal recolors the shared frames at render time")
 	view.queue_free()
 	print("Animated coral fingers: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

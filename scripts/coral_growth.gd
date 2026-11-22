@@ -20,7 +20,9 @@ static func ground_choice(cell: Vector2i) -> Dictionary:
 	return {"id": "ground_%02d" % [hashed % 6 + 1], "rotation": (hashed >> 8) % 4}
 
 static func metadata(id: String) -> Dictionary:
-	return Ordinary.part(id) if Ordinary.owns(id) else (Ordinary.ground_part(id) if id.begins_with("ground_") else Ordinary.special_part(id))
+	if id == "anemone_finger":
+		return {"size_px": [122, 174], "layer": 70}
+	return Ordinary.part(id) if Ordinary.owns(id) else Ordinary.ground_part(id)
 
 static func component_duration(id: String) -> float:
 	return float(metadata(id).animation.duration_seconds)
@@ -152,29 +154,15 @@ func build(before: Array, after: Array) -> void:
 		var center := (Vector2(a) + Vector2(b)) / 2 + Vector2.ONE
 		var old: bool = pair.old
 		var ready: float = Connections.ready(pair, colonies)
-		if colonies[a].color == 1:
-			var finish := ready
-			var choices := Fingers.choices(a, b)
-			for i in range(choices.size()):
-				var event := _add("anemone_foot", 1, a, center, old, ready, Fingers.definition().growth_seconds, 0, false, layout.rotation, identity + "/finger_%d" % i)
-				event.feature = identity
-				event.animated_finger = choices[i]
-				finish = maxf(finish, event.end)
-			unions[identity] = {"a": a, "b": b, "color": 1, "start": ready, "end": finish, "rotation": layout.rotation, "feature": identity}
-			continue
-		var foot := _add("anemone_foot", colonies[a].color, a, center, old, ready, component_duration("anemone_foot"), 0, false, layout.rotation, identity + "/foot")
-		foot.feature = identity
-		var disc_start := dependent_start("anemone_oral_disc", {"anemone_foot": foot})
-		var disc_end: float = -100 if old else end_time(disc_start, 0, component_duration("anemone_oral_disc"), false)
-		var finish: float = foot.end
-		for region in range(8):
-			var id := "anemone_region_%d" % region
-			var event := _add(id, colonies[a].color, a, center, old, disc_end, component_duration(id), 0, false, layout.rotation, identity + "/region_%d" % region)
+		var color: int = colonies[a].color
+		var finish := ready
+		var choices := Fingers.choices(a, b)
+		for i in range(choices.size()):
+			var event := _add("anemone_finger", color, a, center, old, ready, Fingers.definition().growth_seconds, 0, false, layout.rotation, identity + "/finger_%d" % i)
 			event.feature = identity
+			event.animated_finger = choices[i]
 			finish = maxf(finish, event.end)
-		var disc := _add("anemone_oral_disc", colonies[a].color, a, center, old, disc_start, component_duration("anemone_oral_disc"), 0, false, layout.rotation, identity + "/disc")
-		disc.feature = identity
-		unions[identity] = {"a": a, "b": b, "color": colonies[a].color, "start": ready, "end": maxf(finish, disc.end), "rotation": layout.rotation, "feature": identity}
+		unions[identity] = {"a": a, "b": b, "color": color, "start": ready, "end": finish, "rotation": layout.rotation, "feature": identity}
 
 func grid_visibility(a: Vector2i, b: Vector2i, time: float) -> float:
 	if value(board, a) != 0 and value(board, b) == value(board, a):

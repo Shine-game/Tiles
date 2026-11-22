@@ -18,30 +18,27 @@ The existing higher-tier formations and links keep their own artwork and schedul
 
 ## Assembly JSON
 
-Each shape/color has a separate PNG and sidecar, even if bytes are identical:
+Vines uses one flower PNG and sidecar per artwork color:
 
 ```
-vines_tier1_bend_color1_basic.png / .json
-vines_tier1_tjoint_color1_basic.png / .json
-vines_tier1_crossroad_color1_basic.png / .json
+vines_tier1_flower_color1_01.png / .json
+vines_tier1_flower_color2_01.png / .json
 ```
 
-There are matching color2 files. The color token describes the actual artwork:
+Bend, T and X junctions share one flower and metadata file per color. The color token describes the actual artwork:
 color1 is violet, color2 is pink. Vines' logical pink stems (1) bind violet files;
-logical violet stems (2) bind pink files. `color_role: opposite` preserves that
-relationship when selecting another player palette.
+logical violet stems (2) bind pink files. The artwork retains its original colors.
 
 A complete sidecar example:
 
 ```json
 {
   "schema": "tiles.junction-sprite.v1",
-  "image": "vines_tier1_bend_color1_basic.png",
+  "image": "vines_tier1_flower_color1_01.png",
   "center": [624.89, 631.63],
-  "scale": 1.0,
+  "scale": 0.8,
   "rotation": {"range_deg": [0, 360]},
-  "color_role": "opposite",
-  "source_color": "#a758ef"
+  "color_role": "original"
 }
 ```
 
@@ -57,7 +54,7 @@ Only `schema` and `image` are required. Omitted fields mean:
 The schema lives at `assets/schemas/junction-sprite-v1.schema.json`. The runtime
 also checks finite coordinates, positive scale, image bounds, ascending ranges,
 permitted fields and project texture availability. Every bound shape/color needs
-its own metadata path, making later individual artwork changes independent.
+a metadata path. Multiple bindings can share a path when they use the same artwork and settings.
 
 ## Theme binding
 

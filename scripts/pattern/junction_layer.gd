@@ -81,7 +81,6 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		return false
 	# Preflight every shape/color before replacing the live presentation.
 	var loaded: Dictionary = {}
-	var paths: Dictionary = {}
 	for shape: String in (["bend", "t", "cross", "core"] if config.shapes.has("core") else ["bend", "t", "cross"]):
 		if not config.get("shapes", {}).get(shape) is Dictionary:
 			diagnostics.append("Junction configuration needs bend, t and cross bindings")
@@ -89,10 +88,9 @@ func prepare(model, theme: String, before: Array, settled: bool, preserve: bool,
 		loaded[shape] = {}
 		for color: String in ["1", "2"]:
 			var path: Variant = config.shapes[shape].get(color)
-			if not path is String or paths.has(path):
-				diagnostics.append("Each junction shape/color needs its own metadata file")
+			if not path is String:
+				diagnostics.append("Each junction shape/color needs a metadata path")
 				return false
-			paths[path] = true
 			var record := load_sprite(path)
 			if not record.ok:
 				diagnostics.append_array(record.errors)

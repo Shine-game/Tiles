@@ -2,7 +2,15 @@ extends RefCounted
 # Continuous visual animation is independent of the finite construction clock.
 const Assets = preload("res://scripts/pattern/asset_library.gd")
 const ROOT := "res://assets/themes/coral_reef/assembly/"
+const TEAL = preload("res://assets/themes/coral_reef/shaders/coral_reef_finger_teal.gdshader")
 static var data: Dictionary = {}
+static var shared_teal: ShaderMaterial
+
+static func teal_material() -> ShaderMaterial:
+	if shared_teal == null:
+		shared_teal = ShaderMaterial.new()
+		shared_teal.shader = TEAL
+	return shared_teal
 static func definition() -> Dictionary:
 	if data.is_empty(): data = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "coral_reef_tier3_fingers.json"))
 	return data

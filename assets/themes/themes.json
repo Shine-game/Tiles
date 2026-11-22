@@ -228,16 +228,16 @@
         "z_index": -1,
         "shapes": {
           "bend": {
-            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color1_01.json",
-            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_bend_color2_01.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color2_01.json"
           },
           "t": {
-            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_t_color1_01.json",
-            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_t_color2_01.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color2_01.json"
           },
           "cross": {
-            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_cross_color1_01.json",
-            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_cross_color2_01.json"
+            "1": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color1_01.json",
+            "2": "res://assets/themes/vines/sprites/tier1/vines_tier1_flower_color2_01.json"
           },
           "core": {
             "1": "res://assets/themes/vines/sprites/tier0/vines_tier0_core_color1_01.json",
@@ -272,7 +272,7 @@
     },
     "coral_reef": {
       "name": "Coral Reef",
-      "version": "3.0",
+      "version": "3.1",
       "colors": [
         "f49f7f",
         "69bfae"
@@ -302,8 +302,7 @@
         "default": {
           "0": "res://assets/themes/coral_reef/assembly/coral_reef_tier0.json",
           "1": "res://assets/themes/coral_reef/assembly/coral_reef_tier1.json",
-          "2": "res://assets/themes/coral_reef/assembly/coral_reef_tier2.json",
-          "3": "res://assets/themes/coral_reef/assembly/coral_reef_tier3.json"
+          "2": "res://assets/themes/coral_reef/assembly/coral_reef_tier2.json"
         }
       },
       "hooks": {

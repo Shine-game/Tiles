@@ -89,19 +89,17 @@ func _run() -> void:
 		if model.colonies[join.a].old and model.colonies[join.b].old:
 			continue
 		check(join.start >= maxf(model.colonies[join.a].end, model.colonies[join.b].end), "anemone waits for both complete colonies")
-		var foot: Dictionary = model.components[join.feature + "/foot"]
-		var disc: Dictionary = model.components[join.feature + "/disc"]
-		check(is_equal_approx(disc.start, Coral.arrival(foot, 0) + 0.04), "disc follows foot center")
-		for region in range(8):
-			var crown: Dictionary = model.components[join.feature + "/region_%d" % region]
-			check(is_equal_approx(crown.start, disc.end) and is_equal_approx(crown.stroke, 0.28), "all crown partitions share one schedule")
-		check(model.duration >= join.end, "Place gate includes complete crown and reveal tail")
+		for finger in range(int(Coral.Fingers.definition().count)):
+			var event: Dictionary = model.components[join.feature + "/finger_%d" % finger]
+			check(event.has("animated_finger") and is_equal_approx(event.start, join.start), "All fingers start when both colonies are complete")
+		check(model.duration >= join.end, "Place gate includes finger growth")
+
 	var scene = load("res://main.tscn").instantiate()
 	root.add_child(scene)
 	for frame in range(4):
 		await process_frame
 	scene._select_theme("coral_reef")
-	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "2.3", "theme selection opens redesigned Coral Reef")
+	check(Palette.theme_id() == "coral_reef" and Palette.theme_version() == "3.1", "theme selection opens redesigned Coral Reef")
 	check((scene.board_view.coral_visuals.position + Vector2(0, scene.board_view.surface_depth())).is_equal_approx(scene.board_view._floor_point(Vector2.ZERO)), "reef ground and coral share the elevated surface above the placement grid")
 	check(scene.game.moves == 0 and scene.game.undo_left == 3, "theme does not change gameplay or helper budgets")
 	scene.game.board = block
