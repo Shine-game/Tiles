@@ -351,7 +351,7 @@ func _layout() -> void:
 	var hardware := _layout_insets(view, false)
 	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
 	var edge := 10.0 / pixel_scale + maxf(hardware.x, hardware.z)
-	var layout := PlayLayout.measure(view, safe, edge, gap, game.board.size())
+	var layout := PlayLayout.portrait(view, pixel_scale) if view.y >= view.x else PlayLayout.measure_landscape(view, safe, edge, gap, game.board.size())
 	var side: float = layout.board_side
 	var header_height: float = layout.header_height
 	var control_side: float = layout.control_side
@@ -362,7 +362,7 @@ func _layout() -> void:
 	var preview_left := controls_left + control_side + gap
 	var preview_width := maxf(1, controls_right - gap - preview_left)
 	var left := (view.x - side) / 2
-	var top := safe.y
+	var top: float = layout.header_top
 	for i in range(3):
 		_set_rect([erase_button, undo_button, skip_button][i], Rect2(controls_left, top + i * (header_height - control_side) / 2, control_side, control_side))
 	_set_rect(palette_button, Rect2(controls_right, top, control_side, control_side))

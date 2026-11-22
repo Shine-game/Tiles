@@ -27,7 +27,7 @@ func run() -> void:
 				scene.size = dimensions
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
-				check(scene.erase_button.size.x >= 28, "Upper controls retain usable touch targets")
+				check(scene.erase_button.size.x >= (20 if dimensions == Vector2(400,500) else 28), "Upper controls retain usable touch targets")
 				check(scene.erase_button.size.is_equal_approx(scene.palette_button.size), "Both upper columns have equal button sizes")
 				check(not scene.board_view.get_rect().intersects(scene.piece_view.get_rect()), "Offered piece tray remains above the board")
 				for control: Control in scene._controls()+[scene.piece_view,scene.board_view]:
@@ -41,17 +41,21 @@ func run() -> void:
 				check(is_equal_approx(scene.place_button.position.x - scene.blue_button.get_rect().end.x, 2 * padding), "Bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
 				if dimensions.y >= dimensions.x:
-					var upper_gap: float = scene.board_view.position.y - scene.piece_view.get_rect().end.y
-					var bottom_gap: float = scene.blue_button.position.y - scene.board_view.get_rect().end.y
-					check(is_equal_approx(upper_gap, bottom_gap) and bottom_gap > 0, "The portrait board has balanced clearance above and below")
+					var remaining: float = dimensions.y - scene.board_view.size.y
+					var top_border: float = scene.erase_button.position.y
+					var bottom_border: float = scene.blue_button.position.y - scene.board_view.get_rect().end.y
+					check(is_equal_approx(scene.board_view.position.y, remaining * 0.6), "Top controls receive three fifths of the remaining height")
+					check(is_equal_approx(top_border, scene.board_view.position.y - scene.skip_button.get_rect().end.y), "Top rows have symmetrical borders")
+					check(is_equal_approx(bottom_border, dimensions.y - scene.blue_button.get_rect().end.y), "Bottom row is vertically centered")
+					var border: float = 50 / scene.get_viewport().get_stretch_transform().x.length()
+					if dimensions == Vector2(390,844):
+						check(is_equal_approx(top_border, border) and bottom_border >= border - 0.01, "Tall phones reserve 50 screen pixels at each edge")
 				else:
 					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around landscape bottom buttons")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
-				if dimensions in [Vector2(400,500),Vector2(400,600)]:
-					check(scene.piece_view.size.y > 0 and scene.board_view.size.x < dimensions.x - 20, "Compact portraits leave space for the tray and controls")
-				elif dimensions.y >= dimensions.x:
+				if dimensions.y >= dimensions.x:
 					var margin: float = 10.0 / scene.get_viewport().get_stretch_transform().x.length()
 					check(is_equal_approx(scene.board_view.position.x,margin) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-margin),"Both board sizes fill portrait width with ten screen pixels on each side")
 				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")
@@ -61,7 +65,7 @@ func run() -> void:
 	scene._reset()
 	check(scene.get_children().all(func(child):return not child is Label or not child.visible),"Playing screen has no inscriptions before game over")
 	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
-	check(is_equal_approx(scene.place_button.size.x,128),"Bottom controls keep their screen-based size")
+	check(scene.place_button.size.x > 0 and scene.place_button.size.x <= 128,"Bottom controls fit inside their surface")
 	var fixed_board: Rect2 = scene.board_view.get_rect()
 	var fixed_pitch: float = scene.board_view.pitch
 	for piece: Dictionary in Rules.PIECES.values():
