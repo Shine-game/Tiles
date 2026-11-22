@@ -5,7 +5,7 @@ const Rules = preload("res://scripts/rules.gd")
 const MIN_CONTROL_SIDE := 28.0
 const BOARD_FRAME := 28.0
 
-static func portrait(view: Vector2, pixel_scale: float) -> Dictionary:
+static func portrait(view: Vector2, pixel_scale: float, tray_inset: float) -> Dictionary:
 	var margin := 10.0 / pixel_scale
 	var border := 50.0 / pixel_scale
 	var board_side := maxf(1.0, view.x - 2 * margin)
@@ -13,21 +13,25 @@ static func portrait(view: Vector2, pixel_scale: float) -> Dictionary:
 	var top_surface := free_height * 0.6
 	var bottom_surface := free_height - top_surface
 
-	# Keep a little separation between controls when a short viewport cannot
-	# accommodate the full border and usable touch targets at the same time.
-	var gap := minf(4.0 / pixel_scale, top_surface / 10.0)
-	var top_border := minf(border, maxf(0.0, (top_surface - 3 * MIN_CONTROL_SIDE - 2 * gap) / 2.0))
+	var button_gap := 20.0 / pixel_scale
+	var row_gap := minf(button_gap, maxf(0.0, (top_surface - 3 * 16.0) / 2.0))
+	var top_border := minf(border, maxf(0.0, (top_surface - 3 * MIN_CONTROL_SIDE - 2 * row_gap) / 2.0))
 	var header_height := top_surface - 2 * top_border
-	var control_side := minf(clampf(view.x * 0.112, 36.0, 72.0), (header_height - 2 * gap) / 3.0)
+	# Leave the central tray wide enough for the longest offered piece.
+	var column_limit := maxf(1.0, (view.x - 2 * tray_inset - board_side * 0.5) / 2.0)
+	var control_side := minf(column_limit, (header_height - 2 * row_gap) / 3.0)
 	var bottom_border := minf(border, maxf(0.0, (bottom_surface - 40.0) / 2.0))
-	var dock_side := minf(clampf(view.x * 0.225, 56.0, 128.0), bottom_surface - 2 * bottom_border)
+	var dock_gap := minf(button_gap, view.x / 6.0)
+	var dock_width := view.x - 2 * margin - 2 * dock_gap
+	var dock_side := minf(dock_width / 3.0, bottom_surface - 2 * bottom_border)
 	return {
 		"board_side": board_side,
 		"header_top": top_border,
 		"header_height": header_height,
 		"control_side": control_side,
 		"dock_side": dock_side,
-		"dock_padding": (view.x - 3 * dock_side) / 6.0,
+		"dock_padding": (view.x - 3 * dock_side - 2 * dock_gap) / 2.0,
+		"dock_gap": dock_gap,
 		"upper_gap": top_border,
 		"board_to_dock_gap": (bottom_surface - dock_side) / 2.0,
 	}
@@ -62,6 +66,7 @@ static func measure_landscape(view: Vector2, safe: Vector4, edge: float, gap: fl
 		"control_side": control_side,
 		"dock_side": dock_side,
 		"dock_padding": dock_padding,
+		"dock_gap": 2 * dock_padding,
 		"upper_gap": gap,
 		"board_to_dock_gap": board_gap,
 	}

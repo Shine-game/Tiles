@@ -351,13 +351,14 @@ func _layout() -> void:
 	var hardware := _layout_insets(view, false)
 	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
 	var edge := 10.0 / pixel_scale + maxf(hardware.x, hardware.z)
-	var layout := PlayLayout.portrait(view, pixel_scale) if view.y >= view.x else PlayLayout.measure_landscape(view, safe, edge, gap, game.board.size())
+	var controls_left := maxf(safe.x, safe.z) + gap
+	var layout := PlayLayout.portrait(view, pixel_scale, controls_left + gap) if view.y >= view.x else PlayLayout.measure_landscape(view, safe, edge, gap, game.board.size())
 	var side: float = layout.board_side
 	var header_height: float = layout.header_height
 	var control_side: float = layout.control_side
 	var dock_side: float = layout.dock_side
 	var dock_padding: float = layout.dock_padding
-	var controls_left := maxf(safe.x, safe.z) + gap
+	var dock_gap: float = layout.dock_gap
 	var controls_right := view.x - controls_left - control_side
 	var preview_left := controls_left + control_side + gap
 	var preview_width := maxf(1, controls_right - gap - preview_left)
@@ -376,7 +377,7 @@ func _layout() -> void:
 	piece_view.cell_pitch = board_view.pitch
 	var dock_y := board_top + side + float(layout.board_to_dock_gap)
 	for i in range(3):
-		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + 2 * dock_padding), dock_y, dock_side, dock_side))
+		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + dock_gap), dock_y, dock_side, dock_side))
 	for control: Control in _controls():
 		control.add_theme_font_size_override("font_size", clampi(roundi(control_side * 0.34), 12, 26) + 4)
 	_set_rect(reef_background, Rect2(Vector2.ZERO, view))

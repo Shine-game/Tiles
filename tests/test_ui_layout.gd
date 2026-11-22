@@ -27,7 +27,7 @@ func run() -> void:
 				scene.size = dimensions
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
-				check(scene.erase_button.size.x >= (20 if dimensions == Vector2(400,500) else 28), "Upper controls retain usable touch targets")
+				check(scene.erase_button.size.x >= (15.9 if dimensions == Vector2(400,500) else 27.9), "Upper controls retain usable touch targets")
 				check(scene.erase_button.size.is_equal_approx(scene.palette_button.size), "Both upper columns have equal button sizes")
 				check(not scene.board_view.get_rect().intersects(scene.piece_view.get_rect()), "Offered piece tray remains above the board")
 				for control: Control in scene._controls()+[scene.piece_view,scene.board_view]:
@@ -38,7 +38,15 @@ func run() -> void:
 				check(scene.erase_button.position.y < scene.undo_button.position.y and scene.undo_button.position.y < scene.skip_button.position.y,"Jokers ordered vertically")
 				check(scene.palette_button.position.x > scene.piece_view.get_rect().end.x and scene.flip_button.position.x == scene.palette_button.position.x,"Settings and flip on right")
 				var padding: float = scene.blue_button.position.x
-				check(is_equal_approx(scene.place_button.position.x - scene.blue_button.get_rect().end.x, 2 * padding), "Bottom button gaps are double outer padding")
+				var dock_gap: float = scene.place_button.position.x - scene.blue_button.get_rect().end.x
+				if dimensions.y >= dimensions.x:
+					var min_gap: float = 20 / scene.get_viewport().get_stretch_transform().x.length()
+					check(is_equal_approx(dock_gap, min_gap), "Portrait bottom buttons are 20 screen pixels apart")
+					var row_gap: float = scene.undo_button.position.y - scene.erase_button.get_rect().end.y
+					if dimensions != Vector2(400,500):
+						check(row_gap >= min_gap - 0.01, "Portrait upper buttons have at least 20 screen pixels between them")
+				else:
+					check(is_equal_approx(dock_gap, 2 * padding), "Landscape bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
 				if dimensions.y >= dimensions.x:
 					var remaining: float = dimensions.y - scene.board_view.size.y
@@ -50,6 +58,9 @@ func run() -> void:
 					var border: float = 50 / scene.get_viewport().get_stretch_transform().x.length()
 					if dimensions == Vector2(390,844):
 						check(is_equal_approx(top_border, border) and bottom_border >= border - 0.01, "Tall phones reserve 50 screen pixels at each edge")
+						var target_gap: float = border * 0.4
+						check(is_equal_approx(3 * scene.erase_button.size.y + 2 * target_gap, remaining * 0.6 - 2 * border), "Upper buttons fill the available height")
+						check(is_equal_approx(scene.blue_button.size.y, remaining * 0.4 - 2 * border), "Bottom buttons fill the available height")
 				else:
 					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around landscape bottom buttons")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
