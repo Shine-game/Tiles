@@ -72,7 +72,7 @@ func run() -> void:
 		check(game.gallery_panel.get_theme_stylebox("panel").bg_color == Interface.panel_background(), "gallery retains panel background")
 		for page: String in ["Settings", "Themes", "Gameplay", "Difficulty", "Size", "Audio"]:
 			game._show_menu(page)
-			check(not game.menu_frame.visible and not game.menu_title.visible and game.menu_title.text.is_empty(), "Nested menus have no frame or heading")
+			check(game.menu_frame.is_present() and game.menu_frame.theme_id == Palette.theme_id() and not game.menu_title.visible and game.menu_title.text.is_empty(), "Nested menus use the active theme frame")
 			var panel: StyleBoxFlat = game.palette_menu.get_theme_stylebox("panel")
 			check(panel.bg_color == normal.bg_color and panel.border_width_top == 1 and panel.shadow_size == 0, "Menu surface matches buttons with flat thin border")
 		game._show_menu("Audio")

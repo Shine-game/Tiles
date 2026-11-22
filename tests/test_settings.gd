@@ -86,6 +86,7 @@ func _run() -> void:
 	click(scene.axes_button)
 	check(scene.game == axes_game and scene.game.board == active_board and scene.board_view.show_axes != axes and not scene.confirmation.visible, "Axes apply immediately and preserve an active game")
 	for control: Button in [scene.gameplay_options[0], scene.size_picker, scene.theme_options[1]]:
+		scene._show_menu("Themes" if control == scene.theme_options[1] else "Gameplay")
 		check(scene.game.skip(), "Start playing with a joker")
 		var previous = scene.game
 		var board: Array = scene.game.board.duplicate(true)
@@ -135,10 +136,17 @@ func _run() -> void:
 				scene._show_menu(page)
 				for frame in range(2): await process_frame
 				check(bounds.encloses(scene.palette_menu.get_rect()),"Every menu fits every viewport")
+				check(scene.menu_frame.get_global_rect().is_equal_approx(scene.palette_menu.get_global_rect()), "Theme frame follows the entire settings panel")
+				if dimensions == Vector2(720,1100) and page == "Settings":
+					var clearance: float = 20 / root.get_stretch_transform().x.length()
+					var first: Rect2 = scene.settings_options[0].get_global_rect()
+					var second: Rect2 = scene.settings_options[1].get_global_rect()
+					var opening: Rect2 = scene.menu_frame.get_global_rect().grow(-scene.menu_frame.thin_rim)
+					check(is_equal_approx(first.position.x - opening.position.x, clearance) and is_equal_approx(second.position.y - first.end.y, clearance), "Settings controls have 20 screen pixels of clearance from the frame and each other")
 				check(scene.back_button.visible and scene.menu_close.visible and scene.back_button.position.x < scene.menu_close.position.x and scene.back_button.position.y == scene.menu_close.position.y,"Every window has top-corner navigation")
 				for control: Control in scene.menu_buttons:
 					if control.visible:
-						check(scene.palette_menu.get_global_rect().grow(0.2).encloses(control.get_global_rect()),"Visible menu controls fit: %s %s %s" % [theme,page,dimensions])
+						check(scene.palette_menu.get_global_rect().grow(0.2).encloses(control.get_global_rect()),"Visible menu controls fit: %s %s %s control %s panel %s" % [theme,page,dimensions,control.get_global_rect(),scene.palette_menu.get_global_rect()])
 				scene._close_menu()
 	var active_game = scene.game
 	var active_size: int = scene.game.board.size()

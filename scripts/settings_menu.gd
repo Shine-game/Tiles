@@ -10,6 +10,7 @@ const Palette = preload("res://scripts/palette.gd")
 var pages: Dictionary
 var menu_buttons: Array
 var palette_list: Control
+var frame: BoardFrame
 var menu_title: Label
 var menu_close: Button
 var back_button: Button
@@ -37,31 +38,37 @@ func go_back() -> void:
 	else:
 		open_page(history.pop_back(), false)
 
-func layout(view_size: Vector2, anchor_bottom: float, pad: float, theme_labels: Dictionary, style_button: Callable) -> void:
+func layout(view_size: Vector2, anchor_bottom: float, pad: float, requested_clearance: float, theme_labels: Dictionary, style_button: Callable) -> void:
 	for control: Control in menu_buttons:
 		control.hide()
 	var options: Array = pages.get(page, pages["Settings"])
-	var inset := Vector4(12, 12, 12, 12)
+	var rim := frame.thin_rim if frame.apply_theme(Palette.theme_id()) else 0.0
 	var row_units := options.size() + (1 if page == "Game Presets" else 0)
-	var desired_height: float = (38 + 70 * row_units + 12) * 1.5
-	if page == "Themes": desired_height = maxf(desired_height,420)
-	if page == "Audio": desired_height = maxf(desired_height,330)
-	var width := minf(view_size.x - 2 * pad, maxf(view_size.x * 0.70, 340.0))
-	var height: float = minf(desired_height, view_size.y - 2 * pad)
-	var scale_factor: float = minf(1, minf(width / 540, height / desired_height))
-	var content_width: float = width - inset.x - inset.z
-	var content_height: float = height - inset.y - inset.w
-	var title_height: float = maxf(57 * scale_factor, InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 16)
-	var gap: float = 9 * scale_factor
-	var bottom: float = 18 * scale_factor
-	var row_height: float = (content_height - title_height - bottom - gap * (options.size() - 1)) / row_units
+	var width := minf(view_size.x - 2 * pad, maxf(view_size.x * 0.70, 400.0))
+	var max_height := view_size.y - 2 * pad
+	var close_side := maxf(44, InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 8)
+	var min_row := 112.0 if page in ["Themes", "Audio"] else 46.0
+	var clearance := minf(requested_clearance, maxf(0.0, (max_height - 2 * rim - close_side - min_row * row_units) / (options.size() + 2)))
+	clearance = minf(clearance, maxf(0.0, (width - 2 * rim - 2 * close_side) / 3.0))
+	var inset := rim + clearance
+	var title_height := close_side + clearance
+	var gap := clearance
+	var preferred_row := maxf(min_row, 66.0)
+	var height := minf(max_height, 2 * inset + title_height + preferred_row * row_units + gap * (options.size() - 1))
+	var content_width := width - 2 * inset
+	var content_height := height - 2 * inset
+	var row_height := (content_height - title_height - gap * (options.size() - 1)) / row_units
+	var panel_style: StyleBoxFlat = get_theme_stylebox("panel").duplicate()
+	panel_style.set_content_margin_all(inset)
+	add_theme_stylebox_override("panel", panel_style)
 	var y: float = minf(anchor_bottom + pad, view_size.y - pad - height)
 	_set_rect(self, Rect2((view_size.x - width) / 2, maxf(pad, y), width, height))
-	_set_rect(palette_list, Rect2(Vector2(inset.x, inset.y), Vector2(content_width, content_height)))
+	_set_rect(palette_list, Rect2(Vector2.ONE * inset, Vector2(content_width, content_height)))
+	if frame.is_present():
+		frame.surround(Rect2(Vector2.ONE * (rim - inset), Vector2(width, height) - 2 * Vector2.ONE * rim))
 	menu_title.text = ""
 	menu_title.hide()
 	menu_title.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
-	var close_side: float = maxf(InterfaceTheme.FONT.get_height(InterfaceTheme.FONT_SIZE) + 8, 48 * scale_factor)
 	menu_close.show()
 	menu_close.add_theme_font_size_override("font_size", InterfaceTheme.FONT_SIZE)
 	_set_rect(menu_close, Rect2(content_width - close_side, 0, close_side, close_side))
@@ -77,7 +84,7 @@ func layout(view_size: Vector2, anchor_bottom: float, pad: float, theme_labels: 
 		var longest_word := 0.0
 		for word: String in theme_labels[id].split(" "):
 			longest_word = maxf(longest_word, InterfaceTheme.FONT.get_string_size(word,HORIZONTAL_ALIGNMENT_LEFT,-1,InterfaceTheme.FONT_SIZE).x)
-		var tile_side: float = maxf(16, minf(minf(row_height - 16 * scale_factor, content_width * 0.23), content_width-longest_word-38))
+		var tile_side: float = maxf(16, minf(minf(row_height - 16, content_width * 0.23), content_width-longest_word-38))
 		theme_options[i].set_meta("menu_right_inset", tile_side + 20)
 		_set_rect(tile, Rect2(content_width - tile_side - 12, (row_height - tile_side) / 2, tile_side, tile_side))
 	var row_y := title_height

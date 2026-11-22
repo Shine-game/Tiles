@@ -261,6 +261,7 @@ func _build_interface() -> void:
 	palette_menu.add_child(palette_list)
 	menu_frame = Frame.new()
 	menu_frame.name = "SettingsFrame"
+	menu_frame.thin_rim = 14.0
 	palette_list.add_child(menu_frame)
 	_build_settings()
 	reef_background = ColorRect.new()
@@ -764,6 +765,7 @@ func _build_settings() -> void:
 	}
 	palette_menu.menu_buttons = menu_buttons
 	palette_menu.palette_list = palette_list
+	palette_menu.frame = menu_frame
 	palette_menu.menu_title = menu_title
 	palette_menu.menu_close = menu_close
 	palette_menu.back_button = back_button
@@ -837,10 +839,10 @@ func _start_new_game() -> void:
 	_reset()
 
 func _layout_palette_menu(pad: float) -> void:
-	menu_frame.hide()
 	_refresh_menu_style()
 	_update_settings_labels()
-	palette_menu.layout(size, palette_button.get_rect().end.y, pad, MENU_THEMES, _apply_button_style)
+	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
+	palette_menu.layout(size, palette_button.get_rect().end.y, pad, 20.0 / pixel_scale, MENU_THEMES, _apply_button_style)
 
 func _update_settings_labels() -> void:
 	new_button.text = "Start"
