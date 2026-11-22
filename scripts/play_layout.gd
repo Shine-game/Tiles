@@ -12,14 +12,14 @@ static func portrait(view: Vector2, pixel_scale: float, side_safe_area: float) -
 	var bottom_surface := free_height - top_surface
 	var square := maxf(1.0, board_side - BOARD_FRAME) / 9.0
 	# Near-square windows can be too short even for the requested gaps alone.
-	var clearance := minf(square / 4.0, minf(top_surface / 5.0, bottom_surface / 3.0))
+	var clearance := minf(square / 2.0, minf(top_surface / 5.0, bottom_surface / 3.0))
 	var side_inset := maxf(clearance, side_safe_area)
 	var header_height := top_surface - 2 * clearance
 	var max_top_side := (header_height - 2 * clearance) / 3.0
 	var max_bottom_side := minf(bottom_surface - 2 * clearance, (view.x - 2 * side_inset - 2 * clearance) / 3.0)
-	var scale := clampf(minf(max_top_side / square, max_bottom_side / (2 * square)), 0.0, 1.0)
-	var control_side := square * scale
-	var dock_side := 2 * control_side
+	var scale := clampf(minf(max_top_side / (1.2 * square), max_bottom_side / (2 * square)), 0.0, 1.0)
+	var control_side := 1.2 * square * scale
+	var dock_side := 2 * square * scale
 	return {
 		"board_side": board_side,
 		"header_top": clearance,

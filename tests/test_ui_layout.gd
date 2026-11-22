@@ -23,7 +23,7 @@ func run() -> void:
 		for n in [9,11]:
 			scene.requested_size = n
 			scene._reset()
-			for dimensions in [Vector2(400,500),Vector2(400,600),Vector2(360,640),Vector2(390,844),Vector2(540,825),Vector2(720,1100),Vector2(844,390)]:
+			for dimensions in [Vector2(400,500),Vector2(400,600),Vector2(360,640),Vector2(390,844),Vector2(400,890),Vector2(540,825),Vector2(720,1100),Vector2(844,390)]:
 				scene.size = dimensions
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
@@ -41,13 +41,14 @@ func run() -> void:
 				var dock_gap: float = scene.place_button.position.x - scene.blue_button.get_rect().end.x
 				if dimensions.y >= dimensions.x:
 					var square: float = scene.board_view.field.size.x / 9.0
-					var min_gap := square / 4.0
+					var free_height: float = dimensions.y - scene.board_view.size.y
+					var min_gap := minf(square / 2.0, minf(free_height * 0.6 / 5.0, free_height * 0.4 / 3.0))
 					var row_gap: float = scene.undo_button.position.y - scene.erase_button.get_rect().end.y
-					check(dock_gap >= min_gap - 0.01 and row_gap >= min_gap - 0.01, "Buttons are at least one quarter square apart")
-					check(is_equal_approx(padding, min_gap) and is_equal_approx(scene.erase_button.position.x, min_gap), "Outer buttons sit a quarter square from the sides")
+					check(dock_gap >= min_gap - 0.01 and row_gap >= min_gap - 0.01, "Buttons are at least half a reference square apart where space allows")
+					check(is_equal_approx(padding, min_gap) and is_equal_approx(scene.erase_button.position.x, min_gap), "Outer buttons sit at the requested side clearance")
 					check(is_equal_approx(scene.place_button.get_rect().get_center().x, dimensions.x / 2), "Middle bottom button is centered")
-					check(is_equal_approx(scene.blue_button.size.x, 2 * scene.erase_button.size.x), "Both button sizes shrink by the same factor")
-					check(scene.erase_button.size.x <= square + 0.01, "Upper buttons are at most one reference square")
+					check(is_equal_approx(scene.blue_button.size.x, (2.0 / 1.2) * scene.erase_button.size.x), "Both button sizes shrink by the same factor")
+					check(scene.erase_button.size.x <= 1.2 * square + 0.01, "Upper buttons are at most 1.2 reference squares")
 				else:
 					check(is_equal_approx(dock_gap, 2 * padding), "Landscape bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
@@ -58,10 +59,10 @@ func run() -> void:
 					check(is_equal_approx(scene.board_view.position.y, remaining * 0.6), "Top controls receive three fifths of the remaining height")
 					check(is_equal_approx(top_border, scene.board_view.position.y - scene.skip_button.get_rect().end.y), "Top rows have symmetrical borders")
 					check(is_equal_approx(bottom_border, dimensions.y - scene.blue_button.get_rect().end.y), "Bottom row is vertically centered")
-					var clearance: float = scene.board_view.field.size.x / 36.0
-					check(top_border >= clearance - 0.01 and bottom_border >= clearance - 0.01, "Buttons clear the screen and board by a quarter square")
-					if dimensions == Vector2(390,844):
-						check(is_equal_approx(scene.erase_button.size.x, 4 * clearance), "Tall phones fit full-size buttons")
+					var clearance := minf(scene.board_view.field.size.x / 18.0, minf(remaining * 0.6 / 5.0, remaining * 0.4 / 3.0))
+					check(top_border >= clearance - 0.01 and bottom_border >= clearance - 0.01, "Buttons clear the screen and board by half a reference square where space allows")
+					if dimensions == Vector2(400,890):
+						check(is_equal_approx(scene.erase_button.size.x, 2.4 * clearance), "Tall phones fit full-size buttons")
 				else:
 					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around landscape bottom buttons")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
@@ -77,7 +78,7 @@ func run() -> void:
 	scene._reset()
 	check(scene.get_children().all(func(child):return not child is Label or not child.visible),"Playing screen has no inscriptions before game over")
 	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
-	check(is_equal_approx(scene.place_button.size.x, 2 * scene.erase_button.size.x), "Bottom controls are twice as wide as upper controls")
+	check(is_equal_approx(scene.place_button.size.x, (2.0 / 1.2) * scene.erase_button.size.x), "Buttons keep the two-square to 1.2-square ratio")
 	var fixed_board: Rect2 = scene.board_view.get_rect()
 	var fixed_pitch: float = scene.board_view.pitch
 	for piece: Dictionary in Rules.PIECES.values():

@@ -881,8 +881,7 @@ func _apply_button_style(button: Button) -> void:
 		elif palette_options.has(button):
 			style.content_margin_right = float(button.get_meta("menu_right_inset", 70))
 		elif button.has_node("ControlIcon"):
-			style.content_margin_left = 0
-			style.content_margin_right = 0
+			style.set_content_margin_all(0)
 		button.add_theme_stylebox_override(state, style)
 
 func _refresh_theme() -> void:
