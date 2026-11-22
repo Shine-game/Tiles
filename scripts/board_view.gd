@@ -34,6 +34,7 @@ const Axes = preload("res://scripts/field_axes.gd")
 const Growth = preload("res://scripts/growth.gd")
 var tile_floor: ColorRect
 var vines_formations: Node2D
+var show_vine_formations := false
 var fountain_water: Node2D
 var board: Array = []
 var pattern = Growth.new()
@@ -126,14 +127,17 @@ func _build_pattern(before: Array, after: Array) -> void:
 	clockwork = Palette.clockwork
 	coral_reef = Palette.coral_reef
 	var model_hooks := { "clockwork": Clock, "coral_reef": Coral, "vines": VineModel}
-	pattern = model_hooks[Themes.profile(Palette.theme_id()).hooks.growth].new()
+	var profile := Themes.profile(Palette.theme_id())
+	pattern = model_hooks[profile.hooks.growth].new()
+	show_vine_formations = Palette.vines and profile.get("vine_formations", true)
+	if Palette.vines: pattern.formations_enabled = show_vine_formations
 	pattern.build(before, after)
-	if fountain_water == null and Palette.vines and Vines.tier2.definition.water.get("enabled", true):
+	if fountain_water == null and show_vine_formations and Vines.tier2.definition.water.get("enabled", true):
 		fountain_water = FountainWater.new()
 		fountain_water.view = self
 		add_child(fountain_water)
 	if fountain_water != null:
-		fountain_water.visible = Palette.vines and Vines.tier2.definition.water.get("enabled", true)
+		fountain_water.visible = show_vine_formations and Vines.tier2.definition.water.get("enabled", true)
 		fountain_water.set_process(fountain_water.visible and not pattern.links.is_empty())
 		fountain_water.queue_redraw()
 	if board_frame == null:
@@ -288,7 +292,7 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 		add_child(tier1_layer)
 	var okay := tier1_layer.prepare(pattern, Palette.theme_id(), growth_before, settled, preserve, at, restart, sprite_elapsed if restart else 0.0, sprite_reverse)
 	if not okay: push_error("Tier 1 preparation failed: " + str(tier1_layer.diagnostics))
-	if Palette.vines: pattern.reschedule_formations(pattern.sprite_growth_events)
+	if show_vine_formations: pattern.reschedule_formations(pattern.sprite_growth_events)
 	if junction_layer == null:
 		junction_layer = JunctionLayer.new()
 		add_child(junction_layer)
@@ -302,7 +306,7 @@ func _sync_construction(settled: bool, preserve: bool, at: float = 0.0, restart:
 	growing = construction_state.schedule.running()
 	if not tier1_layer.present(construction_state, _sprite_view_transform()): push_error("Tier 1 presentation failed: " + str(tier1_layer.diagnostics))
 	if not junction_layer.present(construction_state, _sprite_view_transform()): push_error(str(junction_layer.diagnostics))
-	if Palette.vines:
+	if show_vine_formations:
 		if vines_formations==null:
 			vines_formations=VinesFormationLayer.new()
 			add_child(vines_formations)

@@ -434,13 +434,13 @@
           1.0039370078740157,
           1.0039370078740157
         ],
-        "layer_z_index": -1,
+        "layer_z_index": 0,
         "decoration_z_index": 0,
         "stroke_seconds": 0.14
       },
       "junctions": {
         "enabled": true,
-        "z_index": 0,
+        "z_index": 1,
         "shapes": {
           "core": {
             "1": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.json",
@@ -460,6 +460,7 @@
         }
       },
       "manifest": "res://assets/themes/christmas_joy/manifest.json",
+      "vine_formations": false,
       "play_product": "christmas_joy"
     }
   },

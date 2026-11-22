@@ -21,6 +21,7 @@ const DIRECTIONS := [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 var board: Array = []
 var arrivals: Dictionary = {}
 var edges: Array = []
+var formations_enabled := true
 var flowers: Dictionary = {}
 var links: Array = []
 var duration := 0.0
@@ -142,6 +143,7 @@ func build(before: Array, after: Array) -> void:
 				duration = maxf(duration, crossing + GRID_FADE)
 				for sprout: Dictionary in leaf_sprouts(edge):
 					duration = maxf(duration, sprout.start + LEAF_POP)
+	if not formations_enabled: return
 	var formations := Formations.collect(before, board)
 	for origin: Vector2i in formations:
 		var corner := origin + Vector2i.ONE
@@ -170,6 +172,7 @@ func flower_link_fraction() -> float:
 	return 0.45
 
 func tier2_records() -> Dictionary:
+	if not formations_enabled: return {}
 	return Formations.bind_records(board, flowers, "", flower_seconds(), Vector2i.ONE)
 
 # Add decorative lifetimes only after structural scheduling has completed.

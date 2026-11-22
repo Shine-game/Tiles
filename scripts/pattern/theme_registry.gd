@@ -3,6 +3,7 @@ extends RefCounted
 
 # One active theme/UI contract. Hook IDs select reviewed project code; data
 # never names a script to execute. Pattern artwork stays in pattern-set files.
+const TextureSource = preload("res://scripts/pattern/texture_source.gd")
 const Manifest = preload("res://scripts/pattern/asset_manifest.gd")
 const PATH := "res://assets/themes/themes.json"
 const SCHEMA := "tiles.themes.v1"
@@ -30,6 +31,7 @@ static func validate(data: Variant) -> Array:
 		if not profile is Dictionary:
 			errors.append(id + ": profile must be an object")
 			continue
+		if not profile.get("vine_formations", true) is bool: errors.append(id + ": vine_formations must be boolean")
 		if profile.has("play_product"):
 			var product: Variant = profile.play_product
 			if not product is String or product.is_empty() or products.has(product):
@@ -153,7 +155,7 @@ static func audio_file(path: Variant) -> bool:
 	return path is String and path.begins_with("res://") and path.get_extension() == "ogg" and ResourceLoader.exists(path, "AudioStreamOggVorbis")
 
 static func texture_file(path: Variant) -> bool:
-	return path is String and path.begins_with("res://") and ResourceLoader.exists(path, "Texture2D")
+	return path is String and path.begins_with("res://") and TextureSource.exists(path)
 
 static func specification() -> Dictionary:
 	if definition.is_empty():

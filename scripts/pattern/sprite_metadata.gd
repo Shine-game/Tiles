@@ -1,6 +1,7 @@
 class_name PatternSpriteMetadata
 extends RefCounted
 
+const TextureSource = preload("res://scripts/pattern/texture_source.gd")
 const Schema = preload("res://scripts/pattern/sprite_schema.gd")
 const SCHEMA_PATH := "res://assets/shared/schemas/sprite-metadata-v1.schema.json"
 const SETTINGS_PATH := "res://assets/shared/assembly/tier1-generation.json"
@@ -98,7 +99,7 @@ static func _settings(source: Variant) -> Dictionary:
 
 static func _texture(path: String) -> Texture2D:
 	if not _textures.has(path):
-		var texture := load(path) as Texture2D if ResourceLoader.exists(path, "Texture2D") else null
+		var texture := TextureSource.texture(path)
 		if texture != null: _textures[path] = texture
 	return _textures.get(path)
 

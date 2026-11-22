@@ -1,6 +1,7 @@
 class_name BoardFrame
 extends NinePatchRect
 
+const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 var thin_rim := 0.0
 var thin_texture: Texture2D
@@ -67,8 +68,8 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 	var path: String = style.texture
 	if artwork != null:
 		texture = artwork
-	elif not path.is_empty() and ResourceLoader.exists(path, "Texture2D"):
-		texture = load(path)
+	elif not path.is_empty():
+		texture = Assets.texture(path)
 	if texture != null and style.has("opening_rect"):
 		full_frame = texture
 		texture = null

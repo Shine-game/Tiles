@@ -26,6 +26,7 @@
     "sprites/tier1/christmas_joy_tier1_vine_*"
   ],
   "profile_overrides": {
+    "vine_formations": false,
     "frame": {
       "enabled": true,
       "texture": "res://assets/themes/christmas_joy/ui/christmas_joy_ui_frame_color0_01.png",
@@ -49,7 +50,7 @@
     },
     "junctions": {
       "enabled": true,
-      "z_index": 0,
+      "z_index": 1,
       "shapes": {
         "core": {
           "1": "res://assets/themes/christmas_joy/sprites/tier1/christmas_joy_tier1_end_color1_01.json",

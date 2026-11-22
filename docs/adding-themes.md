@@ -1,6 +1,6 @@
 # Adding a theme
 
-Christmas joy ships with the game and has a source preset in `theme_drafts/christmas_joy.json` and source artwork in `theme_drafts/christmas_joy/`. The preview uses the snowy background, ice frame, snow paths, and the two motifs for isolated tiles and endpoints. Higher tiers and audio still use Vines placeholders.
+Christmas joy ships with the game and has a source preset in `theme_drafts/christmas_joy.json` and source artwork in `theme_drafts/christmas_joy/`. The preview uses the snowy background, ice frame, snow paths, and the two motifs for isolated tiles and endpoints. Christmas joy shares Vines audio. Higher-tier formations are disabled until Christmas artwork is available.
 
 1. In a disposable development checkout, run `python3 tools/scaffold_theme.py winter_garden --name "Winter Garden" --preview`.
 2. Store source artwork and its assembly JSON in `theme_drafts/<id>/`. Use the same relative paths they should have in `assets/themes/<id>/`. The scaffold copies these files over the Vines template and adds them to the generated manifest. In the preset, `profile_overrides` replaces whole profile sections such as the frame or junction bindings. Use `omit_placeholders` to drop template files once their references have been replaced.

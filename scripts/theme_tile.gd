@@ -1,5 +1,6 @@
 extends Control
 
+const Assets = preload("res://scripts/pattern/asset_library.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 const LeafCenters = preload("res://scripts/pattern/leaf_centers.gd")
 var theme_id := "vines"
@@ -24,8 +25,8 @@ func _ready() -> void:
 	else:
 		var path: String = profile.get("preview", {}).get("core", "")
 		if not path.is_empty():
-			core = load(path)
-			core_region = Rect2(core.get_image().get_used_rect())
+			core = Assets.texture(path)
+			if core != null: core_region = Rect2(core.get_image().get_used_rect())
 
 func _draw() -> void:
 	var extent := minf(size.x, size.y) * 0.84

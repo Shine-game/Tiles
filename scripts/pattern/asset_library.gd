@@ -1,6 +1,7 @@
 class_name PatternAssetLibrary
 extends RefCounted
 
+const TextureSource = preload("res://scripts/pattern/texture_source.gd")
 const SpriteMetadata = preload("res://scripts/pattern/sprite_metadata.gd")
 
 const SET_SCHEMA := "tiles.pattern-set.v1"
@@ -56,7 +57,7 @@ static func validate(asset: Variant, root: String = "res://") -> Array:
 		return provider_validators[provider].call(asset.get("params", {})) if provider_validators.has(provider) else []
 	var path := path_for(str(asset.get("path", "")), root)
 	if not path.begins_with("res://") or path.get_extension().to_lower() not in ["png", "webp", "jpg", "jpeg", "svg", "ctex", "res"]: return ["Expected a project texture path: " + path]
-	if not ResourceLoader.exists(path, "Texture2D"): return ["Texture does not exist: " + path]
+	if not TextureSource.exists(path): return ["Texture does not exist: " + path]
 	if path.get_extension().to_lower() == "res" and not load(path) is Texture2D: return ["Expected a Texture2D resource: " + path]
 	if provider == "atlas":
 		var rect := region(asset.get("region_px"))
@@ -113,7 +114,12 @@ static func resolve(asset: Variant, root: String = "res://", errors: Array = [])
 			generated[key] = result
 		return generated[key]
 	var path := path_for(asset.path, root)
-	if not textures.has(path): textures[path] = load(path) as Texture2D
+	if not textures.has(path):
+		var source := TextureSource.texture(path)
+		if source == null:
+			errors.append("Unable to load texture: " + path)
+			return null
+		textures[path] = source
 	if provider == "texture": return textures[path]
 	var rect := region(asset.region_px)
 	var key := path + "/" + str(rect) + "/" + str(asset.get("filter_clip", true))
