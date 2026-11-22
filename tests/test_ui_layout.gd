@@ -40,15 +40,13 @@ func run() -> void:
 				var padding: float = scene.blue_button.position.x
 				check(is_equal_approx(scene.place_button.position.x - scene.blue_button.get_rect().end.x, 2 * padding), "Bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
-				if dimensions.y > dimensions.x:
-					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, padding), "Equal bottom and side padding")
-				if dimensions.y > dimensions.x:
-					check(is_equal_approx(scene.blue_button.position.y - scene.board_view.get_rect().end.y, padding), "Equal board-to-buttons and side padding")
+				check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, scene.blue_button.position.y - scene.board_view.get_rect().end.y), "Equal vertical space around bottom buttons")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
-				if dimensions.y > dimensions.x*2.0:
-					check(is_equal_approx(scene.board_view.position.x,5) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-5),"Both board sizes fill portrait width with five-pixel side margins")
+				if dimensions.y >= dimensions.x:
+					var margin: float = 10.0 / scene.get_viewport().get_stretch_transform().x.length()
+					check(is_equal_approx(scene.board_view.position.x,margin) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-margin),"Both board sizes fill portrait width with ten screen pixels on each side")
 				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")
 				check(scene.blue_button.position.x > 0,"Bottom buttons have positive outer clearance")
 	Palette.select_theme("vines")

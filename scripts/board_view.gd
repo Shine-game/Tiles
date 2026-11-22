@@ -457,7 +457,7 @@ func _draw_guides() -> void:
 	# Snap only the drawing to physical pixels; logical cells and hit testing
 	# retain their exact, equally spaced coordinates. Hairlines stay one pixel
 	# wide under viewport scaling, avoiding alternating faint/dark seams.
-	var screen := get_screen_transform()
+	var screen := get_viewport().get_stretch_transform() * get_global_transform_with_canvas()
 	var inverse := screen.affine_inverse()
 	for y in range(n):
 		for x in range(n + 1):

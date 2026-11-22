@@ -368,13 +368,14 @@ func _layout() -> void:
 		return
 	var view := size
 	var safe := _layout_insets(view)
-	var gap := clampf(view.x * 0.025, 6, 14)
+	var gap := clampf(view.x * 0.015, 4, 10)
 	if view.x > view.y: gap = 2.0
 	var hardware := _layout_insets(view, false)
-	var edge := 5.0 + maxf(hardware.x, hardware.z)
+	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
+	var edge := 10.0 / pixel_scale + maxf(hardware.x, hardware.z)
 	var short_side := minf(view.x, view.y)
-	# Size controls from the screen, never from the space left by the board.
-	# The board yields on short screens so touch targets remain usable.
+	# Size controls from the screen, then compact the header on shorter phones.
+	# Portrait boards always fill the available width.
 	var control_side := clampf(short_side * 0.112, 36, 72)
 	var dock_side := clampf(short_side * 0.225, 56, 128)
 	if view.x > view.y:
@@ -382,7 +383,7 @@ func _layout() -> void:
 		dock_side = clampf(view.y * 0.14, 40, 64)
 	# Three equal buttons: W = 3B + 6P (outer P, inner 2P).
 	var dock_padding := (view.x - 3 * dock_side) / 6.0
-	var dock_vertical_padding := minf(dock_padding, safe.w) if view.x > view.y else dock_padding
+	var dock_vertical_padding := minf(dock_padding, minf(safe.w, view.y * 0.015))
 	var button_inset := maxf(safe.x, safe.z) + gap
 	var controls_left := button_inset
 	var controls_right := view.x - button_inset - control_side
@@ -405,8 +406,9 @@ func _layout() -> void:
 			low = candidate
 		else:
 			high = candidate
-	var side := view.x - 2 * edge if view.x - 2 * edge - low < 0.01 else low
+	var side := maxf(1, view.x - 2 * edge) if view.y >= view.x else low
 	var header_height := view.y - safe.y - side - dock_side - 2 * dock_vertical_padding - gap
+	control_side = minf(control_side, (header_height - 2 * gap) / 3.0)
 	controls_right = view.x - button_inset - control_side
 	preview_left = controls_left + control_side + gap
 	preview_width = maxf(1, controls_right - gap - preview_left)
