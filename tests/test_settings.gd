@@ -138,11 +138,11 @@ func _run() -> void:
 				check(bounds.encloses(scene.palette_menu.get_rect()),"Every menu fits every viewport")
 				check(scene.menu_frame.get_global_rect().is_equal_approx(scene.palette_menu.get_global_rect()), "Theme frame follows the entire settings panel")
 				if dimensions == Vector2(720,1100) and page == "Settings":
-					var clearance: float = 20 / root.get_stretch_transform().x.length()
+					var clearance: float = 30 / root.get_stretch_transform().x.length()
 					var first: Rect2 = scene.settings_options[0].get_global_rect()
 					var second: Rect2 = scene.settings_options[1].get_global_rect()
 					var opening: Rect2 = scene.menu_frame.get_global_rect().grow(-scene.menu_frame.thin_rim)
-					check(is_equal_approx(first.position.x - opening.position.x, clearance) and is_equal_approx(second.position.y - first.end.y, clearance), "Settings controls have 20 screen pixels of clearance from the frame and each other")
+					check(is_equal_approx(first.position.x - opening.position.x, clearance) and is_equal_approx(second.position.y - first.end.y, clearance), "Settings controls have 30 screen pixels of clearance from the frame and each other")
 				check(scene.back_button.visible and scene.menu_close.visible and scene.back_button.position.x < scene.menu_close.position.x and scene.back_button.position.y == scene.menu_close.position.y,"Every window has top-corner navigation")
 				for control: Control in scene.menu_buttons:
 					if control.visible:
@@ -169,6 +169,7 @@ func _run() -> void:
 	await process_frame
 	var prior_game = scene.game
 	check(is_equal_approx(scene.confirmation.size.x, scene.size.x * 0.7), "Confirmation uses the menu width")
+	check(scene.confirmation.frame.is_present() and scene.confirmation.frame.theme_id == Palette.theme_id(), "New-game confirmation uses the active theme frame")
 	var surface: StyleBoxFlat = scene.confirmation.get_theme_stylebox("panel")
 	check(surface.bg_color == scene.palette_menu.get_theme_stylebox("panel").bg_color and surface.shadow_size == 0 and surface.border_width_top == 1, "Confirmation uses the flat menu surface")
 	check(scene.confirmation.get_ok_button().text == "OK" and scene.confirmation.get_cancel_button().text == "Go back", "Confirmation presents both choices")

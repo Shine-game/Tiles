@@ -8,6 +8,14 @@
     "res://assets/shared/schemas/junction-sprite-v1.schema.json",
     "res://assets/shared/schemas/sprite-catalog-v1.schema.json",
     "res://assets/shared/schemas/sprite-metadata-v1.schema.json",
-    "res://assets/shared/ui/app_icon.svg"
+    "res://assets/shared/ui/button_erase.png",
+    "res://assets/shared/ui/button_flip.png",
+    "res://assets/shared/ui/button_place.png",
+    "res://assets/shared/ui/button_replay.png",
+    "res://assets/shared/ui/button_settings.png",
+    "res://assets/shared/ui/button_skip.png",
+    "res://assets/shared/ui/button_undo.png",
+    "res://assets/shared/ui/loading_screen_portrait_1080x1920.png",
+    "res://assets/shared/ui/simis_icon_512.png"
   ]
 }

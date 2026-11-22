@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmuc4rimrddpk"
-path="res://.godot/imported/app_icon.svg-135bd206ea977395973c40f55ca24fac.ctex"
+uid="uid://cdl2y0jnauin4"
+path="res://.godot/imported/button_erase.png-5adc88e6cf5637e414e816fc7b9c242c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/shared/ui/app_icon.svg"
-dest_files=["res://.godot/imported/app_icon.svg-135bd206ea977395973c40f55ca24fac.ctex"]
+source_file="res://assets/shared/ui/button_erase.png"
+dest_files=["res://.godot/imported/button_erase.png-5adc88e6cf5637e414e816fc7b9c242c.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

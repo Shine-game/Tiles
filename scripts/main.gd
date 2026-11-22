@@ -110,7 +110,6 @@ var theme_options: Array = []
 var christmas_store: ChristmasStore
 var christmas_button: Button
 var christmas_dialog: MenuConfirmation
-var christmas_dialog_frame: BoardFrame
 var christmas_confirm_install := false
 var difficulty_options: Array = []
 var settings_options: Array = []
@@ -797,11 +796,6 @@ func _build_settings() -> void:
 	palette_menu.offer_divider = divider
 	christmas_dialog = MenuConfirmation.new()
 	christmas_dialog.z_index = 300
-	var frame_layer := Node2D.new()
-	christmas_dialog.add_child(frame_layer)
-	christmas_dialog_frame = Frame.new()
-	christmas_dialog_frame.thin_rim = menu_frame.thin_rim
-	frame_layer.add_child(christmas_dialog_frame)
 	christmas_dialog.confirmed.connect(func():
 		if christmas_confirm_install:
 			christmas_confirm_install = false
@@ -925,22 +919,12 @@ func _christmas_notice(message: String) -> void:
 func _update_confirmation_blocker() -> void:
 	confirmation_blocker.visible = confirmation.visible or christmas_dialog.visible
 
+func _settings_clearance() -> float:
+	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
+	return 30.0 / pixel_scale
+
 func _layout_christmas_dialog() -> void:
-	var pad := clampf(size.x * 0.025, 6, 14)
-	var width := minf(size.x - 2 * pad, maxf(size.x * 0.70, 360.0))
-	var style := InterfaceTheme.panel_style()
-	var rim := christmas_dialog_frame.thin_rim if christmas_dialog_frame.apply_theme(Palette.theme_id()) else 0.0
-	var inset := rim + 16.0
-	style.set_content_margin_all(inset)
-	christmas_dialog.add_theme_stylebox_override("panel", style)
-	var prompt_height := InterfaceTheme.FONT.get_multiline_string_size(
-		christmas_dialog.dialog_text, HORIZONTAL_ALIGNMENT_CENTER, width - 2 * inset,
-		InterfaceTheme.FONT_SIZE).y
-	var actions := 2 if christmas_dialog.get_cancel_button().visible else 1
-	var height := minf(size.y - 2 * pad, 2 * inset + prompt_height + 60 * actions)
-	_set_rect(christmas_dialog, Rect2((size - Vector2(width, height)) / 2, Vector2(width, height)))
-	if christmas_dialog_frame.is_present():
-		christmas_dialog_frame.surround(Rect2(Vector2.ONE * rim, christmas_dialog.size - 2 * Vector2.ONE * rim))
+	christmas_dialog.layout(size, clampf(size.x * 0.025, 6, 14), _settings_clearance())
 
 func _christmas_changed() -> void:
 	palette_menu.christmas_owned = christmas_store.owned
@@ -980,8 +964,7 @@ func _start_new_game() -> void:
 func _layout_palette_menu(pad: float) -> void:
 	_refresh_menu_style()
 	_update_settings_labels()
-	var pixel_scale := maxf(0.001, get_viewport().get_stretch_transform().x.length())
-	palette_menu.layout(size, palette_button.get_rect().end.y, pad, 20.0 / pixel_scale, MENU_THEMES, _apply_button_style)
+	palette_menu.layout(size, palette_button.get_rect().end.y, pad, _settings_clearance(), MENU_THEMES, _apply_button_style)
 
 func _update_settings_labels() -> void:
 	new_button.text = "Start"
@@ -1008,13 +991,9 @@ func _refresh_menu_style() -> void:
 	menu_style.border_color = Color(Interface.shade(), 0.65)
 	menu_style.shadow_size = 0
 	palette_menu.add_theme_stylebox_override("panel", menu_style)
-	confirmation.add_theme_stylebox_override("panel", menu_style)
 
 func _layout_confirmation(pad: float) -> void:
-	var width := size.x * 0.70
-	var height := minf((38 + 70 * 3 + 12) * 1.5, size.y - 2 * pad)
-	var y := minf(palette_button.get_rect().end.y + pad, size.y - pad - height)
-	_set_rect(confirmation, Rect2((size.x - width) / 2, maxf(pad, y), width, height))
+	confirmation.layout(size, pad, _settings_clearance(), palette_button.get_rect().end.y)
 
 func _apply_button_style(button: Button) -> void:
 	InterfaceTheme.sync_highlight(button)
@@ -1068,8 +1047,8 @@ func _confirm_new_game(_message: String, action: Callable) -> void:
 	dragging = false
 	pending_change = action
 	confirmation.dialog_text = "Start new game"
-	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 	confirmation.open()
+	_layout_confirmation(clampf(size.x * 0.025, 6, 14))
 
 func _request_theme(id: String) -> void:
 	if id not in MENU_THEMES or id == Palette.theme_id(): return
