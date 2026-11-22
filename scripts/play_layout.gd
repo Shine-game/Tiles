@@ -2,7 +2,8 @@ extends RefCounted
 
 const Geometry = preload("res://scripts/piece_geometry.gd")
 const Rules = preload("res://scripts/rules.gd")
-const MIN_CONTROL_SIDE := 28.0
+const UPPER_TARGET_PX := 44.0
+const BOTTOM_TARGET_PX := 80.0
 const BOARD_FRAME := 28.0
 
 static func portrait(view: Vector2, pixel_scale: float, tray_inset: float) -> Dictionary:
@@ -15,12 +16,12 @@ static func portrait(view: Vector2, pixel_scale: float, tray_inset: float) -> Di
 
 	var button_gap := 20.0 / pixel_scale
 	var row_gap := minf(button_gap, maxf(0.0, (top_surface - 3 * 16.0) / 2.0))
-	var top_border := minf(border, maxf(0.0, (top_surface - 3 * MIN_CONTROL_SIDE - 2 * row_gap) / 2.0))
+	var top_border := minf(border, maxf(0.0, (top_surface - 3 * UPPER_TARGET_PX / pixel_scale - 2 * row_gap) / 2.0))
 	var header_height := top_surface - 2 * top_border
 	# Leave the central tray wide enough for the longest offered piece.
 	var column_limit := maxf(1.0, (view.x - 2 * tray_inset - board_side * 0.5) / 2.0)
 	var control_side := minf(column_limit, (header_height - 2 * row_gap) / 3.0)
-	var bottom_border := minf(border, maxf(0.0, (bottom_surface - 40.0) / 2.0))
+	var bottom_border := minf(border, maxf(0.0, (bottom_surface - BOTTOM_TARGET_PX / pixel_scale) / 2.0))
 	var dock_gap := minf(button_gap, view.x / 6.0)
 	var dock_width := view.x - 2 * margin - 2 * dock_gap
 	var dock_side := minf(dock_width / 3.0, bottom_surface - 2 * bottom_border)
