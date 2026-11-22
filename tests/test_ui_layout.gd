@@ -14,6 +14,7 @@ func _initialize() -> void:
 func run() -> void:
 	root.size = Vector2i(720,1100)
 	var scene = load("res://main.tscn").instantiate()
+	scene.session_enabled = false
 	root.add_child(scene)
 	await process_frame
 	for theme: String in Palette.THEMES:
@@ -26,6 +27,9 @@ func run() -> void:
 				scene.size = dimensions
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
+				check(scene.erase_button.size.x >= 28, "Upper controls retain usable touch targets")
+				check(scene.erase_button.size.is_equal_approx(scene.palette_button.size), "Both upper columns have equal button sizes")
+				check(not scene.board_view.get_rect().intersects(scene.piece_view.get_rect()), "Offered piece tray remains above the board")
 				for control: Control in scene._controls()+[scene.piece_view,scene.board_view]:
 					check(bounds.encloses(control.get_rect()),"Control outside viewport: %s %s" % [theme,dimensions])
 				for i in range(scene._controls().size()):
@@ -36,12 +40,14 @@ func run() -> void:
 				var padding: float = scene.blue_button.position.x
 				check(is_equal_approx(scene.place_button.position.x - scene.blue_button.get_rect().end.x, 2 * padding), "Bottom button gaps are double outer padding")
 				check(is_equal_approx(dimensions.x - scene.indicators[0].panel.get_rect().end.x, padding), "Equal left and right bottom padding")
-				check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, padding), "Equal bottom and side padding")
-				check(is_equal_approx(scene.blue_button.position.y - scene.board_view.get_rect().end.y, padding), "Equal board-to-buttons and side padding")
+				if dimensions.y > dimensions.x:
+					check(is_equal_approx(dimensions.y - scene.blue_button.get_rect().end.y, padding), "Equal bottom and side padding")
+				if dimensions.y > dimensions.x:
+					check(is_equal_approx(scene.blue_button.position.y - scene.board_view.get_rect().end.y, padding), "Equal board-to-buttons and side padding")
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
-				if dimensions.y > dimensions.x*1.5:
+				if dimensions.y > dimensions.x*2.0:
 					check(is_equal_approx(scene.board_view.position.x,5) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-5),"Both board sizes fill portrait width with five-pixel side margins")
 				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")
 				check(scene.blue_button.position.x > 0,"Bottom buttons have positive outer clearance")
@@ -50,7 +56,7 @@ func run() -> void:
 	scene._reset()
 	check(scene.get_children().all(func(child):return not child is Label or not child.visible),"Playing screen has no inscriptions before game over")
 	check(is_equal_approx(scene.board_view.board_frame.thin_rim,14),"Frame thickness doubled")
-	check(is_equal_approx(scene.place_button.size.x,98.952),"Bottom buttons are 20 percent larger")
+	check(is_equal_approx(scene.place_button.size.x,128),"Bottom controls keep their screen-based size")
 	var fixed_board: Rect2 = scene.board_view.get_rect()
 	var fixed_pitch: float = scene.board_view.pitch
 	for piece: Dictionary in Rules.PIECES.values():
@@ -68,7 +74,7 @@ func run() -> void:
 	scene.cells = Rules.rotate(Rules.PIECES.I.cells)
 	scene._refresh()
 	var tall: Dictionary = scene.piece_view.geometry()
-	check(scene.piece_view.position.y+tall.origin.y+4*tall.unit > scene.board_view.position.y,"Tall tray rotation overlaps the playing board")
+	check(is_equal_approx(tall.unit,fixed_pitch) and scene.board_view.get_rect().is_equal_approx(fixed_board),"Tall tray rotations keep full scale and may overlap the board without relayout")
 	check(scene.piece_view.z_index > scene.board_view.z_index,"Tray rotations render above the playing board")
 	check(scene.board_view.z_index + scene.board_view.tile_floor.z_index > 0,"Tile backgrounds draw above UI background")
 	scene.cells = Rules.PIECES.J.cells.duplicate()

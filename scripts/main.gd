@@ -372,23 +372,17 @@ func _layout() -> void:
 	if view.x > view.y: gap = 2.0
 	var hardware := _layout_insets(view, false)
 	var edge := 5.0 + maxf(hardware.x, hardware.z)
-	var available_height := view.y - safe.y - safe.w
 	var short_side := minf(view.x, view.y)
-	var minimum_control := clampf(short_side * 0.05, 16, 36)
-	var minimum_header := 3 * minimum_control + 2 * gap
-	var minimum_dock := clampf(short_side * 0.1, 24, 64)
-	# Keep the previous dock as the reference for the requested 20% increase.
-	var old_caption := clampf(view.x * 0.04, 14, 22)
-	var old_side := maxf(1, minf(view.x - 2 * maxf(hardware.x,hardware.z), available_height - 3 * gap - old_caption - minimum_header - minimum_dock))
-	var old_spare := available_height - old_side - 3 * gap
-	var old_dock := clampf(minf(old_side * 0.22, old_spare * 0.31), minimum_dock, old_spare - old_caption - minimum_header)
-	var dock_side := old_dock * 1.2
+	# Size controls from the screen, never from the space left by the board.
+	# The board yields on short screens so touch targets remain usable.
+	var control_side := clampf(short_side * 0.112, 36, 72)
+	var dock_side := clampf(short_side * 0.225, 56, 128)
+	if view.x > view.y:
+		control_side = clampf(view.y * 0.09, 28, 48)
+		dock_side = clampf(view.y * 0.14, 40, 64)
 	# Three equal buttons: W = 3B + 6P (outer P, inner 2P).
 	var dock_padding := (view.x - 3 * dock_side) / 6.0
-	var old_header := old_spare - old_dock - old_caption
-	var control_side := minf(old_side * 0.16, (old_header - 2 * gap) / 3)
-	if view.x > view.y:
-		control_side = minf(control_side, maxf(12, (view.y - safe.y - view.x / 3.0 - 40 - 3 * gap) / 3.0))
+	var dock_vertical_padding := minf(dock_padding, safe.w) if view.x > view.y else dock_padding
 	var button_inset := maxf(safe.x, safe.z) + gap
 	var controls_left := button_inset
 	var controls_right := view.x - button_inset - control_side
@@ -407,13 +401,12 @@ func _layout() -> void:
 		var unit := maxf(1, (candidate - 28) / maxi(1, game.board.size()))
 		var preview_height := extent.y * unit + 2 * gap
 		var header := maxf(3 * control_side + 2 * gap, preview_height)
-		if candidate + header + dock_side + 2 * dock_padding + gap <= view.y - safe.y and extent.x * unit <= preview_width:
+		if candidate + header + dock_side + 2 * dock_vertical_padding + gap <= view.y - safe.y and extent.x * unit <= preview_width:
 			low = candidate
 		else:
 			high = candidate
-	var side := maxf(1, view.x - 2 * edge) if view.y >= view.x else low
-	var header_height := view.y - safe.y - side - dock_side - 2 * dock_padding - gap
-	control_side = minf(control_side, maxf(1, (header_height - 2 * gap) / 3.0))
+	var side := view.x - 2 * edge if view.x - 2 * edge - low < 0.01 else low
+	var header_height := view.y - safe.y - side - dock_side - 2 * dock_vertical_padding - gap
 	controls_right = view.x - button_inset - control_side
 	preview_left = controls_left + control_side + gap
 	preview_width = maxf(1, controls_right - gap - preview_left)
@@ -430,7 +423,7 @@ func _layout() -> void:
 	_set_rect(board_view, Rect2(left, board_top, side, side))
 	board_view.update_geometry()
 	piece_view.cell_pitch = board_view.pitch
-	var dock_y := board_top + side + dock_padding
+	var dock_y := board_top + side + dock_vertical_padding
 	for i in range(3):
 		_set_rect([blue_button, place_button, indicators[0].panel][i], Rect2(dock_padding + i * (dock_side + 2 * dock_padding), dock_y, dock_side, dock_side))
 	for control: Control in _controls():
