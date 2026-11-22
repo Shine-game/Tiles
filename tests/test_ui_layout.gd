@@ -23,7 +23,7 @@ func run() -> void:
 		for n in [9,11]:
 			scene.requested_size = n
 			scene._reset()
-			for dimensions in [Vector2(360,640),Vector2(390,844),Vector2(540,825),Vector2(720,1100),Vector2(844,390)]:
+			for dimensions in [Vector2(400,500),Vector2(400,600),Vector2(360,640),Vector2(390,844),Vector2(540,825),Vector2(720,1100),Vector2(844,390)]:
 				scene.size = dimensions
 				scene._layout()
 				var bounds := Rect2(Vector2.ZERO,dimensions).grow(0.2)
@@ -44,7 +44,9 @@ func run() -> void:
 				check(scene.place_button.position.x > scene.blue_button.position.x and scene.place_button.position.x < scene.indicators[0].panel.position.x,"Three bottom controls ordered correctly")
 				check(scene.board_view._point(Vector2.ZERO).is_equal_approx(scene.board_view.field.position),"Tile grid meets frame opening")
 				check(is_equal_approx(scene.board_view.pitch*n,scene.board_view.field.size.x),"Grid fills frame opening")
-				if dimensions.y >= dimensions.x:
+				if dimensions in [Vector2(400,500),Vector2(400,600)]:
+					check(scene.piece_view.size.y > 0 and scene.board_view.size.x < dimensions.x - 20, "Compact portraits leave space for the tray and controls")
+				elif dimensions.y >= dimensions.x:
 					var margin: float = 10.0 / scene.get_viewport().get_stretch_transform().x.length()
 					check(is_equal_approx(scene.board_view.position.x,margin) and is_equal_approx(scene.board_view.get_rect().end.x,dimensions.x-margin),"Both board sizes fill portrait width with ten screen pixels on each side")
 				check(is_equal_approx(scene.piece_view.cell_pitch,scene.board_view.pitch),"Preview tiles match grid tiles")

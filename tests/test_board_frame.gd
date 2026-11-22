@@ -25,6 +25,7 @@ func fixture() -> Texture2D:
 	return ImageTexture.create_from_image(image)
 
 func _run() -> void:
+	root.size = Vector2i(720, 1100)
 	Palette.select_theme("vines")
 	var frame := Frame.new()
 	root.add_child(frame)
@@ -66,6 +67,11 @@ func _run() -> void:
 			check(view.grid_inset == 0 and view._point(Vector2.ZERO).is_equal_approx(view.field.position) and view._point(Vector2.ONE*board_size).is_equal_approx(view.field.end),"Live grid reaches all four inner frame edges")
 			check(view.board_frame.get_rect().grow(-view.board_frame.thin_rim).is_equal_approx(view.field),"Live frame has no gap before the grid")
 			check(view.reef_water.floor_plane.get_rect().is_equal_approx(view.field) and view.reef_water.light_plane.get_rect().is_equal_approx(view.board_frame.get_rect()), "one caustic field covers board and frame while lagoon fills only the opening")
+			var light: ShaderMaterial = view.reef_water.light_plane.material
+			check(light.get_shader_parameter("frame_artwork") == view.board_frame.artwork_texture()
+				and light.get_shader_parameter("frame_margins") == Vector4.ONE * view.board_frame.thin_rim
+				and light.get_shader_parameter("frame_source_margins") == Frame.margins(),
+				"caustics sample the live frame with separate source and displayed rims")
 			check(view.reef_water.light_plane.material.get_shader_parameter("cell_origin").is_equal_approx(view._point(Vector2.ZERO) - view.board_frame.position), "frame and board share the exact lighting coordinate origin")
 			scene.grabbed_cell = Vector2i.ZERO
 			for cell: Vector2i in [Vector2i.ZERO, Vector2i(board_size - 1, board_size - 1)]:
@@ -106,15 +112,20 @@ func _run() -> void:
 		scene.confirmation.confirmed.emit()
 		scene.confirmation.hide()
 		scene.gallery.directory = "user://frame-test-%d" % Time.get_ticks_usec()
+		# The gallery only accepts nonempty, symmetric designs.
+		scene.game.board[4][4] = Rules.BLUE
+		scene._refresh()
 		await scene._save_design()
 		var records: Array = scene.gallery.entries()
 		check(records.size() == 1 and records[0].get("surface_revision", "").ends_with("/frame-bleached-wreck-timber-v1"), "native gallery records the framed appearance")
 		if records.size() == 1:
 			var saved: Image = scene.gallery.picture(records[0]).get_image()
 			check(saved.get_pixel(450, 7).get_luminance() < 0.88, "native gallery includes the same frame artwork around the design")
-		for file: String in DirAccess.open(scene.gallery.directory).get_files():
-			DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
-		DirAccess.remove_absolute(scene.gallery.directory)
+		var directory := DirAccess.open(scene.gallery.directory)
+		if directory != null:
+			for file: String in directory.get_files():
+				DirAccess.remove_absolute(scene.gallery.directory.path_join(file))
+			DirAccess.remove_absolute(scene.gallery.directory)
 	scene.queue_free()
 	var deadline := Time.get_ticks_msec() + 150
 	while Time.get_ticks_msec() < deadline:

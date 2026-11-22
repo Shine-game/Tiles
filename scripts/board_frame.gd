@@ -76,7 +76,7 @@ func apply_theme(theme: String, artwork: Texture2D = null) -> bool:
 		source_rect = Rect2(src[0],src[1],src[2],src[3])
 	if texture != null and texture.get_size() != Vector2(Themes.specification().frame_geometry.source_size[0], Themes.specification().frame_geometry.source_size[1]):
 		texture = null
-	if thin_rim > 0:
+	if thin_rim > 0 and (full_frame != null or texture != null):
 		thin_texture = full_frame if full_frame != null else texture
 		if style.has("opening_rect"):
 			var h: Array = style.opening_rect

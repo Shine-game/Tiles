@@ -33,9 +33,9 @@ func _run() -> void:
 	root.add_child(scene)
 	for i in range(4): await process_frame
 	check(not scene.board_view.show_axes and scene.board_view.axes_overlay == null, "axes are off by default")
-	scene._show_menu("Difficulty")
+	scene._show_menu("Gameplay")
 	await process_frame
-	check(scene.axes_button.visible and scene.axes_button.text == "Show axes on field: Off", "Difficulty contains the axes toggle")
+	check(scene.axes_button.visible and scene.axes_button.text == "Show axes on field: Off", "Gameplay contains the axes toggle")
 	var original: Array = scene.game.board.duplicate(true)
 	var original_game = scene.game
 	click(scene.axes_button)

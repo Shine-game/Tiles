@@ -5,6 +5,14 @@ const Rules = preload("res://scripts/rules.gd")
 const Palette = preload("res://scripts/palette.gd")
 const Session = preload("res://scripts/game_session.gd")
 const Main = preload("res://scripts/main.gd")
+# Headless runs still exercise the gallery write and tutorial handoff.
+# Graphical runs use the real renderer and verify the exported PNG.
+class HeadlessCapture extends RefCounted:
+	func render(_owner, _view, _board, _theme) -> Image:
+		var image := Image.create(2, 2, false, Image.FORMAT_RGBA8)
+		image.fill(Color.WHITE)
+		return image
+
 var failures := 0
 var checks := 0
 func check(ok: bool, message: String) -> void:
@@ -69,6 +77,8 @@ func run() -> void:
 	var game = Main.new()
 	var gallery_folder := "/tmp/tutorial-save-%d" % Time.get_ticks_usec()
 	game.gallery.directory = gallery_folder
+	if DisplayServer.get_name() == "headless":
+		game.artwork_capture = HeadlessCapture.new()
 	root.add_child(game)
 	game.size = Vector2(540,825)
 	game._layout()

@@ -22,7 +22,7 @@ func _plane(shader: Shader, layer: int) -> ColorRect:
 	add_child(plane)
 	return plane
 
-func configure(bounds: Rect2, top_origin: Vector2, pitch: float, lighting_bounds: Rect2 = Rect2(), frame_artwork: Texture2D = null) -> void:
+func configure(bounds: Rect2, top_origin: Vector2, pitch: float, lighting_bounds: Rect2 = Rect2(), frame_artwork: Texture2D = null, thin_rim: float = 0.0, source_opening: Rect2 = Rect2()) -> void:
 	if lighting_bounds.size == Vector2.ZERO:
 		lighting_bounds = bounds
 	floor_plane.position = bounds.position
@@ -36,7 +36,13 @@ func configure(bounds: Rect2, top_origin: Vector2, pitch: float, lighting_bounds
 	light_plane.material.set_shader_parameter("frame_artwork", frame_artwork)
 	if frame_artwork != null:
 		light_plane.material.set_shader_parameter("frame_source_pixels", frame_artwork.get_size())
-		light_plane.material.set_shader_parameter("frame_margins", Frame.margins())
+		var source_margins := Frame.margins()
+		if source_opening.has_area():
+			var trailing := frame_artwork.get_size() - source_opening.end
+			source_margins = Vector4(source_opening.position.x, source_opening.position.y, trailing.x, trailing.y)
+		var margins := Vector4.ONE * thin_rim if thin_rim > 0.0 else source_margins
+		light_plane.material.set_shader_parameter("frame_margins", margins)
+		light_plane.material.set_shader_parameter("frame_source_margins", source_margins)
 
 func freeze_phase(seconds: float) -> void:
 	light_plane.material.set_shader_parameter("time_override", seconds)

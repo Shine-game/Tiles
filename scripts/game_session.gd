@@ -5,6 +5,9 @@ const Rules = preload("res://scripts/rules.gd")
 const Themes = preload("res://scripts/pattern/theme_registry.gd")
 var path := "user://game_state.json"
 
+static func autosave_enabled(arguments: PackedStringArray) -> bool:
+	return "--script" not in arguments and "-s" not in arguments
+
 static func number(value, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and value == int(value) and value >= low and value <= high
 

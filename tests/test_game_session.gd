@@ -12,6 +12,9 @@ func check(ok: bool, message: String) -> void:
 		push_error(message)
 func _initialize() -> void: run.call_deferred()
 func run() -> void:
+	check(Session.autosave_enabled(PackedStringArray()), "Normal startup enables session autosave")
+	for flag in ["--script", "-s"]:
+		check(not Session.autosave_enabled(PackedStringArray([flag, "test.gd"])), "Script flag %s isolates the session" % flag)
 	root.size = Vector2i(720,1100)
 	var path := "/tmp/tiles-session-test-%d.json" % Time.get_ticks_usec()
 	Palette.select_theme("vines")

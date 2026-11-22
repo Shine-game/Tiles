@@ -56,24 +56,24 @@ func run():
 	root.add_child(scene)
 	scene.gallery.directory=folder
 	scene._open_gallery()
-	check(not scene.gallery_save.disabled and scene.gallery_share.disabled,"Desktop Gallery offers Save and marks mobile-only sharing unavailable")
-	scene._export_gallery_image(false)
-	check(scene.gallery_file_dialog.visible and scene.gallery_export_busy,"Desktop Save opens a file chooser")
-	scene._save_gallery_file(folder+"/from-ui.png")
-	check(FileAccess.file_exists(folder+"/from-ui.png") and not scene.gallery_export_busy,"Gallery Save exports and restores controls")
+	check(not scene.gallery_panel.save.disabled and scene.gallery_panel.share.disabled,"Desktop Gallery offers Save and marks mobile-only sharing unavailable")
+	scene.gallery_panel.export_image(false)
+	check(scene.gallery_panel.file_dialog.visible and scene.gallery_panel.export_busy,"Desktop Save opens a file chooser")
+	scene.gallery_panel.save_file(folder+"/from-ui.png")
+	check(FileAccess.file_exists(folder+"/from-ui.png") and not scene.gallery_panel.export_busy,"Gallery Save exports and restores controls")
 	check(Image.load_from_file(folder+"/from-ui.png").get_size() == Vector2i(2160,2160),"Desktop Save exports 2160 pixels rather than the preview")
-	scene.gallery_file_dialog.hide()
-	scene.gallery_entries=[]
-	scene._show_gallery_page()
-	check(scene.gallery_save.disabled and scene.gallery_share.disabled,"Empty gallery disables both actions")
+	scene.gallery_panel.file_dialog.hide()
+	scene.gallery_panel.entries=[]
+	scene.gallery_panel.show_page()
+	check(scene.gallery_panel.save.disabled and scene.gallery_panel.share.disabled,"Empty gallery disables both actions")
 	for dimensions in [Vector2(320,568),Vector2(720,1100),Vector2(844,390)]:
 		scene.size=dimensions
 		scene._layout()
 		for frame in range(2):await process_frame
 		var bounds:=Rect2(Vector2.ZERO,dimensions).grow(0.2)
-		for control: Control in [scene.gallery_save,scene.gallery_share,scene.gallery_status,scene.gallery_image,scene.gallery_close,scene.gallery_back]:
+		for control: Control in [scene.gallery_panel.save,scene.gallery_panel.share,scene.gallery_panel.status,scene.gallery_panel.image,scene.gallery_panel.close,scene.gallery_panel.back]:
 			check(bounds.encloses(control.get_rect()),"Gallery image, actions and navigation fit every viewport")
-		check(scene.gallery_image.get_rect().end.y <= scene.gallery_save.position.y,"Export actions stay below the artwork")
+		check(scene.gallery_panel.image.get_rect().end.y <= scene.gallery_panel.save.position.y,"Export actions stay below the artwork")
 	scene.queue_free()
 	await process_frame
 	for name in DirAccess.open(folder).get_files():DirAccess.remove_absolute(folder+"/"+name)

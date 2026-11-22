@@ -81,9 +81,9 @@ func _run() -> void:
 		await scene._save_design()
 		check(scene.gallery.entries().size() == 4, "real capture deduplicates repeated save")
 		scene._open_gallery()
-		check(scene.gallery_image.texture != null and scene.gallery_page.text == "1 / 4", "gallery opens on newest saved artwork")
-		scene._turn_gallery(1)
-		check(scene.gallery_page.text == "2 / 4", "gallery browses saved designs without scrolling")
+		check(scene.gallery_panel.image.texture != null and scene.gallery_panel.page.text == "1 / 4", "gallery opens on newest saved artwork")
+		scene.gallery_panel._turn_page(1)
+		check(scene.gallery_panel.page.text == "2 / 4", "gallery browses saved designs without scrolling")
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://build/gallery-browser-preview.png")
 		scene.gallery_panel.hide()

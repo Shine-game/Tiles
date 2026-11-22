@@ -80,7 +80,12 @@ func _run() -> void:
 	var shape: Dictionary = Rules.PIECES[scene.game.queue[scene.game.index]]
 	var move := Rules.first_physical_move(scene.game.board, shape, scene.game.requires_contact())
 	check(not move.is_empty() and scene.game.place(move.cells, move.anchor).ok and scene._game_started(), "A placed tile starts the game")
-	for control: Button in [scene.gameplay_options[0], scene.size_picker, scene.axes_button, scene.theme_options[1]]:
+	var axes_game = scene.game
+	var active_board: Array = axes_game.board.duplicate(true)
+	axes = scene.board_view.show_axes
+	click(scene.axes_button)
+	check(scene.game == axes_game and scene.game.board == active_board and scene.board_view.show_axes != axes and not scene.confirmation.visible, "Axes apply immediately and preserve an active game")
+	for control: Button in [scene.gameplay_options[0], scene.size_picker, scene.theme_options[1]]:
 		check(scene.game.skip(), "Start playing with a joker")
 		var previous = scene.game
 		var board: Array = scene.game.board.duplicate(true)
@@ -100,11 +105,11 @@ func _run() -> void:
 	click(scene.palette_button)
 	click(scene.settings_options[2])
 	check(scene.gallery_panel.visible and not scene.palette_menu.visible,"Gallery opens from Settings")
-	check(scene.gallery_back.position.x < scene.gallery_close.position.x and scene.gallery_back.position.y == scene.gallery_close.position.y,"Gallery has Back upper left and Close upper right")
-	click(scene.gallery_back)
+	check(scene.gallery_panel.back.position.x < scene.gallery_panel.close.position.x and scene.gallery_panel.back.position.y == scene.gallery_panel.close.position.y,"Gallery has Back upper left and Close upper right")
+	click(scene.gallery_panel.back)
 	check(scene.menu_page == "Settings" and scene.palette_menu.visible and not scene.gallery_panel.visible,"Gallery Back returns to Settings")
 	click(scene.settings_options[2])
-	click(scene.gallery_close)
+	click(scene.gallery_panel.close)
 	check(not scene.gallery_panel.visible and not scene.palette_menu.visible,"Gallery Close returns to the game")
 	click(scene.palette_button)
 	click(scene.settings_options[3])

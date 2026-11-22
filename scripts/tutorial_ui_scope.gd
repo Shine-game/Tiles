@@ -67,5 +67,4 @@ func restore() -> void:
 	if menu_owned and is_instance_valid(host.palette_menu):
 		host.palette_menu.process_mode = menu_mode
 		host.palette_menu.z_index = menu_z
-		host.palette_menu.hide()
-		host.menu_history.clear()
+		host.palette_menu.close()

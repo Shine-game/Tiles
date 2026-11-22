@@ -13,11 +13,12 @@ uniform bool frame_enabled = false;
 uniform sampler2D frame_artwork : filter_linear, repeat_disable;
 uniform vec2 frame_source_pixels = vec2(1.0);
 uniform vec4 frame_margins = vec4(0.0);
+uniform vec4 frame_source_margins = vec4(0.0);
 
-float patch_coordinate(float value, float destination, float source, float before, float after) {
-    if (value < before) { return value; }
-    if (value >= destination - after) { return source - (destination - value); }
-    return before + (value - before) * (source - before - after) / max(destination - before - after, 0.001);
+float patch_coordinate(float value, float destination, float source, float before, float after, float source_before, float source_after) {
+    if (value < before) { return value * source_before / max(before, 0.001); }
+    if (value >= destination - after) { return source - (destination - value) * source_after / max(after, 0.001); }
+    return source_before + (value - before) * (source - source_before - source_after) / max(destination - before - after, 0.001);
 }
 
 float frame_coverage(vec2 pixel) {
@@ -27,8 +28,8 @@ float frame_coverage(vec2 pixel) {
         return 1.0;
     }
     vec2 source = vec2(
-        patch_coordinate(pixel.x, rect_pixels.x, frame_source_pixels.x, frame_margins.x, frame_margins.z),
-        patch_coordinate(pixel.y, rect_pixels.y, frame_source_pixels.y, frame_margins.y, frame_margins.w));
+        patch_coordinate(pixel.x, rect_pixels.x, frame_source_pixels.x, frame_margins.x, frame_margins.z, frame_source_margins.x, frame_source_margins.z),
+        patch_coordinate(pixel.y, rect_pixels.y, frame_source_pixels.y, frame_margins.y, frame_margins.w, frame_source_margins.y, frame_source_margins.w));
     return texture(frame_artwork, source / frame_source_pixels).a;
 }
 

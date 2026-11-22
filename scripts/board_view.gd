@@ -375,7 +375,11 @@ func update_geometry() -> void:
 		clockwork_visuals.configure_surface(occupied_platform)
 	if reef_water != null:
 		var framed: bool = board_frame != null and board_frame.is_present()
-		reef_water.configure(field, _point(Vector2.ZERO), pitch, board_frame.get_rect() if framed else field, board_frame.texture if framed else null)
+		if framed:
+			reef_water.configure(field, _point(Vector2.ZERO), pitch, board_frame.get_rect(),
+				board_frame.artwork_texture(), board_frame.thin_rim, board_frame.thin_hole)
+		else:
+			reef_water.configure(field, _point(Vector2.ZERO), pitch)
 	if coral_visuals != null:
 		coral_visuals.position = _point(Vector2.ZERO)
 		coral_visuals.scale = Vector2.ONE * pitch / 256.0
